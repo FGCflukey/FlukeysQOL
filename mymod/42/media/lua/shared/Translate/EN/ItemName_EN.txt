@@ -1,0 +1,13 @@
+ItemName_EN = {
+    ItemName_Base.cfcombataxe = "Carbon Fibre Axe",
+    ItemName_Base.cflongreachaxe = "Carbon Fibre Long Reach Axe",
+    ItemName_Base.HCToywagon = "Toy Wagon",
+    ItemName_Base.HCHanddolly = "Hand Dolly",
+    ItemName_Base.ZombieMeat = "Zombie Meat",
+    ItemName_Base.BoxedSyringes = "Syringe Package",
+    ItemName_Base.EmptySyringe = "Empty Syringe",
+    ItemName_Base.FilledSyringe = "Blood-Filled Syringe",
+    ItemName_Base.SyringeWithCure = "Syringe Containing The Cure",
+    ItemName_Base.LabTestTubeInfectedBlood = "Test Tube with Filtered Blood",
+    ItemName_Base.LabTestTube = "Test Tube",
+}

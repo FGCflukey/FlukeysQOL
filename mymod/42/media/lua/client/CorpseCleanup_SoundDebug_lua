@@ -1,0 +1,60 @@
+-- Build 42 Safe Sound Tester
+
+local keyHandled = false
+
+local function tryPlaySound(name)
+    local sq = getPlayer():getSquare()
+    if not sq then return end
+
+    print("Testing sound: " .. name)
+
+    -- Try to play the sound safely
+    local ok = pcall(function()
+        sq:playSound(name)
+    end)
+
+    if ok then
+        print("SUCCESS: Sound '" .. name .. "' played (or at least exists).")
+    else
+        print("FAIL: Sound '" .. name .. "' does NOT exist.")
+    end
+end
+
+local function onPlayerUpdate(player)
+    -- F11 = key code 87
+    if isKeyDown(87) then
+        if not keyHandled then
+            keyHandled = true
+
+            print("=== F11 PRESSED: TESTING CUTTING SOUNDS ===")
+
+            -- Test a batch of likely cutting sounds
+            local sounds = {
+                "FleshCut",
+                "FleshStab",
+                "FleshRip",
+                "GutAnimal",
+                "GutAnimal2",
+                "Butcher",
+                "Butcher2",
+                "Slice",
+                "SliceFlesh",
+                "Cutting",
+                "MeatCut",
+                "MeatSlice",
+                "ZombieHit",
+                "ZombieScratch",
+            }
+
+            for _, s in ipairs(sounds) do
+                tryPlaySound(s)
+            end
+
+            print("=== SOUND TEST COMPLETE ===")
+        end
+    else
+        keyHandled = false
+    end
+end
+
+Events.OnPlayerUpdate.Add(onPlayerUpdate)

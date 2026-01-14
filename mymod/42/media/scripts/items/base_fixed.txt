@@ -1,0 +1,36 @@
+module Base
+{
+    item BlowTorch
+    {
+        DisplayCategory = Tool,
+        ItemType = base:drainable,
+        Weight = 1.0,
+        WeightEmpty = 0.3,
+        Icon = BlowTorch,
+        KeepOnDeplete = true,
+        MetalValue = 20.0,
+        UseDelta = 0.01,
+        UseWhileEquipped = false,
+        cantBeConsolided = true,
+        StaticModel = BlowTorch,
+        WorldStaticModel = BlowtorchGround,
+    }
+
+    item PropaneTank
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Weight = 10.0,
+        WeightEmpty = 5.0,
+        Icon = PropaneTank,
+        ScaleWorldIcon = 2.0,
+        UseDelta = 0.0001,
+        UseWhileEquipped = false,
+        UseWorldItem = true,
+        cantBeConsolided = true,
+        WorldStaticModel = PropaneTank,
+        KeepOnDeplete = true,
+        Tags = base:hasmetal;base:smeltablesteellarge,
+    }
+
+}

@@ -1,0 +1,35 @@
+module Base
+{
+
+    import
+    {
+        Base
+    }
+
+    item HCToywagon
+    {
+        WeightReduction             = 100,
+        Weight                      = 6,
+        ItemType                    = Container,
+        Capacity                    = 100,
+        Icon                        = HCToywagon,
+        DisplayCategory             = Container,
+        StaticModel                 = HCToywagon,
+        WorldStaticModel            = HCToywagonfolded,
+        RequiresEquippedBothHands   = FALSE,
+    }
+
+    item HCHanddolly
+    {
+        WeightReduction             = 100,
+        Weight                      = 7,
+        ItemType                    = Container,
+        Capacity                    = 150,
+        Icon                        = HCHanddolly,
+        DisplayCategory             = Container,
+        StaticModel                 = HCHanddolly,
+        WorldStaticModel            = HCHanddolly,
+        RequiresEquippedBothHands   = FALSE,
+    }
+
+}

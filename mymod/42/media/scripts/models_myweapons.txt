@@ -1,0 +1,50 @@
+module Base
+{
+
+    model cfcombataxe
+    {
+        mesh = weapons/1handed/cfcombataxe,
+
+        attachment world
+        {
+            offset = 0.0000 0.0000 0.0000,
+            rotate = 0.0000 90.0000 90.0000,
+        }
+        attachment Bip01_Prop2
+        {
+            offset = -0.0106 -0.0321 -0.0001,
+            rotate = 180.0 -89.459 180.0,
+        }
+    }
+
+    model cflongreachaxe
+    {
+        mesh = weapons/2handed/cflongreachaxe,
+
+        attachment primary
+        {
+            offset = 0.00 -1.20 0.00,
+            rotate = 0.00 90.00 90.00,
+        }
+
+        attachment world
+        {
+            offset = 0.00 0.00 0.00,
+            rotate = 0.00 90.00 90.00,
+        }
+
+        # Right-hand prop (likely)
+        attachment Bip01_Prop
+        {
+            offset = -0.0106 -0.1200 -0.0001,
+            rotate = 180.0 -89.459 90.0,
+        }
+
+        # Second prop (off-hand or alternate)
+        attachment Bip01_Prop2
+        {
+            offset = -0.0106 -0.1200 -0.0001,
+            rotate = 0.0 0.0 0.0,
+        }
+    }
+}

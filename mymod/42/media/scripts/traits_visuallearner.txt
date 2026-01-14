@@ -1,0 +1,12 @@
+module VisualLearner
+{
+    character_trait_definition VisualLearner:visuallearner
+    {
+        IsProfessionTrait = false,
+        DisabledInMultiplayer = false,
+        CharacterTrait = VisualLearner:visuallearner,
+        Cost = 8,
+        UIName = UI_trait_visuallearner,
+        UIDescription = UI_trait_visuallearnerdesc,
+    }
+}

@@ -1,0 +1,7 @@
+name=My Mod
+description=My dolly and axe
+id=mymod
+poster=poster.png
+modversion=1.42
+require=\JB_MaxCapacityOverride
+icon=LogoFGC.png

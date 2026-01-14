@@ -1,0 +1,155 @@
+local origISReadABookUpdate = ISReadABook.update
+
+ISReadABook.update = function(self, ...)
+    self.item:setJobDelta(self:getJobDelta());
+    self.pageTimer = self.pageTimer + getGameTime():getMultiplier();
+    if not isClient() then
+        if self.item:getNumberOfPages() > 0 then
+            --See if the player is already beyond the level
+            if self.item:getMaxLevelTrained() < self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1 then
+                self.character:setAlreadyReadPages(self.item:getFullType(), 0)
+                self:forceStop()
+            else
+                local pagesRead = math.floor(self.item:getNumberOfPages() * self:getJobDelta())
+                local CurrentPerk = SkillBook[self.item:getSkillTrained()].perk
+                local trainedStuff = SkillBook[self.item:getSkillTrained()];
+                
+                if pagesRead > self.item:getAlreadyReadPages() then
+                    self.item:setAlreadyReadPages(pagesRead);
+                    self.character:setAlreadyReadPages(self.item:getFullType(), self.item:getAlreadyReadPages())
+                    if self.item:getMaxLevelTrained() == 2 then
+                    -- BOOK 1
+                            if self.item:getAlreadyReadPages() == 110 and self.character:getPerkLevel(CurrentPerk) < 1 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,1)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.character:playSoundLocal("level_up_41")
+                            elseif self.item:getAlreadyReadPages() == 220 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,2)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.item:setAlreadyReadPages(self.item:getNumberOfPages());
+                                self.character:playSoundLocal("level_up_41")
+                            end
+                    -- BOOK 2
+                    elseif self.item:getMaxLevelTrained() == 4 then
+                            if self.item:getAlreadyReadPages() == 130 and self.character:getPerkLevel(CurrentPerk) < 3 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,3)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.character:playSoundLocal("level_up_41")
+                            elseif self.item:getAlreadyReadPages() == 260 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,4)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.item:setAlreadyReadPages(self.item:getNumberOfPages());
+                                self.character:playSoundLocal("level_up_41")
+                            end
+                    -- BOOK 3
+                    elseif self.item:getMaxLevelTrained() == 6 then
+                            if self.item:getAlreadyReadPages() == 150 and self.character:getPerkLevel(CurrentPerk) < 5 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,5)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.character:playSoundLocal("level_up_41")
+                            elseif self.item:getAlreadyReadPages() == 300 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,6)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.item:setAlreadyReadPages(self.item:getNumberOfPages());
+                                self.character:playSoundLocal("level_up_41")
+                            end
+                    -- BOOK 4
+                    elseif self.item:getMaxLevelTrained() == 8 then
+                            if self.item:getAlreadyReadPages() == 170 and self.character:getPerkLevel(CurrentPerk) < 7 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,7)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.character:playSoundLocal("level_up_41")
+                            elseif self.item:getAlreadyReadPages() == 340 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,8)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.item:setAlreadyReadPages(self.item:getNumberOfPages());
+                                self.character:playSoundLocal("level_up_41")
+                            end
+                    -- BOOK 5
+                    elseif self.item:getMaxLevelTrained() == 10 then
+                            if self.item:getAlreadyReadPages() == 190 and self.character:getPerkLevel(CurrentPerk) < 9 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,9)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.character:playSoundLocal("level_up_41")
+                            elseif self.item:getAlreadyReadPages() == 380 then
+                                self.character:getXp():setXPToLevel(CurrentPerk,10)
+                                self.character:LevelPerk(CurrentPerk);
+                                self.item:setAlreadyReadPages(self.item:getNumberOfPages());
+                                self.character:playSoundLocal("level_up_41")
+                            end
+                    end
+                end
+                if self.item:getAlreadyReadPages() > self.item:getNumberOfPages() then
+                    self.item:setAlreadyReadPages(self.item:getNumberOfPages());
+                
+                end
+            end
+        end
+    end
+    if SkillBook[self.item:getSkillTrained()] then
+--        if self.item:getLvlSkillTrained() > self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1 or self.character:HasTrait("Illiterate") then
+        if self.item:getLvlSkillTrained() > self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1 then
+
+            if self.pageTimer >= 200 then
+                self.pageTimer = 0;
+                local txtRandom = ZombRand(3);
+                if txtRandom == 0 then
+    --                     self.character:Say(getText("IGUI_PlayerText_DontGet"));
+                    HaloTextHelper.addBadText(self.character, getText("IGUI_PlayerText_DontGet"));
+    -- 					HaloTextHelper.addText(self.character, getText("IGUI_PlayerText_DontGet"), getCore():getGoodHighlitedColor());
+                elseif txtRandom == 1 then
+    --                     self.character:Say(getText("IGUI_PlayerText_TooComplicated"));
+                    HaloTextHelper.addBadText(self.character, getText("IGUI_PlayerText_TooComplicated"));
+    -- 					HaloTextHelper.addText(self.character, getText("IGUI_PlayerText_TooComplicated"), getCore():getGoodHighlitedColor());
+                else
+    --                     self.character:Say(getText("IGUI_PlayerText_DontUnderstand"));
+                    HaloTextHelper.addBadText(self.character, getText("IGUI_PlayerText_DontUnderstand"));
+    -- 					HaloTextHelper.addText(self.character, getText("IGUI_PlayerText_DontUnderstand"), getCore():getGoodHighlitedColor());
+                end
+                if self.item:getNumberOfPages() > 0 then
+                    self.character:setAlreadyReadPages(self.item:getFullType(), 0)
+                    self:forceStop()
+                end
+            end
+        elseif self.item:getMaxLevelTrained() < self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1 then
+            if self.pageTimer >= 200 then
+                self.pageTimer = 0;
+                local txtRandom = ZombRand(2);
+                if txtRandom == 0 then
+    --                     self.character:Say(getText("IGUI_PlayerText_KnowSkill"));
+                    HaloTextHelper.addGoodText(self.character, getText("IGUI_PlayerText_KnowSkill"));
+
+    -- 					HaloTextHelper.addText(self.character, getText("IGUI_PlayerText_KnowSkill"), getCore():getGoodHighlitedColor());
+                else
+    --                     self.character:Say(getText("IGUI_PlayerText_BookObsolete"));
+                    HaloTextHelper.addGoodText(self.character, getText("IGUI_PlayerText_BookObsolete"));
+    -- 					HaloTextHelper.addText(self.character, getText("IGUI_PlayerText_BookObsolete"), getCore():getGoodHighlitedColor());
+                end
+            end
+        --else
+            --if not isClient() then
+                --ISReadABook.checkMultiplier(self);
+            --end
+        end
+    end
+
+    -- Playing with longer day length reduces the effectiveness of morale-boosting
+    -- literature, like Comic Book.
+    local bodyDamage = self.character:getBodyDamage()
+    local stats = self.character:getStats()
+    if self.stats and (self.item:getBoredomChange() < 0.0) then
+        if bodyDamage:getBoredomLevel() > self.stats.boredom then
+            bodyDamage:setBoredomLevel(self.stats.boredom)
+        end
+    end
+    if self.stats and (self.item:getUnhappyChange() < 0.0) then
+        if bodyDamage:getUnhappynessLevel() > self.stats.unhappyness then
+            bodyDamage:setUnhappynessLevel(self.stats.unhappyness)
+        end
+    end
+    if self.stats and (self.item:getStressChange() < 0.0) then
+        if stats:getBasicStress() > self.stats.stress then
+            stats:setStress(self.stats.stress)
+        end
+    end
+    end

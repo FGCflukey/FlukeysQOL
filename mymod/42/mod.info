@@ -1,0 +1,10 @@
+name=My Mod
+description=My dolly and axe
+id=mymod
+poster=poster.png
+icon=LogoFGC.png
+versionMin=42.13.1
+require=\JB_MaxCapacityOverride
+lua=42/media/lua/client/
+lua=42/media/lua/server/
+lua=42/media/lua/shared/

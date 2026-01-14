@@ -1,0 +1,189 @@
+module Base
+{
+
+    item ZombieMeat
+    {
+        DisplayCategory         = FirstAid,
+        Weight                  = 0.3,
+        ItemType                = Normal,
+        Icon                    = ZombieMeat,
+        Tooltip                 = Tooltip_item_ZombieMeat,
+    }
+
+    item LabTestTube
+    {
+        DisplayCategory         = FirstAid,
+        Weight                  = 0.05,
+        ItemType                = Normal,
+        Icon                    = LabTestTube,
+        WorldStaticModel        = Item_LabTestTube,
+        Tooltip                 = Tooltip_LabTestTube,
+    }
+
+    item LabTestTubeInfectedBlood
+    {
+        DisplayCategory         = FirstAid,
+        Weight                  = 0.1,
+        ItemType                = Normal,
+        Icon                    = CmpTestTubeWithInfectedBlood,
+        Tooltip                 = Tooltip_CmpTestTubeWithInfectedBlood,
+        WorldStaticModel        = Item_CmpTestTubeWithInfectedBlood,
+    }
+
+    item BoxedSyringes
+    {
+        DisplayCategory         = Container,
+        Weight                  = 2.5,
+        ItemType                = base:container,
+        Icon                    = Parcel4,
+        Capacity                = 2,
+        CloseSound              = CloseParcelMedium,
+        OpenSound               = OpenParcelMedium,
+        PutInSound              = StoreItemParcelMedium,
+        WorldStaticModel        = Parcel5,
+        Tooltip                 = Tooltip_item_ZBloodSyringeBox,
+    }
+
+    item EmptySyringe
+    {
+        DisplayCategory         = FirstAid,
+        Weight                  = 0.05,
+        ItemType                = Normal,
+        Count                   = 1,
+        Icon                    = EmptySyringe,
+        CanStack                = TRUE,
+        WorldStaticModel        = Syringe,
+        Tooltip                 = Tooltip_item_ZBloodSyringe,
+        Tags                    = Syringe,
+        IsMedical               = TRUE,
+    }
+
+    item FilledSyringe
+    {
+        DisplayCategory         = FirstAid,
+        Weight                  = 0.06,
+        ItemType                = Normal,
+        Count                   = 1,
+        Icon                    = FilledSyringe,
+        CanStack                = TRUE,
+        WorldStaticModel        = Syringe,
+        Tooltip                 = Tooltip_item_ZBloodFilledSyringe,
+        Tags                    = Syringe,
+        IsMedical               = TRUE,
+    }
+
+    item SyringeWithCure
+    {
+        DisplayCategory         = FirstAid,
+        Weight                  = 0.06,
+        ItemType                = Normal,
+        Count                   = 1,
+        Icon                    = FilledCureSyringe,
+        CanStack                = TRUE,
+        WorldStaticModel        = Syringe,
+        Tooltip                 = Tooltip_item_ZCureFilledSyringe,
+        Tags                    = Syringe,
+        IsMedical               = TRUE,
+    }
+
+    craftRecipe OpenBoxofSyringes
+    {
+        timedAction         = UnPackBox,
+        Time                = 15,
+        OnCreate            = RecipeCodeOnCreate.unpackItemTypeFromBox,
+        Tags                = InHandCraft;Packing,
+        recipeGroup         = OpenBox,
+        inputs
+        {
+            item 1 [Base.BoxedSyringes] flags[AllowFavorite;InheritFavorite],
+        }
+        outputs
+        {
+            item 50 Base.EmptySyringe,
+        }
+    }
+
+    craftRecipe MakeaBoxofSyringes
+    {
+        timedAction         = PackingBox,
+        Time                = 15,
+        Tags                = InHandCraft;Packing,
+        category            = Packing,
+        inputs
+        {
+            item 50 [Base.EmptySyringe] flags[AllowFavorite;InheritFavorite;ItemCount],
+        }
+        outputs
+        {
+            item 1 Base.BoxedSyringes,
+        }
+    }
+    craftRecipe FillSyringesWithBlood
+    {
+        timedAction     = MixingMortarPestle,
+        time            = 120,
+        Tags            = AnySurfaceCraft;Health,
+        category        = Medical,
+        OnCreate        = OnCreate_FilledSyringes,
+
+        inputs
+        {
+            item 25 [Base.ZombieMeat] mode:destroy,
+            item 1 tags[base:mortarpestle] mode:keep,
+            item 25 [Base.EmptySyringe],
+        }
+
+        outputs
+        {
+            item 25 Base.FilledSyringe,
+        }
+    }
+
+    craftRecipe FillTestTubeWithBaseSerum
+    {
+        timedAction     = MixingMortarPestle,
+        time            = 300,
+        Tags            = AnySurfaceCraft;Health,
+        category        = Medical,
+        OnCreate        = OnCreate_FilledSyringes,
+
+        inputs
+        {
+
+            item 25 [Base.FilledSyringe] mode:destroy,
+            item 1 tags[base:mortarpestle] mode:keep,
+            item 1 [Base.CottonBalls],
+            item 1 [Base.LabTestTube],
+        }
+
+        outputs
+        {
+            item 1 Base.LabTestTubeInfectedBlood,
+            item 25 Base.EmptySyringe,
+        }
+    }
+
+    craftRecipe CraftZomCureSyringe
+    {
+        timedAction = MixingMortarPestle,
+        time = 300,
+        Tags = AnySurfaceCraft;Health,
+        category = Medical,
+
+        inputs
+        {
+            item 1 [Base.LabTestTubeInfectedBlood],
+            item 2 [Base.Pills],
+            item 1 tags[base:mortarpestle] mode:keep,
+            item 1 [Base.Antibiotics],
+            item 1 [Base.EmptySyringe],
+        }
+
+        outputs
+        {
+            item 1 Base.SyringeWithCure,
+            item 1 Base.LabTestTube,
+        }
+    }
+
+}

@@ -1,0 +1,8 @@
+RecipesEN {
+    Recipe_MakeaBoxofSyringes = "Pack 50 Empty Syringes",
+    Recipe_OpenBoxofSyringes = "Open 50 Pack of Syringes",
+    Recipe_FillSyringesWithBlood = "Grind Meat and Extract Zombie Blood",
+    Recipe_FillTestTubeWithBaseSerum = "Clean Blood Samples & Fill Test Tube",
+    Recipe_CraftZomCureSyringe = "Finalize Cure Serum and Fill Syringe",
+
+}
