@@ -8,9 +8,12 @@ ISReadABook = ISBaseTimedAction:derive("ISReadABook")
 -- Helper: check if this reader has Visual Learner
 -------------------------------------------------
 local function VL_HasVisualLearner(player)
-    return player and player:HasTrait(VisualLearnerRegistries.visuallearner)
+    return player
+       and player.HasTrait
+       and VisualLearnerRegistries
+       and VisualLearnerRegistries.TraitID
+       and player:HasTrait(VisualLearnerRegistries.TraitID)
 end
-
 
 -------------------------------------------------
 -- Vanilla multiplier logic (for non-trait readers)
@@ -85,7 +88,7 @@ end
 
 function ISReadABook:update()
 
-print("[VL] update() running for", self.character:getUsername())
+    print("[VL] update() running for", self.character:getUsername())
 
     self.pageTimer = self.pageTimer + getGameTime():getMultiplier()
     self.item:setJobDelta(self:getJobDelta())
@@ -145,16 +148,16 @@ print("[VL] update() running for", self.character:getUsername())
 
                 -- Debug: does the game think this character has the trait?
                 local hasTraitRaw = false
-                if self.character and self.character.HasTrait then
-                    hasTraitRaw = self.character:HasTrait(VisualLearnerRegistries.visuallearner)
+                if self.character and self.character.HasTrait and VisualLearnerRegistries and VisualLearnerRegistries.TraitID then
+                    hasTraitRaw = self.character:HasTrait(VisualLearnerRegistries.TraitID)
                 end
 
-                print("[VL] Trait check:", VL_HasVisualLearner(player),
+                print("[VL] Trait check:",
+                      VL_HasVisualLearner(self.character),
                       "Raw:", hasTraitRaw,
                       "Player:", self.character and self.character:getUsername() or "nil")
 
-
-                if VL_HasVisualLearner(player) then
+                if VL_HasVisualLearner(self.character) then
                     print("[VL] Trait XP block entered for", self.character:getUsername())
 
                     -- XP-per-page logic
@@ -506,53 +509,69 @@ function ISReadABook:animEvent(event, parameter)
 
     if event == "ReadAPage" then
         if isServer() then
-            if SkillBook[self.item:getSkillTrained()] then
-                if self.item:getLvlSkillTrained() > self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1
-                    or self.character:hasTrait(CharacterTrait.ILLITERATE) then
 
-                    if self.item:getNumberOfPages() > 0 then
-                        self.character:setAlreadyReadPages(self.item:getFullType(), 0)
-                        self.item:setAlreadyReadPages(0)
-                        syncItemFields(self.character, self.item)
-                        self.netAction:forceComplete()
-                    end
+            ---------------------------------------------------------
+            -- VISUAL LEARNER GUARD: skip vanilla XP logic entirely
+            ---------------------------------------------------------
+            if VL_HasVisualLearner(self.character) then
+                -- Do NOT return; we still want page syncing below.
+                -- We simply skip the vanilla XP block.
+            else
+                -----------------------------------------------------
+                -- VANILLA XP LOGIC (unchanged)
+                -----------------------------------------------------
+                if SkillBook[self.item:getSkillTrained()] then
+                    if self.item:getLvlSkillTrained() > self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1
+                        or self.character:hasTrait(CharacterTrait.ILLITERATE) then
 
-                elseif self.item:getMaxLevelTrained() >= self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1 then
-                    local skillBook = SkillBook[self.item:getSkillTrained()].perk
-                    local level = self.character:getPerkLevel(skillBook)
-                    local currentPages = self.item:getAlreadyReadPages()
-
-                    if not self.lastXPPage then
-                        self.lastXPPage = self.item:getAlreadyReadPages() or 0
-                    end
-
-                    if skillBook and currentPages and self.lastXPPage then
-                        if currentPages > self.lastXPPage then
-                            local pagesDiff = currentPages - self.lastXPPage
-                            local XPPerPage = 0
-
-                            if level == 0 or level == 1 then
-                                XPPerPage = 4.2
-                            elseif level == 2 or level == 3 then
-                                XPPerPage = 16.2
-                            elseif level == 4 or level == 5 then
-                                XPPerPage = 60.1
-                            elseif level == 6 or level == 7 then
-                                XPPerPage = 123.7
-                            elseif level == 8 or level == 9 then
-                                XPPerPage = 173.9
-                            end
-
-                            self.character:getXp():AddXP(skillBook, XPPerPage * pagesDiff)
-                            self.lastXPPage = currentPages
-                            sendSyncPlayerFields(self.character, 0x00000001)
+                        if self.item:getNumberOfPages() > 0 then
+                            self.character:setAlreadyReadPages(self.item:getFullType(), 0)
+                            self.item:setAlreadyReadPages(0)
+                            syncItemFields(self.character, self.item)
+                            self.netAction:forceComplete()
                         end
-                    elseif not self.lastXPPage then
-                        self.lastXPPage = currentPages or 0
+
+                    elseif self.item:getMaxLevelTrained() >= self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1 then
+                        local skillBook = SkillBook[self.item:getSkillTrained()].perk
+                        local level = self.character:getPerkLevel(skillBook)
+                        local currentPages = self.item:getAlreadyReadPages()
+
+                        if not self.lastXPPage then
+                            self.lastXPPage = self.item:getAlreadyReadPages() or 0
+                        end
+
+                        if skillBook and currentPages and self.lastXPPage then
+                            if currentPages > self.lastXPPage then
+                                local pagesDiff = currentPages - self.lastXPPage
+                                local XPPerPage = 0
+
+                                if level == 0 or level == 1 then
+                                    XPPerPage = 4.2
+                                elseif level == 2 or level == 3 then
+                                    XPPerPage = 16.2
+                                elseif level == 4 or level == 5 then
+                                    XPPerPage = 60.1
+                                elseif level == 6 or level == 7 then
+                                    XPPerPage = 123.7
+                                elseif level == 8 or level == 9 then
+                                    XPPerPage = 173.9
+                                end
+
+                                self.character:getXp():AddXP(skillBook, XPPerPage * pagesDiff)
+                                self.lastXPPage = currentPages
+                                sendSyncPlayerFields(self.character, 0x00000001)
+                            end
+                        elseif not self.lastXPPage then
+                            self.lastXPPage = currentPages or 0
+                        end
                     end
                 end
             end
+            ---------------------------------------------------------
+            -- END OF TRAIT GUARD + VANILLA XP BLOCK
+            ---------------------------------------------------------
 
+            -- PAGE SYNCING (always runs)
             if self.item:getNumberOfPages() > 0 and self.startPage then
                 local pagesRead = math.floor(self.item:getNumberOfPages() * self.netAction:getProgress()) + self.startPage
                 self.item:setAlreadyReadPages(pagesRead)
