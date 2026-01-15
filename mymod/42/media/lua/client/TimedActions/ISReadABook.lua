@@ -7,7 +7,12 @@ ISReadABook = ISBaseTimedAction:derive("ISReadABook")
 -------------------------------------------------
 local function VL_HasVisualLearner(self)
     local ch = self.character
-    return ch and ch.HasTrait and ch:HasTrait("visuallearner:visuallearner")
+    local res = false
+    if ch and ch.HasTrait then
+        res = ch:HasTrait("visuallearner:visuallearner")
+    end
+    print("[VL] VL_HasVisualLearner raw:", tostring(res))
+    return res
 end
 
 -------------------------------------------------
