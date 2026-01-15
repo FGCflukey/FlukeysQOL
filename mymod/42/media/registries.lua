@@ -1,1 +1,3 @@
-CharacterTrait.register("visuallearner:visuallearner")
+mymodRegistries = {}
+
+mymodRegistries.visuallearner = CharacterTrait.register("mymod:visuallearner")

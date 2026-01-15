@@ -5,8 +5,8 @@ function VisualLearner.hasTrait(player)
     if not player then return false end
     -- Some contexts pass non-player objects or indices
     if type(player) ~= "userdata" then return false end
-    if not player.HasTrait then return false end
-    return player:HasTrait("visuallearner:visuallearner")
+    if not player.hasTrait then return false end
+    return player:hasTrait(mymodRegistries.visuallearner)
 end
 
 -- Safely apply level gain with cap 10

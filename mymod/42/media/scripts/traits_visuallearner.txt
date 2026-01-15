@@ -1,10 +1,10 @@
-module VisualLearner
+module mymod
 {
-    character_trait_definition visuallearner:visuallearner
+    character_trait_definition mymod:visuallearner
     {
         IsProfessionTrait = false,
         DisabledInMultiplayer = false,
-        CharacterTrait = visuallearner:visuallearner,
+        CharacterTrait = mymod:visuallearner,
         Cost = 8,
         UIName = UI_trait_visuallearner,
         UIDescription = UI_trait_visuallearnerdesc,
