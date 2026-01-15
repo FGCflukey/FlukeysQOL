@@ -1,1 +1,1 @@
-CharacterTrait.register("VisualLearner:visuallearner")
+CharacterTrait.register("visuallearner:visuallearner")
