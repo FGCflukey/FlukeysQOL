@@ -1,3 +1,1 @@
-VisualLearnerRegistries = {
-    TraitID = "VisualLearner"
-}
+CharacterTrait.register("VisualLearner:visuallearner")
