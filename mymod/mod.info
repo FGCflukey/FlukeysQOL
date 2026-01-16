@@ -1,6 +1,7 @@
-name=My Mod
-description=My dolly and axe
+name=Flukeys QOL Mod for PZ
+description=Collection of tweaks and customizations for Project Zomboid.
 id=mymod
+icon=LogoFGC.png
 poster=poster.png
 modversion=1.42
 require=\JB_MaxCapacityOverride
