@@ -11,7 +11,7 @@ local function VL_HasVisualLearner(self)
     if ch and ch.hasTrait then
         res = ch:hasTrait(mymodRegistries.visuallearner)
     end
-    print("[VL] VL_HasVisualLearner raw:", tostring(res))
+    -- print("[VL] VL_HasVisualLearner raw:", tostring(res))
     return res
 end
 
@@ -41,11 +41,15 @@ local function VL_GainLevels(player, perk, levelsToGain)
     local xp = player:getXp()
     if not xp then return end
 
-    local currentLevel = player:getPerkLevel(perk)
-    local targetLevel = math.min(currentLevel + levelsToGain, 10)
-    if targetLevel <= currentLevel then return end
+    for i = 1, levelsToGain do
+        local currentLevel = player:getPerkLevel(perk)
+        if currentLevel >= 10 then return end
 
-    xp:setXPToLevel(perk, targetLevel)
+        xp:setXPToLevel(perk, currentLevel + 1)
+        player:LevelPerk(perk)
+        player:playSoundLocal("level_up_41")
+
+    end
 end
 
 local function VL_GetBookProgress(item)
@@ -154,17 +158,20 @@ function ISReadABook:update()
                         if currentPages > self.lastXPPage then
                             local pagesDiff = currentPages - self.lastXPPage
                             local XPPerPage = 0
+                            local lvl = self.item:getLvlSkillTrained()
 
-                            if level == 0 or level == 1 then
-                                XPPerPage = 4.2
-                            elseif level == 2 or level == 3 then
-                                XPPerPage = 16.2
-                            elseif level == 4 or level == 5 then
-                                XPPerPage = 60.1
-                            elseif level == 6 or level == 7 then
-                                XPPerPage = 123.7
-                            elseif level == 8 or level == 9 then
-                                XPPerPage = 173.9
+                            if lvl == 1 then
+                                XPPerPage = 0.34
+                            elseif lvl == 3 then
+                                XPPerPage = 0.58
+                            elseif lvl == 5 then
+                                XPPerPage = 1.61
+                            elseif lvl == 7 then
+                                XPPerPage = 2.50
+                            elseif lvl == 9 then
+                                XPPerPage = 4.69
+                            else
+                                XPPerPage = 0.5  -- fallback for unknown books
                             end
 
                             self.character:getXp():AddXP(perk, XPPerPage * pagesDiff)
@@ -176,21 +183,39 @@ function ISReadABook:update()
                     end
 
                     -- Half/full bonuses for Visual Learner
-                    local progress = VL_GetBookProgress(self.item)
-                    self.VL_halfGranted = self.VL_halfGranted or false
-                    self.VL_totalGranted = self.VL_totalGranted or 0
+                    local progress = self:getJobDelta()  -- FIXED: use true reading progress
 
+                    -- Ensure flags exist (they are initialized in start())
+                    if self.VL_halfGranted == nil then self.VL_halfGranted = false end
+                    if self.VL_totalGranted == nil then self.VL_totalGranted = 0 end
+
+                    -- DEBUG
+--                    print(string.format(
+--                        "[VL] UPDATE: jobDelta=%.3f pages=%d/%d halfGranted=%s totalGranted=%d level=%d",
+--                        progress,
+--                        self.item:getAlreadyReadPages() or -1,
+--                        self.item:getNumberOfPages() or -1,
+--                        tostring(self.VL_halfGranted),
+--                        self.VL_totalGranted,
+--                        self.character:getPerkLevel(perk)
+--                    ))
+
+                    -- 50% bonus
                     if (not self.VL_halfGranted) and progress >= 0.5 then
+                        -- print("[VL] 50% BONUS TRIGGERED at jobDelta=", progress)
                         VL_GainLevels(self.character, perk, 1)
                         self.VL_halfGranted = true
-                        self.VL_totalGranted = (self.VL_totalGranted or 0) + 1
+                        self.VL_totalGranted = self.VL_totalGranted + 1
                     end
 
+                    -- 100% bonus
                     if progress >= 1.0 then
-                        local remaining = 2 - (self.VL_totalGranted or 0)
+                        local remaining = 2 - self.VL_totalGranted
+                        -- print("[VL] CHECK 100% BONUS at jobDelta=", progress, " remaining=", remaining)
                         if remaining > 0 then
+                            -- print("[VL] 100% BONUS TRIGGERED at jobDelta=", progress)
                             VL_GainLevels(self.character, perk, remaining)
-                            self.VL_totalGranted = (self.VL_totalGranted or 0) + remaining
+                            self.VL_totalGranted = self.VL_totalGranted + remaining
                         end
                     end
                 else
@@ -229,10 +254,12 @@ function ISReadABook:start()
         self.item = self.character:getInventory():getItemById(self.item:getID())
     end
 
-    self.lastXPPage = self.item:getAlreadyReadPages() or 0
+    -- Initialize Visual Learner state ONCE per reading action
+    self.lastXPPage     = self.item:getAlreadyReadPages() or 0
     self.VL_halfGranted = false
     self.VL_totalGranted = 0
 
+    -- If starting mid‑book
     if self.startPage then
         self:setCurrentTime(self.maxTime * (self.startPage / self.item:getNumberOfPages()))
     end
@@ -240,6 +267,7 @@ function ISReadABook:start()
     self.item:setJobType(getText("ContextMenu_Read") .. ' ' .. self.item:getName())
     self.item:setJobDelta(0.0)
 
+    -- Animation setup
     if self.item:getReadType() then
         self:setAnimVariable("ReadType", self.item:getReadType())
     elseif (self.item:getType() == "Newspaper" or self.item:hasTag(ItemTag.NEWSPAPER_READ)) then
@@ -256,6 +284,7 @@ function ISReadABook:start()
 
     self.character:reportEvent("EventRead")
 
+    -- Save boredom/stress stats for non‑skill books
     if not SkillBook[self.item:getSkillTrained()] then
         self.stats = {}
         self.stats.boredom = self.character:getStats():get(CharacterStat.BOREDOM)
@@ -263,16 +292,19 @@ function ISReadABook:start()
         self.stats.stress = self.character:getStats():get(CharacterStat.STRESS)
     end
 
+    -- Sounds
     if self:isBook(self.item) then
         self.character:playSound("OpenBook")
     else
         self.character:playSound("OpenMagazine")
     end
 
+    -- Print media support
     if self.item:hasModData() and self.item:getModData().printMedia then
         self:startLoadingPrintMediaTextures()
     end
 end
+
 
 function ISReadABook:stop()
     if self.item:getNumberOfPages() > 0 and self.item:getAlreadyReadPages() >= self.item:getNumberOfPages() then
@@ -617,3 +649,10 @@ function ISReadABook:new(character, item)
 
     return o
 end
+
+----------------------------------------------------------------------------
+--- This code was written by I-AM-Starman aka Flukey to most PZ players. ---
+---    https://steamcommunity.com/id/I-AM-STARMAN/                       ---
+---  This code has never been published on Steam. It is private code.    ---
+---  If you are wanting this code. Please provide me the due credit. TY! ---
+----------------------------------------------------------------------------
