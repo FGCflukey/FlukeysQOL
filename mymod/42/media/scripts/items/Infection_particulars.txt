@@ -30,6 +30,20 @@ module Base
         WorldStaticModel        = Item_CmpTestTubeWithInfectedBlood,
     }
 
+    item BoxedLabTestTubes
+    {
+        DisplayCategory         = Container,
+        Weight                  = 0.5,
+        ItemType                = base:container,
+        Icon                    = Parcel4,
+        Capacity                = 2,
+        CloseSound              = CloseParcelMedium,
+        OpenSound               = OpenParcelMedium,
+        PutInSound              = StoreItemParcelMedium,
+        WorldStaticModel        = Parcel5,
+        Tooltip                 = Tooltip_item_ZBloodTestTubeBox,
+    }
+
     item BoxedSyringes
     {
         DisplayCategory         = Container,
@@ -118,6 +132,40 @@ module Base
             item 1 Base.BoxedSyringes,
         }
     }
+
+    craftRecipe OpenBoxofTestTubes
+    {
+        timedAction         = UnPackBox,
+        Time                = 15,
+        OnCreate            = RecipeCodeOnCreate.unpackItemTypeFromBox,
+        Tags                = InHandCraft;Packing,
+        recipeGroup         = OpenBox,
+        inputs
+        {
+            item 1 [Base.BoxedLabTestTubes] flags[AllowFavorite;InheritFavorite],
+        }
+        outputs
+        {
+            item 10 Base.LabTestTube,
+        }
+    }
+
+    craftRecipe MakeaBoxofTestTubes
+    {
+        timedAction         = PackingBox,
+        Time                = 15,
+        Tags                = InHandCraft;Packing,
+        category            = Packing,
+        inputs
+        {
+            item 10 [Base.LabTestTube] flags[AllowFavorite;InheritFavorite;ItemCount],
+        }
+        outputs
+        {
+            item 1 Base.BoxedSyringes,
+        }
+    }
+
     craftRecipe FillSyringesWithBlood
     {
         timedAction     = MixingMortarPestle,

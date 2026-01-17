@@ -5,6 +5,7 @@ ItemName_EN = {
     ItemName_Base.HCHanddolly = "Hand Dolly",
     ItemName_Base.ZombieMeat = "Zombie Meat",
     ItemName_Base.BoxedSyringes = "Syringe Package",
+    ItemName_Base.BoxedLabTestTubes = "Test Tubes Package",
     ItemName_Base.EmptySyringe = "Empty Syringe",
     ItemName_Base.FilledSyringe = "Blood-Filled Syringe",
     ItemName_Base.SyringeWithCure = "Syringe Containing The Cure",

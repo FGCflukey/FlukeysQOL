@@ -4,5 +4,6 @@ RecipesEN {
     Recipe_FillSyringesWithBlood = "Grind Meat and Extract Zombie Blood",
     Recipe_FillTestTubeWithBaseSerum = "Clean Blood Samples & Fill Test Tube",
     Recipe_CraftZomCureSyringe = "Finalize Cure Serum and Fill Syringe",
-
+    Recipe_MakeaBoxofTestTubes = "Pack 10 Empty Test Tubes",
+    Recipe_OpenBoxofTestTubes = "Open 10 Pack of Test Tubes",
 }
