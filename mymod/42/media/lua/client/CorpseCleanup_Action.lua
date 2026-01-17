@@ -11,11 +11,8 @@ function CorpseCleanupAction:update()
 end
 
 function CorpseCleanupAction:start()
-    -- Kneeling animation
     self:setActionAnim("Dig")
     self.character:reportEvent("EventDig")
-
-    -- Play your custom cutting sound
     self.sound = self.character:getEmitter():playSound("DissectCorpseKnives")
 end
 
@@ -31,27 +28,45 @@ function CorpseCleanupAction:perform()
         self.character:getEmitter():stopSound(self.sound)
     end
 
-    -- Remove the corpse
     local sq = self.corpse:getSquare()
     if sq then
         sq:removeCorpse(self.corpse, true)
     end
 
-    -- Add a bit of blood to the player
     self.character:addBlood(0.2)
 
-    -- ⭐ GIVE 1–10 ZOMBIE MEAT ⭐
     local inv = self.character:getInventory()
-    local count = ZombRand(1, 11) -- 1 to 10 inclusive
+    local count = ZombRand(1, 11)
     inv:AddItems("Base.ZombieMeat", count)
+
+    -- ⭐ RESTORE PRIMARY
+    if self.originalPrimary
+       and self.originalPrimary:getContainer() == inv
+       and not self.originalPrimary:isBroken() then
+        self.character:setPrimaryHandItem(self.originalPrimary)
+    else
+        self.character:setPrimaryHandItem(nil)
+    end
+
+    -- ⭐ RESTORE SECONDARY
+    if self.originalSecondary
+       and self.originalSecondary:getContainer() == inv
+       and not self.originalSecondary:isBroken() then
+        self.character:setSecondaryHandItem(self.originalSecondary)
+    else
+        self.character:setSecondaryHandItem(nil)
+    end
 
     ISBaseTimedAction.perform(self)
 end
 
-function CorpseCleanupAction:new(character, corpse, tool, time)
+function CorpseCleanupAction:new(character, corpse, tool, time, originalPrimary, originalSecondary)
     local o = ISBaseTimedAction.new(self, character)
+    o.character = character
     o.corpse = corpse
     o.tool = tool
     o.maxTime = time or 100
+    o.originalPrimary = originalPrimary
+    o.originalSecondary = originalSecondary
     return o
 end
