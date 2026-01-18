@@ -16,6 +16,12 @@ following:
   walls without dropping your Dolly or Toy Wagon
 - Adds a Visual Learner trait which allows the player to get XP/
   Levels from books instead of the usual vanilla boost
+- Adds alternative version of Simple Lockingpicking, returning
+  screwdriver back to where it came from
+- Adds packaging such as 10 pack of Engine Parts, Syringes and
+  Test Tubes
+- Using JB Max Capacity Override - added car trunk size increase
+- Custom overrides for 
 
 ## Installation
 
