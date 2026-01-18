@@ -70,15 +70,23 @@ local function onFillWorldObjectContextMenu(player, context, worldobjects, test)
     local tool = getHarvestTool(playerObj)
     if not tool then return end
 
+    -- ⭐ Correct Butchering skill requirement
+    local requiredLevel = 1 -- change to 2 if desired
+    local butcherLevel = playerObj:getPerkLevel(Perks.Butchering)
+
+    if butcherLevel < requiredLevel then
+        local opt = context:addOption("Butcher Corpse (Requires Butchering " .. requiredLevel .. ")", nil)
+        opt.notAvailable = true
+        return
+    end
+
     context:addOption("Butcher Corpse", worldobjects, function()
         local tool = getHarvestTool(playerObj)
         if not tool then return end
 
-        -- ⭐ Store BOTH hands
         local originalPrimary = playerObj:getPrimaryHandItem()
         local originalSecondary = playerObj:getSecondaryHandItem()
 
-        -- Equip butchering tool
         playerObj:setPrimaryHandItem(tool)
         playerObj:setSecondaryHandItem(nil)
 

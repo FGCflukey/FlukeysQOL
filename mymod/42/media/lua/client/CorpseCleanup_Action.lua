@@ -2,7 +2,6 @@
 
 CorpseCleanupAction = ISBaseTimedAction:derive("CorpseCleanupAction")
 
--- 🔹 NEW: helper to drop corpse inventory
 local function DropCorpseInventory(corpse)
     if not corpse then return end
 
@@ -12,7 +11,6 @@ local function DropCorpseInventory(corpse)
     local container = corpse:getContainer()
     if not container then return end
 
-    -- Copy items first to avoid iterator issues
     local items = {}
     for i = 0, container:getItems():size() - 1 do
         table.insert(items, container:getItems():get(i))
@@ -33,6 +31,14 @@ function CorpseCleanupAction:update()
 end
 
 function CorpseCleanupAction:start()
+    -- ⭐ Correct Butchering skill requirement (safety check)
+    local requiredLevel = 1 -- or 2
+    if self.character:getPerkLevel(Perks.Butchering) < requiredLevel then
+        self.character:Say("I don't know how to butcher a corpse yet.")
+        self:forceStop()
+        return
+    end
+
     self:setActionAnim("Dig")
     self.character:reportEvent("EventDig")
     self.sound = self.character:getEmitter():playSound("DissectCorpseKnives")
@@ -52,7 +58,6 @@ function CorpseCleanupAction:perform()
 
     local sq = self.corpse:getSquare()
 
-    -- ⭐ NEW: Drop corpse items BEFORE removing corpse
     DropCorpseInventory(self.corpse)
 
     if sq then
@@ -65,7 +70,6 @@ function CorpseCleanupAction:perform()
     local count = ZombRand(1, 11)
     inv:AddItems("Base.ZombieMeat", count)
 
-    -- ⭐ RESTORE PRIMARY
     if self.originalPrimary
        and self.originalPrimary:getContainer() == inv
        and not self.originalPrimary:isBroken() then
@@ -74,7 +78,6 @@ function CorpseCleanupAction:perform()
         self.character:setPrimaryHandItem(nil)
     end
 
-    -- ⭐ RESTORE SECONDARY
     if self.originalSecondary
        and self.originalSecondary:getContainer() == inv
        and not self.originalSecondary:isBroken() then
