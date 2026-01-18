@@ -1,0 +1,448 @@
+module Base
+{
+
+/* Scrapping Unusable Metal and making things */
+
+craftRecipe ScrapMetalFromUnusableMetal
+    {
+        timedAction     = Making,
+        Time            = 100,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:10,
+        
+        inputs
+        {
+            item 1 tags[base:charcoal],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 [Base.UnusableMetal],
+        }
+        outputs
+        {
+            item 1 Base.ScrapMetal,
+        }
+    }
+
+craftRecipe MakeSheetMetalFromUnusableMetal
+    {
+        time            = 200,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 2 [Base.UnusableMetal],
+        }
+        outputs
+        {
+            item 1 Base.SheetMetal,
+        }
+    }
+
+craftRecipe MakeMetalBarFromUnusableMetal
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.UnusableMetal],
+        }
+        outputs
+        {
+            item 1 Base.MetalBar,
+        }
+    }
+
+craftRecipe MakeMetalPipeFromUnusableMetal
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.UnusableMetal],
+        }
+        outputs
+        {
+            item 1 Base.MetalPipe,
+        }
+    }
+
+craftRecipe MakeWireFromUnusableMetal
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.UnusableMetal],
+        }
+        outputs
+        {
+            item 1 Base.Wire,
+        }
+    }
+
+craftRecipe MakeNailsFromUnusableMetal
+    {
+        time            = 100,
+        timedAction     = Making,
+        xpAward         = Blacksmith:20,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        inputs
+        {
+            item 1 tags[base:charcoal],
+            item 1 [Base.UnusableMetal],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:headingtool] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NailsBox,
+        }
+    }
+
+craftRecipe MakeScrewsFromUnusableMetal
+    {
+        time            = 100,
+        timedAction     = Making,
+        xpAward         = Blacksmith:20,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        inputs
+        {
+            item 1 tags[base:charcoal],
+            item 1 [Base.UnusableMetal],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:headingtool] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ScrewsBox,
+        }
+    }
+
+/* Make things from Scrap Metal */
+
+craftRecipe MakeSheetMetalFromScrapMetal
+    {
+        time            = 200,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 2 [Base.ScrapMetal],
+        }
+        outputs
+        {
+            item 1 Base.SheetMetal,
+        }
+    }
+
+craftRecipe MakeMetalBarFromScrapMetal
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.ScrapMetal],
+        }
+        outputs
+        {
+            item 1 Base.MetalBar,
+        }
+    }
+
+craftRecipe MakeMetalPipeFromScrapMetal
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.ScrapMetal],
+        }
+        outputs
+        {
+            item 1 Base.MetalPipe,
+        }
+    }
+
+craftRecipe MakeWireFromScrapMetal
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.ScrapMetal],
+        }
+        outputs
+        {
+            item 1 Base.Wire,
+        }
+    }
+
+craftRecipe MakeNailsFromScrapMetal
+    {
+        time            = 100,
+        timedAction     = Making,
+        xpAward         = Blacksmith:20,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        inputs
+        {
+            item 1 tags[base:charcoal],
+            item 1 [Base.ScrapMetal],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:headingtool] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NailsBox,
+        }
+    }
+
+craftRecipe MakeScrewsFromScrapMetal
+    {
+        time            = 100,
+        timedAction     = Making,
+        xpAward         = Blacksmith:20,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        inputs
+        {
+            item 1 tags[base:charcoal],
+            item 1 [Base.ScrapMetal],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:headingtool] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ScrewsBox,
+        }
+    }
+
+/* Make things from Iron and Steel Scrap */
+
+    craftRecipe MakeScrapMetalFromIronScrapOrSteelScrap
+    {
+        timedAction     = Making,
+        Time            = 100,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:10,
+        
+        inputs
+        {
+            item 1 tags[base:charcoal],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
+        }
+        outputs
+        {
+            item 1 Base.ScrapMetal,
+        }
+    }
+
+craftRecipe MakeSheetMetalFromIronScrapOrSteelScrap
+    {
+        time            = 200,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 2 tags[base:charcoal],
+            item 2 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
+        }
+        outputs
+        {
+            item 1 Base.SheetMetal,
+        }
+    }
+
+craftRecipe MakeMetalBarFromIronScrapOrSteelScrap
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
+        }
+        outputs
+        {
+            item 1 Base.MetalBar,
+        }
+    }
+
+craftRecipe MakeMetalPipeFromIronScrapOrSteelScrap
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
+        }
+        outputs
+        {
+            item 1 Base.MetalPipe,
+        }
+    }
+
+craftRecipe MakeWireFromIronScrapOrSteelScrap
+    {
+        time            = 100,
+        tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:25,
+        inputs
+        {
+            item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:charcoal],
+            item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
+        }
+        outputs
+        {
+            item 1 Base.Wire,
+        }
+    }
+
+craftRecipe MakeNailsFromIronScrapOrSteelScrap
+    {
+        time            = 100,
+        timedAction     = Making,
+        xpAward         = Blacksmith:20,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        inputs
+        {
+            item 1 tags[base:charcoal],
+            item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:headingtool] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NailsBox,
+        }
+    }
+
+craftRecipe MakeScrewsFromIronScrapOrSteelScrap
+    {
+        time            = 100,
+        timedAction     = Making,
+        xpAward         = Blacksmith:20,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        inputs
+        {
+            item 1 tags[base:charcoal],
+            item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:headingtool] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ScrewsBox,
+        }
+    }
+
+/* Other Misc Stuff to make */
+
+craftRecipe MakeWireandLimestoneIntoWeldingRods
+    {
+        timedAction     = Making,
+        Time            = 200,
+        Tags            = PrimitiveFurnace;PrimitiveForge,
+        category        = Blacksmithing,
+        xpAward         = Blacksmith:20,
+        
+        inputs
+        {
+            item 2 tags[base:charcoal],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:pliers] mode:keep flags[MayDegradeLight],
+            item 1 [Base.Wire],
+            item 1 [Base.Limestone],
+        }
+        outputs
+        {
+            item 1 Base.WeldingRods,
+        }
+    }
+
+craftRecipe MakeWireandElectronicsScrapIntoElectricWire
+    {
+        timedAction     = MakingElectrical,
+        time            = 50,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Electrical,
+        xpAward         = Electricity:20,
+        inputs
+        {
+            item 1 tags[base:pliers] mode:keep flags[MayDegradeLight],
+            item 1 [Base.ElectronicsScrap],
+            item 1 [Base.Wire],
+        }
+        outputs
+        {
+            item 1 Base.ElectricWire,
+        }
+    }
+
+}
