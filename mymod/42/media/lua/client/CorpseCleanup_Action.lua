@@ -2,6 +2,28 @@
 
 CorpseCleanupAction = ISBaseTimedAction:derive("CorpseCleanupAction")
 
+-- 🔹 NEW: helper to drop corpse inventory
+local function DropCorpseInventory(corpse)
+    if not corpse then return end
+
+    local square = corpse:getSquare()
+    if not square then return end
+
+    local container = corpse:getContainer()
+    if not container then return end
+
+    -- Copy items first to avoid iterator issues
+    local items = {}
+    for i = 0, container:getItems():size() - 1 do
+        table.insert(items, container:getItems():get(i))
+    end
+
+    for _, item in ipairs(items) do
+        container:Remove(item)
+        square:AddWorldInventoryItem(item, 0, 0, 0)
+    end
+end
+
 function CorpseCleanupAction:isValid()
     return self.corpse ~= nil and self.corpse:getSquare() ~= nil
 end
@@ -29,6 +51,10 @@ function CorpseCleanupAction:perform()
     end
 
     local sq = self.corpse:getSquare()
+
+    -- ⭐ NEW: Drop corpse items BEFORE removing corpse
+    DropCorpseInventory(self.corpse)
+
     if sq then
         sq:removeCorpse(self.corpse, true)
     end

@@ -1,0 +1,22 @@
+Sandbox_JP = 
+{
+	Sandbox_SimpleLockpicking = "簡単な鍵開け",
+	
+	Sandbox_SimpleLockpicking_CanFailLockpick = "ロックピック失敗",
+	Sandbox_SimpleLockpicking_CanFailLockpick_tooltip = "これは、プレイヤーがロックピックの試みに失敗する可能性があるかどうかを決定する。",
+	
+	Sandbox_SimpleLockpicking_FailChance = "フェイル・チャンス",
+	Sandbox_SimpleLockpicking_FailChance_tooltip = "これはプレイヤーがロックピックの試みに失敗する確率である。ロックピック失敗 が有効でない場合には適用されない。",
+	
+	Sandbox_SimpleLockpicking_LosePaperclipOnFail = "失敗でペーパークリップを失う",
+	Sandbox_SimpleLockpicking_LosePaperclipOnFail_tooltip = "これは、ロックピックの失敗時にプレイヤーがペーパークリップを壊すかどうかを決定する。",
+	
+	Sandbox_SimpleLockpicking_ActionSpeedMult = "アクションスピード倍率",
+	Sandbox_SimpleLockpicking_ActionSpeedMult_tooltip = "値が高いほど、プレイヤーが鍵を開けるのにかかる時間が短くなる。",
+	
+	Sandbox_SimpleLockpicking_RequireBurglar = "強盗の職業が必要",
+	Sandbox_SimpleLockpicking_RequireBurglar_tooltip = "プレイヤーが鍵を開けるために強盗でなければならないかどうかを決定する。",
+	
+	Sandbox_SimpleLockpicking_BurglarBonus = "泥棒の成功確率ボーナス",
+	Sandbox_SimpleLockpicking_BurglarBonus_tooltip = "プレイヤーが泥棒の場合、鍵開けの試行に成功する追加のチャンスが与えられます。"
+}

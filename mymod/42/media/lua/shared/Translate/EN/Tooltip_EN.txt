@@ -2,11 +2,12 @@ Tooltip_EN = {
 
     Tooltip_item_ZombieMeat = "Gross looking flesh",
     Tooltip_item_ZBloodSyringeBox = "Box containing 50 Syringes",
+    Tooltip_item_ZBloodTestTubeBox = "Box containing 10 Test Tubes",
     Tooltip_item_ZBloodSyringe = "Empty Syringe",
     Tooltip_item_ZBloodFilledSyringe = "Syringe Filled with Blood",
     Tooltip_item_ZCureFilledSyringe = "This syringe is Filled with Cure",
     Tooltip_item_ZomColaCure = "Totally not poison!",
     Tooltip_LabTestTube = "Empty Test Tube",
     Tooltip_CmpTestTubeWithInfectedBlood = "Test Tube with Infected Blood",
-    
+    Tooltip_item_BoxedEngineParts = "Box filled with New Engine Parts",
 }

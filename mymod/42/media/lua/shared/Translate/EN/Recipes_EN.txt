@@ -6,4 +6,6 @@ RecipesEN {
     Recipe_CraftZomCureSyringe = "Finalize Cure Serum and Fill Syringe",
     Recipe_MakeaBoxofTestTubes = "Pack 10 Empty Test Tubes",
     Recipe_OpenBoxofTestTubes = "Open 10 Pack of Test Tubes",
+    Recipe_MakeaBoxofEngineParts = "Package 10 Engine Parts",
+    Recipe_OpenBoxofEngineParts = "Open Engine Parts 10 Pack",
 }

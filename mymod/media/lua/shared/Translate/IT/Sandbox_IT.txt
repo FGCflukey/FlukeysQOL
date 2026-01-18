@@ -1,0 +1,22 @@
+Sandbox_IT =
+{
+	Sandbox_SimpleLockpicking = "Simple Lockpicking (Scassinamento)",
+	
+	Sandbox_SimpleLockpicking_CanFailLockpick = "Il grimaldello può fallire",
+	Sandbox_SimpleLockpicking_CanFailLockpick_tooltip = "Determina se è possibile o meno per il giocatore fallire un tentativo di scasso.",
+	
+	Sandbox_SimpleLockpicking_FailChance = "Possibilità di fallimento",
+	Sandbox_SimpleLockpicking_FailChance_tooltip = "Probabilità che il giocatore fallisca un tentativo di scassinamento. Non applicabile se Il grimaldello può fallire non è abilitato.",
+	
+	Sandbox_SimpleLockpicking_LosePaperclipOnFail = "Perdi la graffetta in caso di fallimento",
+	Sandbox_SimpleLockpicking_LosePaperclipOnFail_tooltip = "Determina se il giocatore rompe una graffetta in caso di tentativo con scasso fallito.",
+	
+	Sandbox_SimpleLockpicking_ActionSpeedMult = "Moltiplicatore della velocità dell'azione",
+	Sandbox_SimpleLockpicking_ActionSpeedMult_tooltip = "Valori più alti diminuiranno il tempo impiegato dal giocatore per scassinare una serratura.",
+	
+	Sandbox_SimpleLockpicking_RequireBurglar = "Richiedi occupazione Ladro",
+	Sandbox_SimpleLockpicking_RequireBurglar_tooltip = "Determina se il giocatore deve essere un ladro per scassinare le serrature.",
+	
+	Sandbox_SimpleLockpicking_BurglarBonus = "Bonus possibilità di successo del ladro",
+	Sandbox_SimpleLockpicking_BurglarBonus_tooltip = "Ulteriore possibilità per il giocatore di riuscire in un tentativo di scassinare una serratura se è un ladro."
+}

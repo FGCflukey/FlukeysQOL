@@ -1,0 +1,37 @@
+VERSION = 1,
+
+option simpleLockpicking.CanFailLockpick
+{
+	type = boolean, default = false,
+	page = SimpleLockpicking, translation = SimpleLockpicking_CanFailLockpick,
+}
+
+option simpleLockpicking.FailChance
+{
+	type = integer, min = 0, max = 100, default = 15,
+	page = SimpleLockpicking, translation = SimpleLockpicking_FailChance,
+}
+
+option simpleLockpicking.LosePaperclipOnFail
+{
+	type = boolean, default = true,
+	page = SimpleLockpicking, translation = SimpleLockpicking_LosePaperclipOnFail,
+}
+
+option simpleLockpicking.ActionSpeedMult
+{
+	type = double, min = 0.1, max = 10.0, default = 1.0,
+	page = SimpleLockpicking, translation = SimpleLockpicking_ActionSpeedMult,
+}
+
+option simpleLockpicking.RequireBurglar
+{
+	type = boolean, default = false,
+	page = SimpleLockpicking, translation = SimpleLockpicking_RequireBurglar,
+}
+
+option simpleLockpicking.BurglarBonus
+{
+	type = integer, min = 0, max = 100, default = 0,
+	page = SimpleLockpicking, translation = SimpleLockpicking_BurglarBonus,
+}
