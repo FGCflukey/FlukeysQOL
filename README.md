@@ -20,8 +20,7 @@ following:
   screwdriver back to where it came from
 - Adds packaging such as 10 pack of Engine Parts, Syringes and
   Test Tubes
-- Using JB Max Capacity Override - added car trunk size increase
-- Custom overrides for 
+- Using JB Max Capacity Override - vehicle trunk size increases
 
 ## Installation
 
