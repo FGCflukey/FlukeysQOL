@@ -1,0 +1,20 @@
+module Base
+{
+    craftRecipe MakeSomeBandages
+    {
+        timedAction = Making,
+        time = 60,
+        Tags = InHandCraft;Health,
+        category = Medical,
+        inputs
+        {
+            item 1 [Base.DuctTape],
+            item 4 [Base.CottonBalls] mode:destroy,
+            item 1 tags[base:scissors;base:sharpknife] mode:keep flags[MayDegradeLight;Prop1;IsNotDull],
+        }
+        outputs
+        {
+            item 12 Base.Bandage,
+        }
+    }
+}

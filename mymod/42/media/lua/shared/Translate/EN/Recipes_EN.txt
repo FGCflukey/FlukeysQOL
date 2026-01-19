@@ -8,6 +8,7 @@ RecipesEN {
     Recipe_OpenBoxofTestTubes = "Open 10 Pack of Test Tubes",
     Recipe_MakeaBoxofEngineParts = "Package 10 Engine Parts",
     Recipe_OpenBoxofEngineParts = "Open Engine Parts 10 Pack",
+    Recipe_MakeSomeBandages = "Make some Bandages",
 
     Recipe_ScrapMetalFromUnusableMetal = "Make Scrap Metal from Unusable Metal",
     Recipe_MakeSheetMetalFromUnusableMetal = "Make Sheet Metal from Unusable Metal",
