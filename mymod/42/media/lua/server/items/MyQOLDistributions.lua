@@ -13,8 +13,8 @@ local qolMedsDistribTable = {
 }
 
 local qolStorageDistribTable = {
-    "Base.HCHanddolly", 0.1,
-    "Base.HCToywagon", 0.2,
+    "Base.HCHanddolly", 0.2,
+    "Base.HCToywagon", 0.3,
 }
 
 local qolWeapDistribTable = {
