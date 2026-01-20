@@ -1,0 +1,40 @@
+module Base
+{
+
+    craftRecipe DismantleReceiver
+    {
+        timedAction = DismantleElectrical,
+        time = 100,
+        Tags = InHandCraft;Electrical,
+        category = Electrical,
+        xpAward = Electricity:1,
+        inputs
+        {
+            item 1 tags[base:screwdriver;base:sharpknife] mode:keep flags[MayDegradeVeryLight;IsNotDull],
+            item 1 [Base.RadioReceiver] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.ElectronicsScrap,
+        }
+    }
+
+    craftRecipe DismantleRadioTransmitter
+    {
+        timedAction = DismantleElectrical,
+        time = 100,
+        Tags = InHandCraft;Electrical,
+        category = Electrical,
+        xpAward = Electricity:1,
+        inputs
+        {
+            item 1 tags[base:screwdriver;base:sharpknife] mode:keep flags[MayDegradeVeryLight;IsNotDull],
+            item 1 [Base.RadioTransmitter] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.ElectronicsScrap,
+        }
+    }
+
+}

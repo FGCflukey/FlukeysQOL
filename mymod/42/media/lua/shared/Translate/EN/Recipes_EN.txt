@@ -9,6 +9,8 @@ RecipesEN {
     Recipe_MakeaBoxofEngineParts = "Package 10 Engine Parts",
     Recipe_OpenBoxofEngineParts = "Open Engine Parts 10 Pack",
     Recipe_MakeSomeBandages = "Make some Bandages",
+    Recipe_DismantleReceiver = "Dismantle Receiver",
+    Recipe_DismantleRadioTransmitter = "Dismantle Radio Transmitter",
 
     Recipe_ScrapMetalFromUnusableMetal = "Make Scrap Metal from Unusable Metal",
     Recipe_MakeSheetMetalFromUnusableMetal = "Make Sheet Metal from Unusable Metal",
