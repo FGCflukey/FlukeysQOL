@@ -20,6 +20,8 @@ following:
   screwdriver back to where it came from
 - Adds packaging such as 10 pack of Engine Parts, Syringes and
   Test Tubes
+- Adding and added more Packaing options for items
+- Added recipes in regards to repurposing unusable metal and scrap.
 - Using JB Max Capacity Override - vehicle trunk size increases
 - Includes BlowTorch and Propane Tank filling at pumps. My mod.
 
