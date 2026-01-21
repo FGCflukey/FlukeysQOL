@@ -21,6 +21,7 @@ following:
 - Adds packaging such as 10 pack of Engine Parts, Syringes and
   Test Tubes
 - Using JB Max Capacity Override - vehicle trunk size increases
+- Includes BlowTorch and Propane Tank filling at pumps. My mod.
 
 ## Installation
 
