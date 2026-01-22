@@ -11,5 +11,7 @@ ItemName_EN = {
     ItemName_Base.SyringeWithCure = "Syringe Containing The Cure",
     ItemName_Base.LabTestTubeInfectedBlood = "Test Tube with Filtered Blood",
     ItemName_Base.LabTestTube = "Test Tube",
-    ItemName_Base.BoxedEngineParts = "Box of 10 Engine Parts",
+    ItemName_Base.BoxedEngineParts = "Package of 10 Engine Parts",
+    ItemName_Base.BoxedElectronicsScrap = "Package of 50 Electronics Scrap",
+    ItemName_Base.BoxedElectricWire = "Package of 50 Electric Wire",
 }

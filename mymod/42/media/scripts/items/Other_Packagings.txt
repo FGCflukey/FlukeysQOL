@@ -1,5 +1,8 @@
 module Base
 {
+
+/* Engine Parts */
+
     item BoxedEngineParts
     {
         DisplayCategory         = Container,
@@ -44,6 +47,104 @@ module Base
         outputs
         {
             item 1 Base.BoxedEngineParts,
+        }
+    }
+
+/* Electrical Stuff */
+
+    item BoxedElectronicsScrap
+    {
+        DisplayCategory         = Container,
+        Weight                  = 5.0,
+        ItemType                = base:container,
+        Icon                    = Parcel4,
+        Capacity                = 2,
+        CloseSound              = CloseParcelMedium,
+        OpenSound               = OpenParcelMedium,
+        PutInSound              = StoreItemParcelMedium,
+        WorldStaticModel        = Parcel5,
+        Tooltip                 = Tooltip_item_BoxedElectronicsScrap,
+    }
+
+    item BoxedElectricWire
+    {
+        DisplayCategory         = Container,
+        Weight                  = 5.0,
+        ItemType                = base:container,
+        Icon                    = Parcel4,
+        Capacity                = 2,
+        CloseSound              = CloseParcelMedium,
+        OpenSound               = OpenParcelMedium,
+        PutInSound              = StoreItemParcelMedium,
+        WorldStaticModel        = Parcel5,
+        Tooltip                 = Tooltip_item_BoxedElectricWire,
+    }
+
+    craftRecipe OpenBoxofElectronicsScrap
+    {
+        timedAction             = UnPackBox,
+        Time                    = 15,
+        OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
+        Tags                    = InHandCraft;Packing,
+        recipeGroup             = OpenBox,
+        inputs
+        {
+            item 1 [Base.BoxedElectronicsScrap] flags[AllowFavorite;InheritFavorite],
+        }
+        outputs
+        {
+            item 50 Base.ElectronicsScrap,
+        }
+    }
+
+    craftRecipe MakeaBoxofElectronicsScrap
+    {
+        timedAction         = PackingBox,
+        Time                = 15,
+        Tags                = InHandCraft;Packing,
+        category            = Packing,
+        inputs
+        {
+            item 50 [Base.ElectronicsScrap] flags[AllowFavorite;InheritFavorite;ItemCount],
+        }
+        outputs
+        {
+            item 1 Base.BoxedElectronicsScrap,
+        }
+    }
+
+    /* --- Electric Wire Recipes --- */
+
+    craftRecipe OpenBoxofElectricWire
+    {
+        timedAction             = UnPackBox,
+        Time                    = 15,
+        OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
+        Tags                    = InHandCraft;Packing,
+        recipeGroup             = OpenBox,
+        inputs
+        {
+            item 1 [Base.BoxedElectricWire] flags[AllowFavorite;InheritFavorite],
+        }
+        outputs
+        {
+            item 50 Base.ElectricWire,
+        }
+    }
+
+    craftRecipe MakeaBoxofElectricWire
+    {
+        timedAction         = PackingBox,
+        Time                = 15,
+        Tags                = InHandCraft;Packing,
+        category            = Packing,
+        inputs
+        {
+            item 50 [Base.ElectricWire] flags[AllowFavorite;InheritFavorite;ItemCount],
+        }
+        outputs
+        {
+            item 1 Base.BoxedElectricWire,
         }
     }
 

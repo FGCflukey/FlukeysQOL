@@ -11,6 +11,12 @@ RecipesEN {
     Recipe_MakeSomeBandages = "Make some Bandages",
     Recipe_DismantleReceiver = "Dismantle Receiver",
     Recipe_DismantleRadioTransmitter = "Dismantle Radio Transmitter",
+    Recipe_DismantleMakeshiftRadio = "Dismantle Makeshift Ham Radio",
+
+    Recipe_OpenBoxofElectronicsScrap = "Open 50 Pack of Electronics Scrap",
+    Recipe_MakeaBoxofElectronicsScrap = "Pack 50 Electronics Scrap",
+    Recipe_OpenBoxofElectricWire = "Open 50 pack of Electric Wire",
+    Recipe_MakeaBoxofElectricWire = "Pack 50 Electric Wire",
 
     Recipe_ScrapMetalFromUnusableMetal = "Make Scrap Metal from Unusable Metal",
     Recipe_MakeSheetMetalFromUnusableMetal = "Make Sheet Metal from Unusable Metal",

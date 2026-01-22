@@ -3,11 +3,11 @@ module Base
 
     craftRecipe DismantleReceiver
     {
-        timedAction = DismantleElectrical,
-        time = 100,
-        Tags = InHandCraft;Electrical,
-        category = Electrical,
-        xpAward = Electricity:1,
+        timedAction     = DismantleElectrical,
+        time            = 60,
+        Tags            = InHandCraft;Electrical,
+        category        = Electrical,
+        xpAward         = Electricity:2,
         inputs
         {
             item 1 tags[base:screwdriver;base:sharpknife] mode:keep flags[MayDegradeVeryLight;IsNotDull],
@@ -21,11 +21,11 @@ module Base
 
     craftRecipe DismantleRadioTransmitter
     {
-        timedAction = DismantleElectrical,
-        time = 100,
-        Tags = InHandCraft;Electrical,
-        category = Electrical,
-        xpAward = Electricity:1,
+        timedAction     = DismantleElectrical,
+        time            = 60,
+        Tags            = InHandCraft;Electrical,
+        category        = Electrical,
+        xpAward         = Electricity:2,
         inputs
         {
             item 1 tags[base:screwdriver;base:sharpknife] mode:keep flags[MayDegradeVeryLight;IsNotDull],
@@ -34,6 +34,31 @@ module Base
         outputs
         {
             item 1 Base.ElectronicsScrap,
+        }
+    }
+
+    craftRecipe DismantleMakeshiftRadio
+    {
+        timedAction     = DismantleElectrical,
+        time            = 60,
+        OnCreate        = RecipeCodeOnCreate.dismantleRadio,
+        Tags            = InHandCraft;Electrical,
+        category        = Electrical,
+        xpAward         = Electricity:2,
+
+        inputs
+        {
+            item 1 [Base.RadioMakeShift] flags[NoBrokenItems;ResearchInput] mode:destroy,
+            item 1 tags[base:screwdriver;base:sharpknife] mode:keep flags[MayDegradeVeryLight;IsNotDull],
+        }
+        outputs
+        {
+            item 1 Base.ElectricWire,
+            item 2 Base.ElectronicsScrap,
+            item 2 Base.Aluminum,
+            item 1 Base.LightBulb,
+            item 1 Base.Amplifier,
+            item 1 Base.RadioReceiver,
         }
     }
 
