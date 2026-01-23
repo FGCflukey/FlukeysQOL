@@ -10,7 +10,7 @@ following:
 - Overrides UseDelta on BlowTorches and Propane Tanks because it
   makes sense!
 - Adds Zombie butchering to cleanup  the dead around your base
-- Update of my PZ Bloodcure which utilizes the Zombie buchering
+- Adds update PZ Bloodcure which utilizes the Zombie buchering
 - Adds Carbon Fibre Combat Axe and Long Reach Axe updated
 - Adds the old Hydrocraft looking Dolly and Toy Wagon for crazy
   hoarders like me
@@ -22,11 +22,11 @@ following:
   screwdriver back to where it came from
 - Adds packaging such as 10 pack of Engine Parts, Syringes and
   Test Tubes
-- Adding and added more Packaing options for items
-- Added recipes in regards to repurposing unusable metal and scrap.
+- Adds more Packaing options for items
+- Adds recipes in regards to repurposing unusable metal and scrap.
 - Using JB Max Capacity Override - vehicle trunk size increases
-- Includes BlowTorch and Propane Tank filling at pumps.
-- Added Lockpicking. All doors, all directions. 20% chance you can
+- Adds BlowTorch and Propane Tank filling at pumps.
+- Adds Lockpicking. All doors, all directions. 20% chance you can
   break your paperclip. Vehicle Lockpicking included.
 
 ## Installation
