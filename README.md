@@ -2,6 +2,8 @@
 
 # About it
 
+Mod for Solo Play only. Some features have to sync for server.
+
 This mod is a bunch of tweaks to the base game and does the
 following:
 
