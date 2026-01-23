@@ -23,7 +23,7 @@ following:
 - Adding and added more Packaing options for items
 - Added recipes in regards to repurposing unusable metal and scrap.
 - Using JB Max Capacity Override - vehicle trunk size increases
-- Includes BlowTorch and Propane Tank filling at pumps. My mod.
+- Includes BlowTorch and Propane Tank filling at pumps.
 - Added Lockpicking. All doors, all directions. 20% chance you can
   break your paperclip. Vehicle Lockpicking included.
 
