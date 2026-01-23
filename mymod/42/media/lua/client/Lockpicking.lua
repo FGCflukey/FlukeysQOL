@@ -1,81 +1,208 @@
-SimpleLockpicking = SimpleLockpicking or {}
+require "LockpickTimedAction"
 
-function SimpleLockpicking.shouldPickLock(player)
-    if getSandboxOptions():getOptionByName("simpleLockpicking.RequireBurglar"):getValue() then
-        local trait = CharacterTrait.get(ResourceLocation.of("Burglar"))
-        if not player:hasTrait(trait) then
-            return false
-        end
+-------------------------------------------------
+-- Utility: determine if object is a door
+-------------------------------------------------
+
+local function isDoorObject(obj)
+    if not obj then return false end
+    if instanceof(obj, "IsoDoor") then return true end
+    if instanceof(obj, "IsoThumpable") and obj.isDoor and obj:isDoor() then
+        return true
     end
-    return true
+    return false
 end
 
-function SimpleLockpicking.pickLock(playerID, player, vehicle, door, tools)
-    if vehicle or luautils.walkAdjWindowOrDoor(player, door:getSquare(), door) then
+-------------------------------------------------
+-- Collect all door objects in a 3x3 cluster
+-------------------------------------------------
 
-        -- Equip tools
-        ISWorldObjectContextMenu.equip(player, player:getPrimaryHandItem(), tools.paperclip, true, false)
-        ISWorldObjectContextMenu.equip(player, player:getSecondaryHandItem(), tools.screwdriver, false, false)
+local function getDoorCluster(square)
+    local doors = {}
+    if not square then return doors end
 
-        -- ⭐ Pass tools + their original containers into the timed action
-        ISTimedActionQueue.add(
-            LockpickTimedAction:new(
-                playerID,
-                door,
-                vehicle,
-                tools.paperclip,
-                tools.screwdriver,
-                tools.paperclip:getContainer(),
-                tools.screwdriver:getContainer()
-            )
+    local cell = square:getCell()
+    local sx, sy, sz = square:getX(), square:getY(), square:getZ()
+
+    local function addFromSquare(sq)
+        if not sq then return end
+        local objs = sq:getSpecialObjects()
+        for i = 0, objs:size() - 1 do
+            local obj = objs:get(i)
+            if isDoorObject(obj) then
+                table.insert(doors, obj)
+            end
+        end
+    end
+
+    for dx = -1, 1 do
+        for dy = -1, 1 do
+            addFromSquare(cell:getGridSquare(sx + dx, sy + dy, sz))
+        end
+    end
+
+    return doors
+end
+
+-------------------------------------------------
+-- Identify the "master" door tile
+-------------------------------------------------
+
+local function findMasterDoor(doors)
+    if #doors == 0 then return nil end
+
+    local master = doors[1]
+    local bestScore = 0
+
+    for _, door in ipairs(doors) do
+        local score = 0
+
+        if door.getMaxHealth and door:getMaxHealth() then
+            score = score + door:getMaxHealth()
+        end
+
+        if door.getKeyId and door:getKeyId() and door:getKeyId() ~= -1 then
+            score = score + 5000
+        end
+
+        if door.isLockedByKey and door:isLockedByKey() then
+            score = score + 3000
+        end
+
+        if score > bestScore then
+            bestScore = score
+            master = door
+        end
+    end
+
+    return master
+end
+
+-------------------------------------------------
+-- Safe lock check for cluster
+-------------------------------------------------
+
+local function clusterLocked(doors)
+    for _, door in ipairs(doors) do
+        if door then
+            if door.isLocked and door:isLocked() then return true end
+            if door.isLockedByKey and door:isLockedByKey() then return true end
+            if door.isLockedByPadlock and door:isLockedByPadlock() then return true end
+            if door.getKeyId and door:getKeyId() ~= -1 then return true end
+        end
+    end
+    return false
+end
+
+-------------------------------------------------
+-- Tool checks
+-------------------------------------------------
+
+local function hasLockpickTools(player)
+    local inv = player:getInventory()
+    return inv:containsTypeRecurse("Screwdriver")
+       and inv:containsTypeRecurse("Paperclip")
+end
+
+local function removeOnePaperclip(player)
+    local inv = player:getInventory()
+    local pc = inv:getFirstTypeRecurse("Paperclip")
+    if pc then inv:Remove(pc) end
+end
+
+-------------------------------------------------
+-- Unlock all lock flags on a door
+-------------------------------------------------
+
+local function unlockDoorObject(door)
+    if not door then return end
+
+    if door.setLocked then door:setLocked(false) end
+    if door.setIsLocked then door:setIsLocked(false) end
+    if door.setLockedByKey then door:setLockedByKey(false) end
+    if door.setLockedByPadlock then door:setLockedByPadlock(false) end
+    if door.setKeyId then door:setKeyId(-1) end
+end
+
+-------------------------------------------------
+-- Pick lock action (doors only, timed)
+-------------------------------------------------
+
+local function onPickLock(worldobjects, playerIndex)
+    local player = getSpecificPlayer(playerIndex)
+    if not player then return end
+
+    local square = nil
+    if worldobjects and #worldobjects > 0 then
+        local obj = worldobjects[1]
+        if obj and obj.getSquare then
+            square = obj:getSquare()
+        end
+    end
+    if not square then
+        local sq = player:getSquare()
+        if sq then square = sq:getTileInDirection(player:getDir()) end
+    end
+    if not square then return end
+
+    local doors = getDoorCluster(square)
+    if #doors == 0 then
+        player:Say("There's nothing to pick here.")
+        return
+    end
+
+    if not hasLockpickTools(player) then
+        player:Say("I need a screwdriver and a paperclip.")
+        return
+    end
+
+    local door = doors[1]
+
+    ISTimedActionQueue.add(
+        LockpickTimedAction:new(
+            player,
+            door,
+            ZombRand(6, 11) * 30, -- 6–10 seconds
+            function(player, door)
+                for _, d in ipairs(doors) do
+                    unlockDoorObject(d)
+                end
+            end,
+            function(player, door)
+                removeOnePaperclip(player)
+            end
         )
-    end
+    )
 end
 
-function SimpleLockpicking.tryPickLock(playerID, vehicle, door)
-    local player = getSpecificPlayer(playerID)
-    local inventory = player:getInventory()
+-------------------------------------------------
+-- Context menu
+-------------------------------------------------
 
-    local tag = ItemTag.get(ResourceLocation.of("Screwdriver"))
-    local screwdriver = inventory:getFirstTagRecurse(tag)
-    local paperclip = inventory:getFirstTypeRecurse("Paperclip")
+local function onFillWorldObjectContextMenu(playerIndex, context, worldobjects, test)
+    if test then return end
 
-    if not (screwdriver or paperclip) then
-        player:Say(getText("IGUI_NeedScrewAndClip"))
-        return
-    elseif not screwdriver then
-        player:Say(getText("IGUI_NeedScrew"))
-        return
-    elseif not paperclip then
-        player:Say(getText("IGUI_NeedClip"))
-        return
-    end
+    local player = getSpecificPlayer(playerIndex)
+    if not player then return end
 
-    SimpleLockpicking.pickLock(playerID, player, vehicle, door, {
-        screwdriver = screwdriver,
-        paperclip = paperclip
-    })
-end
-
-function SimpleLockpicking.tryPickWorldLock(worldObjects, playerID, door)
-    SimpleLockpicking.tryPickLock(playerID, nil, door)
-end
-
-function SimpleLockpicking.tryPickVehicleWorldLock(worldObjects, playerID, door)
-    SimpleLockpicking.tryPickLock(playerID, door:getVehicle(), door)
-end
-
-local function lockPickContextMenu(playerID, context, worldObjects, test)
-    local player = getSpecificPlayer(playerID)
-    if not SimpleLockpicking.shouldPickLock(player) then return end
-
-    for _, obj in ipairs(worldObjects) do
-        local isDoor = instanceof(obj, "IsoDoor") or (instanceof(obj, "IsoThumpable") and obj:isDoor())
-        if isDoor and (obj:isLockedByKey() or obj:isLocked()) then
-            context:addOption(getText("ContextMenu_PickLock"), worldObjects, SimpleLockpicking.tryPickWorldLock, playerID, obj)
-            break
+    local square = nil
+    if worldobjects and #worldobjects > 0 then
+        local obj = worldobjects[1]
+        if obj and obj.getSquare then
+            square = obj:getSquare()
         end
     end
+    if not square then
+        local sq = player:getSquare()
+        if sq then square = sq:getTileInDirection(player:getDir()) end
+    end
+    if not square then return end
+
+    local doors = getDoorCluster(square)
+    if #doors == 0 then return end
+    if not clusterLocked(doors) then return end
+
+    context:addOption("Pick Lock", worldobjects, onPickLock, playerIndex)
 end
 
-Events.OnFillWorldObjectContextMenu.Add(lockPickContextMenu)
+Events.OnFillWorldObjectContextMenu.Add(onFillWorldObjectContextMenu)

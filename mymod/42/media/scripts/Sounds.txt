@@ -1,0 +1,24 @@
+module Base
+{
+
+    sound PickLock
+    {
+        category = Player,
+        clip
+        {
+            file = media/sound/PickLock.ogg,
+            distanceMax = 3,
+        }
+    }
+
+    sound FailedPickLock
+    {
+        category = Player,
+        clip
+        {
+            file = media/sound/FailedPickLock.ogg,
+            distanceMax = 6,
+        }
+    }
+
+}
