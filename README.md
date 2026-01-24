@@ -24,10 +24,12 @@ following:
   Test Tubes
 - Adds more Packaing options for items
 - Adds recipes in regards to repurposing unusable metal and scrap.
-- Using JB Max Capacity Override - vehicle trunk size increases
+- Using JB Max Capacity Override - Dolly and trunk size increase
 - Adds BlowTorch and Propane Tank filling at pumps.
 - Adds Lockpicking. All doors, all directions. 20% chance you can
   break your paperclip. Vehicle Lockpicking included.
+- Added Gate cutting with torch that gives scrap on success. Think
+  Gun Store the security fence blocking the door. Welding 2 Req.
 
 ## Installation
 
