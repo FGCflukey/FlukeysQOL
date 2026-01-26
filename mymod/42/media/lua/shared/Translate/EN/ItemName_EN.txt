@@ -14,4 +14,33 @@ ItemName_EN = {
     ItemName_Base.BoxedEngineParts = "Package of 10 Engine Parts",
     ItemName_Base.BoxedElectronicsScrap = "Package of 50 Electronics Scrap",
     ItemName_Base.BoxedElectricWire = "Package of 50 Electric Wire",
+
+    ItemName_Base.SpraycanWhite = "Spraycan (White)",
+    ItemName_Base.SpraycanBlack = "Spraycan (Black)",
+    ItemName_Base.SpraycanGray = "Spraycan (Gray)",
+    ItemName_Base.SpraycanDarkGray = "Spraycan (Dark-Gray)",
+    
+    ItemName_Base.SpraycanRed = "Spraycan (Red)",
+    ItemName_Base.SpraycanBlue = "Spraycan (Blue)",
+    ItemName_Base.SpraycanGreen = "Spraycan (Green)",
+    ItemName_Base.SpraycanYellow = "Spraycan (Yellow)",
+    ItemName_Base.SpraycanOrange = "Spraycan (Orange)",
+    ItemName_Base.SpraycanPurple = "Spraycan (Purple)",
+    
+    ItemName_Base.SpraycanPastelBlue = "Spraycan (Pastel-Blue)",
+    ItemName_Base.SpraycanPastelPink = "Spraycan (Pastel-Pink)",
+    ItemName_Base.SpraycanPastelGreen = "Spraycan (Pastel-Green)",
+    ItemName_Base.SpraycanPastelYellow = "Spraycan (Pastel-Yellow)",
+    ItemName_Base.SpraycanMauve = "Spraycan (Mauve)",
+    
+    ItemName_Base.SpraycanBrown = "Spraycan (Brown)",
+    ItemName_Base.SpraycanTan = "Spraycan (Tan)",
+    ItemName_Base.SpraycanOlive = "Spraycan (Olive)",
+    ItemName_Base.SpraycanForestGreen = "Spraycan (Forest-Green)",
+
+
+    ItemName_Base.SpraycanPink = "Spraycan (Pink)",
+    ItemName_Base.SpraycanCyan = "Spraycan (Cyan)",
+
+
 }

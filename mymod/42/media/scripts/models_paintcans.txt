@@ -1,0 +1,151 @@
+module Base
+{
+
+    model spraycanTZWhite
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZWhite,
+        scale   = 0.425,
+    }
+
+    model spraycanTZBlack
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZBlack,
+        scale   = 0.425,
+    }
+
+    model spraycanTZGray
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZGray,
+        scale   = 0.425,
+    }
+
+    model spraycanTZDarkGray
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZDarkGray,
+        scale   = 0.425,
+    }
+
+    model spraycanTZRed
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZRed,
+        scale   = 0.425,
+    }
+    
+    model spraycanTZBlue
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZBlue,
+        scale   = 0.425,
+    }
+
+    model spraycanTZGreen
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZGreen,
+        scale   = 0.425,
+    }
+
+    model spraycanTZYellow
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZYellow,
+        scale   = 0.425,
+    }
+
+    model spraycanTZOrange
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZOrange,
+        scale   = 0.425,
+    }
+
+    model spraycanTZPurple
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZPurple,
+        scale   = 0.425,
+    }
+
+    model spraycanTZPastelBlue
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZPastelBlue,
+        scale   = 0.425,
+    }
+
+    model spraycanTZPastelPink
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZPastelPink,
+        scale   = 0.425,
+    }
+
+    model spraycanTZPastelGreen
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZPastelGreen,
+        scale   = 0.425,
+    }
+
+    model spraycanTZPastelYellow
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZPastelYellow,
+        scale   = 0.425,
+    }
+
+    model spraycanTZMauve
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZMauve,
+        scale   = 0.425,
+    }
+
+    model spraycanTZBrown
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZBrown,
+        scale   = 0.425,
+    }
+
+    model spraycanTZTan
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZTan,
+        scale   = 0.425,
+    }
+
+    model spraycanTZOlive
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZOlive,
+        scale   = 0.425,
+    }
+
+    model spraycanTZForestGreen
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZForestGreen,
+        scale   = 0.425,
+    }
+
+    model spraycanTZPink
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZPink,
+        scale   = 0.425,
+    }
+
+    model spraycanTZCyan
+    {
+        mesh    = WorldItems/spraycanTZ,
+        texture = WorldItems/spraycanTZCyan,
+        scale   = 0.425,
+    }
+
+}

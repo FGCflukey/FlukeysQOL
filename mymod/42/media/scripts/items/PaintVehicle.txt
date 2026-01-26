@@ -1,0 +1,235 @@
+module Base
+{
+
+    item SpraycanWhite
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_White.png,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZWhite,
+        WorldStaticModel    = spraycanTZWhite,
+    }
+
+    item SpraycanBlack
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Black,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZBlack,
+        WorldStaticModel    = spraycanTZBlack,
+    }
+
+    item SpraycanGray
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Gray,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZGray,
+        WorldStaticModel    = spraycanTZGray,
+    }
+
+    item SpraycanDarkGray
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_DarkGray,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZDarkGray,
+        WorldStaticModel    = spraycanTZDarkGray,
+    }
+
+    item SpraycanRed
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Red,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZRed,
+        WorldStaticModel    = spraycanTZRed,
+    }
+    
+    item SpraycanBlue
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Blue,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZBlue,
+        WorldStaticModel    = spraycanTZBlue,
+    }
+
+    item SpraycanGreen
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Green,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZGreen,
+        WorldStaticModel    = spraycanTZGreen,
+    }
+
+    item SpraycanYellow
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Yellow,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZYellow,
+        WorldStaticModel    = spraycanTZYellow,
+    }
+
+    item SpraycanOrange
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Orange,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZOrange,
+        WorldStaticModel    = spraycanTZOrange,
+    }
+
+    item SpraycanPurple
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Purple,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZPurple,
+        WorldStaticModel    = spraycanTZPurple,
+    }
+
+    item SpraycanPastelBlue
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_PastelBlue,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZPastelBlue,
+        WorldStaticModel    = spraycanTZPastelBlue,
+    }
+
+    item SpraycanPastelPink
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_PastelPink,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZPastelPink,
+        WorldStaticModel    = spraycanTZPastelPink,
+    }
+
+    item SpraycanPastelGreen
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_PastelGreen,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZPastelGreen,
+        WorldStaticModel    = spraycanTZPastelGreen,
+    }
+
+    item SpraycanPastelYellow
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_PastelYellow,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZPastelYellow,
+        WorldStaticModel    = spraycanTZPastelYellow,
+    }
+
+    item SpraycanMauve
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Mauve,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZMauve,
+        WorldStaticModel    = spraycanTZMauve,
+    }
+
+    item SpraycanBrown
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Brown,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZBrown,
+        WorldStaticModel    = spraycanTZBrown,
+    }
+
+    item SpraycanTan
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Tan,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZTan,
+        WorldStaticModel    = spraycanTZTan,
+    }
+
+    item SpraycanOlive
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Olive,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZOlive,
+        WorldStaticModel    = spraycanTZOlive,
+    }
+
+    item SpraycanForestGreen
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_ForestGreen,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZForestGreen,
+        WorldStaticModel    = spraycanTZForestGreen,
+    }
+
+    item SpraycanPink
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Pink,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZPink,
+        WorldStaticModel    = spraycanTZPink,
+    }
+
+    item SpraycanCyan
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Cyan.png,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZCyan,
+        WorldStaticModel    = spraycanTZCyan,
+    }
+
+}
