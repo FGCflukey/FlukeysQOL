@@ -23,14 +23,17 @@ module Base
 
     sound PaintVehicleSpray
     {
-        category = Player,
+        category = Object,
+        volume = 3.0,
+
         clip
         {
             file = media/sound/PaintVehicleSpray.ogg,
-            distanceMax = 3,
+            distanceMin = 1,
+            distanceMax = 12,
+            priority = 5,
+            pitch = 1.1,
         }
     }
-
-
 
 }
