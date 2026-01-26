@@ -30,6 +30,8 @@ following:
   break your paperclip. Vehicle Lockpicking included.
 - Added Gate cutting with torch that gives scrap on success. Think
   Gun Store the security fence blocking the door. Welding 2 Req.
+- Added EZ Car Painting. Now you have a nice variety of colours to
+  paint your ride with. Only tested vanilla and single player.
 
 ## Installation
 
