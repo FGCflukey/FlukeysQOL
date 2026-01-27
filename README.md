@@ -32,6 +32,8 @@ following:
   Gun Store the security fence blocking the door. Welding 2 Req.
 - Added EZ Car Painting. Now you have a nice variety of colours to
   paint your ride with. Only tested vanilla and single player.
+- Added Filling Barrels with Liquid. Can be gas or water. Will tweak
+  it more later. Animation is funny when working on barrel too.
 
 ## Installation
 
