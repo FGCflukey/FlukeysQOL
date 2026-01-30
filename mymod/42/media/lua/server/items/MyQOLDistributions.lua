@@ -1,103 +1,163 @@
 require "Items/Distributions"
 require "Items/ProceduralDistributions"
 
-local i;
+---------------------------------------------------------
+-- DEBUG TOGGLE
+---------------------------------------------------------
+local QOL_DEBUG = false   -- set to true to enable debug logging
 
--- QOL Loot Distribution Stuff
-
-local qolMedsDistribTable = {
-    "Base.BoxedSyringes", 0.2,
-    "Base.BoxedLabTestTubes", 0.2,
-    "Base.EmptySyringe", 0.3,
-    "Base.LabTestTube", 0.2,
-}
-
-local qolStorageDistribTable = {
-    "Base.HCHanddolly", 0.2,
-    "Base.HCToywagon", 0.3,
-}
-
-local qolWeapDistribTable = {
-    "Base.cfcombataxe", 0.2,
-    "Base.cflongreachaxe", 0.2,
-}
-
-local qolCarDistribTable = {
-    "Base.BoxedEngineParts", 0.4,
-}
-
-local qolSprayDistribTable = {
-    "Base.SpraycanWhite", 0.5,
-    "Base.SpraycanBlack", 0.5,
-    "Base.SpraycanGray", 0.5,
-    "Base.SpraycanDarkGray", 0.5,
-    "Base.SpraycanRed", 0.5,
-    "Base.SpraycanBlue", 0.5,
-    "Base.SpraycanGreen", 0.5,
-    "Base.SpraycanYellow", 0.5,
-    "Base.SpraycanOrange", 0.5,
-    "Base.SpraycanPurple", 0.5,
-    "Base.SpraycanPastelBlue", 0.5,
-    "Base.SpraycanPastelPink", 0.5,
-    "Base.SpraycanPastelGreen", 0.5,
-    "Base.SpraycanPastelYellow", 0.5,
-    "Base.SpraycanMauve", 0.5,
-    "Base.SpraycanBrown", 0.5,
-    "Base.SpraycanTan", 0.5,
-    "Base.SpraycanOlive", 0.5,
-    "Base.SpraycanForestGreen", 0.5,
-    "Base.SpraycanPink", 0.5,
-    "Base.SpraycanCyan", 0.5,
-}
-
-local function insertTable(t1, t2)
-    local n = #t1
-    for i = 1, #t2 do
-        t1[n + i] = t2[i]
+local function qolDebug(msg)
+    if QOL_DEBUG then
+        print("[QOL Loot Debug] " .. tostring(msg))
     end
 end
 
--- Dolly and Toywagon
-insertTable(ProceduralDistributions["list"]["FireDeptLockers"].items, qolStorageDistribTable)
-insertTable(ProceduralDistributions["list"]["CrateTools"].items, qolStorageDistribTable)
-insertTable(ProceduralDistributions["list"]["CrateToolsOld"].items, qolStorageDistribTable)
-insertTable(ProceduralDistributions["list"]["GardenStoreTools"].items, qolStorageDistribTable)
-insertTable(ProceduralDistributions["list"]["GasStorageMechanics"].items, qolStorageDistribTable)
-insertTable(ProceduralDistributions["list"]["GigamartTools"].items, qolStorageDistribTable)
-insertTable(ProceduralDistributions["list"]["GroceryStorageCrate1"].items, qolStorageDistribTable)
-insertTable(ProceduralDistributions["list"]["GroceryStorageCrate2"].items, qolStorageDistribTable)
+---------------------------------------------------------
+-- Helper: Safe Insert with Debug
+---------------------------------------------------------
+local function safeInsert(listName, tableToInsert)
+    local dist = ProceduralDistributions.list[listName]
+    if not dist or not dist.items then
+        qolDebug("WARNING: Procedural container '" .. listName .. "' does not exist!")
+        return
+    end
 
--- Zombie Cure Items
-insertTable(ProceduralDistributions["list"]["MedicalClinicDrugs"].items, qolMedsDistribTable)
-insertTable(ProceduralDistributions["list"]["MedicalStorageDrugs"].items, qolMedsDistribTable)
-insertTable(ProceduralDistributions["list"]["StoreShelfMedical"].items, qolMedsDistribTable)
-insertTable(ProceduralDistributions["list"]["BathroomCounter"].items, qolMedsDistribTable)
+    local target = dist.items
+    local before = #target
+    local added = #tableToInsert
 
--- Weapon Items
-insertTable(ProceduralDistributions["list"]["ArmyStorageGuns"].items, qolWeapDistribTable)
-insertTable(ProceduralDistributions["list"]["ArmyHangarTools"].items, qolWeapDistribTable)
-insertTable(ProceduralDistributions["list"]["ArmySurplusCases"].items, qolWeapDistribTable)
-insertTable(ProceduralDistributions["list"]["GunStoreKnives"].items, qolWeapDistribTable)
-insertTable(ProceduralDistributions["list"]["GunStoreGuns"].items, qolWeapDistribTable)
-insertTable(ProceduralDistributions["list"]["PoliceStorageGuns"].items, qolWeapDistribTable)
+    for i = 1, added do
+        target[before + i] = tableToInsert[i]
+    end
 
--- Other Stuff
-insertTable(ProceduralDistributions["list"]["FireStorageMechanics"].items, qolCarDistribTable)
-insertTable(ProceduralDistributions["list"]["CrateMechanics"].items, qolCarDistribTable)
-insertTable(ProceduralDistributions["list"]["GarageMechanics"].items, qolCarDistribTable)
-insertTable(ProceduralDistributions["list"]["GasStorageMechanics"].items, qolCarDistribTable)
+    qolDebug("Inserted into " .. listName .. ": +" .. added .. " entries")
+end
+
+---------------------------------------------------------
+-- Item Tables
+---------------------------------------------------------
+
+-- Medical / Cure Items
+local qolMedsDistribTable = {
+    "Base.BoxedSyringes",      0.6,
+    "Base.BoxedLabTestTubes",  0.6,
+    "Base.EmptySyringe",       0.8,
+    "Base.LabTestTube",        0.6,
+}
+
+-- Storage Items
+local qolStorageDistribTable = {
+    "Base.HCHanddolly",  0.5,
+    "Base.HCToywagon",   0.6,
+}
+
+-- Weapons
+local qolWeapDistribTable = {
+    "Base.cfcombataxe",      0.4,
+    "Base.cflongreachaxe",   0.4,
+}
+
+-- Car / Mechanics
+local qolCarDistribTable = {
+    "Base.BoxedEngineParts", 0.8,
+}
 
 -- Spray Cans
-insertTable(ProceduralDistributions["list"]["GasStorageMechanics"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["CrateMechanics"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["GarageMechanics"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["GasStorageMechanics"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["GigamartTools"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["FireStorageMechanics"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["StoreShelfCombo"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["ClosetShelfGeneric"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["StoreShelfMechanics"].items, qolSprayDistribTable)
-insertTable(ProceduralDistributions["list"]["MechanicSpecial"].items, qolSprayDistribTable)
+local qolSprayDistribTable = {
+    "Base.SpraycanWhite",        0.4,
+    "Base.SpraycanBlack",        0.4,
+    "Base.SpraycanGray",         0.4,
+    "Base.SpraycanDarkGray",     0.4,
+    "Base.SpraycanRed",          0.4,
+    "Base.SpraycanBlue",         0.4,
+    "Base.SpraycanGreen",        0.4,
+    "Base.SpraycanYellow",       0.4,
+    "Base.SpraycanOrange",       0.4,
+    "Base.SpraycanPurple",       0.4,
+    "Base.SpraycanPastelBlue",   0.4,
+    "Base.SpraycanPastelPink",   0.4,
+    "Base.SpraycanPastelGreen",  0.4,
+    "Base.SpraycanPastelYellow", 0.4,
+    "Base.SpraycanMauve",        0.4,
+    "Base.SpraycanBrown",        0.4,
+    "Base.SpraycanTan",          0.4,
+    "Base.SpraycanOlive",        0.4,
+    "Base.SpraycanForestGreen",  0.4,
+    "Base.SpraycanPink",         0.4,
+    "Base.SpraycanCyan",         0.4,
+}
 
+---------------------------------------------------------
+-- Procedural targets (only ones confirmed by your logs)
+---------------------------------------------------------
 
+local storageTargets = {
+    "FireDeptLockers",
+    "CrateTools",
+    "CrateToolsOld",
+    "GardenStoreTools",
+    "GasStorageMechanics",
+    "GigamartTools",
+    "GroceryStorageCrate1",
+    "GroceryStorageCrate2",
+}
 
+local medTargets = {
+    "MedicalClinicDrugs",
+    "MedicalStorageDrugs",
+    "StoreShelfMedical",
+    "BathroomCounter",
+}
+
+local weaponTargets = {
+    "ArmyStorageGuns",
+    "ArmyHangarTools",
+    "ArmySurplusCases",
+    "GunStoreKnives",
+    "GunStoreGuns",
+    "PoliceStorageGuns",
+}
+
+local carTargets = {
+    "FireStorageMechanics",
+    "CrateMechanics",
+    "GarageMechanics",
+    "GasStorageMechanics",
+    "MechanicSpecial",
+}
+
+local sprayTargets = {
+    "CrateMechanics",
+    "GarageMechanics",
+    "GasStorageMechanics",
+    "GigamartTools",
+    "FireStorageMechanics",
+    "StoreShelfCombo",
+    "ClosetShelfGeneric",
+    "StoreShelfMechanics",
+    "MechanicSpecial",
+}
+
+---------------------------------------------------------
+-- Insertions
+---------------------------------------------------------
+
+for _, name in ipairs(storageTargets) do
+    safeInsert(name, qolStorageDistribTable)
+end
+
+for _, name in ipairs(medTargets) do
+    safeInsert(name, qolMedsDistribTable)
+end
+
+for _, name in ipairs(weaponTargets) do
+    safeInsert(name, qolWeapDistribTable)
+end
+
+for _, name in ipairs(carTargets) do
+    safeInsert(name, qolCarDistribTable)
+end
+
+for _, name in ipairs(sprayTargets) do
+    safeInsert(name, qolSprayDistribTable)
+end
