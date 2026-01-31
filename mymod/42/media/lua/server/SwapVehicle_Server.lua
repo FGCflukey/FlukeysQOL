@@ -1,6 +1,23 @@
----------------------------------------------------------
--- Multi-tick fuel restore with stabilization
----------------------------------------------------------
+------------------------------------------------------------
+-- SwapVehicle Server Logic
+-- Fully registry-driven, preserves all original behaviors:
+-- ✔ Part conditions
+-- ✔ Battery item
+-- ✔ Fuel (multi-tick stabilization)
+-- ✔ Position
+-- ✔ Rust/Dirt cleaning
+-- ❌ No Taxi hardcoding
+-- ✔ Supports all registry groups (Vanilla + KI5)
+------------------------------------------------------------
+
+if not SwapVehicleRegistry then
+    print("ERROR: SwapVehicleRegistry missing! (Vanilla/KI5 registry not loaded)")
+    return
+end
+
+------------------------------------------------------------
+-- Multi-tick fuel restore with stabilization (unchanged)
+------------------------------------------------------------
 local function QueueFuelRestoreStabilized(newVehicleId, targetFuel)
     if not targetFuel then
         print("SERVER: QueueFuelRestoreStabilized: no fuel value to restore")
@@ -22,15 +39,10 @@ local function QueueFuelRestoreStabilized(newVehicleId, targetFuel)
         local gasTank = vehicle:getPartById("GasTank")
         if gasTank and gasTank.getContainerContentAmount and gasTank.setContainerContentAmount then
             local current = gasTank:getContainerContentAmount()
-            print("SERVER: Fuel tick", ticks, "current =", current, "target =", targetFuel)
-
             if math.abs(current - targetFuel) < 0.01 then
-                print("SERVER: Fuel stable at", current, "stopping fuel restore")
                 Events.OnTick.Remove(tickFunc)
                 return
             end
-
-            print("SERVER: Fuel mismatch, re-applying =", targetFuel)
             gasTank:setContainerContentAmount(targetFuel)
         end
 
@@ -40,127 +52,99 @@ local function QueueFuelRestoreStabilized(newVehicleId, targetFuel)
         end
     end
 
-    print("SERVER: FuelRestore: scheduled, targetFuel =", targetFuel)
     Events.OnTick.Add(tickFunc)
 end
 
----------------------------------------------------------
--- Main handler
----------------------------------------------------------
-local function SwapVehicle_Server_Handle(player, args)
+------------------------------------------------------------
+-- Main swap handler
+------------------------------------------------------------
+function SwapVehicle_Server_Handle(player, args)
     print("SERVER: SwapVehicle_Server_Handle triggered")
 
     local vehicle = getVehicleById(args.vehicleId)
-    print("SERVER: vehicle =", tostring(vehicle))
-    if not vehicle then return end
-
-    ---------------------------------------------------------
-    -- Dump parts (debug)
-    ---------------------------------------------------------
-    print("SERVER: Dumping part IDs:")
-    local count = vehicle:getPartCount()
-    for i = 0, count - 1 do
-        local part = vehicle:getPartByIndex(i)
-        print("PART:", part:getId(), "COND:", part:getCondition())
-    end
-
-    ---------------------------------------------------------
-    -- Determine new script
-    ---------------------------------------------------------
-    local oldScript = vehicle:getScript():getFullName()
-    local newScript = nil
-
-    if oldScript == "Base.CarTaxi" then
-        newScript = "Base.CarTaxi2"
-    elseif oldScript == "Base.CarTaxi2" then
-        newScript = "Base.CarTaxi"
-    else
+    if not vehicle then
+        print("SERVER: No vehicle found for ID", args.vehicleId)
         return
     end
 
-    ---------------------------------------------------------
-    -- Capture part conditions
-    ---------------------------------------------------------
-    local partIds = {
-        "TrunkDoor","TruckBed",
-        "SeatFrontLeft","SeatFrontRight","SeatRearLeft","SeatRearRight",
-        "GloveBox","Radio","PassengerCompartment",
-        "GasTank","Battery","Engine","Muffler","EngineDoor","Heater",
-        "Windshield","WindshieldRear",
-        "WindowFrontLeft","WindowFrontRight","WindowRearLeft","WindowRearRight",
-        "DoorFrontLeft","DoorFrontRight","DoorRearLeft","DoorRearRight",
-        "TireFrontLeft","TireFrontRight","TireRearLeft","TireRearRight",
-        "BrakeFrontLeft","BrakeFrontRight","BrakeRearLeft","BrakeRearRight",
-        "SuspensionFrontLeft","SuspensionFrontRight",
-        "SuspensionRearLeft","SuspensionRearRight",
-        "HeadlightLeft","HeadlightRight","HeadlightRearLeft","HeadlightRearRight"
-    }
+    local oldScript = vehicle:getScript():getFullName()
+    local newScript = args.newScript
 
-    local saved = {}
-    for _, id in ipairs(partIds) do
-        local part = vehicle:getPartById(id)
-        if part then saved[id] = part:getCondition() end
+    if not newScript then
+        print("SERVER: No newScript provided")
+        return
     end
 
-    ---------------------------------------------------------
+    print("SERVER: Swapping", oldScript, "→", newScript)
+
+    --------------------------------------------------------
+    -- Determine part set for this group
+    --------------------------------------------------------
+    local group = SwapVehicleRegistry.Groups[oldScript]
+    local partSet = SwapVehicleRegistry.PartSets[group] or SwapVehicleRegistry.PartSets.Default
+
+    --------------------------------------------------------
+    -- Capture part conditions
+    --------------------------------------------------------
+    local saved = {}
+    for _, id in ipairs(partSet) do
+        local part = vehicle:getPartById(id)
+        if part then
+            saved[id] = part:getCondition()
+        end
+    end
+
+    --------------------------------------------------------
     -- Capture fuel level
-    ---------------------------------------------------------
+    --------------------------------------------------------
     local fuel = nil
     local gasTank = vehicle:getPartById("GasTank")
     if gasTank and gasTank.getContainerContentAmount then
         fuel = gasTank:getContainerContentAmount()
     end
-    print("SERVER: Captured fuel =", fuel)
 
-    ---------------------------------------------------------
-    -- Capture battery item (for transfer)
-    ---------------------------------------------------------
+    --------------------------------------------------------
+    -- Capture battery item
+    --------------------------------------------------------
     local oldBatteryPart = vehicle:getPartById("Battery")
     local oldBatteryItem = nil
     if oldBatteryPart and oldBatteryPart.getInventoryItem then
         oldBatteryItem = oldBatteryPart:getInventoryItem()
         if oldBatteryItem then
-            print("SERVER: Captured battery item =", tostring(oldBatteryItem))
-            -- detach from old vehicle
             oldBatteryPart:setInventoryItem(nil)
-        else
-            print("SERVER: No battery item found on old vehicle")
         end
     end
 
-    ---------------------------------------------------------
+    --------------------------------------------------------
     -- Save position
-    ---------------------------------------------------------
+    --------------------------------------------------------
     local x, y, z = vehicle:getX(), vehicle:getY(), vehicle:getZ()
 
-    ---------------------------------------------------------
+    --------------------------------------------------------
     -- Remove old vehicle
-    ---------------------------------------------------------
+    --------------------------------------------------------
     vehicle:permanentlyRemove()
 
-    ---------------------------------------------------------
+    --------------------------------------------------------
     -- Spawn new vehicle
-    ---------------------------------------------------------
+    --------------------------------------------------------
     local newVehicle = addVehicle(newScript, math.floor(x), math.floor(y), math.floor(z))
-    print("SERVER: newVehicle =", tostring(newVehicle))
-    if not newVehicle then return end
+    if not newVehicle then
+        print("SERVER: Failed to spawn new vehicle", newScript)
+        return
+    end
 
     local newVehicleId = newVehicle:getId()
 
-    ---------------------------------------------------------
+    --------------------------------------------------------
     -- Clean new vehicle (no rust, no dirt)
-    ---------------------------------------------------------
-    if newVehicle.setRust then
-        newVehicle:setRust(0)
-    end
-    if newVehicle.setDirt then
-        newVehicle:setDirt(0)
-    end
-    -- Blood is more granular in the engine; leaving it out to avoid calling unknown APIs.
+    --------------------------------------------------------
+    if newVehicle.setRust then newVehicle:setRust(0) end
+    if newVehicle.setDirt then newVehicle:setDirt(0) end
 
-    ---------------------------------------------------------
+    --------------------------------------------------------
     -- Restore part conditions
-    ---------------------------------------------------------
+    --------------------------------------------------------
     for id, cond in pairs(saved) do
         local part = newVehicle:getPartById(id)
         if part then
@@ -168,34 +152,29 @@ local function SwapVehicle_Server_Handle(player, args)
         end
     end
 
-    ---------------------------------------------------------
-    -- Install old battery item into new vehicle
-    ---------------------------------------------------------
+    --------------------------------------------------------
+    -- Restore battery item
+    --------------------------------------------------------
     if oldBatteryItem then
         local newBatteryPart = newVehicle:getPartById("Battery")
         if newBatteryPart and newBatteryPart.setInventoryItem then
-            print("SERVER: Installing old battery item into new vehicle")
             newBatteryPart:setInventoryItem(oldBatteryItem)
-        else
-            print("SERVER: New vehicle battery part missing or no setInventoryItem")
         end
     end
 
-    ---------------------------------------------------------
+    --------------------------------------------------------
     -- Restore fuel (multi-tick stabilization)
-    ---------------------------------------------------------
+    --------------------------------------------------------
     if fuel then
         QueueFuelRestoreStabilized(newVehicleId, fuel)
-    else
-        print("SERVER: No fuel captured, skipping fuel restore")
     end
 end
 
----------------------------------------------------------
--- Event hook
----------------------------------------------------------
+------------------------------------------------------------
+-- Event hook (modern command)
+------------------------------------------------------------
 Events.OnClientCommand.Add(function(module, command, player, args)
-    if module == "SwapVehicle" and command == "SwapVehicle_Request" then
+    if module == "SwapVehicle" and command == "Swap" then
         SwapVehicle_Server_Handle(player, args)
     end
 end)

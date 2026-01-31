@@ -107,6 +107,7 @@ local medTargets = {
     "MedicalStorageDrugs",
     "StoreShelfMedical",
     "BathroomCounter",
+    "ArmyStorageMedical",
 }
 
 local weaponTargets = {
@@ -116,6 +117,7 @@ local weaponTargets = {
     "GunStoreKnives",
     "GunStoreGuns",
     "PoliceStorageGuns",
+    "FiremanTools",
 }
 
 local carTargets = {
@@ -124,6 +126,8 @@ local carTargets = {
     "GarageMechanics",
     "GasStorageMechanics",
     "MechanicSpecial",
+    "ArmySurplusMisc",
+    "FireDeptLockers",
 }
 
 local sprayTargets = {
@@ -136,6 +140,7 @@ local sprayTargets = {
     "ClosetShelfGeneric",
     "StoreShelfMechanics",
     "MechanicSpecial",
+    "FireStorageTools",
 }
 
 ---------------------------------------------------------
