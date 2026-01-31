@@ -8,7 +8,7 @@ if not SwapVehicleRegistry then
 end
 
 ------------------------------------------------------------
--- Multi-tick fuel restore
+-- Multi-tick fuel restore (stabilized)
 ------------------------------------------------------------
 local function QueueFuelRestoreStabilized(newVehicleId, targetFuel)
     if not targetFuel then return end
@@ -92,6 +92,24 @@ function SwapVehicle_Server_Handle(player, args)
     local x, y, z = vehicle:getX(), vehicle:getY(), vehicle:getZ()
 
     --------------------------------------------------------
+    -- Capture key ID + key item + custom name
+    --------------------------------------------------------
+    local oldKeyId = vehicle:getKeyId()
+    local keyItem = nil
+    local keyName = nil
+
+    if oldKeyId and oldKeyId ~= -1 then
+        local inv = player:getInventory()
+        keyItem = inv:getFirstTypeEvalRecurse("Key", function(item)
+            return item:getKeyId() == oldKeyId
+        end)
+
+        if keyItem then
+            keyName = keyItem:getName()
+        end
+    end
+
+    --------------------------------------------------------
     -- Remove old vehicle
     --------------------------------------------------------
     vehicle:permanentlyRemove()
@@ -103,6 +121,27 @@ function SwapVehicle_Server_Handle(player, args)
     if not newVehicle then return end
 
     local newVehicleId = newVehicle:getId()
+
+    --------------------------------------------------------
+    -- Restore key ID to new vehicle + ensure player has a key
+    --------------------------------------------------------
+    if oldKeyId and oldKeyId ~= -1 then
+        newVehicle:setKeyId(oldKeyId)
+
+        if keyItem then
+            keyItem:setKeyId(oldKeyId)
+            keyItem:setVehicle(newVehicle)
+            if keyName then keyItem:setName(keyName) end
+        else
+            local inv = player:getInventory()
+            local newKey = inv:AddItem("Base.Key")
+            if newKey then
+                newKey:setKeyId(oldKeyId)
+                newKey:setVehicle(newVehicle)
+                if keyName then newKey:setName(keyName) end
+            end
+        end
+    end
 
     --------------------------------------------------------
     -- Clean new vehicle
@@ -140,7 +179,7 @@ function SwapVehicle_Server_Handle(player, args)
     end
 
     --------------------------------------------------------
-    -- Restore fuel
+    -- Restore fuel (multi-tick stabilized)
     --------------------------------------------------------
     if tankData.fuel then
         QueueFuelRestoreStabilized(newVehicleId, tankData.fuel)

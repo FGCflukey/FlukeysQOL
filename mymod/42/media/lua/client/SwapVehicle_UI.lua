@@ -48,20 +48,22 @@ end
 ----------------------------------------------------------
 -- Create Children
 ----------------------------------------------------------
+
 function SwapVehicle_UI:createChildren()
     ISCollapsableWindow.createChildren(self)
 
-    local th = self:titleBarHeight()
+    local th  = self:titleBarHeight()
     local pad = 10
 
     ------------------------------------------------------
-    -- Variant List (full width, top half)
+    -- LEFT COLUMN: Variant List
     ------------------------------------------------------
-    local listH = (self.height - th - pad*3) * 0.45
+    local listW = (self.width - pad*3) * 0.35
+    local listH = self.height - th - pad*3 - 40  -- leave room for button
 
     self.list = ISScrollingListBox:new(
         pad, th + pad,
-        self.width - pad*2 - 20,
+        listW,
         listH
     )
 
@@ -71,7 +73,6 @@ function SwapVehicle_UI:createChildren()
     self.list.font = UIFont.NewSmall
     self.list.drawBorder = true
 
-    -- FIX: Restore built-in selection logic
     self.list.onMouseDown = function(list, x, y)
         ISScrollingListBox.onMouseDown(list, x, y)
         self:onSelectVariant()
@@ -92,16 +93,17 @@ function SwapVehicle_UI:createChildren()
     end
 
     ------------------------------------------------------
-    -- 3D Preview Panel (full width, below list)
+    -- RIGHT COLUMN: 3D Preview Panel
     ------------------------------------------------------
-    local previewY = self.list:getBottom() + pad
-    local previewH = (self.height - th - pad*3) * 0.45
+    local previewX = self.list:getRight() + pad
+    local previewW = self.width - previewX - pad
+    local previewH = listH
 
     self.preview = ISUI3DScene:new(
-        pad, previewY,
-        self.width - pad*2,
-        previewH
+        previewX, th + pad,
+        previewW, previewH
     )
+
     self.preview:initialise()
     self.preview:instantiate()
     self.preview:setView("Right")
@@ -112,15 +114,17 @@ function SwapVehicle_UI:createChildren()
     self:addChild(self.preview)
 
     ------------------------------------------------------
-    -- Swap Button (bottom right)
+    -- Swap Button (bottom center)
     ------------------------------------------------------
     self.swapBtn = ISButton:new(
-        self.width - 140, self.height - 35,
+        (self.width - 120) / 2,
+        self.height - 35,
         120, 25,
         "Swap Vinyl",
         self,
         SwapVehicle_UI.onSwapClick
     )
+
     self.swapBtn:initialise()
     self.swapBtn:instantiate()
     self:addChild(self.swapBtn)
