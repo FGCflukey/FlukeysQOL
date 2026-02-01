@@ -85,6 +85,49 @@ function ISPaintVehicleAction:perform()
         self.vehicle:transmitColorHSV()
     end
 
+    -----------------------------------------------------
+    -- CLEAN VEHICLE AFTER PAINTING (SERVER-SAFE VERSION)
+    -----------------------------------------------------
+    local v = self.vehicle
+    if v and v:getId() then
+        -- Get the authoritative server vehicle
+        local sv = getVehicleById(v:getId())
+
+        if sv then
+            -------------------------------------------------
+            -- BLOOD CLEANING (requires server vehicle)
+            -------------------------------------------------
+            if sv.setBloodIntensity and sv.getPartList then
+                local parts = sv:getPartList()
+                if parts then
+                    for i = 0, parts:size() - 1 do
+                        local part = parts:get(i)
+                        if part and part:getId() then
+                            sv:setBloodIntensity(part:getId(), 0)
+                        end
+                    end
+                end
+                if sv.transmitBlood then sv:transmitBlood() end
+            end
+
+            -------------------------------------------------
+            -- DIRT CLEANING
+            -------------------------------------------------
+            if sv.setDirt then
+                sv:setDirt(0)
+                if sv.transmitDirt then sv:transmitDirt() end
+            end
+
+            -------------------------------------------------
+            -- RUST CLEANING
+            -------------------------------------------------
+            if sv.setRust then
+                sv:setRust(0)
+                if sv.transmitRust then sv:transmitRust() end
+            end
+        end
+    end
+
     -- Consume spraycan
     if self.spraycan then
         local maxUses = self.spraycan:getMaxUses()
