@@ -1,4 +1,0 @@
-ContextMenu_CH =
-{
-	ContextMenu_PickLock = "撬锁",
-}

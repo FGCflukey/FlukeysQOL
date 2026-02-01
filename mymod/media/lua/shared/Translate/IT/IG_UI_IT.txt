@@ -1,8 +1,0 @@
-IGUI_IT = 
-{
-	IGUI_NeedScrewAndClip = "Mi servono un cacciavite e una graffetta.",
-	IGUI_NeedScrew = "Mi serve un cacciavite.",
-	IGUI_NeedClip = "Mi serve una graffetta.",
-	IGUI_LockpickFail = "La serratura non si è aperta. Dovrei riprovare.",
-	IGUI_LockpickFailBreak = "La graffetta si è rotta.",
-}

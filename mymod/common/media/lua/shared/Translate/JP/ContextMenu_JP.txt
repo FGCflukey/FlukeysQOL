@@ -1,4 +1,0 @@
-ContextMenu_JP =
-{
-	ContextMenu_PickLock = "ピック・ロック",
-}

@@ -81,24 +81,33 @@ SwapVehicleRegistry.Groups = {
     -- VanBase (standard cargo vans)
     --------------------------------------------------------
     ["Base.VanBeckmans"] = "VanBase",
+    ["Base.Van_Blacksmith"] = "VanBase",
     ["Base.VanBrewsterHarbin"] = "VanBase",
-    ["Base.VanBuilder"] = "VanBase",
-    ["Base.VanCarpenter"] = "VanBase",
+    ["Base.Van_BugWipers"] = "VanBase",
+    ["Base.Van_Charlemange_Beer"] = "VanBase",
     ["Base.VanCoastToCoast"] = "VanBase",
+    ["Base.Van_CraftSupplies"] = "VanBase",
     ["Base.VanDeerValley"] = "VanBase",
     ["Base.VanFossoil"] = "VanBase",
     ["Base.VanGardenGods"] = "VanBase",
     ["Base.VanGardener"] = "VanBase",
+    ["Base.Van_Glass"] = "VanBase",
     ["Base.VanGreenes"] = "VanBase",
+    ["Base.Van_HeritageTailors"] = "VanBase",
     ["Base.VanJohnMcCoy"] = "VanBase",
     ["Base.VanJonesFabrication"] = "VanBase",
     ["Base.VanKerrHomes"] = "VanBase",
     ["Base.VanKnobCreekGas"] = "VanBase",
     ["Base.VanKnoxCom"] = "VanBase",
+    ["Base.Van_KnoxDisti"] = "VanBase",
     ["Base.VanKorshunovs"] = "VanBase",
+    ["Base.Van_Leather"] = "VanBase",
+    ["Base.Van_LectroMax"] = "VanBase",
+    ["Base.Van_Locksmith"] = "VanBase",
     ["Base.VanLouisvilleLandscaping"] = "VanBase",
+    ["Base.Van_Masonry"] = "VanBase",
+    ["Base.Van_MassGenFac"] = "VanBase",
     ["Base.VanMccoy"] = "VanBase",
-    ["Base.VanMechanic"] = "VanBase",
     ["Base.VanMeltingPointMetal"] = "VanBase",
     ["Base.VanMetalheads"] = "VanBase",
     ["Base.VanMetalworker"] = "VanBase",
@@ -108,6 +117,7 @@ SwapVehicleRegistry.Groups = {
     ["Base.VanOldMill"] = "VanBase",
     ["Base.VanOvoFarm"] = "VanBase",
     ["Base.VanPennSHam"] = "VanBase",
+    ["Base.Van_Perfick_Potato"] = "VanBase",
     ["Base.VanPlattAuto"] = "VanBase",
     ["Base.VanPluggedInElectrics"] = "VanBase",
     ["Base.VanRadio"] = "VanBase",
@@ -116,24 +126,11 @@ SwapVehicleRegistry.Groups = {
     ["Base.VanRosewoodworking"] = "VanBase",
     ["Base.VanSchwabSheetMetal"] = "VanBase",
     ["Base.VanSpiffo"] = "VanBase",
+    ["Base.Van_Transit"] = "VanBase",
     ["Base.VanTreyBaines"] = "VanBase",
     ["Base.VanUncloggers"] = "VanBase",
-    ["Base.VanWPCarpentry"] = "VanBase",
-    ["Base.Van_Blacksmith"] = "VanBase",
-    ["Base.Van_BugWipers"] = "VanBase",
-    ["Base.Van_Charlemange_Beer"] = "VanBase",
-    ["Base.Van_CraftSupplies"] = "VanBase",
-    ["Base.Van_Glass"] = "VanBase",
-    ["Base.Van_HeritageTailors"] = "VanBase",
-    ["Base.Van_KnoxDisti"] = "VanBase",
-    ["Base.Van_Leather"] = "VanBase",
-    ["Base.Van_LectroMax"] = "VanBase",
-    ["Base.Van_Locksmith"] = "VanBase",
-    ["Base.Van_Masonry"] = "VanBase",
-    ["Base.Van_MassGenFac"] = "VanBase",
-    ["Base.Van_Perfick_Potato"] = "VanBase",
-    ["Base.Van_Transit"] = "VanBase",
     ["Base.Van_VoltMojo"] = "VanBase",
+    ["Base.VanWPCarpentry"] = "VanBase",
 
     --------------------------------------------------------
     -- VanAmbulance
@@ -182,8 +179,6 @@ SwapVehicleRegistry.Groups = {
     ["Base.StepVan_LouisvilleSWAT"] = "StepVan",
     ["Base.StepVan_MarineBites"] = "StepVan",
     ["Base.StepVan_Masonry"] = "StepVan",
-    ["Base.StepVan_Mechanic"] = "StepVan",
-    ["Base.StepVan_MobileLibrary"] = "StepVan",
     ["Base.StepVan_Plonkies"] = "StepVan",
     ["Base.StepVan_Propane"] = "StepVan",
     ["Base.StepVan_RandisPlants"] = "StepVan",
@@ -244,9 +239,7 @@ SwapVehicleRegistry.PartSets = {
         "HeadlightRearLeft","HeadlightRearRight"
     }
 
-
 }
-
 
 ------------------------------------------------------------
 -- SWAP PAIRS
@@ -315,24 +308,33 @@ SwapVehicleRegistry.SwapPairs = {
 
     VanBase = {
         "Base.VanBeckmans",
+        "Base.Van_Blacksmith",
         "Base.VanBrewsterHarbin",
-        "Base.VanBuilder",
-        "Base.VanCarpenter",
+        "Base.Van_BugWipers",
+        "Base.Van_Charlemange_Beer",
         "Base.VanCoastToCoast",
+        "Base.Van_CraftSupplies",
         "Base.VanDeerValley",
         "Base.VanFossoil",
         "Base.VanGardenGods",
         "Base.VanGardener",
+        "Base.Van_Glass",
         "Base.VanGreenes",
+        "Base.Van_HeritageTailors",
         "Base.VanJohnMcCoy",
         "Base.VanJonesFabrication",
         "Base.VanKerrHomes",
         "Base.VanKnobCreekGas",
         "Base.VanKnoxCom",
+        "Base.Van_KnoxDisti",
         "Base.VanKorshunovs",
+        "Base.Van_Leather",
+        "Base.Van_LectroMax",
+        "Base.Van_Locksmith",
         "Base.VanLouisvilleLandscaping",
+        "Base.Van_Masonry",
+        "Base.Van_MassGenFac",
         "Base.VanMccoy",
-        "Base.VanMechanic",
         "Base.VanMeltingPointMetal",
         "Base.VanMetalheads",
         "Base.VanMetalworker",
@@ -342,6 +344,7 @@ SwapVehicleRegistry.SwapPairs = {
         "Base.VanOldMill",
         "Base.VanOvoFarm",
         "Base.VanPennSHam",
+        "Base.Van_Perfick_Potato",
         "Base.VanPlattAuto",
         "Base.VanPluggedInElectrics",
         "Base.VanRadio",
@@ -350,24 +353,11 @@ SwapVehicleRegistry.SwapPairs = {
         "Base.VanRosewoodworking",
         "Base.VanSchwabSheetMetal",
         "Base.VanSpiffo",
+        "Base.Van_Transit",
         "Base.VanTreyBaines",
         "Base.VanUncloggers",
-        "Base.VanWPCarpentry",
-        "Base.Van_Blacksmith",
-        "Base.Van_BugWipers",
-        "Base.Van_Charlemange_Beer",
-        "Base.Van_CraftSupplies",
-        "Base.Van_Glass",
-        "Base.Van_HeritageTailors",
-        "Base.Van_KnoxDisti",
-        "Base.Van_Leather",
-        "Base.Van_LectroMax",
-        "Base.Van_Locksmith",
-        "Base.Van_Masonry",
-        "Base.Van_MassGenFac",
-        "Base.Van_Perfick_Potato",
-        "Base.Van_Transit",
         "Base.Van_VoltMojo",
+        "Base.VanWPCarpentry",
     },
 
     VanAmbulance = {
@@ -411,8 +401,6 @@ SwapVehicleRegistry.SwapPairs = {
         "Base.StepVan_LouisvilleSWAT",
         "Base.StepVan_MarineBites",
         "Base.StepVan_Masonry",
-        "Base.StepVan_Mechanic",
-        "Base.StepVan_MobileLibrary",
         "Base.StepVan_Plonkies",
         "Base.StepVan_Propane",
         "Base.StepVan_RandisPlants",
@@ -436,6 +424,29 @@ SwapVehicleRegistry.SwapPairs = {
     TrailerAnimal = {
         "Base.Trailer_Horsebox",
         "Base.Trailer_Livestock",
+    },
+}
+
+------------------------------------------------------------
+-- OVERRIDE GROUPS
+-- Handles special-case parts that only exist on some variants
+------------------------------------------------------------
+SwapVehicleRegistry.OverrideGroups = SwapVehicleRegistry.OverrideGroups or {}
+
+SwapVehicleRegistry.OverrideGroups["PickupVanLights"] = {
+    -- Parts that should be preserved when both vehicles support them
+    preserveParts = {
+        "lightbar",
+    },
+
+    -- Parts that should be removed when the target vehicle does NOT support them
+    removeIfTargetLacks = {
+        "lightbar",
+    },
+
+    -- Parts that should be added when the TARGET vehicle supports them
+    addIfTargetHas = {
+        "lightbar",
     },
 }
 

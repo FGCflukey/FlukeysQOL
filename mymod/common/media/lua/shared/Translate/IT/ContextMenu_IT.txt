@@ -1,4 +1,0 @@
-ContextMenu_IT =
-{
-	ContextMenu_PickLock = "Scassina",
-}

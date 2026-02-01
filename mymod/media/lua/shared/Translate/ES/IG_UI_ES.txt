@@ -1,8 +1,0 @@
-IGUI_ES = 
-{
-	IGUI_NeedScrewAndClip = "Necesito un destornillador y un clip.",
-	IGUI_NeedScrew = "Necesito un destornillador.",
-	IGUI_NeedClip = "Necesito un clip.",
-	IGUI_LockpickFail = "La cerradura no se movió. Debería intentarlo de nuevo.",
-	IGUI_LockpickFailBreak = "El clip se rompió.",
-}
