@@ -80,7 +80,6 @@ local VANILLA_CONTAINERS = {
     "TruckBed",
 }
 
--- Capture references to containers + items
 local function CaptureLootReferences(vehicle)
     local loot = {}
 
@@ -105,7 +104,6 @@ local function CaptureLootReferences(vehicle)
     return loot
 end
 
--- Clear all items from the new vehicle's containers
 local function ClearNewVehicleContainers(newVehicle)
     for _, id in ipairs(VANILLA_CONTAINERS) do
         local part = newVehicle:getPartById(id)
@@ -115,7 +113,6 @@ local function ClearNewVehicleContainers(newVehicle)
     end
 end
 
--- Restore items from old container references into new vehicle
 local function RestoreLootFromReferences(newVehicle, loot)
     for id, data in pairs(loot) do
         local newPart = newVehicle:getPartById(id)
@@ -158,7 +155,7 @@ function SwapVehicle_Server_Handle(player, args)
     end
 
     --------------------------------------------------------
-    -- Capture loot references (Lua table method)
+    -- Capture loot references
     --------------------------------------------------------
     local lootData = CaptureLootReferences(vehicle)
 
@@ -172,15 +169,18 @@ function SwapVehicle_Server_Handle(player, args)
     end
 
     --------------------------------------------------------
-    -- Capture tank data
+    -- CAPTURE TANK DATA (YOUR EXACT LOGIC)
     --------------------------------------------------------
-    local tank = vehicle:getPartById("GasTank")
-    local tankData = {}
-    if tank then
-        tankData.capacity  = tank:getContainerCapacity()
-        tankData.condition = tank:getCondition()
-        tankData.fuel      = tank:getContainerContentAmount()
-    end
+    local oldTankPart = vehicle:getPartById("GasTank")
+    local oldTankItem = oldTankPart and oldTankPart:getInventoryItem()
+
+    local oldTankType = oldTankItem and oldTankItem:getFullType()
+    local oldTankCondition = oldTankItem and oldTankItem:getCondition()
+    local oldTankFuel = oldTankPart and oldTankPart:getContainerContentAmount()
+
+    print("[SwapVehicle] Old tank item: " .. tostring(oldTankType))
+    print("[SwapVehicle] Old tank condition: " .. tostring(oldTankCondition))
+    print("[SwapVehicle] Old tank fuel: " .. tostring(oldTankFuel))
 
     --------------------------------------------------------
     -- Capture battery
@@ -275,23 +275,31 @@ function SwapVehicle_Server_Handle(player, args)
     end
 
     --------------------------------------------------------
-    -- Restore tank
+    -- RESTORE TANK (YOUR EXACT LOGIC)
     --------------------------------------------------------
-    if tankData.capacity then
-        local newTank = newVehicle:getPartById("GasTank")
-        if newTank then
-            if newTank.setContainerCapacity then
-                newTank:setContainerCapacity(tankData.capacity)
-            end
-            newTank:setCondition(tankData.condition)
-        end
-    end
+    if oldTankType then
+        local newTankPart = newVehicle:getPartById("GasTank")
 
-    --------------------------------------------------------
-    -- Restore fuel
-    --------------------------------------------------------
-    if tankData.fuel then
-        QueueFuelRestoreStabilized(newVehicleId, tankData.fuel)
+        if newTankPart then
+            print("[SwapVehicle] Removing new car's default tank item")
+            newTankPart:setInventoryItem(nil)
+
+            print("[SwapVehicle] Installing tank item: " .. tostring(oldTankType))
+            local newTankItem = instanceItem(oldTankType)
+
+            if newTankItem then
+                newTankItem:setCondition(oldTankCondition or 100)
+                newTankPart:setInventoryItem(newTankItem)
+                newTankPart:setContainerContentAmount(oldTankFuel or 0)
+
+                print("[SwapVehicle] Tank condition restored: " .. tostring(oldTankCondition))
+                print("[SwapVehicle] Tank fuel restored: " .. tostring(oldTankFuel))
+            else
+                print("[SwapVehicle] ERROR: Failed to create tank item " .. tostring(oldTankType))
+            end
+        else
+            print("[SwapVehicle] ERROR: New vehicle has no GasTank part")
+        end
     end
 
     --------------------------------------------------------
