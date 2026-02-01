@@ -80,8 +80,11 @@ local function SV_AddContextMenu(playerIndex, context, worldobjects, test)
     -- Add context menu option
     --------------------------------------------------------
     context:addOption("Swap Vehicle Vinyl", vehicle, function(v)
+        -- CRITICAL FIX: Normalize vehicle reference
+        local worldVehicle = getVehicleById(v:getId())
+
         if SwapVehicle_UI and SwapVehicle_UI.Open then
-            SwapVehicle_UI.Open(player, v, group, variants)
+            SwapVehicle_UI.Open(player, worldVehicle, group, variants)
         else
             print("ERROR: SwapVehicle_UI.Open missing!")
         end

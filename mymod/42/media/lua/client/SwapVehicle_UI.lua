@@ -1,6 +1,7 @@
 --========================================================
 -- SwapVehicle UI (Vertical Layout + Full Script Names)
 --========================================================
+require "ISSwapVinylAction"
 
 SwapVehicle_UI = ISCollapsableWindow:derive("SwapVehicle_UI")
 SwapVehicle_UI.instance = nil
@@ -34,6 +35,15 @@ function SwapVehicle_UI:new(x, y, w, h, player, vehicleObj, groupID, variants)
     setmetatable(o, self)
     self.__index = self
 
+    ------------------------------------------------------
+    -- CRITICAL FIX: Normalize vehicle reference
+    -- Ensures we always use the real world IsoVehicle,
+    -- not the seat-vehicle instance returned when inside.
+    ------------------------------------------------------
+    if vehicleObj and vehicleObj:getId() then
+        vehicleObj = getVehicleById(vehicleObj:getId())
+    end
+
     o.player     = player
     o.vehicleObj = vehicleObj
     o.groupID    = groupID
@@ -48,7 +58,6 @@ end
 ----------------------------------------------------------
 -- Create Children
 ----------------------------------------------------------
-
 function SwapVehicle_UI:createChildren()
     ISCollapsableWindow.createChildren(self)
 
@@ -59,7 +68,7 @@ function SwapVehicle_UI:createChildren()
     -- LEFT COLUMN: Variant List
     ------------------------------------------------------
     local listW = (self.width - pad*3) * 0.35
-    local listH = self.height - th - pad*3 - 40  -- leave room for button
+    local listH = self.height - th - pad*3 - 40
 
     self.list = ISScrollingListBox:new(
         pad, th + pad,
@@ -114,7 +123,7 @@ function SwapVehicle_UI:createChildren()
     self:addChild(self.preview)
 
     ------------------------------------------------------
-    -- Swap Button (bottom center)
+    -- Swap Button
     ------------------------------------------------------
     self.swapBtn = ISButton:new(
         (self.width - 120) / 2,
@@ -160,14 +169,16 @@ function SwapVehicle_UI:onSwapClick()
 
     local scriptName = item.scriptName
 
-    sendClientCommand(
-        self.player,
-        "SwapVehicle",
-        "Swap",
-        {
-            vehicleId = self.vehicleObj:getId(),
-            newScript = scriptName
-        }
+    ------------------------------------------------------
+    -- Timed Action (Animation + Delay)
+    ------------------------------------------------------
+    ISTimedActionQueue.add(
+        ISSwapVinylAction:new(
+            self.player,
+            self.vehicleObj,
+            scriptName,
+            600
+        )
     )
 
     self:close()
