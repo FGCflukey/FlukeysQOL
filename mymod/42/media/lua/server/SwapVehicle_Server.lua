@@ -169,7 +169,7 @@ function SwapVehicle_Server_Handle(player, args)
     end
 
     --------------------------------------------------------
-    -- CAPTURE TANK DATA (YOUR EXACT LOGIC)
+    -- CAPTURE TANK DATA
     --------------------------------------------------------
     local oldTankPart = vehicle:getPartById("GasTank")
     local oldTankItem = oldTankPart and oldTankPart:getInventoryItem()
@@ -205,9 +205,24 @@ function SwapVehicle_Server_Handle(player, args)
     end
 
     --------------------------------------------------------
-    -- Save position
+    -- Save position + rotation (SAFE)
     --------------------------------------------------------
     local x, y, z = vehicle:getX(), vehicle:getY(), vehicle:getZ()
+
+    local angle = 0
+    if vehicle.getAngle then
+        angle = vehicle:getAngle() or 0
+    end
+
+    local dir = 0
+    if vehicle.getDir then
+        dir = vehicle:getDir() or 0
+    end
+
+    local forward = nil
+    if vehicle.getForwardDirection then
+        forward = vehicle:getForwardDirection()
+    end
 
     --------------------------------------------------------
     -- Remove old vehicle
@@ -217,10 +232,44 @@ function SwapVehicle_Server_Handle(player, args)
     --------------------------------------------------------
     -- Spawn new vehicle
     --------------------------------------------------------
-    local newVehicle = addVehicle(newScript, math.floor(x), math.floor(y), math.floor(z))
+    local newVehicle = addVehicle(newScript, x, y, z)
     if not newVehicle then return end
 
     local newVehicleId = newVehicle:getId()
+
+    --------------------------------------------------------
+    -- Force new vehicle to old transform (Quaternion‑Based)
+    --------------------------------------------------------
+
+    -- Capture quaternion rotation from old vehicle
+    local rot = nil
+    if vehicle.getWorldRotation then
+        rot = vehicle:getWorldRotation()
+    end
+
+    -- Apply position
+    if newVehicle.setX then newVehicle:setX(x) end
+    if newVehicle.setY then newVehicle:setY(y) end
+    if newVehicle.setZ then newVehicle:setZ(z) end
+
+    if newVehicle.setWorldPos then
+        newVehicle:setWorldPos(x, y, z)
+    end
+
+    -- Apply rotation using quaternion
+    if rot and newVehicle.setWorldRotation then
+        newVehicle:setWorldRotation(rot)
+    end
+
+    -- Reset movement
+    if newVehicle.setCurrentSpeed then newVehicle:setCurrentSpeed(0) end
+    if newVehicle.setEngineSpeed then newVehicle:setEngineSpeed(0) end
+    if newVehicle.setEngineStarted then newVehicle:setEngineStarted(false) end
+
+    -- Transmit corrected state
+    if newVehicle.transmitPosition then newVehicle:transmitPosition() end
+    if newVehicle.transmitDirection then newVehicle:transmitDirection() end
+    if newVehicle.transmitEngine then newVehicle:transmitEngine() end
 
     --------------------------------------------------------
     -- Restore key
@@ -275,7 +324,7 @@ function SwapVehicle_Server_Handle(player, args)
     end
 
     --------------------------------------------------------
-    -- RESTORE TANK (YOUR EXACT LOGIC)
+    -- RESTORE TANK
     --------------------------------------------------------
     if oldTankType then
         local newTankPart = newVehicle:getPartById("GasTank")
