@@ -214,7 +214,7 @@ SwapVehicleRegistry.PartSets = {
         "GasTank","Battery","Engine","Muffler","EngineDoor","Heater",
         "Windshield","WindshieldRear",
         "WindowFrontLeft","WindowFrontRight","WindowRearLeft","WindowRearRight",
-        "DoorFrontLeft","DoorFrontRight",
+        "DoorFrontLeft","DoorFrontRight","DoorRearLeft","DoorRearRight",
         "DoorRear",
         "TireFrontLeft","TireFrontRight","TireRearLeft","TireRearRight",
         "BrakeFrontLeft","BrakeFrontRight","BrakeRearLeft","BrakeRearRight",
