@@ -7,34 +7,24 @@ Mod for Solo Play only. Some features have to sync for server.
 This mod is a bunch of tweaks to the base game and does the
 following:
 
-- Overrides UseDelta on BlowTorches and Propane Tanks because it
-  makes sense!
-- Adds Zombie butchering to cleanup  the dead around your base
-- Adds update PZ Bloodcure which utilizes the Zombie buchering
+- Overrides UseDelta on BlowTorches and Propane Tanks because it makes sense!
+- Adds Zombie butchering to cleanup the dead around your base
+- Adds updated PZ Bloodcure which utilizes the Zombie butchering (rewrite)
 - Adds Carbon Fibre Combat Axe and Long Reach Axe updated
-- Adds the old Hydrocraft looking Dolly and Toy Wagon for crazy
-  hoarders like me
-- Allows climbing all obstacles such as fences, windows and tall
-  walls without dropping your Dolly or Toy Wagon
-- Adds a Visual Learner trait which allows the player to get XP/
-  Levels from books instead of the usual vanilla boost
-- Adds alternative version of Simple Lockingpicking, returning
-  screwdriver back to where it came from
-- Adds packaging such as 10 pack of Engine Parts, Syringes and
-  Test Tubes
-- Adds more Packaing options for items
+- Adds the old Hydrocraft looking Dolly and Toy Wagon for crazy hoarders like me
+- Allows climbing all obstacles such as fences, windows and tall walls without dropping your Dolly or Toy Wagon
+- Adds a Visual Learner trait which allows the player to get XP/ Levels from books instead of the usual vanilla boost
+- Adds Lockpicking inspired by Simple Lockpicking, returning screwdriver back to where it came from
+- Adds more packaging options such as 10 pack of Engine Parts, Syringes and Test Tubes
+- Adds more Packaging options for items
 - Adds recipes in regards to repurposing unusable metal and scrap.
-- Using JB Max Capacity Override - Dolly and trunk size increase
+- <required from workshop> Using JB Max Capacity Override - Dolly and trunk size increase
 - Adds BlowTorch and Propane Tank filling at pumps.
-- Adds Lockpicking. All doors, all directions. 20% chance you can
-  break your paperclip. Vehicle Lockpicking included.
-- Added Gate cutting with torch that gives scrap on success. Think
-  Gun Store the security fence blocking the door. Welding 2 Req.
-- Added EZ Car Painting. Now you have a nice variety of colours to
-  paint your ride with. Only tested vanilla and single player.
-- Added Filling Barrels with Liquid. Can be gas or water. Will tweak
-  it more later. Animation is funny when working on barrel too.
-- Added Vehicle Vinyl swapping. Want a different look for your vehicle?
+- Adds Lockpicking. All doors, all directions. 20% chance you can break your paperclip. Vehicles can Lockpicked too!
+- Added Security Gate cutting with torch, rewards scrap. Think Gun Store security fence blocking the door. Welding 2 Req.
+- Added Car Painting. Now you have a nice variety of colours to paint your ride with. Tested vanilla/single player only.
+- Added Filling Barrels with Liquid. Gas or Water 200L. Will tweak/expand more later.
+- Added Vehicle Vinyl swapping. Want a different look for your vehicle? (only vanilla for now)
 - Added Bulk Magazine Reloading/Unloading. Right click your stack!
 
 ## Installation
