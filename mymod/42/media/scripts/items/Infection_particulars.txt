@@ -1,6 +1,23 @@
 module Base
 {
 
+    item CurezMagazine
+    {
+        DisplayCategory         = SkillBook,
+        ItemType                = base:literature,
+        Weight                  = 0.5,
+        Icon                    = CurezMag,
+        BoredomChange           = -20,
+        StressChange            = -15,
+        LearnedRecipes          = CraftZomCureSyringe;FillSyringesWithBlood;FillTestTubeWithBaseSerum,
+        DisappearOnUse          = false,
+        Tooltip                 = Tooltip_item_CurezMagazine,
+        StaticModel             = Magazine,
+        WorldStaticModel        = MagazineCureZ_Ground,
+        Tags                    = base:magazine,
+        OnCreate                = SpecialLootSpawns.OnCreateRecipeMagazine,
+    }
+
     item ZombieMeat
     {
         DisplayCategory         = FirstAid,
@@ -170,6 +187,7 @@ module Base
     {
         timedAction     = MixingMortarPestle,
         time            = 120,
+        NeedToBeLearn   = true,
         Tags            = AnySurfaceCraft;Health,
         category        = Medical,
         OnCreate        = OnCreate_FilledSyringes,
@@ -191,6 +209,7 @@ module Base
     {
         timedAction     = MixingMortarPestle,
         time            = 300,
+        NeedToBeLearn   = true,
         Tags            = AnySurfaceCraft;Health,
         category        = Medical,
         OnCreate        = OnCreate_FilledSyringes,
@@ -213,10 +232,11 @@ module Base
 
     craftRecipe CraftZomCureSyringe
     {
-        timedAction = MixingMortarPestle,
-        time = 300,
-        Tags = AnySurfaceCraft;Health,
-        category = Medical,
+        timedAction         = MixingMortarPestle,
+        time                = 300,
+        NeedToBeLearn       = true,
+        Tags                = AnySurfaceCraft;Health,
+        category            = Medical,
 
         inputs
         {

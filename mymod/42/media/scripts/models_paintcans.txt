@@ -148,4 +148,11 @@ module Base
         scale   = 0.425,
     }
 
+    model SandingBlock
+    {
+        mesh    = WorldItems/SandingBlock,
+        texture = WorldItems/SandingBlock,
+        scale   = 0.4,
+    }
+
 }

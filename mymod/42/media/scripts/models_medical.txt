@@ -2,30 +2,37 @@ module Base
 {
     model Syringe
     {
-        mesh        = items/Item_Syringe,
-        texture     = WorldItems/MetalSheet,
-        scale       = 1,
+        mesh    = items/Item_Syringe,
+        texture = WorldItems/MetalSheet,
+        scale   = 1,
     }
 
     model Item_LabTestTube
     {
-        mesh = WorldItems/Item_LabTestTube,
+        mesh    = WorldItems/Item_LabTestTube,
         texture = WorldItems/Item_LabTestTube,
-        scale = 0.6,
+        scale   = 0.6,
     }
 
     model Item_CmpTestTubeWithInfectedBlood
     {
-        mesh = WorldItems/Item_LabTestTube,
+        mesh    = WorldItems/Item_LabTestTube,
         texture = WorldItems/Item_CmpTestTubeWithInfectedBlood,
-        scale = 0.6,
+        scale   = 0.6,
     }
 
     model Item_CmpTestTubeWithInfectedSerum
     {
-        mesh = WorldItems/Item_LabTestTube,
+        mesh    = WorldItems/Item_LabTestTube,
         texture = WorldItems/Item_CmpTestTubeWithInfectedSerum,
-        scale = 0.6,
+        scale   = 0.6,
+    }
+
+    model MagazineCureZ_Ground
+    {
+        mesh    = WorldItems/Magazine,
+        texture = WorldItems/MagazineCureZ,
+        scale   = 0.4,
     }
 
 }

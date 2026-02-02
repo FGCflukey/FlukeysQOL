@@ -23,39 +23,36 @@ function ISPaintVehicleAction:isValid()
     if not self.vehicle or self.vehicle:isRemovedFromWorld() then return false end
     if not self.character or self.character:isDead() then return false end
 
+    -- Must have spraycan
     if self.spraycan then
         if self.spraycan:getCurrentUses() <= 0 then return false end
         if not self.character:getInventory():contains(self.spraycan) then return false end
+    end
+
+    -- Must have sanding block
+    if not self.character:getInventory():contains("SandingBlock") then
+        return false
     end
 
     return true
 end
 
 function ISPaintVehicleAction:start()
-    -- Face the vehicle
     self.character:faceThisObject(self.vehicle)
 
-    -- Animation
     self:setActionAnim("Craft")
     self.character:SetVariable("CraftingType", "Spraycan")
 
-    -- Play shake sound (WaterPour)
     local emitter = self.character:getEmitter()
     if emitter then
         emitter:playSound("WaterPour")
-    end
-
-    -- Start looping spray sound (PaintVehicleSpray)
-    if emitter then
         self.loopSound = emitter:playSound("PaintVehicleSpray")
     end
 end
 
 function ISPaintVehicleAction:update()
-    -- Keep facing the vehicle
     self.character:faceThisObject(self.vehicle)
 
-    -- Restart spray sound if it stops
     local emitter = self.character:getEmitter()
     if emitter and self.loopSound and not emitter:isPlaying(self.loopSound) then
         self.loopSound = emitter:playSound("PaintVehicleSpray")
@@ -63,7 +60,6 @@ function ISPaintVehicleAction:update()
 end
 
 function ISPaintVehicleAction:stop()
-    -- Stop looping spray sound
     local emitter = self.character:getEmitter()
     if emitter and self.loopSound then
         emitter:stopSound(self.loopSound)
@@ -73,7 +69,6 @@ function ISPaintVehicleAction:stop()
 end
 
 function ISPaintVehicleAction:perform()
-    -- Stop looping spray sound
     local emitter = self.character:getEmitter()
     if emitter and self.loopSound then
         emitter:stopSound(self.loopSound)
@@ -90,13 +85,10 @@ function ISPaintVehicleAction:perform()
     -----------------------------------------------------
     local v = self.vehicle
     if v and v:getId() then
-        -- Get the authoritative server vehicle
         local sv = getVehicleById(v:getId())
 
         if sv then
-            -------------------------------------------------
-            -- BLOOD CLEANING (requires server vehicle)
-            -------------------------------------------------
+            -- Blood
             if sv.setBloodIntensity and sv.getPartList then
                 local parts = sv:getPartList()
                 if parts then
@@ -110,17 +102,13 @@ function ISPaintVehicleAction:perform()
                 if sv.transmitBlood then sv:transmitBlood() end
             end
 
-            -------------------------------------------------
-            -- DIRT CLEANING
-            -------------------------------------------------
+            -- Dirt
             if sv.setDirt then
                 sv:setDirt(0)
                 if sv.transmitDirt then sv:transmitDirt() end
             end
 
-            -------------------------------------------------
-            -- RUST CLEANING
-            -------------------------------------------------
+            -- Rust
             if sv.setRust then
                 sv:setRust(0)
                 if sv.transmitRust then sv:transmitRust() end
@@ -144,7 +132,6 @@ function ISPaintVehicleAction:perform()
         end
     end
 
-    -- Close context menus
     if ISContextMenu.instance then
         ISContextMenu.closeAll()
     end
@@ -160,9 +147,7 @@ function ISPaintVehicleAction:new(character, vehicle, hsv, spraycan, scriptName)
     o.spraycan    = spraycan
     o.scriptName  = scriptName
 
-    -- 10 seconds (600 ticks)
     o.maxTime     = 600
-
     o.stopOnWalk  = true
     o.stopOnRun   = true
     o.useProgressBar = true

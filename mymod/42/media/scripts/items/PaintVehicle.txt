@@ -232,4 +232,15 @@ module Base
         WorldStaticModel    = spraycanTZCyan,
     }
 
+    item SandingBlock
+    {
+        ItemType            = base:normal,
+        DisplayCategory     = Tool,
+        Weight              = 1.0,
+        Icon                = SandingBlock,
+        StaticModel         = SandingBlock,
+        WorldStaticModel    = SandingBlock,
+        Tooltip             = Tooltip_SandingBlock,
+    }
+
 }

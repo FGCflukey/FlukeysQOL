@@ -125,6 +125,13 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
     if not hasAnySpraycan then return end
 
     -----------------------------------------------------
+    -- NEW REQUIREMENT: Must have Sanding Block
+    -----------------------------------------------------
+    if not inv:contains("SandingBlock") then
+        return
+    end
+
+    -----------------------------------------------------
     -- MAIN OPTION
     -----------------------------------------------------
     local mainOption = context:addOption("Repaint Vehicle", worldobjects, nil)
