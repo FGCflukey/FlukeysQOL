@@ -36,4 +36,19 @@ module Base
         }
     }
 
+    sound ATM_Machine
+    {
+        category = Object,
+        volume = 3.0,
+
+        clip
+        {
+            file = media/sound/ATM_Machine.ogg,
+            distanceMin = 1,
+            distanceMax = 12,
+            priority = 5,
+            pitch = 1.1,
+        }
+    }
+
 }
