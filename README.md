@@ -34,7 +34,8 @@ following:
   paint your ride with. Only tested vanilla and single player.
 - Added Filling Barrels with Liquid. Can be gas or water. Will tweak
   it more later. Animation is funny when working on barrel too.
-- Added core Vehicle Vinyl swapping.
+- Added Vehicle Vinyl swapping. Want a different look for your vehicle?
+- Added Bulk Magazine Reloading/Unloading. Right click your stack!
 
 ## Installation
 
