@@ -4,7 +4,7 @@ require "Items/ProceduralDistributions"
 ---------------------------------------------------------
 -- DEBUG TOGGLE
 ---------------------------------------------------------
-local QOL_DEBUG = false   -- set to true to enable debug logging
+local QOL_DEBUG = true   -- set to true to enable debug logging
 
 local function qolDebug(msg)
     if QOL_DEBUG then
@@ -39,52 +39,52 @@ end
 
 -- Medical / Cure Items
 local qolMedsDistribTable = {
-    "Base.BoxedSyringes",      0.6,
-    "Base.BoxedLabTestTubes",  0.6,
-    "Base.EmptySyringe",       0.8,
-    "Base.LabTestTube",        0.6,
+    "Base.BoxedSyringes",      8.0,
+    "Base.BoxedLabTestTubes",  8.0,
+    "Base.EmptySyringe",       12.0,
+    "Base.LabTestTube",        9.0,
 }
 
 -- Storage Items
 local qolStorageDistribTable = {
-    "Base.HCHanddolly",  0.5,
-    "Base.HCToywagon",   0.6,
+    "Base.HCHanddolly",  3.0,
+    "Base.HCToywagon",   4.0,
 }
 
 -- Weapons
 local qolWeapDistribTable = {
-    "Base.cfcombataxe",      0.4,
-    "Base.cflongreachaxe",   0.4,
+    "Base.cfcombataxe",      8.5,
+    "Base.cflongreachaxe",   8.5,
 }
 
 -- Car / Mechanics
 local qolCarDistribTable = {
-    "Base.BoxedEngineParts", 0.8,
+    "Base.BoxedEngineParts", 9.0,
 }
 
 -- Spray Cans
 local qolSprayDistribTable = {
-    "Base.SpraycanWhite",        0.4,
-    "Base.SpraycanBlack",        0.4,
-    "Base.SpraycanGray",         0.4,
-    "Base.SpraycanDarkGray",     0.4,
-    "Base.SpraycanRed",          0.4,
-    "Base.SpraycanBlue",         0.4,
-    "Base.SpraycanGreen",        0.4,
-    "Base.SpraycanYellow",       0.4,
-    "Base.SpraycanOrange",       0.4,
-    "Base.SpraycanPurple",       0.4,
-    "Base.SpraycanPastelBlue",   0.4,
-    "Base.SpraycanPastelPink",   0.4,
-    "Base.SpraycanPastelGreen",  0.4,
-    "Base.SpraycanPastelYellow", 0.4,
-    "Base.SpraycanMauve",        0.4,
-    "Base.SpraycanBrown",        0.4,
-    "Base.SpraycanTan",          0.4,
-    "Base.SpraycanOlive",        0.4,
-    "Base.SpraycanForestGreen",  0.4,
-    "Base.SpraycanPink",         0.4,
-    "Base.SpraycanCyan",         0.4,
+    "Base.SpraycanWhite",        4.0,
+    "Base.SpraycanBlack",        4.0,
+    "Base.SpraycanGray",         4.0,
+    "Base.SpraycanDarkGray",     4.0,
+    "Base.SpraycanRed",          4.0,
+    "Base.SpraycanBlue",         4.0,
+    "Base.SpraycanGreen",        4.0,
+    "Base.SpraycanYellow",       4.0,
+    "Base.SpraycanOrange",       4.0,
+    "Base.SpraycanPurple",       4.0,
+    "Base.SpraycanPastelBlue",   4.0,
+    "Base.SpraycanPastelPink",   4.0,
+    "Base.SpraycanPastelGreen",  4.0,
+    "Base.SpraycanPastelYellow", 4.0,
+    "Base.SpraycanMauve",        4.0,
+    "Base.SpraycanBrown",        4.0,
+    "Base.SpraycanTan",          4.0,
+    "Base.SpraycanOlive",        4.0,
+    "Base.SpraycanForestGreen",  4.0,
+    "Base.SpraycanPink",         4.0,
+    "Base.SpraycanCyan",         4.0,
 }
 
 ---------------------------------------------------------
@@ -100,6 +100,7 @@ local storageTargets = {
     "GigamartTools",
     "GroceryStorageCrate1",
     "GroceryStorageCrate2",
+    "PawnShopTools",
 }
 
 local medTargets = {
@@ -115,6 +116,8 @@ local weaponTargets = {
     "ArmyHangarTools",
     "ArmySurplusCases",
     "GunStoreKnives",
+    "GunStorePistols",
+    "GunStoreRifles",
     "GunStoreGuns",
     "PoliceStorageGuns",
     "FiremanTools",
@@ -128,6 +131,7 @@ local carTargets = {
     "MechanicSpecial",
     "ArmySurplusMisc",
     "FireDeptLockers",
+    "ToolCabinetMechanics",
 }
 
 local sprayTargets = {
