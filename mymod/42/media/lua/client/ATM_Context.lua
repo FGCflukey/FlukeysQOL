@@ -27,28 +27,43 @@ local function isATM(worldobjects)
 end
 
 -----------------------------------------------------
--- CREDIT CARD COLLECTION
+-- RECURSIVE CREDIT CARD COLLECTION
 -----------------------------------------------------
-local function getCreditCards(inv)
-    local cards = ArrayList.new()
+local function collectCardsRecursive(container, list)
+    if not container then return end
 
-    -- Normal credit cards
-    local normal = inv:getAllType("CreditCard")
+    -- Normal cards
+    local normal = container:getAllType("CreditCard")
     if normal and not normal:isEmpty() then
         for i = 0, normal:size() - 1 do
-            cards:add(normal:get(i))
+            list[#list + 1] = normal:get(i)
         end
     end
 
-    -- Stolen credit cards
-    local stolen = inv:getAllType("CreditCard_Stolen")
+    -- Stolen cards
+    local stolen = container:getAllType("CreditCard_Stolen")
     if stolen and not stolen:isEmpty() then
         for i = 0, stolen:size() - 1 do
-            cards:add(stolen:get(i))
+            list[#list + 1] = stolen:get(i)
         end
     end
 
-    return cards
+    -- Recurse into subcontainers
+    local items = container:getItems()
+    if items then
+        for i = 0, items:size() - 1 do
+            local item = items:get(i)
+            if item and item:IsInventoryContainer() then
+                collectCardsRecursive(item:getItemContainer(), list)
+            end
+        end
+    end
+end
+
+local function getAllCreditCards(player)
+    local list = {}
+    collectCardsRecursive(player:getInventory(), list)
+    return list
 end
 
 -----------------------------------------------------
@@ -63,34 +78,30 @@ local function OnFillWorldObjectContextMenu_ATM(playerNum, context, worldobjects
     local atm = isATM(worldobjects)
     if not atm then return end
 
-    local inv = player:getInventory()
-    local cards = getCreditCards(inv)
+    local cards = getAllCreditCards(player)
 
     -----------------------------------------------------
-    -- NO CREDIT CARDS
+    -- NO CARDS ANYWHERE
     -----------------------------------------------------
-    if cards:isEmpty() then
-        context:addOption("Cash out Credit Card", worldobjects, function()
-            player:Say("I need some credit cards to try")
-        end)
+    if #cards == 0 then
+        player:Say("I should try getting a credit card.")
         return
     end
 
     -----------------------------------------------------
-    -- SINGLE CARD OPTION
+    -- SINGLE CARD OPTION (use first found)
     -----------------------------------------------------
+    local firstCard = cards[1]
     context:addOption("Cash out Credit Card", worldobjects, function()
-        local card = cards:get(0)
-        ISTimedActionQueue.add(CashOutATMAction:new(player, atm, card))
+        ISTimedActionQueue.add(CashOutATMAction:new(player, atm, firstCard))
     end)
 
     -----------------------------------------------------
-    -- MULTIPLE CARDS OPTION
+    -- BULK OPTION (only if more than one)
     -----------------------------------------------------
-    if cards:size() > 1 then
+    if #cards > 1 then
         context:addOption("Cash out ALL Credit Cards", worldobjects, function()
-            for i = 0, cards:size() - 1 do
-                local card = cards:get(i)
+            for _, card in ipairs(cards) do
                 ISTimedActionQueue.add(CashOutATMAction:new(player, atm, card))
             end
         end)

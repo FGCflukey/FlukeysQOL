@@ -26,6 +26,8 @@ following:
 - Added Filling Barrels with Liquid. Gas or Water 200L. Will tweak/expand more later.
 - Added Vehicle Vinyl swapping. Want a different look for your vehicle? (only vanilla for now)
 - Added Bulk Magazine Reloading/Unloading. Right click your stack!
+- Added ATM usage. Find credit cards and try them to get some money! Watch out, it can attact Zombies!
+- Added an Emergency Vendor. Accesible via right-click of Vending Machine. Buy critical items if you have enough cash!
 
 ## Installation
 
