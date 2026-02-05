@@ -41,4 +41,10 @@ RecipesEN {
     Recipe_MakeWireandLimestoneIntoWeldingRods = "Make Welding Rods from Wire and Limestone",
     Recipe_MakeWireandElectronicsScrapIntoElectricWire = "Make Electric Wire from Wire and Elec Scrap",
 
+    Recipe_FillTheMoneyBag = "Put 5 Money Bundles in Money Bag",
+    Recipe_EmptyTheMoneyBag = "Empty your Money Bag",
+    Recipe_FillTheBigMoneyBag = "Put 10 Money Bundles in Money Bag",
+    Recipe_EmptyTheBigMoneyBag = "Empty your Money Bag",
+    Recipe_ConvertDuffleMoney = "Convert Duffle Bag to Money Bag",
+    Recipe_ConvertMoneyDuffle = "Convert Money Bag to Duffle Bag",
 }

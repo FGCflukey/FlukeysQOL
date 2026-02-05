@@ -44,4 +44,6 @@ ItemName_EN = {
     ItemName_Base.SpraycanCyan = "Spraycan (Cyan)",
     ItemName_Base.SandingBlock = "Sanding Pad",
 
+    ItemName_Base.Bag_FullMoneyBag = "Money Bag ($500)",
+    ItemName_Base.Bag_FullBigMoneyBag = "Money Bag ($1000)",
 }

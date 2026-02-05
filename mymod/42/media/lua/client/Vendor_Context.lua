@@ -1,16 +1,27 @@
 -- Vendor_Context.lua
 require "Vendor_UI"
 
+-----------------------------------------------------
+-- UPDATED MONEY COUNTER (supports money bags)
+-----------------------------------------------------
+local MONEY_VALUES = {
+    ["Money"] = 1,
+    ["MoneyBundle"] = 100,
+    ["Bag_FullMoneyBag"] = 500,
+    ["Bag_FullBigMoneyBag"] = 1000,
+}
+
 local function countMoneyRecursive(container)
     if not container then return 0 end
 
     local total = 0
 
-    local bundles = container:getAllType("MoneyBundle")
-    if bundles then total = total + (bundles:size() * 100) end
-
-    local singles = container:getAllType("Money")
-    if singles then total = total + singles:size() end
+    for typeName, value in pairs(MONEY_VALUES) do
+        local items = container:getAllType(typeName)
+        if items then
+            total = total + (items:size() * value)
+        end
+    end
 
     local items = container:getItems()
     if items then
@@ -25,6 +36,9 @@ local function countMoneyRecursive(container)
     return total
 end
 
+-----------------------------------------------------
+-- VENDOR SPRITES
+-----------------------------------------------------
 local VENDOR_SPRITES = {
     ["location_shop_accessories_01_16"] = true,
     ["location_shop_accessories_01_17"] = true,
@@ -45,6 +59,9 @@ local function isVendorMachine(worldobjects)
     return nil
 end
 
+-----------------------------------------------------
+-- CONTEXT MENU
+-----------------------------------------------------
 local function OnFillWorldObjectContextMenu_Vendor(playerNum, context, worldobjects, test)
     if test then return end
 

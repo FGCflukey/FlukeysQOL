@@ -10,6 +10,21 @@ VendorUI = {}
 VendorUI.instance = nil
 
 -----------------------------------------------------
+-- MONEY CONSTANTS
+-----------------------------------------------------
+local MONEY_VALUES = {
+    ["Money"] = 1,
+    ["MoneyBundle"] = 100,
+    ["Bag_FullMoneyBag"] = 500,
+    ["Bag_FullBigMoneyBag"] = 1000,
+}
+
+local MONEY_BAG_TYPES = {
+    ["Bag_FullMoneyBag"] = true,
+    ["Bag_FullBigMoneyBag"] = true,
+}
+
+-----------------------------------------------------
 -- RECURSIVE MONEY HELPERS
 -----------------------------------------------------
 
@@ -18,11 +33,12 @@ local function countMoneyRecursive(container)
 
     local total = 0
 
-    local bundles = container:getAllType("MoneyBundle")
-    if bundles then total = total + (bundles:size() * 100) end
-
-    local singles = container:getAllType("Money")
-    if singles then total = total + singles:size() end
+    for typeName, value in pairs(MONEY_VALUES) do
+        local items = container:getAllType(typeName)
+        if items then
+            total = total + (items:size() * value)
+        end
+    end
 
     local items = container:getItems()
     if items then
@@ -37,36 +53,77 @@ local function countMoneyRecursive(container)
     return total
 end
 
-local function removeMoneyRecursive(container, amount)
+-----------------------------------------------------
+-- REMOVE MONEY (supports breaking bags)
+-----------------------------------------------------
+
+local function removeMoneyRecursive(container, amount, playerInv, allowBreak)
     if amount <= 0 or not container then return amount end
+    allowBreak = allowBreak ~= false  -- default true
 
-    local bundles = container:getAllType("MoneyBundle")
-    while amount >= 100 and bundles and not bundles:isEmpty() do
-        container:Remove(bundles:get(0))
-        amount = amount - 100
-        bundles = container:getAllType("MoneyBundle")
+    -- Helper to remove items of a type
+    local function removeType(typeName, value)
+        local items = container:getAllType(typeName)
+        while amount >= value and items and not items:isEmpty() do
+            local itm = items:get(0)
+            container:Remove(itm)
+            amount = amount - value
+
+            if MONEY_BAG_TYPES[typeName] then
+                playerInv:AddItem("Base.Bag_MoneyBag")
+            end
+
+            items = container:getAllType(typeName)
+        end
     end
 
-    local singles = container:getAllType("Money")
-    while amount > 0 and singles and not singles:isEmpty() do
-        container:Remove(singles:get(0))
-        amount = amount - 1
-        singles = container:getAllType("Money")
-    end
+    -- Remove in descending value order
+    removeType("Bag_FullBigMoneyBag", 1000)
+    removeType("Bag_FullMoneyBag", 500)
+    removeType("MoneyBundle", 100)
+    removeType("Money", 1)
 
+    -- Recurse into subcontainers (but do NOT allow breaking bags inside them)
     local items = container:getItems()
     if items then
         for i = 0, items:size() - 1 do
             if amount <= 0 then break end
             local item = items:get(i)
             if item and item:IsInventoryContainer() then
-                amount = removeMoneyRecursive(item:getItemContainer(), amount)
+                amount = removeMoneyRecursive(item:getItemContainer(), amount, playerInv, false)
             end
+        end
+    end
+
+    ---------------------------------------------------------
+    -- NEW: Only top-level call may break a bag
+    ---------------------------------------------------------
+    if allowBreak and amount > 0 then
+        -- Try big bag first
+        local big = container:getAllType("Bag_FullBigMoneyBag")
+        if big and not big:isEmpty() then
+            container:Remove(big:get(0))
+            playerInv:AddItem("Base.Bag_MoneyBag")
+            amount = amount - 1000
+            return amount
+        end
+
+        -- Try small bag
+        local small = container:getAllType("Bag_FullMoneyBag")
+        if small and not small:isEmpty() then
+            container:Remove(small:get(0))
+            playerInv:AddItem("Base.Bag_MoneyBag")
+            amount = amount - 500
+            return amount
         end
     end
 
     return amount
 end
+
+-----------------------------------------------------
+-- GIVE CHANGE
+-----------------------------------------------------
 
 local function giveChange(inv, change)
     if change <= 0 then return end
@@ -86,7 +143,6 @@ VendorWindow = ISCollapsableWindow:derive("VendorWindow")
 function VendorWindow:initialise()
     ISCollapsableWindow.initialise(self)
 
-    -- Enable resizing
     self.resizable = true
     self.resizeWidget = true
     self.minimumWidth = 250
@@ -111,7 +167,6 @@ function VendorWindow:initialise()
     self.closeButton:instantiate()
     self:addChild(self.closeButton)
 
-    -- Hook resize callback
     self.onResize = VendorWindow.onResize
 
     self:populateList()
@@ -153,7 +208,7 @@ function VendorWindow:populateList()
 end
 
 -----------------------------------------------------
--- DRAW LIST ITEM (with category support)
+-- DRAW LIST ITEM
 -----------------------------------------------------
 function VendorWindow.drawListItem(self, y, item, alt)
     local data = item.item
@@ -203,7 +258,14 @@ function VendorWindow:onBuy()
         return
     end
 
-    local leftover = removeMoneyRecursive(inv, price)
+    local leftover = removeMoneyRecursive(inv, price, inv)
+
+    -- leftover < 0 means we broke a bag and need to give change
+    if leftover < 0 then
+        giveChange(inv, math.abs(leftover))
+        leftover = 0
+    end
+
     if leftover > 0 then
         player:Say("Error removing money.")
         return

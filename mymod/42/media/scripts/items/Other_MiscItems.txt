@@ -1,0 +1,148 @@
+module Base
+{
+
+    item Bag_FullMoneyBag
+    {
+        DisplayCategory = Bag,
+        ItemType = base:container,
+        Weight = 1.0,
+        Icon = DuffelBagWhite,
+        CanBeEquipped = base:back,
+        CanHaveHoles = false,
+        Capacity = 18,
+        CloseSound = CloseBag,
+        ClothingItem = Bag_MoneyBag,
+        EquipSound = EquipDuffleBag,
+        OpenSound = OpenBag,
+        PutInSound = PutItemInBag,
+        ReplaceInPrimaryHand = Bag_DuffelBag_RHandTINT holdingbagright,
+        ReplaceInSecondHand = Bag_DuffelBag_LHandTINT holdingbagleft,
+        RunSpeedModifier = 0.95,
+        WeightReduction = 65,
+        WorldStaticModel = DuffelBag_Ground,
+        Tags = base:isfirefuel;base:isfiretinder;base:neverempty,
+    }
+
+    item Bag_FullBigMoneyBag
+    {
+        DisplayCategory = Bag,
+        ItemType = base:container,
+        Weight = 2.0,
+        Icon = DuffelBagWhite,
+        CanBeEquipped = base:back,
+        CanHaveHoles = false,
+        Capacity = 18,
+        CloseSound = CloseBag,
+        ClothingItem = Bag_MoneyBag,
+        EquipSound = EquipDuffleBag,
+        OpenSound = OpenBag,
+        PutInSound = PutItemInBag,
+        ReplaceInPrimaryHand = Bag_DuffelBag_RHandTINT holdingbagright,
+        ReplaceInSecondHand = Bag_DuffelBag_LHandTINT holdingbagleft,
+        RunSpeedModifier = 0.95,
+        WeightReduction = 65,
+        WorldStaticModel = DuffelBag_Ground,
+        Tags = base:isfirefuel;base:isfiretinder;base:neverempty,
+    }
+
+    craftRecipe FillTheMoneyBag
+    {
+        timedAction     = UnPackSack,
+        time            = 30,
+        Tags            = InHandCraft,
+        category        = Packing,
+        inputs
+        {
+            item 5 [Base.MoneyBundle] mode:destroy,
+            item 1 [Base.Bag_MoneyBag] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.Bag_FullMoneyBag,
+        }
+    }
+
+    craftRecipe EmptyTheMoneyBag
+    {
+        timedAction     = UnPackSack,
+        time            = 30,
+        Tags            = InHandCraft,
+        category        = Packing,
+        inputs
+        {
+            item 1 [Base.Bag_FullMoneyBag] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.Bag_MoneyBag,
+            item 5 Base.MoneyBundle,
+        }
+    }
+
+    craftRecipe FillTheBigMoneyBag
+    {
+        timedAction     = UnPackSack,
+        time            = 30,
+        Tags            = InHandCraft,
+        category        = Packing,
+        inputs
+        {
+            item 10 [Base.MoneyBundle] mode:destroy,
+            item 1 [Base.Bag_MoneyBag] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.Bag_FullBigMoneyBag,
+        }
+    }
+
+    craftRecipe EmptyTheBigMoneyBag
+    {
+        timedAction     = UnPackSack,
+        time            = 30,
+        Tags            = InHandCraft,
+        category        = Packing,
+        inputs
+        {
+            item 1 [Base.Bag_FullBigMoneyBag] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.Bag_MoneyBag,
+            item 10 Base.MoneyBundle,
+        }
+    }
+
+    craftRecipe ConvertDuffleMoney
+    {
+        timedAction     = UnPackSack,
+        time            = 15,
+        Tags            = InHandCraft,
+        category        = Packing,
+        inputs
+        {
+            item 1 [Base.Bag_DuffelBag] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.Bag_MoneyBag,
+        }
+    }
+
+    craftRecipe ConvertMoneyDuffle
+    {
+        timedAction     = UnPackSack,
+        time            = 15,
+        Tags            = InHandCraft,
+        category        = Packing,
+        inputs
+        {
+            item 1 [Base.Bag_MoneyBag] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.Bag_DuffelBag,
+        }
+    }
+
+}

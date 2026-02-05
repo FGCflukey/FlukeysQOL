@@ -11,6 +11,7 @@ VendorItems = {
     { id = "Base.Chocolate",            name = "Chocolate Bar",                 price = 15 },
     { id = "Base.CandyPackage",         name = "Candy",                         price = 10 },
     { id = "Base.Lighter",              name = "Lighter",                       price = 20 },
+    { id = "Base.Bag_DuffelBag",        name = "Duffelbag",                     price = 100 },
 
     { category = true, name = "-- Medical Items --" },
 
