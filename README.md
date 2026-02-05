@@ -29,7 +29,7 @@ This ModPack brings the following things:
 - Added Vehicle Vinyl swapping. Want a different look for your vehicle? (only vanilla for now)
 - Added Bulk Magazine Reloading/Unloading. Right click your stack!
 - Added ATM usage. Find credit cards and try them to get some money! Watch out, it can attact Zombies!
-- Expanded Money. More money you get you can now pack $500 or $1000 money bags. Duffle<->Moneybag conversion.
+- Expanded Money. More money you get, can now pack $500 or $1000 money bags. Duffle<->Moneybag conversion.
 - Added an Emergency Vendor. Right-click on Vending Machine. Buy critical items if you have enough cash!
 - Added Clothing Recycling. All items Indie forgot to give rip or cut, now you have a Recycle Clothing option.
 
