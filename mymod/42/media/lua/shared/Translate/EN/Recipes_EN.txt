@@ -47,4 +47,8 @@ RecipesEN {
     Recipe_EmptyTheBigMoneyBag = "Empty your Money Bag",
     Recipe_ConvertDuffleMoney = "Convert Duffle Bag to Money Bag",
     Recipe_ConvertMoneyDuffle = "Convert Money Bag to Duffle Bag",
+    Recipe_CraftSurvivorMultitool = "Make Survivor Multitool",
+    Recipe_UnhotwireVehicle = "Unhotwire Vehicle",
+    Recipe_MakeCarKey = "Craft a Car Key",
+    Recipe_MakeMortarAndPestle = "Carve a Mortar & Pestle",
 }

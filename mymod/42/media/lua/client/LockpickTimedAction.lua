@@ -16,10 +16,8 @@ function LockpickTimedAction:waitToStart()
 end
 
 function LockpickTimedAction:start()
-    -- Animation
     self:setActionAnim(CharacterActionAnims.InsertBullets)
 
-    -- Start sound
     local emitter = self.character:getEmitter()
     if emitter then
         emitter:playSound("PickLock", self.door)
@@ -27,25 +25,22 @@ function LockpickTimedAction:start()
 end
 
 function LockpickTimedAction:stop()
+    -- Interrupted: do NOT run success/fail logic
     ISBaseTimedAction.stop(self)
 end
 
 function LockpickTimedAction:perform()
     local emitter = self.character:getEmitter()
 
-    -- Failure chance
-    if ZombRand(100) < 20 then
+    if ZombRand(100) < 40 then
         if emitter then emitter:playSound("FailedPickLock", self.door) end
         self.character:Say("The paperclip snapped.")
         self.onFail(self.character, self.door)
-        ISBaseTimedAction.perform(self)
-        return
+    else
+        if emitter then emitter:playSound("PickLock", self.door) end
+        self.character:Say("Unlocked.")
+        self.onSuccess(self.character, self.door)
     end
-
-    -- Success
-    if emitter then emitter:playSound("PickLock", self.door) end
-    self.character:Say("Unlocked.")
-    self.onSuccess(self.character, self.door)
 
     ISBaseTimedAction.perform(self)
 end

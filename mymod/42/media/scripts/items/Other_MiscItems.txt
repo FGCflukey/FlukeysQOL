@@ -1,48 +1,102 @@
 module Base
 {
-
     item Bag_FullMoneyBag
     {
-        DisplayCategory = Bag,
-        ItemType = base:container,
-        Weight = 1.0,
-        Icon = DuffelBagWhite,
-        CanBeEquipped = base:back,
-        CanHaveHoles = false,
-        Capacity = 18,
-        CloseSound = CloseBag,
-        ClothingItem = Bag_MoneyBag,
-        EquipSound = EquipDuffleBag,
-        OpenSound = OpenBag,
-        PutInSound = PutItemInBag,
-        ReplaceInPrimaryHand = Bag_DuffelBag_RHandTINT holdingbagright,
-        ReplaceInSecondHand = Bag_DuffelBag_LHandTINT holdingbagleft,
-        RunSpeedModifier = 0.95,
-        WeightReduction = 65,
-        WorldStaticModel = DuffelBag_Ground,
-        Tags = base:isfirefuel;base:isfiretinder;base:neverempty,
+        DisplayCategory         = Bag,
+        ItemType                = base:container,
+        Weight                  = 1.0,
+        Icon                    = DuffelBagWhite,
+        CanBeEquipped           = base:back,
+        CanHaveHoles            = false,
+        Capacity                = 18,
+        CloseSound              = CloseBag,
+        ClothingItem            = Bag_MoneyBag,
+        EquipSound              = EquipDuffleBag,
+        OpenSound               = OpenBag,
+        PutInSound              = PutItemInBag,
+        ReplaceInPrimaryHand    = Bag_DuffelBag_RHandTINT holdingbagright,
+        ReplaceInSecondHand     = Bag_DuffelBag_LHandTINT holdingbagleft,
+        RunSpeedModifier        = 0.95,
+        WeightReduction         = 65,
+        WorldStaticModel        = DuffelBag_Ground,
+        Tags                    = base:isfirefuel;base:isfiretinder;base:neverempty,
     }
 
     item Bag_FullBigMoneyBag
     {
-        DisplayCategory = Bag,
-        ItemType = base:container,
-        Weight = 2.0,
-        Icon = DuffelBagWhite,
-        CanBeEquipped = base:back,
-        CanHaveHoles = false,
-        Capacity = 18,
-        CloseSound = CloseBag,
-        ClothingItem = Bag_MoneyBag,
-        EquipSound = EquipDuffleBag,
-        OpenSound = OpenBag,
-        PutInSound = PutItemInBag,
-        ReplaceInPrimaryHand = Bag_DuffelBag_RHandTINT holdingbagright,
-        ReplaceInSecondHand = Bag_DuffelBag_LHandTINT holdingbagleft,
-        RunSpeedModifier = 0.95,
-        WeightReduction = 65,
-        WorldStaticModel = DuffelBag_Ground,
-        Tags = base:isfirefuel;base:isfiretinder;base:neverempty,
+        DisplayCategory         = Bag,
+        ItemType                = base:container,
+        Weight                  = 2.0,
+        Icon                    = DuffelBagWhite,
+        CanBeEquipped           = base:back,
+        CanHaveHoles            = false,
+        Capacity                = 18,
+        CloseSound              = CloseBag,
+        ClothingItem            = Bag_MoneyBag,
+        EquipSound              = EquipDuffleBag,
+        OpenSound               = OpenBag,
+        PutInSound              = PutItemInBag,
+        ReplaceInPrimaryHand    = Bag_DuffelBag_RHandTINT holdingbagright,
+        ReplaceInSecondHand     = Bag_DuffelBag_LHandTINT holdingbagleft,
+        RunSpeedModifier        = 0.95,
+        WeightReduction         = 65,
+        WorldStaticModel        = DuffelBag_Ground,
+        Tags                    = base:isfirefuel;base:isfiretinder;base:neverempty,
+    }
+
+    item SurvivorMultitool
+    {
+        DisplayCategory         = ToolWeapon,
+        MaxRange                = 1.0,
+        WeaponSprite            = Multitool_Knife,
+        MinAngle                = 0.65,
+        ItemType                = base:weapon,
+        MinimumSwingtime        = 2.0,
+        KnockBackOnNoDeath      = false,
+        SwingAmountBeforeImpact = 0.02,
+        Categories              = base:smallblade,
+        CloseKillMove           = Jaw_Stab,
+        ConditionLowerChanceOneIn = 15,
+        ConditionMax            = 10,
+        Weight                  = 1.0,
+        SplatNumber             = 2,
+        PushBackMod             = 0.01,
+        SubCategory             = Stab,
+        AimingMod               = 0.8,
+        MaxHitcount             = 1,
+        IsAimedHandWeapon       = true,
+        DoorDamage              = 1,
+        SwingAnim               = Stab,
+        MinRange                = 0.61,
+        Swingtime               = 2.0,
+        KnockdownMod            = 0.0,
+        SplatBloodOnNoDeath     = true,
+        Icon                    = MultiTool,
+        RunAnim                 = Run_Weapon2,
+        IdleAnim                = Idle_Weapon2,
+        BreakSound              = MultitoolBreak,
+        TreeDamage              = 0,
+        MetalValue              = 12.0,
+        CriticalChance          = 25.0,
+        CritDmgMultiplier       = 4.0,
+        MinDamage               = 0.3,
+        MaxDamage               = 0.6,
+        WeaponLength            = 0.19,
+        DamageCategory          = Slash,
+        DamageMakeHole          = true,
+        HitFloorSound           = MultitoolHit,
+        ImpactSound             = MultitoolStab,
+        DoorHitSound            = MultitoolHit,
+        HitSound                = MultitoolHit,
+        SwingSound              = MultitoolSwing,
+        EquipSound              = PocketKnifeEquip,
+        UnequipSound            = PocketKnifeUnequip,
+        AttachmentType          = Knife,
+        WorldStaticModel        = Multitool_Closed,
+        Researchablerecipes     = Forge_Crude_Blade;Forge_Small_Knife;MakeScrewdriver;Forge_Saw;MakeStoneBladeSaw,
+        Sharpness               = 1.0,
+        BaseSpeed               = 1.1,
+        Tags = base:ignorezombiedensity;base:bottleopener;base:cutplant;base:sharpknife;base:butcheranimal;base:useworldstaticmodel;base:canopener;base:screwdriver;base:pliers;base:removebullet;base:removeglass;base:smallfiles;base:scissors;base:awl;base:hasmetal;base:sharpenable;base:saw;base:metalsaw,
     }
 
     craftRecipe FillTheMoneyBag
@@ -62,23 +116,6 @@ module Base
         }
     }
 
-    craftRecipe EmptyTheMoneyBag
-    {
-        timedAction     = UnPackSack,
-        time            = 30,
-        Tags            = InHandCraft,
-        category        = Packing,
-        inputs
-        {
-            item 1 [Base.Bag_FullMoneyBag] mode:destroy,
-        }
-        outputs
-        {
-            item 1 Base.Bag_MoneyBag,
-            item 5 Base.MoneyBundle,
-        }
-    }
-
     craftRecipe FillTheBigMoneyBag
     {
         timedAction     = UnPackSack,
@@ -93,6 +130,23 @@ module Base
         outputs
         {
             item 1 Base.Bag_FullBigMoneyBag,
+        }
+    }
+
+    craftRecipe EmptyTheMoneyBag
+    {
+        timedAction     = UnPackSack,
+        time            = 30,
+        Tags            = InHandCraft,
+        category        = Packing,
+        inputs
+        {
+            item 1 [Base.Bag_FullMoneyBag] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.Bag_MoneyBag,
+            item 5 Base.MoneyBundle,
         }
     }
 
@@ -142,6 +196,87 @@ module Base
         outputs
         {
             item 1 Base.Bag_DuffelBag,
+        }
+    }
+
+    craftRecipe CraftSurvivorMultitool
+    {
+        timedAction     = CraftWeapon1H,
+        Time            = 300,
+        needTobeLearn   = false,
+        Tags            = InHandCraft;Survivalist,
+        xpAward         = Maintenance:5,
+        category        = Assembly,
+        inputs
+        {
+            item 1 [Base.Saw],
+            item 1 [Base.Wire],
+            item 1 tags[base:canopener],
+            item 1 tags[base:pliers],
+            item 1 tags[base:sharpenable],
+            item 1 tags[base:screwdriver],
+            item 1 tags[base:wrench],
+        }
+        outputs
+        {
+            item 1 Base.SurvivorMultitool,
+        }
+    }
+
+    craftRecipe UnhotwireVehicle
+    {
+        timedAction     = Making,
+        time            = 200,
+        SkillRequired   = Electricity:1;Mechanics:2,
+        Tags            = InHandCraft,
+        category        = Electrical,
+        xpAward         = Electricity:10,
+        OnCreate        = unHotwire,
+        inputs
+        {
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+        }
+        outputs
+        {
+        }
+    }
+
+    craftRecipe MakeCarKey
+    {
+        timedAction     = Making,
+        time            = 300,
+        SkillRequired   = MetalWelding:4;Mechanics:2,
+        Tags            = InHandCraft,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        OnCreate        = addKey,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+        }
+        outputs
+        {
+        }
+    }
+
+    craftRecipe MakeMortarAndPestle
+    {
+        timedAction     = SharpenStakeWood,
+        time            = 300,
+        OnCreate        = RecipeCodeOnCreate.minorCondition,
+        Tags            = InHandCraft,
+        xpAward         = Carving:10,
+        category        = Carving,
+        NeedToBeLearn   = false,
+        inputs
+        {
+            item 1 tags[base:sharpknife;base:meatcleaver] mode:keep flags[Prop1;MayDegrade;IsNotDull],
+            item 1 [Base.Log;Base.Firewood] flags[Prop2],
+        }
+        outputs
+        {
+            item 1 Base.MortarPestle,
         }
     }
 

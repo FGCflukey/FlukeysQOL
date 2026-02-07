@@ -40,13 +40,19 @@ end
 -------------------------------------------------
 function ClothingBreakdownAction:start()
     -- Auto-transfer world items into player inventory
-    if not self.character:getInventory():containsRecursive(self.item) then
-        self.character:getInventory():AddItem(self.item)
+    if self.item:getWorldItem() then
+        self.item:getWorldItem():getSquare():transmitRemoveItemFromSquare(self.item:getWorldItem())
+        self.item:setWorldItem(nil)
     end
+
+    self.character:getInventory():AddItem(self.item)
 
     self.item:setJobType("Recycling")
     self.item:setJobDelta(0.0)
     self:setActionAnim("RipSheets")
+
+    -- *** PLAY SOUND ***
+    self.sound = self.character:playSound("ClothesRipping")
 end
 
 -------------------------------------------------
@@ -55,6 +61,11 @@ end
 function ClothingBreakdownAction:stop()
     ISBaseTimedAction.stop(self)
     self.item:setJobDelta(0.0)
+
+    -- Stop sound if still playing
+    if self.sound and self.character:getEmitter():isPlaying(self.sound) then
+        self.character:stopOrTriggerSound(self.sound)
+    end
 end
 
 -------------------------------------------------
@@ -65,6 +76,11 @@ function ClothingBreakdownAction:perform()
         print("ERROR: ClothingBreakdownAction missing item reference")
         ISBaseTimedAction.perform(self)
         return
+    end
+
+    -- Stop sound if still playing
+    if self.sound and self.character:getEmitter():isPlaying(self.sound) then
+        self.character:stopOrTriggerSound(self.sound)
     end
 
     local fullType = self.item:getFullType()

@@ -11,32 +11,26 @@ local function unlockVehicleDoor(player, vehicle, part)
         return
     end
 
-    -- Attempt unlock
     door:setLocked(false)
 
-    -- Optional: unlock trunk
     local trunk = vehicle:getPartById("TrunkDoor")
     if trunk and trunk:getDoor() then
         trunk:getDoor():setLocked(false)
     end
 
-    -- Verify unlock
     if door:isLocked() then
-        -- Fallback: send client command
         sendClientCommand(player, "vehicle", "setDoorLocked", {
             vehicle = vehicle:getId(),
             part = part:getId(),
             locked = false
         })
 
-        -- Recheck after sync
         if door:isLocked() then
             player:Say("Still locked... something's off.")
             return
         end
     end
 
-    -- Success
     vehicle:playPartSound(part, player, "Unlock")
 end
 
@@ -63,31 +57,26 @@ function VehicleLockpickTimedAction:start()
 end
 
 function VehicleLockpickTimedAction:stop()
+    -- Interrupted: do NOT run success/fail logic
     ISBaseTimedAction.stop(self)
 end
 
 function VehicleLockpickTimedAction:perform()
     local emitter = self.character:getEmitter()
 
-    -- Failure chance (20%)
-    if ZombRand(100) < 20 then
+    if ZombRand(100) < 40 then
         if emitter then emitter:playSound("FailedPickLock", self.vehicle) end
         self.character:Say("The paperclip snapped.")
 
-        -- Remove one paperclip
         local inv = self.character:getInventory()
         local pc = inv:getFirstTypeRecurse("Paperclip")
         if pc then inv:Remove(pc) end
 
-        ISBaseTimedAction.perform(self)
-        return
+    else
+        if emitter then emitter:playSound("PickLock", self.vehicle) end
+        self.character:Say("Unlocked.")
+        unlockVehicleDoor(self.character, self.vehicle, self.part)
     end
-
-    -- Success
-    if emitter then emitter:playSound("PickLock", self.vehicle) end
-    self.character:Say("Unlocked.")
-
-    unlockVehicleDoor(self.character, self.vehicle, self.part)
 
     ISBaseTimedAction.perform(self)
 end

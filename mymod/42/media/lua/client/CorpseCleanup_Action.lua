@@ -94,7 +94,7 @@ function CorpseCleanupAction:new(character, corpse, tool, time, originalPrimary,
     o.character = character
     o.corpse = corpse
     o.tool = tool
-    o.maxTime = time or 100
+    o.maxTime = 200
     o.originalPrimary = originalPrimary
     o.originalSecondary = originalSecondary
     return o

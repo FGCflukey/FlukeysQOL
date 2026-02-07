@@ -46,4 +46,6 @@ ItemName_EN = {
 
     ItemName_Base.Bag_FullMoneyBag = "Money Bag ($500)",
     ItemName_Base.Bag_FullBigMoneyBag = "Money Bag ($1000)",
+    ItemName_Base.SurvivorMultitool = "Survivor Multitool",
+    ItemName_Base.SurvivorMortarPestle = "Mortar & Pestle",
 }
