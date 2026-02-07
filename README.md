@@ -25,13 +25,14 @@ This ModPack brings the following things:
 - Adds Lockpicking. All doors, all directions. 20% chance you can break your paperclip. Vehicles too!
 - Added Security Gate cutting, rewards scrap. Think Gun Store security fence blocking the door. Welding 2 Req.
 - Added Car Painting. Now you have a nice variety of colours to paint your ride with. Vanilla/single player.
-- Added Filling Barrels with Liquid. Gas or Water 200L. Will tweak/expand more later.
+- Added Filling Barrels with Liquid. Gas or Water etc. to 200 Litres. Will tweak/expand more later.
 - Added Vehicle Vinyl swapping. Want a different look for your vehicle? (only vanilla for now)
-- Added Bulk Magazine Reloading/Unloading. Right click your stack!
+- Added Bulk Weapon Magazine Reloading/Unloading. Right click your stack!
 - Added ATM usage. Find credit cards and try them to get some money! Watch out, it can attact Zombies!
 - Expanded Money. Got too much money? Pack $500 or $1000 money bags. Duffle<->Moneybag conversion.
 - Added an Emergency Vendor. Right-click on Vending Machine. Buy critical items if you have enough cash!
-- Added Clothing Recycling. All items Indie forgot to give rip or cut, now you have a Recycle Clothing option.
+- Added Clothing Recycling. All items Indie forgot, now you have a Recycle Clothing option for these.
+- Added ability to unHotwire cars. As well, with small sheet metal and screwdriver you can make a car key.
 
 ## Installation
 
