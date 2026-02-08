@@ -10,6 +10,7 @@ what I consider missing features. Everything here is written by me.
 This ModPack brings the following things:
 
 - Overrides UseDelta on BlowTorches and Propane Tanks because it makes sense!
+- Overrides Canteens to hold more water
 - Adds Zombie butchering to cleanup the dead around your base
 - Adds updated PZ Bloodcure which utilizes the Zombie butchering (rewrite)
 - Adds Carbon Fibre Combat Axe and Long Reach Axe updated
