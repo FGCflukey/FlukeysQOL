@@ -3,7 +3,7 @@ OrangeBarrelFluid.DEBUG = true
 
 local function OBFLog(...)
     if not OrangeBarrelFluid.DEBUG then return end
-    print("[OrangeBarrelFluid]", ...)
+    -- print("[OrangeBarrelFluid]", ...)
 end
 
 -- Shared label helper

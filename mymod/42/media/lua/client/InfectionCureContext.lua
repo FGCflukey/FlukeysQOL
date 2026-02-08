@@ -18,7 +18,7 @@ local function ZomInfectionCure_Context(playerIndex, context, items)
         end
 
         if instanceof(obj, "InventoryItem") then
-            print("DEBUG REAL ITEM:", obj:getFullType())
+            -- print("DEBUG REAL ITEM:", obj:getFullType())
             if obj:getFullType() == "Base.SyringeWithCure" then
                 foundItem = obj
                 break

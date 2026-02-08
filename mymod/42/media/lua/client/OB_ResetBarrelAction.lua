@@ -2,7 +2,11 @@ require "TimedActions/ISBaseTimedAction"
 
 OB_ResetBarrelAction = ISBaseTimedAction:derive("OB_ResetBarrelAction")
 
+-- Debug toggle
+local OB_DEBUG = false   -- set to true to enable logging
+
 local function OBFLog(...)
+    if not OB_DEBUG then return end
     print("[OB_ResetBarrelAction]", ...)
 end
 
@@ -15,18 +19,15 @@ function OB_ResetBarrelAction:isValid()
         return false
     end
 
-    -- Use the SAME wrench detection as Convert
     local wrench = OrangeBarrelFluid.getPlayerWrench(self.character)
     if not wrench then
         return false
     end
 
-    -- Barrel must actually have a fluid component to reset
     if not OrangeBarrelFluid.HasFluidComponent(self.barrel) then
         return false
     end
 
-    -- Barrel must be empty (safety check)
     local comp = nil
     local okGet = pcall(function()
         if self.barrel.getComponent and ComponentType and ComponentType.FluidContainer then
@@ -37,7 +38,6 @@ function OB_ResetBarrelAction:isValid()
     if okGet and comp and comp.getAmount then
         local amount = comp:getAmount()
         if amount > 0 then
-            -- Character speaks the warning
             self.character:Say("Empty The Barrel Must Be Empty!")
             return false
         end
@@ -70,6 +70,7 @@ function OB_ResetBarrelAction:start()
     local ok, soundOrErr = pcall(function()
         return self.character:playSound("RepairWithWrench")
     end)
+
     if ok then
         self.sound = soundOrErr
         OBFLog("start: sound started, id =", tostring(self.sound))
@@ -83,9 +84,11 @@ function OB_ResetBarrelAction:update()
     if self.barrel and self.character.faceThisObject then
         self.character:faceThisObject(self.barrel)
     end
+
     if self.character.setMetabolicTarget then
         self.character:setMetabolicTarget(Metabolics.MediumWork)
     end
+
     if self.wrench and self.wrench.setJobDelta then
         self.wrench:setJobDelta(self:getJobDelta())
     end
@@ -97,6 +100,7 @@ function OB_ResetBarrelAction:stop()
     if self.sound and self.character.stopOrTriggerSound then
         self.character:stopOrTriggerSound(self.sound)
     end
+
     if self.wrench and self.wrench.setJobDelta then
         self.wrench:setJobDelta(0.0)
     end
@@ -110,6 +114,7 @@ function OB_ResetBarrelAction:perform()
     if self.sound and self.character.stopOrTriggerSound then
         self.character:stopOrTriggerSound(self.sound)
     end
+
     if self.wrench and self.wrench.setJobDelta then
         self.wrench:setJobDelta(0.0)
     end

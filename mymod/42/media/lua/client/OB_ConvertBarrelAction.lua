@@ -2,11 +2,14 @@ require "TimedActions/ISBaseTimedAction"
 
 OB_ConvertBarrelAction = ISBaseTimedAction:derive("OB_ConvertBarrelAction")
 
+-- Debug toggle
+local OB_DEBUG = false   -- set to true to enable logging
+
 local function OBFLog(...)
+    if not OB_DEBUG then return end
     print("[OB_ConvertBarrelAction]", ...)
 end
 
--- Shared label helper
 local function OB_GetConvertLabel()
     local txt = getText("ContextMenu_ConvertToFluidBarrel")
     if not txt or txt == "" or txt == "ContextMenu_ConvertToFluidBarrel" then
@@ -15,7 +18,6 @@ local function OB_GetConvertLabel()
     return txt
 end
 
--- Safe helper so we don't directly call hasComponent everywhere
 local function hasFluidComponentSafe(barrel)
     if not barrel then
         OBFLog("hasFluidComponentSafe: barrel is nil")
@@ -40,13 +42,11 @@ function OB_ConvertBarrelAction:isValid()
         return false
     end
 
-    -- Use the SAME wrench detection as OnConvertBarrel
     local wrench = OrangeBarrelFluid.getPlayerWrench(self.character)
     if not wrench then
         return false
     end
 
-    -- Barrel must not already have a fluid component
     if OrangeBarrelFluid.HasFluidComponent(self.barrel) then
         return false
     end
@@ -78,6 +78,7 @@ function OB_ConvertBarrelAction:start()
     else
         OBFLog("start: setActionAnim not available")
     end
+
     if self.setAnimVariable then
         self:setAnimVariable("LootPosition", "Mid")
     else
@@ -87,6 +88,7 @@ function OB_ConvertBarrelAction:start()
     local ok, soundOrErr = pcall(function()
         return self.character:playSound("RepairWithWrench")
     end)
+
     if ok then
         self.sound = soundOrErr
         OBFLog("start: sound started, id =", tostring(self.sound))
@@ -100,9 +102,11 @@ function OB_ConvertBarrelAction:update()
     if self.barrel and self.character.faceThisObject then
         self.character:faceThisObject(self.barrel)
     end
+
     if self.character.setMetabolicTarget then
         self.character:setMetabolicTarget(Metabolics.MediumWork)
     end
+
     if self.wrench and self.wrench.setJobDelta then
         self.wrench:setJobDelta(self:getJobDelta())
     end
@@ -115,9 +119,11 @@ function OB_ConvertBarrelAction:stop()
         self.character:stopOrTriggerSound(self.sound)
         OBFLog("stop: sound stopped")
     end
+
     if self.wrench and self.wrench.setJobDelta then
         self.wrench:setJobDelta(0.0)
     end
+
     ISBaseTimedAction.stop(self)
 end
 
@@ -128,6 +134,7 @@ function OB_ConvertBarrelAction:perform()
         self.character:stopOrTriggerSound(self.sound)
         OBFLog("perform: sound stopped")
     end
+
     if self.wrench and self.wrench.setJobDelta then
         self.wrench:setJobDelta(0.0)
     end

@@ -47,8 +47,19 @@ RecipesEN {
     Recipe_EmptyTheBigMoneyBag = "Empty your Money Bag",
     Recipe_ConvertDuffleMoney = "Convert Duffle Bag to Money Bag",
     Recipe_ConvertMoneyDuffle = "Convert Money Bag to Duffle Bag",
+
     Recipe_CraftSurvivorMultitool = "Make Survivor Multitool",
+
     Recipe_UnhotwireVehicle = "Unhotwire Vehicle",
     Recipe_MakeCarKey = "Craft a Car Key",
+
     Recipe_MakeMortarAndPestle = "Carve a Mortar & Pestle",
+
+    Recipe_MakeSomeNails = "Craft a Box of Nails",
+    Recipe_MakeSomeNailsScrap = "Craft a Box of Nails",
+    Recipe_MakeSomeNailsBatch = "Craft 4 Boxes of Nails",
+
+    Recipe_CraftEnginePartsWeld = "Make Spare Engine Parts (Welding)",
+    Recipe_CraftEnginePartsMech = "Make Spare Engine Parts {Mechanics)",
+    Recipe_CraftEnginePartsSmithing = "Make Spare Engine Parts (Smithing)",
 }
