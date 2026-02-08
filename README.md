@@ -33,6 +33,9 @@ This ModPack brings the following things:
 - Added an Emergency Vendor. Right-click on Vending Machine. Buy critical items if you have enough cash!
 - Added Clothing Recycling. All items Indie forgot, now you have a Recycle Clothing option for these.
 - Added ability to unHotwire cars. As well, with small sheet metal and screwdriver you can make a car key.
+- Added back ability to craft Nail boxes with Sheet Metals and Scrap Metals
+- Added back ability to open car hoods faster, overrides default
+- Added back ability to craft Spare Engine Parts, recipes for mechanic, welding and blacksmithing
 
 ## Installation
 
