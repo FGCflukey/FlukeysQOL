@@ -33,4 +33,107 @@ module Base
         Tags = base:hasmetal;base:smeltablesteellarge,
     }
 
+    item CanteenMilitary
+    {
+        DisplayCategory = WaterContainer,
+        Weight = 0.2,
+        ItemType = base:normal,
+        IconsForTexture = Canteen_Military_Green;Canteen_Military_Camo,
+        StaticModelsByIndex = CanteenMilitaryUS;CanteenMilitaryCamo,
+        WorldStaticModelsByIndex = CanteenMilitaryUS_Ground;CanteenMilitaryCamo_Ground,
+        AttachmentType = Walkie,
+        Tags = base:hasmetal;base:lightwhenattached,
+        IsCookable = true,
+        CookingSound = BoilingFood,
+        FillFromDispenserSound = GetWaterFromDispenserMetalMedium,
+        FillFromLakeSound = GetWaterFromLakeSmall,
+        FillFromTapSound = GetWaterFromTapMetalMedium,
+        FillFromToiletSound = GetWaterFromToilet,
+        component FluidContainer
+        {
+            ContainerName = Canteen,
+            Capacity = 1.0,
+            CustomDrinkSound = DrinkingFromBottlePlastic,
+        }
+    }
+
+    item CanteenMilitaryFull
+    {
+        DisplayCategory = WaterContainer,
+        ItemType = base:normal,
+        Weight = 0.2,
+        IconsForTexture = Canteen_Military_Green;Canteen_Military_Camo,
+        FillFromDispenserSound = GetWaterFromDispenserMetalMedium,
+        FillFromLakeSound = GetWaterFromLakeSmall,
+        FillFromTapSound = GetWaterFromTapMetalMedium,
+        FillFromToiletSound = GetWaterFromToilet,
+        IsCookable = true,
+        StaticModelsByIndex = CanteenMilitaryUS;CanteenMilitaryCamo,
+        WorldStaticModelsByIndex = CanteenMilitaryUS_Ground;CanteenMilitaryCamo_Ground,
+        AttachmentType = Walkie,
+        Tags = base:hasmetal;base:lightwhenattached,
+        CookingSound = BoilingFood,
+        component FluidContainer
+        {
+            ContainerName = Canteen,
+            Capacity = 1.0,
+            CustomDrinkSound = DrinkingFromBottlePlastic,
+            Fluids
+            {
+                fluid = Water:1.0,
+            }
+        }
+    }
+
+    item Canteen
+    {
+        DisplayCategory = WaterContainer,
+        Weight = 0.2,
+        CanStoreWater = true,
+        ItemType = base:normal,
+        IconsForTexture = Canteen_Military_Green;Canteen_Military_Camo;Canteen_Black;Canteen_Metal,
+        StaticModelsByIndex = CanteenMilitaryUS;CanteenMilitaryCamo;CanteenMilitaryBlack;CanteenMilitaryMetal,
+        WorldStaticModelsByIndex = CanteenMilitaryUS_Ground;CanteenMilitaryCamo_Ground;CanteenMilitaryBlack_Ground;CanteenMilitaryMetal_Ground,
+        AttachmentType = Walkie,
+        FillFromDispenserSound = GetWaterFromDispenser,
+        FillFromLakeSound = GetWaterFromLakeSmall,
+        FillFromTapSound = GetWaterFromTap,
+        FillFromToiletSound = GetWaterFromToilet,
+        Tags = base:hasmetal;base:lightwhenattached,
+        component FluidContainer
+        {
+            ContainerName = Canteen,
+            Capacity = 1.0,
+            InitialPercentMin = 0.0,
+            InitialPercentMax = 1.0,
+            CustomDrinkSound = DrinkingFromBottlePlastic,
+            Fluids
+            {
+                fluid = Water:1.0,
+            }
+        }
+    }
+
+    item CanteenClay
+    {
+        DisplayCategory = WaterContainer,
+        Weight = 0.2,
+        CanStoreWater = true,
+        ItemType = base:normal,
+        Icon = Canteen_Clay,
+        StaticModel = CanteenClay,
+        WorldStaticModel = CanteenClay_Ground,
+        AttachmentType = Walkie,
+        FillFromDispenserSound = GetWaterFromDispenserCeramic,
+        FillFromLakeSound = GetWaterFromLakeSmall,
+        FillFromTapSound = GetWaterFromTapCeramic,
+        FillFromToiletSound = GetWaterFromToilet,
+        Tags = base:lightwhenattached,
+        component FluidContainer
+        {
+            ContainerName = Canteen,
+            Capacity = 1.0,
+        }
+    }
+
 }
