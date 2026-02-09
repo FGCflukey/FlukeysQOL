@@ -13,7 +13,7 @@ This ModPack brings the following things:
 - Overrides Canteens to hold more water
 - Adds Zombie butchering to cleanup the dead around your base
 - Adds updated PZ Bloodcure which utilizes the Zombie butchering (rewrite)
-- Adds Carbon Fibre Combat Axe and Long Reach Axe updated
+- Adds Carbon Fibre Combat Axe and Long Reach Axe, includes repairs
 - Adds the old Hydrocraft looking Dolly and Toy Wagon for crazy hoarders like me
 - Allows Climbing all obstacles, fences, windows and tall walls without dropping your Dolly or Toy Wagon
 - Adds a Visual Learner trait, allows the player to get XP from books instead of the usual vanilla boost
@@ -34,9 +34,11 @@ This ModPack brings the following things:
 - Added an Emergency Vendor. Right-click on Vending Machine. Buy critical items if you have enough cash!
 - Added Clothing Recycling. All items Indie forgot, now you have a Recycle Clothing option for these.
 - Added ability to unHotwire cars. As well, with small sheet metal and screwdriver you can make a car key.
-- Added back ability to craft Nail boxes with Sheet Metals and Scrap Metals
-- Added back ability to open car hoods faster, overrides default
-- Added back ability to craft Spare Engine Parts, recipes for mechanic, welding and blacksmithing
+- Added ability to craft Nail boxes with Sheet Metals and Scrap Metals
+- Added ability to open car hoods faster, overrides default
+- Added ability to craft Spare Engine Parts, recipes for mechanic, welding and blacksmithing
+- Added dismantling of general car parts, serves as a fill-in for missing stuff or as a 2nd option
+- Added Fueling Generators with a Gas Filled Barrel. It only needs to be beside generator and presto.
 
 ## Installation
 
