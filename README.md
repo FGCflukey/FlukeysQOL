@@ -42,8 +42,7 @@ This ModPack brings the following things:
 
 This mod currently requires these 2 excellent mods
 
-These 2 excellent mods make larger capacity Dolly, Toywagon and Car
-trunks possible.
+These 2 excellent mods make larger capacity Dolly, Toywagon and Car trunks possible.
 
 JB Max Capacity Override [42 SP Only]
 https://steamcommunity.com/sharedfiles/filedetails/?id=3452113500

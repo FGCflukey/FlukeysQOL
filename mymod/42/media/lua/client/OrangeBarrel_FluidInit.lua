@@ -1,5 +1,5 @@
 OrangeBarrelFluid = OrangeBarrelFluid or {}
-OrangeBarrelFluid.DEBUG = true
+OrangeBarrelFluid.DEBUG = false
 
 local function OBFLog(...)
     if not OrangeBarrelFluid.DEBUG then return end

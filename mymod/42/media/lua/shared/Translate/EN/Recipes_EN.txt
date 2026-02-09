@@ -62,4 +62,8 @@ RecipesEN {
     Recipe_CraftEnginePartsWeld = "Make Spare Engine Parts (Welding)",
     Recipe_CraftEnginePartsMech = "Make Spare Engine Parts {Mechanics)",
     Recipe_CraftEnginePartsSmithing = "Make Spare Engine Parts (Smithing)",
+
+    Recipe_FixCFAxeWithMetal = "Fix Carbon Fibre Combat Axe",
+    Recipe_FixCFLRAxeWithMetal = "Fix Carbon Fibre Long Reach Axe",
+
 }

@@ -103,4 +103,52 @@ item cflongreachaxe
         Tags                        = base:choptree;base:cutplant;base:butcheranimal;base:sharpenable;base:killanimal;base:repairwithtape;base:repairwithglue;base:hasmetal,
     }
 
+    craftRecipe FixCFAxeWithMetal
+    {
+        time = 180,
+        AllowBatchCraft = false,
+        Tags = AnySurfaceCraft,
+        category = Repair,
+        timedAction = CraftWeapon1H,
+        xpAward = Maintenance:15,
+        SkillRequired = Maintenance:3,
+        OnCreate = RecipeCodeOnCreate.genericEvenBetterFixing,
+        inputs
+        {
+            item 1 [Base.cfcombataxe] mode:keep flags[IsDamaged],
+            item 1 [Base.SteelPiece;Base.IronPiece] flags[Prop2],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 [Base.WeldingRods],
+            item 1 tags[base:epoxy],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+        }
+    }
+
+    craftRecipe FixCFLRAxeWithMetal
+    {
+        time = 180,
+        AllowBatchCraft = false,
+        Tags = AnySurfaceCraft,
+        category = Repair,
+        timedAction = CraftWeapon1H,
+        xpAward = Maintenance:15,
+        SkillRequired = Maintenance:3,
+        OnCreate = RecipeCodeOnCreate.genericEvenBetterFixing,
+        inputs
+        {
+            item 1 [Base.cflongreachaxe] mode:keep flags[IsDamaged],
+            item 2 [Base.SteelPiece;Base.IronPiece] flags[Prop2],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 [Base.WeldingRods],
+            item 1 tags[base:epoxy],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+        }
+    }
+
 }
