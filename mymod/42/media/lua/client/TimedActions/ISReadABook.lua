@@ -36,19 +36,26 @@ end
 -------------------------------------------------
 -- Level gain helper for half/full bonuses
 -------------------------------------------------
-local function VL_GainLevels(player, perk, levelsToGain)
-    if not player or not perk or levelsToGain <= 0 then return end
+local function VL_GainLevels(player, perk, targetLevel)
+    -- targetLevel is the level we want the player to reach
+    -- Only grant levels if they don't already have them
+    if not player or not perk or targetLevel <= 0 then return end
     local xp = player:getXp()
     if not xp then return end
 
-    for i = 1, levelsToGain do
-        local currentLevel = player:getPerkLevel(perk)
-        if currentLevel >= 10 then return end
-
+    local currentLevel = player:getPerkLevel(perk)
+    
+    -- If player already has this level or higher, don't grant anything
+    if currentLevel >= targetLevel then 
+        return 
+    end
+    
+    -- Grant levels one at a time until we reach targetLevel
+    while currentLevel < targetLevel and currentLevel < 10 do
         xp:setXPToLevel(perk, currentLevel + 1)
         player:LevelPerk(perk)
         player:playSoundLocal("level_up_41")
-
+        currentLevel = currentLevel + 1
     end
 end
 
@@ -200,23 +207,18 @@ function ISReadABook:update()
 --                        self.character:getPerkLevel(perk)
 --                    ))
 
-                    -- 50% bonus
+                    -- 50% bonus - player should have first level the book teaches
                     if (not self.VL_halfGranted) and progress >= 0.5 then
-                        -- print("[VL] 50% BONUS TRIGGERED at jobDelta=", progress)
-                        VL_GainLevels(self.character, perk, 1)
+                        local targetLevel = self.item:getLvlSkillTrained()  -- Book 2 teaches starting at level 3
+                        VL_GainLevels(self.character, perk, targetLevel)
                         self.VL_halfGranted = true
-                        self.VL_totalGranted = self.VL_totalGranted + 1
                     end
 
-                    -- 100% bonus
+                    -- 100% bonus - player should have both levels the book teaches
                     if progress >= 1.0 then
-                        local remaining = 2 - self.VL_totalGranted
-                        -- print("[VL] CHECK 100% BONUS at jobDelta=", progress, " remaining=", remaining)
-                        if remaining > 0 then
-                            -- print("[VL] 100% BONUS TRIGGERED at jobDelta=", progress)
-                            VL_GainLevels(self.character, perk, remaining)
-                            self.VL_totalGranted = self.VL_totalGranted + remaining
-                        end
+                        local targetLevel = self.item:getMaxLevelTrained()  -- Book 2 maxes at level 4
+                        VL_GainLevels(self.character, perk, targetLevel)
+                        self.VL_totalGranted = 2  -- Mark as complete
                     end
                 else
                     -- Non-trait: vanilla multiplier behavior
@@ -258,6 +260,22 @@ function ISReadABook:start()
     self.lastXPPage     = self.item:getAlreadyReadPages() or 0
     self.VL_halfGranted = false
     self.VL_totalGranted = 0
+    
+    -- If we skipped pages due to existing knowledge, mark those bonuses as already granted
+    if VL_HasVisualLearner(self) and SkillBook[self.item:getSkillTrained()] then
+        local totalPages = self.item:getNumberOfPages()
+        local currentPages = self.item:getAlreadyReadPages()
+        
+        if totalPages > 0 and currentPages > 0 then
+            local skippedPercent = currentPages / totalPages
+            
+            -- If we skipped to 50% or more, the half bonus was already earned
+            if skippedPercent >= 0.5 then
+                self.VL_halfGranted = true
+                self.VL_totalGranted = 1
+            end
+        end
+    end
 
     -- If starting mid‑book
     if self.startPage then
@@ -589,6 +607,34 @@ function ISReadABook:getDuration()
     if self.item:getNumberOfPages() > 0 then
         ISReadABook.checkLevel(self.character, self.item)
         self.item:setAlreadyReadPages(self.character:getAlreadyReadPages(self.item:getFullType()))
+        
+        -- Visual Learner: Skip already-known content based on current skill level
+        if VL_HasVisualLearner(self) and SkillBook[self.item:getSkillTrained()] then
+            local skillBook = SkillBook[self.item:getSkillTrained()]
+            local perk = skillBook.perk
+            local currentLevel = self.character:getPerkLevel(perk)
+            local totalPages = self.item:getNumberOfPages()
+            local bookMinLevel = self.item:getLvlSkillTrained()  -- e.g., 3 for a level 3-4 book
+            local bookMaxLevel = self.item:getMaxLevelTrained()  -- e.g., 4 for a level 3-4 book
+            
+            if totalPages > 0 and currentLevel < bookMaxLevel then
+                -- Simple rule: Does the player already have the FIRST level this book teaches?
+                -- Book 2 teaches 3-4. If player has level 3, skip first half (50%)
+                -- Book 3 teaches 5-6. If player has level 4, skip 0% (doesn't have level 5 yet)
+                
+                if currentLevel >= bookMinLevel then
+                    -- Player has the first level this book teaches, skip first half
+                    local skipToPage = math.floor(totalPages * 0.5)
+                    
+                    if skipToPage > self.item:getAlreadyReadPages() then
+                        self.item:setAlreadyReadPages(skipToPage)
+                        self.character:setAlreadyReadPages(self.item:getFullType(), skipToPage)
+                    end
+                end
+                -- If currentLevel < bookMinLevel, don't skip anything (read from page 0)
+            end
+        end
+        
         self.startPage = self.item:getAlreadyReadPages()
         numPages = self.item:getNumberOfPages() - self.item:getAlreadyReadPages()
     else
