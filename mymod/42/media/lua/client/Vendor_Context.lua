@@ -44,6 +44,8 @@ local VENDOR_SPRITES = {
     ["location_shop_accessories_01_17"] = true,
     ["location_shop_accessories_01_18"] = true,
     ["location_shop_accessories_01_19"] = true,
+    ["location_shop_accessories_01_29"] = true,
+    ["location_shop_accessories_01_31"] = true,
 }
 
 local function isVendorMachine(worldobjects)

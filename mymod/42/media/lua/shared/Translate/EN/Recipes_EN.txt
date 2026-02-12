@@ -51,19 +51,21 @@ RecipesEN {
     Recipe_CraftSurvivorMultitool = "Make Survivor Multitool",
 
     Recipe_UnhotwireVehicle = "Unhotwire Vehicle",
-    Recipe_MakeCarKey = "Craft a Car Key",
+    Recipe_MakeCarKey = "Make a Car Key",
 
     Recipe_MakeMortarAndPestle = "Carve a Mortar & Pestle",
 
-    Recipe_MakeSomeNails = "Craft a Box of Nails",
-    Recipe_MakeSomeNailsScrap = "Craft a Box of Nails",
-    Recipe_MakeSomeNailsBatch = "Craft 4 Boxes of Nails",
+    Recipe_MakeSomeNails = "Make a Box of Nails",
+    Recipe_MakeSomeNailsScrap = "Make a Box of Nails",
+    Recipe_MakeSomeNailsBatch = "Make 4 Boxes of Nails",
 
     Recipe_CraftEnginePartsWeld = "Make Spare Engine Parts (Welding)",
     Recipe_CraftEnginePartsMech = "Make Spare Engine Parts {Mechanics)",
     Recipe_CraftEnginePartsSmithing = "Make Spare Engine Parts (Smithing)",
 
-    Recipe_FixCFAxeWithMetal = "Fix Carbon Fibre Combat Axe",
-    Recipe_FixCFLRAxeWithMetal = "Fix Carbon Fibre Long Reach Axe",
-
+    Recipe_FixCFAxeWithMetal = "Repair Carbon Fibre Combat Axe",
+    Recipe_FixCFLRAxeWithMetal = "Repair Carbon Fibre Long Reach Axe",
+    
+    Recipe_MakeANeedle = "Make a Needle",
+    Recipe_MakeAPickAxeHead = "Make a Pick Axe Head",
 }

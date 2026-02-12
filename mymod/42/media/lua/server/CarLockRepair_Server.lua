@@ -1,0 +1,2 @@
+-- No server initialization needed.
+-- File kept intentionally empty to avoid load errors.

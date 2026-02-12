@@ -2,6 +2,21 @@ require "TimedActions/ISBaseTimedAction"
 
 LockpickTimedAction = ISBaseTimedAction:derive("LockpickTimedAction")
 
+-- Mechanics-based success chance
+local function getLockpickSuccessChance(player)
+    local mech = player:getPerkLevel(Perks.Mechanics)
+
+    if mech <= 1 then
+        return 15
+    elseif mech <= 4 then
+        return 45
+    elseif mech <= 7 then
+        return 75
+    else
+        return 100
+    end
+end
+
 function LockpickTimedAction:isValid()
     return true
 end
@@ -32,14 +47,17 @@ end
 function LockpickTimedAction:perform()
     local emitter = self.character:getEmitter()
 
-    if ZombRand(100) < 40 then
-        if emitter then emitter:playSound("FailedPickLock", self.door) end
-        self.character:Say("The paperclip snapped.")
-        self.onFail(self.character, self.door)
-    else
+    local chance = getLockpickSuccessChance(self.character)
+    local roll = ZombRand(100)
+
+    if roll < chance then
         if emitter then emitter:playSound("PickLock", self.door) end
         self.character:Say("Unlocked.")
         self.onSuccess(self.character, self.door)
+    else
+        if emitter then emitter:playSound("FailedPickLock", self.door) end
+        self.character:Say("The paperclip snapped.")
+        self.onFail(self.character, self.door)
     end
 
     ISBaseTimedAction.perform(self)

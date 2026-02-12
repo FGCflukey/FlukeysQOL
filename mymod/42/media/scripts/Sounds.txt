@@ -7,17 +7,19 @@ module Base
         clip
         {
             file = media/sound/PickLock.ogg,
-            distanceMax = 3,
+            distanceMax = 6,
         }
     }
 
     sound FailedPickLock
     {
         category = Player,
+        volume = 3.0,
+
         clip
         {
             file = media/sound/FailedPickLock.ogg,
-            distanceMax = 6,
+            distanceMax = 3,
         }
     }
 
