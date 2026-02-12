@@ -10,20 +10,18 @@ what I consider missing features. Everything here is written by me.
 This ModPack brings the following things:
 
 - Overrides UseDelta on BlowTorches and Propane Tanks because it makes sense!
-- Overrides Canteens to hold more water
-- Adds Zombie butchering to cleanup the dead around your base
-- Adds updated PZ Bloodcure which utilizes the Zombie butchering (rewrite)
-- Adds Carbon Fibre Combat Axe and Long Reach Axe, includes repairs
-- Adds the old Hydrocraft looking Dolly and Toy Wagon for crazy hoarders like me
+- Overrides Canteens to hold more water, from 500ml to 1 Litre
+- Added Zombie butchering to cleanup the dead around your base
+- Added new version of PZ Bloodcure which utilizes the Zombie butchering. Multi-stage recipe. Magazine
+- Added Carbon Fibre Combat Axe and Long Reach Axe, includes repairs
+- Added the old Hydrocraft looking Dolly and Toy Wagon for crazy hoarders like me
 - Allows Climbing all obstacles, fences, windows and tall walls without dropping your Dolly or Toy Wagon
-- Adds a Visual Learner trait, allows the player to get XP from books instead of the usual vanilla boost
-- Adds Lockpicking inspired by Simple Lockpicking, returning screwdriver back to where it came from
-- Adds more packaging options such as 10 pack of Engine Parts, Syringes and Test Tubes
-- Adds more Packaging options for items
-- Adds recipes in regards to repurposing unusable metal and scrap.
+- Added Visual Learner trait, allows the player to get XP from books instead of the usual vanilla boost
+- Added Lockpicking Door & Vehicle Lockpicking using screwdriver/paperclip. Succcess based on Mechanics
+- Added more packaging options such as 10 pack of Engine Parts, Syringes and Test Tubes
+- Added some recipes in for repurposing unusable metal and scrap.
 - <required from workshop> Using JB Max Capacity Override - Dolly and trunk size increase
-- Adds BlowTorch and Propane Tank filling at pumps.
-- Adds Lockpicking. All doors, all directions. 20% chance you can break your paperclip. Vehicles too!
+- Added fueling BlowTorch and Propane Tank filling at pumps as well as Open Barrels
 - Added Security Gate cutting, rewards scrap. Think Gun Store security fence blocking the door. Welding 2 Req.
 - Added Car Painting. Now you have a nice variety of colours to paint your ride with. Vanilla/single player.
 - Added Filling Barrels with Liquid. Gas or Water etc. to 200 Litres. Will tweak/expand more later.
@@ -33,12 +31,13 @@ This ModPack brings the following things:
 - Expanded Money. Got too much money? Pack $500 or $1000 money bags. Duffle<->Moneybag conversion.
 - Added an Emergency Vendor. Right-click on Vending Machine. Buy critical items if you have enough cash!
 - Added Clothing Recycling. All items Indie forgot, now you have a Recycle Clothing option for these.
-- Added ability to unHotwire cars. As well, with small sheet metal and screwdriver you can make a car key.
-- Added ability to craft Nail boxes with Sheet Metals and Scrap Metals
-- Added ability to open car hoods faster, overrides default
-- Added ability to craft Spare Engine Parts, recipes for mechanic, welding and blacksmithing
+- Added unHotwire for Cars. Needs SmallSheetMetal and Screwdriver and right skills. Sit in to perform
+- Added crafting Nail boxes with Sheet Metals and Scrap Metal
+- Added faster Car Hood opening, overrides default slowness
+- Added crafting Spare Engine Parts, recipes for mechanic, welding and blacksmithing
 - Added dismantling of general car parts, serves as a fill-in for missing stuff or as a 2nd option
-- Added Fueling Generators with a Gas Filled Barrel. It only needs to be beside generator and presto.
+- Added fueling Generators with a Gas Filled Barrel. It only needs to be beside generator and presto.
+- Added fixing broken Car locks. Success is based on Mechanics level. But chance to fail exists.
 
 ## Installation
 
