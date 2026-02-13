@@ -33,7 +33,7 @@ List of current things this mod does...
 - Added Bulk Weapon Magazine Reloading/Unloading. Right click your stack!
 - Added ATM usage. Find credit cards and try them to get some money! Watch out, it can attract Zombies!
 - Added Usable Money. Pack it in $500/$1000 money bags. Duffle<->Moneybag conversion. Vendor friendly.
-- Added Emergency Vendor. Right-click on a Vending Machine. Buy critical items if you have the cash!
+- Added Emergency Vendor. Right-click on a Vending Machine. Buy/Sell items if you have the cash or need it!
 - Added Clothing Recycling. All items Indie neglected, now you have a Recycle Clothing option for those.
 - Added UnHotwire for Cars. Needs SmallSheetMetal and Screwdriver and right skills. Sit in to perform
 - Added Car Key crafting. Got the skills use some metal and make your own car key.
