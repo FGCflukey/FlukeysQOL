@@ -5,31 +5,47 @@ VendorItems = {
 
     { category = true, name = "-- General Items --" },
 
-    { id = "Base.SodaBottle",           name = "Soda Bottle",                   price = 30 },
+    { id = "Base.SodaBottle",           name = "Soda Bottle",                   price = 20 },
     { id = "Base.WaterBottleFull",      name = "Water Bottle",                  price = 25 },
-    { id = "Base.Chips",                name = "Bag of Chips",                  price = 20 },
-    { id = "Base.Chocolate",            name = "Chocolate Bar",                 price = 15 },
+    { id = "Base.Chips",                name = "Bag of Chips",                  price = 15 },
+    { id = "Base.Chocolate",            name = "Chocolate Bar",                 price = 10 },
     { id = "Base.CandyPackage",         name = "Candy",                         price = 10 },
     { id = "Base.Lighter",              name = "Lighter",                       price = 20 },
-    { id = "Base.Bag_DuffelBag",        name = "Duffelbag",                     price = 100 },
+    { id = "Base.TinOpener",            name = "Can Opener",                    price = 25 },
+    { id = "Base.Bag_DuffelBag",        name = "Duffelbag <-> Moneybag",        price = 50 },
+    { id = "Base.EmptyPetrolCan",       name = "Empty Gas Can",                 price = 50 },
+    { id = "Base.SurvivorMultitool",    name = "Survivor-Edition MultiTool",    price = 75 },
+    { id = "Base.CannedPotato_Box",     name = "Box of Canned Potato",          price = 50 },
+
+    { category = true, name = "-- Generators --" },
+
+    { id = "Base.Generator_Yellow",     name = "Generator - Premium",           price = 600 },
+    { id = "Base.Generator",            name = "Generator - Regular",           price = 500 },
+    { id = "Base.Generator_Blue",       name = "Generator - ValueTech",         price = 350 },
 
     { category = true, name = "-- Medical Items --" },
 
     { id = "Base.AdhesiveBandageBox",   name = "Box of Adhesive Bandages",      price = 25 },
-    { id = "Base.BandageBox",           name = "Box of Bandages",               price = 50 },
-    { id = "Base.AntibioticsBox",       name = "Box of Antibiotics",            price = 100 },
+    { id = "Base.BandageBox",           name = "Box of Bandages",               price = 40 },
+    { id = "Base.AntibioticsBox",       name = "Box of Antibiotics",            price = 75 },
     { id = "Base.SyringeWithCure",      name = "Syringe Containing The Cure",   price = 1000 },
 
     { category = true, name = "-- Melee Weapons --" },
 
-    { id = "Base.HuntingKnife",         name = "Hunting Knife",                 price = 300 },
-    { id = "Base.HandAxe",              name = "Hatchet",                       price = 450 },
-    { id = "Base.Axe",                  name = "Axe",                           price = 400 },
-    { id = "Base.WoodAxe",              name = "Wood Axe",                      price = 450 },
+    { id = "Base.HuntingKnife",         name = "Hunting Knife",                 price = 150 },
+    { id = "Base.HandAxe",              name = "Hatchet",                       price = 200 },
+    { id = "Base.Axe",                  name = "Axe",                           price = 300 },
+    { id = "Base.WoodAxe",              name = "Wood Axe",                      price = 300 },
+    { id = "Base.Katana",               name = "Katana",                        price = 300 },
+    { id = "Base.Machete",              name = "Machete",                       price = 250 },
+    { id = "Base.PickAxe",              name = "PickAxe",                       price = 200 },
+    { id = "Base.Crowbar",              name = "Crowbar",                       price = 200 },
+    { id = "Base.Sledgehammer",         name = "Classic SledgeHammer",          price = 200 },
+    { id = "Base.Sledgehammer2",        name = "Polished SledgeHammer",         price = 200 },
 
     { category = true, name = "-- Guns --" },
     { id = "Base.Pistol",               name = "9mm Pistol",                    price = 200 },
-    { id = "Base.DoubleBarrelShotgun",  name = "Double Barrel Shotgun",         price = 400 },
+    { id = "Base.DoubleBarrelShotgun",  name = "Double Barrel Shotgun",         price = 350 },
 
     { category = true, name = "-- Ammunition --" },
 

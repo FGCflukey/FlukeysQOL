@@ -20,31 +20,32 @@ ItemName_EN = {
     ItemName_Base.SpraycanBlack = "Spray Can (Black)",
     ItemName_Base.SpraycanGray = "Spray Can (Gray)",
     ItemName_Base.SpraycanDarkGray = "Spray Can (Dark-Gray)",
-    
+
     ItemName_Base.SpraycanRed = "Spray Can (Red)",
     ItemName_Base.SpraycanBlue = "Spray Can (Blue)",
     ItemName_Base.SpraycanGreen = "Spray Can (Green)",
     ItemName_Base.SpraycanYellow = "Spray Can (Yellow)",
     ItemName_Base.SpraycanOrange = "Spray Can (Orange)",
     ItemName_Base.SpraycanPurple = "Spray Can (Purple)",
-    
+
     ItemName_Base.SpraycanPastelBlue = "Spray Can (Pastel-Blue)",
     ItemName_Base.SpraycanPastelPink = "Spray Can (Pastel-Pink)",
     ItemName_Base.SpraycanPastelGreen = "SprayCan (Pastel-Green)",
     ItemName_Base.SpraycanPastelYellow = "SprayCan (Pastel-Yellow)",
     ItemName_Base.SpraycanMauve = "Spray Can (Mauve)",
-    
+
     ItemName_Base.SpraycanBrown = "Spray Can (Brown)",
     ItemName_Base.SpraycanTan = "Spray Can (Tan)",
     ItemName_Base.SpraycanOlive = "Spray Can (Olive)",
     ItemName_Base.SpraycanForestGreen = "Spray Can (Forest-Green)",
 
-    ItemName_Base.SpraycanPink = "Spraycan (Pink)",
-    ItemName_Base.SpraycanCyan = "Spraycan (Cyan)",
+    ItemName_Base.SpraycanPink = "Spray Can (Pink)",
+    ItemName_Base.SpraycanCyan = "Spray Can (Cyan)",
     ItemName_Base.SandingBlock = "Sanding Pad",
 
     ItemName_Base.Bag_FullMoneyBag = "Money Bag ($500)",
     ItemName_Base.Bag_FullBigMoneyBag = "Money Bag ($1000)",
-    ItemName_Base.SurvivorMultitool = "Survivor Multitool",
+
+    ItemName_Base.SurvivorMultitool = "Survivor Edition MultiTool",
     ItemName_Base.SurvivorMortarPestle = "Mortar & Pestle",
 }

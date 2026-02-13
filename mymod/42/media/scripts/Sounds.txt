@@ -53,4 +53,19 @@ module Base
         }
     }
 
+    sound vendingdispense
+    {
+        category = Object,
+        volume = 3.0,
+
+        clip
+        {
+            file = media/sound/vendingdispense.ogg,
+            distanceMin = 1,
+            distanceMax = 8,
+            priority = 5,
+            pitch = 1.1,
+        }
+    }
+
 }

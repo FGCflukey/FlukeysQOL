@@ -1,10 +1,11 @@
 -- Vendor_UI.lua
--- Emergency Vendor UI window (with category support + resizable window)
+-- Emergency Vendor UI window (Buy + Sell support + vending machine sound)
 
 require "ISUI/ISCollapsableWindow"
 require "ISUI/ISButton"
 require "ISUI/ISScrollingListBox"
 require "Vendor_Items"
+require "Vendor_SellItems"
 
 VendorUI = {}
 VendorUI.instance = nil
@@ -59,9 +60,8 @@ end
 
 local function removeMoneyRecursive(container, amount, playerInv, allowBreak)
     if amount <= 0 or not container then return amount end
-    allowBreak = allowBreak ~= false  -- default true
+    allowBreak = allowBreak ~= false
 
-    -- Helper to remove items of a type
     local function removeType(typeName, value)
         local items = container:getAllType(typeName)
         while amount >= value and items and not items:isEmpty() do
@@ -77,13 +77,11 @@ local function removeMoneyRecursive(container, amount, playerInv, allowBreak)
         end
     end
 
-    -- Remove in descending value order
     removeType("Bag_FullBigMoneyBag", 1000)
     removeType("Bag_FullMoneyBag", 500)
     removeType("MoneyBundle", 100)
     removeType("Money", 1)
 
-    -- Recurse into subcontainers (but do NOT allow breaking bags inside them)
     local items = container:getItems()
     if items then
         for i = 0, items:size() - 1 do
@@ -95,11 +93,7 @@ local function removeMoneyRecursive(container, amount, playerInv, allowBreak)
         end
     end
 
-    ---------------------------------------------------------
-    -- NEW: Only top-level call may break a bag
-    ---------------------------------------------------------
     if allowBreak and amount > 0 then
-        -- Try big bag first
         local big = container:getAllType("Bag_FullBigMoneyBag")
         if big and not big:isEmpty() then
             container:Remove(big:get(0))
@@ -108,7 +102,6 @@ local function removeMoneyRecursive(container, amount, playerInv, allowBreak)
             return amount
         end
 
-        -- Try small bag
         local small = container:getAllType("Bag_FullMoneyBag")
         if small and not small:isEmpty() then
             container:Remove(small:get(0))
@@ -148,6 +141,8 @@ function VendorWindow:initialise()
     self.minimumWidth = 250
     self.minimumHeight = 200
 
+    self.mode = "buy"
+
     self.list = ISScrollingListBox:new(10, 30, self.width - 20, self.height - 80)
     self.list:initialise()
     self.list:instantiate()
@@ -162,12 +157,31 @@ function VendorWindow:initialise()
     self.buyButton:instantiate()
     self:addChild(self.buyButton)
 
+    self.toggleButton = ISButton:new(100, self.height - 40, 80, 25, "Sell", self, VendorWindow.onToggleMode)
+    self.toggleButton:initialise()
+    self.toggleButton:instantiate()
+    self:addChild(self.toggleButton)
+
     self.closeButton = ISButton:new(self.width - 90, self.height - 40, 80, 25, "Close", self, VendorWindow.onClose)
     self.closeButton:initialise()
     self.closeButton:instantiate()
     self:addChild(self.closeButton)
 
     self.onResize = VendorWindow.onResize
+
+    self:populateList()
+end
+
+function VendorWindow:onToggleMode()
+    if self.mode == "buy" then
+        self.mode = "sell"
+        self.toggleButton:setTitle("Buy")
+        self.buyButton:setTitle("Sell")
+    else
+        self.mode = "buy"
+        self.toggleButton:setTitle("Sell")
+        self.buyButton:setTitle("Buy")
+    end
 
     self:populateList()
 end
@@ -184,21 +198,37 @@ function VendorWindow:onResize()
         self.buyButton:setY(self.height - 40)
     end
 
+    if self.toggleButton then
+        self.toggleButton:setY(self.height - 40)
+    end
+
     if self.closeButton then
         self.closeButton:setX(self.width - 90)
         self.closeButton:setY(self.height - 40)
     end
 end
 
+-----------------------------------------------------
+-- POPULATE LIST (always show items, even x0)
+-----------------------------------------------------
 function VendorWindow:populateList()
     self.list:clear()
 
-    for _, entry in ipairs(VendorItems) do
+    local source = (self.mode == "buy") and VendorItems or VendorSellItems
+    local inv = self.player:getInventory()
+
+    for _, entry in ipairs(source) do
         if entry.category then
             self.list:addItem("[ " .. entry.name .. " ]", { category = true })
         else
-            local text = string.format("%s  -  $%d", entry.name, entry.price)
-            self.list:addItem(text, entry)
+            if self.mode == "sell" then
+                local count = inv:getCountType(entry.id)
+                local text = string.format("%s  -  $%d (x%d)", entry.name, entry.price, count)
+                self.list:addItem(text, entry)
+            else
+                local text = string.format("%s  -  $%d", entry.name, entry.price)
+                self.list:addItem(text, entry)
+            end
         end
     end
 
@@ -228,7 +258,7 @@ function VendorWindow.drawListItem(self, y, item, alt)
 end
 
 -----------------------------------------------------
--- BUY BUTTON
+-- BUY / SELL BUTTON
 -----------------------------------------------------
 function VendorWindow:onBuy()
     local player = self.player
@@ -250,6 +280,17 @@ function VendorWindow:onBuy()
         return
     end
 
+    if self.mode == "buy" then
+        return self:handleBuy(entry, inv, player)
+    else
+        return self:handleSell(entry, inv, player)
+    end
+end
+
+-----------------------------------------------------
+-- BUY LOGIC (with vending machine sound)
+-----------------------------------------------------
+function VendorWindow:handleBuy(entry, inv, player)
     local price = entry.price or 0
     local totalMoney = countMoneyRecursive(inv)
 
@@ -260,7 +301,6 @@ function VendorWindow:onBuy()
 
     local leftover = removeMoneyRecursive(inv, price, inv)
 
-    -- leftover < 0 means we broke a bag and need to give change
     if leftover < 0 then
         giveChange(inv, math.abs(leftover))
         leftover = 0
@@ -272,7 +312,40 @@ function VendorWindow:onBuy()
     end
 
     inv:AddItem(entry.id)
+
+    -----------------------------------------------------
+    -- PLAY VENDING MACHINE DISPENSE SOUND
+    -----------------------------------------------------
+    getSoundManager():PlayWorldSound(
+        "vendingdispense",
+        player:getSquare(),
+        0,
+        10,
+        1.0,
+        false
+    )
+
     player:Say("Bought " .. entry.name .. " for $" .. price)
+end
+
+-----------------------------------------------------
+-- SELL LOGIC
+-----------------------------------------------------
+function VendorWindow:handleSell(entry, inv, player)
+    local count = inv:getCountType(entry.id)
+    if count <= 0 then
+        player:Say("I don't have any " .. entry.name .. " to sell.")
+        return
+    end
+
+    local item = inv:FindAndReturn(entry.id)
+    inv:Remove(item)
+
+    giveChange(inv, entry.price)
+
+    player:Say("Sold " .. entry.name .. " for $" .. entry.price)
+
+    self:populateList()
 end
 
 -----------------------------------------------------

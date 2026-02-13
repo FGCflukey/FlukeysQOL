@@ -48,7 +48,7 @@ RecipesEN {
     Recipe_ConvertDuffleMoney = "Convert Duffle Bag to Money Bag",
     Recipe_ConvertMoneyDuffle = "Convert Money Bag to Duffle Bag",
 
-    Recipe_CraftSurvivorMultitool = "Make Survivor Multitool",
+    Recipe_CraftSurvivorMultitool = "Make Survivor Edition MultiTool",
 
     Recipe_UnhotwireVehicle = "Unhotwire Vehicle",
     Recipe_MakeCarKey = "Make a Car Key",
