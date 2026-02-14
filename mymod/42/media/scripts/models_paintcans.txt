@@ -6,6 +6,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZWhite,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZBlack
@@ -13,6 +20,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZBlack,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZGray
@@ -20,6 +34,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZGray,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZDarkGray
@@ -27,6 +48,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZDarkGray,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZRed
@@ -34,6 +62,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZRed,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
     
     model spraycanTZBlue
@@ -41,6 +76,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZBlue,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZGreen
@@ -48,6 +90,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZGreen,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZYellow
@@ -55,6 +104,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZYellow,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZOrange
@@ -62,6 +118,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZOrange,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZPurple
@@ -69,6 +132,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZPurple,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZPastelBlue
@@ -76,6 +146,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZPastelBlue,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZPastelPink
@@ -83,6 +160,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZPastelPink,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZPastelGreen
@@ -90,6 +174,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZPastelGreen,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZPastelYellow
@@ -97,6 +188,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZPastelYellow,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZMauve
@@ -104,6 +202,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZMauve,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZBrown
@@ -111,6 +216,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZBrown,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZTan
@@ -118,6 +230,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZTan,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZOlive
@@ -125,6 +244,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZOlive,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZForestGreen
@@ -132,6 +258,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZForestGreen,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZPink
@@ -139,6 +272,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZPink,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model spraycanTZCyan
@@ -146,6 +286,13 @@ module Base
         mesh    = WorldItems/spraycanTZ,
         texture = WorldItems/spraycanTZCyan,
         scale   = 0.425,
+
+        attachment world 
+        {
+            /* [X] [Y] [Z] - Adjust Y for height above floor */
+            offset = 0.0000 -0.2000 0.0000,
+            rotate = 0.0000 0.0000 0.0000,
+        }
     }
 
     model SandingBlock

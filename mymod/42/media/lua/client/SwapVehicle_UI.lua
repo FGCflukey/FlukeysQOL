@@ -170,6 +170,18 @@ function SwapVehicle_UI:onSwapClick()
     local scriptName = item.scriptName
 
     ------------------------------------------------------
+    -- REQUIRE ITEMS BEFORE STARTING TIMED ACTION
+    ------------------------------------------------------
+    local inv = self.player:getInventory()
+    local hasSpray = inv:contains("SpraycanVinylCoat")
+    local hasSanding = inv:contains("SandingBlock")
+
+    if not hasSpray or not hasSanding then
+        self.player:Say("I need a Spraycan Vinyl Coat and a Sanding Block.")
+        return
+    end
+
+    ------------------------------------------------------
     -- Timed Action (Animation + Delay)
     ------------------------------------------------------
     ISTimedActionQueue.add(

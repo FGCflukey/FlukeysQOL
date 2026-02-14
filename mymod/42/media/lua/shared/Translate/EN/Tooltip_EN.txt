@@ -1,6 +1,6 @@
 Tooltip_EN = {
 
-    Tooltip_item_ZombieMeat = "Gross looking flesh",
+    Tooltip_item_ZombieMeat = "Gross Looking Flesh!",
     Tooltip_item_ZBloodSyringeBox = "Package containing 50 Syringes",
     Tooltip_item_ZBloodTestTubeBox = "Package containing 10 Test Tubes",
     Tooltip_item_ZBloodSyringe = "Empty Syringe",
@@ -13,5 +13,5 @@ Tooltip_EN = {
     Tooltip_item_BoxedEngineParts = "Package filled with New Engine Parts",
     Tooltip_item_BoxedElectronicsScrap = "Package filled with Electronics Scrap",
     Tooltip_item_BoxedElectricWire = "Package filled with Electric Wire",
-    Tooltip_SandingBlock = "A sanding block for working on cars.",
+    Tooltip_SandingBlock = "A sanding block for vehicle bodywork",
 }

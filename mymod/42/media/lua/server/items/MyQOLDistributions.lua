@@ -87,6 +87,7 @@ local qolSprayDistribTable = {
     "Base.SpraycanForestGreen",  4.0,
     "Base.SpraycanPink",         4.0,
     "Base.SpraycanCyan",         4.0,
+    "Base.SpraycanVinylCoat",    4.0,
 }
 
 ---------------------------------------------------------

@@ -224,12 +224,23 @@ module Base
     item SpraycanCyan
     {
         ItemType            = Drainable,
-        Icon                = TZ_Spraycan_Cyan.png,
+        Icon                = TZ_Spraycan_Cyan,
         UseDelta            = 0.025,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         StaticModel         = spraycanTZCyan,
         WorldStaticModel    = spraycanTZCyan,
+    }
+
+    item SpraycanVinylCoat
+    {
+        ItemType            = Drainable,
+        Icon                = TZ_Spraycan_Vinyl,
+        UseDelta            = 0.025,
+        UseWhileEquipped    = false,
+        Weight              = 0.5,
+        StaticModel         = spraycanTZDarkGray,
+        WorldStaticModel    = spraycanTZDarkGray,
     }
 
     item SandingBlock
