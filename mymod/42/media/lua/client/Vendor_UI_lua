@@ -1,5 +1,5 @@
 -- Vendor_UI.lua
--- Emergency Vendor UI (Tabbed Buy/Sell System)
+-- Emergency Vendor UI window (Buy + Sell support + vending machine sound)
 
 require "ISUI/ISCollapsableWindow"
 require "ISUI/ISButton"
@@ -138,43 +138,12 @@ function VendorWindow:initialise()
 
     self.resizable = true
     self.resizeWidget = true
-    self.minimumWidth = 300
-    self.minimumHeight = 260
+    self.minimumWidth = 250
+    self.minimumHeight = 200
 
-    -----------------------------------------------------
-    -- BUILD TAB LIST FROM CATEGORIES
-    -----------------------------------------------------
-    self.tabs = { "All" }
+    self.mode = "buy"
 
-    for _, entry in ipairs(VendorItems) do
-        if entry.category then
-            table.insert(self.tabs, entry.category)
-        end
-    end
-
-    table.insert(self.tabs, "Sell")
-
-    self.activeTab = "All"
-
-    -----------------------------------------------------
-    -- CREATE TAB BUTTONS
-    -----------------------------------------------------
-    self.tabButtons = {}
-    local x = 10
-    for _, tab in ipairs(self.tabs) do
-        local btn = ISButton:new(x, 30, 80, 25, tab, self, VendorWindow.onTab)
-        btn.internal = tab
-        btn:initialise()
-        btn:instantiate()
-        self:addChild(btn)
-        table.insert(self.tabButtons, btn)
-        x = x + 85
-    end
-
-    -----------------------------------------------------
-    -- LIST BOX
-    -----------------------------------------------------
-    self.list = ISScrollingListBox:new(10, 60, self.width - 20, self.height - 130)
+    self.list = ISScrollingListBox:new(10, 30, self.width - 20, self.height - 80)
     self.list:initialise()
     self.list:instantiate()
     self.list.itemheight = 22
@@ -183,117 +152,88 @@ function VendorWindow:initialise()
     self.list.doDrawItem = VendorWindow.drawListItem
     self:addChild(self.list)
 
-    -----------------------------------------------------
-    -- BUY / SELL BUTTON
-    -----------------------------------------------------
-    self.actionButton = ISButton:new(10, self.height - 40, 80, 25, "Buy", self, VendorWindow.onAction)
-    self.actionButton:initialise()
-    self.actionButton:instantiate()
-    self:addChild(self.actionButton)
+    self.buyButton = ISButton:new(10, self.height - 40, 80, 25, "Buy", self, VendorWindow.onBuy)
+    self.buyButton:initialise()
+    self.buyButton:instantiate()
+    self:addChild(self.buyButton)
 
-    -----------------------------------------------------
-    -- CLOSE BUTTON
-    -----------------------------------------------------
+    self.toggleButton = ISButton:new(100, self.height - 40, 80, 25, "Sell", self, VendorWindow.onToggleMode)
+    self.toggleButton:initialise()
+    self.toggleButton:instantiate()
+    self:addChild(self.toggleButton)
+
     self.closeButton = ISButton:new(self.width - 90, self.height - 40, 80, 25, "Close", self, VendorWindow.onClose)
     self.closeButton:initialise()
     self.closeButton:instantiate()
     self:addChild(self.closeButton)
-
-    -----------------------------------------------------
-    -- FOOTER TEXT
-    -----------------------------------------------------
-    self.footerText = "All Sales Are Final."
-    self.footerY = self.height - 60
 
     self.onResize = VendorWindow.onResize
 
     self:populateList()
 end
 
------------------------------------------------------
--- FOOTER DRAWING
------------------------------------------------------
-function VendorWindow:render()
-    ISCollapsableWindow.render(self)
+function VendorWindow:onToggleMode()
+    if self.mode == "buy" then
+        self.mode = "sell"
+        self.toggleButton:setTitle("Buy")
+        self.buyButton:setTitle("Sell")
+    else
+        self.mode = "buy"
+        self.toggleButton:setTitle("Sell")
+        self.buyButton:setTitle("Buy")
+    end
 
-    -- Center the footer text
-    local textWidth = getTextManager():MeasureStringX(UIFont.Small, self.footerText)
-    local centerX = (self.width - textWidth) / 2
-
-    self:drawText(
-        self.footerText,
-        centerX,
-        self.footerY,
-        0.9, 0.9, 0.9, 1,
-        UIFont.Small
-    )
-end
-
------------------------------------------------------
--- TAB CLICK HANDLER
------------------------------------------------------
-function VendorWindow:onTab(button)
-    self.activeTab = button.internal
-    self.actionButton:setTitle(self.activeTab == "Sell" and "Sell" or "Buy")
     self:populateList()
 end
 
------------------------------------------------------
--- RESIZE HANDLER
------------------------------------------------------
 function VendorWindow:onResize()
     ISCollapsableWindow.onResize(self)
 
     if self.list then
         self.list:setWidth(self.width - 20)
-        self.list:setHeight(self.height - 130)
+        self.list:setHeight(self.height - 80)
     end
 
-    if self.actionButton then
-        self.actionButton:setY(self.height - 40)
+    if self.buyButton then
+        self.buyButton:setY(self.height - 40)
+    end
+
+    if self.toggleButton then
+        self.toggleButton:setY(self.height - 40)
     end
 
     if self.closeButton then
         self.closeButton:setX(self.width - 90)
         self.closeButton:setY(self.height - 40)
     end
-
-    -- Keep footer pinned above buttons
-    self.footerY = self.height - 60
 end
 
 -----------------------------------------------------
--- POPULATE LIST BASED ON ACTIVE TAB
+-- POPULATE LIST (always show items, even x0)
 -----------------------------------------------------
 function VendorWindow:populateList()
     self.list:clear()
 
+    local source = (self.mode == "buy") and VendorItems or VendorSellItems
     local inv = self.player:getInventory()
 
-    -- SELL TAB
-    if self.activeTab == "Sell" then
-        for _, entry in ipairs(VendorSellItems) do
-            local count = inv:getCountType(entry.id)
-            local text = string.format("%s  -  $%d (x%d)", entry.name, entry.price, count)
-            self.list:addItem(text, entry)
-        end
-        return
-    end
-
-    -- BUY TABS
-    local currentCategory = nil
-
-    for _, entry in ipairs(VendorItems) do
+    for _, entry in ipairs(source) do
         if entry.category then
-            currentCategory = entry.category
+            self.list:addItem("[ " .. entry.name .. " ]", { category = true })
         else
-            entry._category = currentCategory
-
-            if self.activeTab == "All" or entry._category == self.activeTab then
+            if self.mode == "sell" then
+                local count = inv:getCountType(entry.id)
+                local text = string.format("%s  -  $%d (x%d)", entry.name, entry.price, count)
+                self.list:addItem(text, entry)
+            else
                 local text = string.format("%s  -  $%d", entry.name, entry.price)
                 self.list:addItem(text, entry)
             end
         end
+    end
+
+    if #self.list.items > 0 then
+        self.list.selected = 1
     end
 end
 
@@ -302,6 +242,12 @@ end
 -----------------------------------------------------
 function VendorWindow.drawListItem(self, y, item, alt)
     local data = item.item
+
+    if data.category then
+        self:drawRect(0, y, self.width, self.itemheight, 0.4, 0.1, 0.1, 0.1)
+        self:drawText(item.text, 10, y + 2, 0.9, 0.9, 0.4, 1, UIFont.Medium)
+        return y + self.itemheight
+    end
 
     if self.selected == item.index then
         self:drawRect(0, y, self.width, self.itemheight, 0.3, 0.3, 0.6, 1)
@@ -312,14 +258,16 @@ function VendorWindow.drawListItem(self, y, item, alt)
 end
 
 -----------------------------------------------------
--- ACTION BUTTON (BUY OR SELL)
+-- BUY / SELL BUTTON
 -----------------------------------------------------
-function VendorWindow:onAction()
+function VendorWindow:onBuy()
     local player = self.player
-    local inv = player:getInventory()
+    if not player then return end
 
+    local inv = player:getInventory()
     local selectedIndex = self.list.selected
     local selected = selectedIndex and self.list.items[selectedIndex]
+
     if not selected then
         player:Say("I should pick something first.")
         return
@@ -327,15 +275,20 @@ function VendorWindow:onAction()
 
     local entry = selected.item
 
-    if self.activeTab == "Sell" then
-        return self:handleSell(entry, inv, player)
-    else
+    if entry.category then
+        player:Say("That's a category, not an item.")
+        return
+    end
+
+    if self.mode == "buy" then
         return self:handleBuy(entry, inv, player)
+    else
+        return self:handleSell(entry, inv, player)
     end
 end
 
 -----------------------------------------------------
--- BUY LOGIC (with sound)
+-- BUY LOGIC (with vending machine sound)
 -----------------------------------------------------
 function VendorWindow:handleBuy(entry, inv, player)
     local price = entry.price or 0
@@ -360,7 +313,17 @@ function VendorWindow:handleBuy(entry, inv, player)
 
     inv:AddItem(entry.id)
 
-    getSoundManager():PlayWorldSound("vendingdispense", player:getSquare(), 0, 10, 1.0, false)
+    -----------------------------------------------------
+    -- PLAY VENDING MACHINE DISPENSE SOUND
+    -----------------------------------------------------
+    getSoundManager():PlayWorldSound(
+        "vendingdispense",
+        player:getSquare(),
+        0,
+        10,
+        1.0,
+        false
+    )
 
     player:Say("Bought " .. entry.name .. " for $" .. price)
 end
@@ -404,8 +367,8 @@ function VendorWindow:new(x, y, width, height, player)
     o.title = "Emergency Vendor"
     o.resizable = true
     o.resizeWidget = true
-    o.minimumWidth = 600
-    o.minimumHeight = 450
+    o.minimumWidth = 250
+    o.minimumHeight = 200
     o.moveWithMouse = true
     return o
 end
@@ -418,7 +381,7 @@ function VendorUI.open(player)
 
     local sw = getCore():getScreenWidth()
     local sh = getCore():getScreenHeight()
-    local w, h = 700, 550
+    local w, h = 350, 260
     local x = (sw - w) / 2
     local y = (sh - h) / 2
 
