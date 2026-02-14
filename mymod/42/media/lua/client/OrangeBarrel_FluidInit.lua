@@ -45,7 +45,9 @@ function OrangeBarrelFluid.IsOrangeBarrel(object)
 
     return spriteName == "crafted_01_32"
         or spriteName == "location_military_generic_01_14"
+        or spriteName == "location_military_generic_01_15"
         or spriteName == "location_military_generic_01_6"
+        or spriteName == "location_military_generic_01_7"
         or spriteName == "industry_01_22"
         or spriteName == "industry_01_23"
 end

@@ -13,7 +13,8 @@ VendorItems = {
     { id = "Base.Lighter",              name = "Lighter",                       price = 20 },
     { id = "Base.TinOpener",            name = "Can Opener",                    price = 25 },
     { id = "Base.Bag_DuffelBag",        name = "Duffelbag <-> Moneybag",        price = 50 },
-    { id = "Base.EmptyPetrolCan",       name = "Empty Gas Can",                 price = 50 },
+    { id = "Base.PetrolCan",            name = "Gas Can",                       price = 50 },
+    { id = "Base.JerryCan",             name = "Jerry Can",                     price = 50 },
     { id = "Base.SurvivorMultitool",    name = "Survivor-Edition MultiTool",    price = 75 },
     { id = "Base.CannedPotato_Box",     name = "Box of Canned Potato",          price = 50 },
 
