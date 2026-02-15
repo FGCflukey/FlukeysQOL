@@ -49,4 +49,5 @@ ItemName_EN = {
 
     ItemName_Base.SurvivorMultitool = "Survivor Edition MultiTool",
     ItemName_Base.SurvivorMortarPestle = "Mortar & Pestle",
+
 }

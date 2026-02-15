@@ -10,7 +10,6 @@ local function isFenceTile(square, label)
     label = label or "UNKNOWN"
 
     if not square then
-        -- print("DEBUG: [" .. label .. "] square is NIL")
         return false
     end
 
@@ -21,7 +20,6 @@ local function isFenceTile(square, label)
         if spr and spr.getName then
             local name = spr:getName()
             if name and name:sub(1, 7) == "fencing" then
-                -- print("DEBUG: [" .. label .. "] Fence detected (FLOOR)")
                 return true
             end
         end
@@ -37,7 +35,6 @@ local function isFenceTile(square, label)
                 if spr and spr.getName then
                     local name = spr:getName()
                     if name and name:sub(1, 7) == "fencing" then
-                        -- print("DEBUG: [" .. label .. "] Fence detected (OBJECT)")
                         return true
                     end
                 end
@@ -81,9 +78,6 @@ local function isFenceNearby(player)
     local frontIsFence   = isFenceTile(front,  "FRONT")
 
     if currentIsFence or frontIsFence then
-       -- print("DEBUG: Fence nearby (" ..
-       --     (currentIsFence and "CURRENT " or "") ..
-       --     (frontIsFence and "FRONT" or "") .. ")")
         return true
     end
 
@@ -103,7 +97,9 @@ local function OnKeyPressed(key)
         return
     end
 
+    local primary   = player:getPrimaryHandItem()
     local secondary = player:getSecondaryHandItem()
+
     if not secondary then
         print("DEBUG: No item in secondary hand")
         return
@@ -115,20 +111,26 @@ local function OnKeyPressed(key)
         return
     end
 
-    print("DEBUG: Protecting item:", fullType)
+    print("DEBUG: Protecting items:",
+        (primary and primary:getFullType() or "NONE"),
+        (secondary and secondary:getFullType() or "NONE")
+    )
 
     local inv = player:getInventory()
     if not inv then return end
 
-    -- Unequip
+    -- Store both items
+    local md = player:getModData()
+    md.StoredPrimaryClimbItem   = primary
+    md.StoredSecondaryClimbItem = secondary
+
+    -- Unequip both
     player:setPrimaryHandItem(nil)
     player:setSecondaryHandItem(nil)
 
     -- Remove from inventory
+    if primary then inv:Remove(primary) end
     inv:Remove(secondary)
-
-    local md = player:getModData()
-    md.StoredClimbItem = secondary
 
     print("### PRE-CLIMB REMOVE:", fullType)
 end
@@ -136,25 +138,36 @@ end
 Events.OnKeyPressed.Add(OnKeyPressed)
 
 ---------------------------------------------------------
--- Restore item after climb
+-- Restore items after climb
 ---------------------------------------------------------
 local function OnTick()
     local player = getPlayer()
     if not player then return end
 
     local md = player:getModData()
-    local item = md.StoredClimbItem
-    if not item then return end
+    local primary   = md.StoredPrimaryClimbItem
+    local secondary = md.StoredSecondaryClimbItem
+
+    if not primary and not secondary then return end
 
     if not isFenceNearby(player) then
         local inv = player:getInventory()
         if inv then
-            inv:AddItem(item)
-            player:setSecondaryHandItem(item)
-            print("### RESTORED AFTER CLIMB:", item:getFullType())
+            if primary then
+                inv:AddItem(primary)
+                player:setPrimaryHandItem(primary)
+                print("### RESTORED PRIMARY AFTER CLIMB:", primary:getFullType())
+            end
+
+            if secondary then
+                inv:AddItem(secondary)
+                player:setSecondaryHandItem(secondary)
+                print("### RESTORED SECONDARY AFTER CLIMB:", secondary:getFullType())
+            end
         end
 
-        md.StoredClimbItem = nil
+        md.StoredPrimaryClimbItem   = nil
+        md.StoredSecondaryClimbItem = nil
     end
 end
 
