@@ -67,5 +67,24 @@ RecipesEN {
     Recipe_FixCFLRAxeWithMetal = "Repair Carbon Fibre Long Reach Axe",
     
     Recipe_MakeANeedle = "Make a Needle",
+    Recipe_MakeASheet = "Make a Sheet",
     Recipe_MakeAPickAxeHead = "Make a Pick Axe Head",
+
+    Recipe_ConvertTo9mms = "Convert Ammo to 9mm",
+    Recipe_ConvertTo38s = "Convert Ammo to .38",
+    Recipe_ConvertTo44s = "Convert Ammo to .44",
+    Recipe_ConvertTo45s = "Convert Ammo to .45",
+    Recipe_ConvertTo223s = "Convert Ammo to .223",
+    Recipe_ConvertTo308s = "Convert Ammo to .308",
+    Recipe_ConvertTo556s = "Convert Ammo to 5.56mm",
+    Recipe_ConvertToShotgunShells = "Convert Ammo to Shotgun Shells",
+    Recipe_ConvertTo9mmBox = "Convert Box to 9mm",
+    Recipe_ConvertTo38Box = "Convert Box to .38",
+    Recipe_ConvertTo44Box = "Convert Box to .44",
+    Recipe_ConvertTo45Box = "Convert Box to .45",
+    Recipe_ConvertTo223Box = "Convert Box to .223",
+    Recipe_ConvertTo308Box = "Convert Box to .308",
+    Recipe_ConvertTo556Box = "Convert Box to 5.56mm",
+    Recipe_ConvertToShotgunShellsBox = "Convert Box to Shotgun Shells",
+
 }

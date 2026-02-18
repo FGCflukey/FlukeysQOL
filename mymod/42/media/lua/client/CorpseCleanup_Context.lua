@@ -71,7 +71,7 @@ local function onFillWorldObjectContextMenu(player, context, worldobjects, test)
     if not tool then return end
 
     -- ⭐ Correct Butchering skill requirement
-    local requiredLevel = 1 -- change to 2 if desired
+    local requiredLevel = 2 -- change to 2 if desired
     local butcherLevel = playerObj:getPerkLevel(Perks.Butchering)
 
     if butcherLevel < requiredLevel then

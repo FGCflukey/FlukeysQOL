@@ -188,6 +188,7 @@ module Base
         timedAction     = MixingMortarPestle,
         time            = 120,
         NeedToBeLearn   = true,
+        SkillRequired   = FirstAid:2,
         Tags            = AnySurfaceCraft;Health,
         category        = Medical,
         OnCreate        = OnCreate_FilledSyringes,
@@ -210,6 +211,7 @@ module Base
         timedAction     = MixingMortarPestle,
         time            = 300,
         NeedToBeLearn   = true,
+        SkillRequired   = FirstAid:2,
         Tags            = AnySurfaceCraft;Health,
         category        = Medical,
         OnCreate        = OnCreate_FilledSyringes,
@@ -232,11 +234,12 @@ module Base
 
     craftRecipe CraftZomCureSyringe
     {
-        timedAction         = MixingMortarPestle,
-        time                = 300,
-        NeedToBeLearn       = true,
-        Tags                = AnySurfaceCraft;Health,
-        category            = Medical,
+        timedAction     = MixingMortarPestle,
+        time            = 300,
+        NeedToBeLearn   = true,
+        SkillRequired   = FirstAid:2,
+        Tags            = AnySurfaceCraft;Health,
+        category        = Medical,
 
         inputs
         {

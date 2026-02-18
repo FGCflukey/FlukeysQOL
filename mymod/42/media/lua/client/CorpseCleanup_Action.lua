@@ -22,6 +22,21 @@ local function DropCorpseInventory(corpse)
     end
 end
 
+-- Skill‑based zombie meat yield
+local function getZombieMeatYield(character)
+    local perk = character:getPerkLevel(Perks.Butchering)
+
+    if perk < 2 then
+        return ZombRand(1, 3)      -- 1–2
+    elseif perk < 4 then
+        return ZombRand(1, 4)      -- 1–3
+    elseif perk < 6 then
+        return ZombRand(3, 6)      -- 3–5
+    else
+        return ZombRand(5, 11)     -- 5–10
+    end
+end
+
 function CorpseCleanupAction:isValid()
     return self.corpse ~= nil and self.corpse:getSquare() ~= nil
 end
@@ -31,8 +46,8 @@ function CorpseCleanupAction:update()
 end
 
 function CorpseCleanupAction:start()
-    -- ⭐ Correct Butchering skill requirement (safety check)
-    local requiredLevel = 1 -- or 2
+    -- Butchering skill requirement (safety check)
+    local requiredLevel = 2
     if self.character:getPerkLevel(Perks.Butchering) < requiredLevel then
         self.character:Say("I don't know how to butcher a corpse yet.")
         self:forceStop()
@@ -58,18 +73,23 @@ function CorpseCleanupAction:perform()
 
     local sq = self.corpse:getSquare()
 
+    -- Drop corpse inventory
     DropCorpseInventory(self.corpse)
 
+    -- Remove corpse cleanly
     if sq then
         sq:removeCorpse(self.corpse, true)
     end
 
+    -- Blood effect
     self.character:addBlood(0.2)
 
+    -- Inventory + skill‑based meat yield
     local inv = self.character:getInventory()
-    local count = ZombRand(1, 11)
+    local count = getZombieMeatYield(self.character)
     inv:AddItems("Base.ZombieMeat", count)
 
+    -- Restore original hand items
     if self.originalPrimary
        and self.originalPrimary:getContainer() == inv
        and not self.originalPrimary:isBroken() then

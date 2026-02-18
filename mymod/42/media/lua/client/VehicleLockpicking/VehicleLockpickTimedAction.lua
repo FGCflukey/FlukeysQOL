@@ -6,11 +6,11 @@ VehicleLockpickTimedAction = ISBaseTimedAction:derive("VehicleLockpickTimedActio
 local function getLockpickSuccessChance(player)
     local mech = player:getPerkLevel(Perks.Mechanics)
 
-    if mech <= 1 then
+    if mech <= 2 then
         return 15
     elseif mech <= 4 then
         return 45
-    elseif mech <= 7 then
+    elseif mech <= 8 then
         return 75
     else
         return 100
@@ -87,11 +87,20 @@ function VehicleLockpickTimedAction:perform()
         unlockVehicleDoor(self.character, self.vehicle, self.part)
     else
         if emitter then emitter:playSound("FailedPickLock", self.vehicle) end
-        self.character:Say("The paperclip snapped.")
+        self.character:Say("The lock resisted.")
 
-        local inv = self.character:getInventory()
-        local pc = inv:getFirstTypeRecurse("Paperclip")
-        if pc then inv:Remove(pc) end
+        -- 35% chance to break the paperclip
+        local breakChance = 35
+        local breakRoll = ZombRand(100)
+
+        if breakRoll < breakChance then
+            self.character:Say("The paperclip snapped.")
+            local inv = self.character:getInventory()
+            local pc = inv:getFirstTypeRecurse("Paperclip")
+            if pc then inv:Remove(pc) end
+        else
+            self.character:Say("The paperclip held.")
+        end
     end
 
     ISBaseTimedAction.perform(self)

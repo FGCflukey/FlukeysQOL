@@ -470,4 +470,24 @@ module Base
         }
     }
 
+    craftRecipe MakeASheet
+    {
+        timedAction     = SewingCloth,
+        time            = 90,
+        Tags            = InHandCraft,
+        category        = Tailoring,
+        needToBeLearn   = false,
+        xpAward         = Tailoring:5,
+        inputs
+        {
+            item 1 tags[base:sewingneedle] mode:keep,
+            item 2 [Base.Thread],
+            item 10 [Base.RippedSheets;Base.RippedSheetsDirty;Base.AlcoholRippedSheets] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.Sheet,
+        }
+    }
+
 }

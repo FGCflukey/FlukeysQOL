@@ -6,11 +6,11 @@ LockpickTimedAction = ISBaseTimedAction:derive("LockpickTimedAction")
 local function getLockpickSuccessChance(player)
     local mech = player:getPerkLevel(Perks.Mechanics)
 
-    if mech <= 1 then
+    if mech <= 2 then
         return 15
     elseif mech <= 4 then
         return 45
-    elseif mech <= 7 then
+    elseif mech <= 8 then
         return 75
     else
         return 100
@@ -56,8 +56,18 @@ function LockpickTimedAction:perform()
         self.onSuccess(self.character, self.door)
     else
         if emitter then emitter:playSound("FailedPickLock", self.door) end
-        self.character:Say("The paperclip snapped.")
-        self.onFail(self.character, self.door)
+        self.character:Say("The lock resisted.")
+
+        -- 35% chance to break the paperclip
+        local breakChance = 35
+        local breakRoll = ZombRand(100)
+
+        if breakRoll < breakChance then
+            self.character:Say("The paperclip snapped.")
+            self.onFail(self.character, self.door)
+        else
+            self.character:Say("The paperclip held.")
+        end
     end
 
     ISBaseTimedAction.perform(self)

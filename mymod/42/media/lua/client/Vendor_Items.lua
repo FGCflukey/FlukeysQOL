@@ -17,6 +17,8 @@ VendorItems = {
     { id = "Base.JerryCan",             name = "Jerry Can",                     price = 50 },
     { id = "Base.SurvivorMultitool",    name = "Survivor-Edition MultiTool",    price = 75 },
     { id = "Base.CannedPotato_Box",     name = "Box of Canned Potato",          price = 50 },
+    { id = "Base.HCHanddolly",          name = "Hand Dolly",                    price = 400 },
+    { id = "Base.HCToywagon",           name = "Toy Wagon",                     price = 300 },
 
     { category = "Generators" },
 
@@ -43,6 +45,8 @@ VendorItems = {
     { id = "Base.Crowbar",              name = "Crowbar",                       price = 200 },
     { id = "Base.Sledgehammer",         name = "Classic SledgeHammer",          price = 200 },
     { id = "Base.Sledgehammer2",        name = "Polished SledgeHammer",         price = 200 },
+    { id = "Base.cfcombataxe",          name = "*Carbon Fibre Combat Axe*",     price = 800 },
+    { id = "Base.cflongreachaxe",       name = "*Carbon Fibre Long Reach Axe*", price = 800 },
 
     { category = "Guns" },
 

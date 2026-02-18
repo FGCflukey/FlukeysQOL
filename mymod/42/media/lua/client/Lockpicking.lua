@@ -201,8 +201,10 @@ local function onFillWorldObjectContextMenu(playerIndex, context, worldobjects, 
     local doors = getDoorCluster(square)
     if #doors == 0 then return end
     if not clusterLocked(doors) then return end
+    if not hasLockpickTools(player) then return end
 
     context:addOption("Pick Lock", worldobjects, onPickLock, playerIndex)
+
 end
 
 Events.OnFillWorldObjectContextMenu.Add(onFillWorldObjectContextMenu)

@@ -43,8 +43,18 @@ end
 -- START
 -----------------------------------------------------
 function CashOutATMAction:start()
-    self:setActionAnim("Craft")
-    self.character:SetVariable("CraftingType", "ATM")
+    -- Face ATM once (prevents animation fighting)
+    if self.atm then
+        self.character:faceThisObject(self.atm)
+    end
+
+    -- Use looting animation instead of crafting
+    if self.setActionAnim then
+        self:setActionAnim("Loot")
+    end
+    if self.setAnimVariable then
+        self:setAnimVariable("LootPosition", "Mid")
+    end
 
     -- Save & unequip primary
     if not self.originalPrimary then
@@ -66,9 +76,8 @@ end
 -- UPDATE
 -----------------------------------------------------
 function CashOutATMAction:update()
-    self.character:faceThisObject(self.atm)
-
-    -- Loop sound safely
+    -- No more forced facing here (prevents turning away)
+    -- Sound loop safety
     local emitter = self.character:getEmitter()
     if emitter and self.atmSound and not emitter:isPlaying(self.atmSound) then
         self.atmSound = emitter:playSound("ATM_Machine")

@@ -5,5 +5,5 @@ icon=LogoFGC.png
 author=justanothersteamclient
 poster=poster.png
 modversion=1.0
-versionMax=42.13
+versionMax=42.14
 require=\JB_MaxCapacityOverride
