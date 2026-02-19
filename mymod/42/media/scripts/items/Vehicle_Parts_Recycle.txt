@@ -9,7 +9,6 @@ module Base
         Tags            = InHandCraft,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
-
         inputs
         {
             item 1 [Base.EngineDoor1;Base.EngineDoor2;Base.EngineDoor3] mode:destroy,
@@ -31,7 +30,6 @@ module Base
         Tags            = InHandCraft,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
-
         inputs
         {
             item 1 [Base.TrunkDoor1;Base.TrunkDoor2;Base.TrunkDoor3] mode:destroy,
@@ -53,7 +51,6 @@ module Base
         Tags            = InHandCraft,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
-
         inputs
         {
             item 1 [Base.OldCarMuffler1;Base.OldCarMuffler2;Base.OldCarMuffler3;Base.NormalCarMuffler1;Base.NormalCarMuffler2;Base.NormalCarMuffler3;Base.ModernCarMuffler1;Base.ModernCarMuffler2;Base.ModernCarMuffler3] mode:destroy,
@@ -75,7 +72,6 @@ module Base
         Tags            = InHandCraft,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
-
         inputs
         {
             item 1 [Base.NormalGasTank1;Base.NormalGasTank2;Base.NormalGasTank3;Base.BigGasTank1;Base.BigGasTank2;Base.BigGasTank3;Base.SmallGasTank1;Base.SmallGasTank2;Base.SmallGasTank3] mode:destroy,
@@ -97,7 +93,6 @@ module Base
         Tags            = InHandCraft,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
-
         inputs
         {
             item 1 [Base.NormalSuspension1;Base.NormalSuspension2;Base.NormalSuspension3;Base.ModernSuspension1;Base.ModernSuspension2;Base.ModernSuspension3] mode:destroy,
@@ -119,7 +114,6 @@ module Base
         Tags            = InHandCraft,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
-
         inputs
         {
             item 1 [Base.OldBrake1;Base.OldBrake2;Base.OldBrake3;Base.NormalBrake1;Base.NormalBrake2;Base.NormalBrake3;Base.ModernBrake1;Base.ModernBrake2;Base.ModernBrake3] mode:destroy,

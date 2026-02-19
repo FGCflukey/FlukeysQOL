@@ -50,7 +50,7 @@ RecipesEN {
 
     Recipe_CraftSurvivorMultitool = "Make Survivor Edition MultiTool",
 
-    Recipe_UnhotwireVehicle = "Unhotwire Vehicle",
+    Recipe_UnhotwireVehicle = "Un-Hotwire Vehicle",
     Recipe_MakeCarKey = "Make a Car Key",
 
     Recipe_MakeMortarAndPestle = "Carve a Mortar & Pestle",
@@ -104,5 +104,18 @@ RecipesEN {
     Recipe_RecycleDoor = "Recycle Door",
     Recipe_RecycleCarSeat = "Recycle Car Seat",
     Recipe_RecycleCarTire = "Recycle Car Tire",
+
+    Recipe_MakeStandardWindshield = "Make Standard Windshield",
+    Recipe_MakeHeavyDutyWindshield = "Make Heavy Windshield",
+    Recipe_MakeSportWindshield = "Make Sport Windshield",
+    Recipe_MakeStandardRearWindshield = "Make Standard Rear Windshield",
+    Recipe_MakeHeavyDutyRearWindshield = "Make Heavy Rear Windshield",
+    Recipe_MakeSportRearWindshield = "Make Sport Rear Windshield",
+    Recipe_MakeStandardFrontWindow = "Make Standard Front Window",
+    Recipe_MakeHeavyDutyFrontWindow = "Make Heavy Front Window",
+    Recipe_MakeSportFrontWindow = "Make Sport Front Window",
+    Recipe_MakeStandardRearWindow = "Make Standard Rear Window",
+    Recipe_MakeHeavyDutyRearWindow = "Make Heavy Rear Window",
+    Recipe_MakeSportRearWindow = "Make Sport Rear Window",
 
 }

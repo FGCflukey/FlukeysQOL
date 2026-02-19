@@ -1,0 +1,233 @@
+module Base
+{
+
+    /***    Vehicle Windows     ***/
+
+    craftRecipe MakeStandardWindshield
+    {
+        timedAction     = Making,
+        Time            = 120,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 2 [Base.GlassPanel],
+            item 1 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.Windshield1,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyWindshield
+    {
+        timedAction     = Making,
+        Time            = 120,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 3 [Base.GlassPanel],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.Windshield2,
+        }
+    }
+
+    craftRecipe MakeSportWindshield
+    {
+        timedAction     = Making,
+        Time            = 120,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 2 [Base.GlassPanel],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.Windshield3,
+        }
+    }
+
+    craftRecipe MakeStandardRearWindshield
+    {
+        timedAction     = Making,
+        Time            = 120,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 2 [Base.GlassPanel],
+            item 1 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearWindshield1,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyRearWindshield
+    {
+        timedAction     = Making,
+        Time            = 120,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 3 [Base.GlassPanel],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearWindshield2,
+        }
+    }
+
+    craftRecipe MakeSportRearWindshield
+    {
+        timedAction     = Making,
+        Time            = 120,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 2 [Base.GlassPanel],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearWindshield3,
+        }
+    }
+
+    craftRecipe MakeStandardFrontWindow
+    {
+        timedAction     = Making,
+        Time            = 90,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 1 [Base.GlassPanel],
+            item 1 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.FrontWindow1,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyFrontWindow
+    {
+        timedAction     = Making,
+        Time            = 90,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 2 [Base.GlassPanel],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.FrontWindow2,
+        }
+    }
+
+    craftRecipe MakeSportFrontWindow
+    {
+        timedAction     = Making,
+        Time            = 90,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 1 [Base.GlassPanel],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.FrontWindow3,
+        }
+    }
+
+    craftRecipe MakeStandardRearWindow
+    {
+        timedAction     = Making,
+        Time            = 90,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 1 [Base.GlassPanel],
+            item 1 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearWindow1,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyRearWindow
+    {
+        timedAction     = Making,
+        Time            = 90,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 2 [Base.GlassPanel],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearWindow2,
+        }
+    }
+
+    craftRecipe MakeSportRearWindow
+    {
+        timedAction     = Making,
+        Time            = 90,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 1 [Base.GlassPanel],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearWindow3,
+        }
+    }
+}

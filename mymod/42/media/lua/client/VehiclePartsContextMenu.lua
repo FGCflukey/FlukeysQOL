@@ -91,6 +91,7 @@ Events.OnFillWorldObjectContextMenu.Add(function(player, context, worldobjects, 
     -- Check for actual items, not tags (most reliable)
     if not inv:containsTypeRecurse("WeldingMask") then return end
     if not inv:containsTypeRecurse("BlowTorch") then return end
+    if not inv:containsTypeRecurse("SheetMetal") then return end
 
     -- Main parent menu
     local root = context:addOption("Make Vehicle Parts")
