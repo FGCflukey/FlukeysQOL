@@ -81,8 +81,21 @@ function CorpseCleanupAction:perform()
         sq:removeCorpse(self.corpse, true)
     end
 
-    -- Blood effect
-    self.character:addBlood(0.2)
+    -- Blood effect (42.14+ clothing system)
+    local function AddBloodToClothes(character, amount)
+        local worn = character:getWornItems()
+        if not worn then return end
+
+        for i = 0, worn:size() - 1 do
+            local item = worn:getItemByIndex(i)
+            if item and item.setBloodLevel and item.getBloodLevel then
+                local current = item:getBloodLevel()
+                item:setBloodLevel(math.min(1, current + amount))
+            end
+        end
+    end
+
+    AddBloodToClothes(self.character, 0.2)
 
     -- Inventory + skill‑based meat yield
     local inv = self.character:getInventory()
