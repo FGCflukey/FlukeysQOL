@@ -1,0 +1,852 @@
+module Base
+{
+
+    /***    Making Vanilla Standard-Normal Vehicle Parts     ***/
+
+    craftRecipe MakeStandardCarHood
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.EngineDoor1,
+        }
+    }
+
+    craftRecipe MakeStandardFrontCarDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 2 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 2 [Base.NutsBolts],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.FrontCarDoor1,
+        }
+    }
+
+    craftRecipe MakeStandardRearCarDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 2 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 2 [Base.NutsBolts],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearCarDoor1,
+        }
+    }
+
+    craftRecipe MakeStandardRearCarDoubleDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 8 [Base.SheetMetal],
+            item 4 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 4 [Base.NutsBolts],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearCarDoorDouble1,
+        }
+    }
+
+    craftRecipe MakeStandardSmallGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 3 [Base.SheetMetal],
+            item 2 [Base.SmallSheetMetal],
+            item 1 [Base.MetalPipe],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.SmallGasTank1,
+        }
+    }
+
+    craftRecipe MakeStandardGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 2 [Base.SmallSheetMetal],
+            item 1 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalGasTank1,
+        }
+    }
+
+    craftRecipe MakeStandardBigGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:10;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 3 [Base.SmallSheetMetal],
+            item 1 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.BigGasTank1,
+        }
+    }
+
+    craftRecipe MakeStandardCarMuffler
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 2 [Base.SmallSheetMetal],
+            item 1 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernCarMuffler1,
+        }
+    }
+
+    craftRecipe MakeStandardPerformanceCarMuffler
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 3 [Base.SmallSheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernCarMuffler1,
+        }
+    }
+
+    craftRecipe MakeStandardTrunkLid
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.TrunkDoor1,
+        }
+    }
+
+    /***    Making Vanilla Heavy Vehicle Parts     ***/
+
+    craftRecipe MakeHeavyDutyCarHood
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.EngineDoor2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyFrontCarDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 6 [Base.SheetMetal],
+            item 2 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 2 [Base.NutsBolts],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.FrontCarDoor2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyRearCarDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 6 [Base.SheetMetal],
+            item 2 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 2 [Base.NutsBolts],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearCarDoor2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyRearCarDoubleDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 10 [Base.SheetMetal],
+            item 4 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 4 [Base.NutsBolts],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearCarDoorDouble2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutySmallGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 2 [Base.SmallSheetMetal],
+            item 1 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.SmallGasTank2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 4 [Base.SmallSheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalGasTank2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyBigGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:10;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 3 [Base.SmallSheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.BigGasTank2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyCarMuffler
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 3 [Base.SmallSheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalCarMuffler2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyPerformanceCarMuffler
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 3 [Base.SmallSheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernCarMuffler2,
+        }
+    }
+
+    craftRecipe MakeHeavyDutyTrunkLid
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.TrunkDoor2,
+        }
+    }
+
+    /***    Making Vanilla Sport Vehicle Parts     ***/
+
+    craftRecipe MakeSportCarHood
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.EngineDoor3,
+        }
+    }
+
+    craftRecipe MakeSportFrontCarDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 3 [Base.SheetMetal],
+            item 2 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 2 [Base.NutsBolts],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.FrontCarDoor3,
+        }
+    }
+
+    craftRecipe MakeSportRearCarDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 3 [Base.SheetMetal],
+            item 2 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 2 [Base.NutsBolts],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearCarDoor3,
+        }
+    }
+
+    craftRecipe MakeSportRearCarDoubleDoor
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 6 [Base.SheetMetal],
+            item 4 [Base.MetalBar],
+            item 4 [Base.Screws],
+            item 4 [Base.NutsBolts],
+            item 1 [Base.ElectronicsScrap],
+            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 2 [Base.BlowTorch],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.RearCarDoorDouble3,
+        }
+    }
+
+    craftRecipe MakeSportSmallGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 3 [Base.SheetMetal],
+            item 2 [Base.SmallSheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.SmallGasTank3,
+        }
+    }
+
+    craftRecipe MakeSportGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 4 [Base.SmallSheetMetal],
+            item 1 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalGasTank3,
+        }
+    }
+
+    craftRecipe MakeSportBigGasTank
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:10;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 3 [Base.SmallSheetMetal],
+            item 1 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.BigGasTank3,
+        }
+    }
+
+    craftRecipe MakeSportCarMuffler
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 3 [Base.SmallSheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernCarMuffler3,
+        }
+    }
+
+    craftRecipe MakeSportPerformanceCarMuffler
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 5 [Base.SheetMetal],
+            item 3 [Base.SmallSheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernCarMuffler3,
+        }
+    }
+
+    craftRecipe MakeSportTrunkLid
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[WeldingMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.TrunkDoor3,
+        }
+    }
+
+    /***    Tires     ***/
+
+    craftRecipe MakeStandardRegularTire
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 2 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.MetalBar],
+            item 4 [Base.NutsBolts],
+            item 2 [Base.SmallSheetMetal],
+            item 1 [Base.OldTire1],
+            item 1 [Base.LugWrench] mode:keep flags[Prop1],
+        }
+        outputs
+        {
+            item 1 Base.NormalTire1,
+        }
+    }
+
+    craftRecipe MakeHeavyRegularTire
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SheetMetal],
+            item 2 [Base.MetalPipe],
+            item 2 [Base.MetalBar],
+            item 5 [Base.NutsBolts],
+            item 3 [Base.SmallSheetMetal],
+            item 2 [Base.OldTire2],
+            item 1 [Base.LugWrench] mode:keep flags[Prop1],
+        }
+        outputs
+        {
+            item 1 Base.NormalTire2,
+        }
+    }
+
+    craftRecipe MakeSportRegularTire
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 2 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.MetalBar],
+            item 4 [Base.NutsBolts],
+            item 2 [Base.SmallSheetMetal],
+            item 1 [Base.OldTire3],
+            item 1 [Base.LugWrench] mode:keep flags[Prop1],
+        }
+        outputs
+        {
+            item 1 Base.NormalTire3,
+        }
+    }
+
+    craftRecipe MakeSportPerformanceTire
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 2 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.MetalBar],
+            item 4 [Base.NutsBolts],
+            item 2 [Base.SmallSheetMetal],
+            item 2 [Base.NormalTire3],
+            item 1 [Base.LugWrench] mode:keep flags[Prop1],
+        }
+        outputs
+        {
+            item 1 Base.ModernTire3,
+        }
+    }
+
+    craftRecipe MakeHeavyPerformanceTire
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 2 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.MetalBar],
+            item 5 [Base.NutsBolts],
+            item 2 [Base.SmallSheetMetal],
+            item 2 [Base.NormalTire2],
+            item 1 [Base.LugWrench] mode:keep flags[Prop1],
+        }
+        outputs
+        {
+            item 1 Base.ModernTire2,
+        }
+    }
+
+    craftRecipe MakeStandardPerformanceTire
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 2 [Base.SheetMetal],
+            item 4 [Base.MetalPipe],
+            item 2 [Base.MetalBar],
+            item 4 [Base.NutsBolts],
+            item 2 [Base.SmallSheetMetal],
+            item 2 [Base.NormalTire1],
+            item 1 [Base.LugWrench] mode:keep flags[Prop1],
+        }
+        outputs
+        {
+            item 1 Base.ModernTire1,
+        }
+    }
+
+}

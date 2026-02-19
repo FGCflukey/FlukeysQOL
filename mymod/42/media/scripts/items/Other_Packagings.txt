@@ -1,6 +1,28 @@
 module Base
 {
 
+/* Home and Carpentry */
+
+    item HingesBox
+    {
+        DisplayCategory     = Material,
+        Type                = Normal,
+        Weight              = 1,
+        Icon                = Parcel_Small_Food,
+        WorldStaticModel    = Parcel_Food_Small,
+        Tags                = HasMetal;IgnoreZombieDensity,
+    }
+
+    item DoorknobsBox
+    {
+        DisplayCategory     = Material,
+        Type                = Normal,
+        Weight              = 1,
+        Icon                = Parcel_Small_Food,
+        WorldStaticModel    = Parcel_Food_Small,
+        Tags                = HasMetal;IgnoreZombieDensity,
+    }
+
 /* Engine Parts */
 
     item BoxedEngineParts
@@ -147,5 +169,7 @@ module Base
             item 1 Base.BoxedElectricWire,
         }
     }
+
+
 
 }

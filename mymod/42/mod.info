@@ -6,4 +6,5 @@ author=justanothersteamclient
 poster=poster.png
 modversion=1.0
 versionMax=42.14
+versionMin=42.13
 require=\JB_MaxCapacityOverride

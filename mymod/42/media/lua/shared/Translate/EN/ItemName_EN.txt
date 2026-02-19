@@ -50,4 +50,7 @@ ItemName_EN = {
     ItemName_Base.SurvivorMultitool = "Survivor Edition MultiTool",
     ItemName_Base.SurvivorMortarPestle = "Mortar & Pestle",
 
+    ItemName_Base.DoorknobsBox = "Box of 10 Doorknobs",
+    ItemName_Base.HingesBox = "Box of 10 Door Hinges",
+
 }

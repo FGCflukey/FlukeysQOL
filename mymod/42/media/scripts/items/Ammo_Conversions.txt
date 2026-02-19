@@ -64,22 +64,6 @@ module Base
         }
     }
 
-    craftRecipe ConvertTo223s
-    {
-        timedAction     = OpenAmmoBox,
-        Time            = 30,
-        category        = Ammunition,
-        Tags            = InHandCraft;CanBeDoneInDark,
-        inputs
-        {
-            item 1 tags[Ammo] mode:destroy,
-        }
-        outputs
-        {
-            item 1 Base.223Bullets,
-        }
-    }
-
     craftRecipe ConvertTo308s
     {
         timedAction     = OpenAmmoBox,
@@ -136,7 +120,7 @@ module Base
         Tags            = InHandCraft;CanBeDoneInDark,
         inputs
         {
-            item 1 [Base.223Box;Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.556Box;Base.ShotgunShellsBox],
+            item 1 [Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.556Box;Base.ShotgunShellsBox],
         }
         outputs
         {
@@ -152,7 +136,7 @@ module Base
         Tags            = InHandCraft;CanBeDoneInDark,
         inputs
         {
-            item 1 [Base.223Box;Base.308Box;Base.Bullets44Box;Base.Bullets45Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
+            item 1 [Base.308Box;Base.Bullets44Box;Base.Bullets45Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
         }
         outputs
         {
@@ -168,7 +152,7 @@ module Base
         Tags            = InHandCraft;CanBeDoneInDark,
         inputs
         {
-            item 1 [Base.223Box;Base.308Box;Base.Bullets38Box;Base.Bullets45Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
+            item 1 [Base.308Box;Base.Bullets38Box;Base.Bullets45Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
         }
         outputs
         {
@@ -184,27 +168,11 @@ module Base
         Tags            = InHandCraft;CanBeDoneInDark,
         inputs
         {
-            item 1 [Base.223Box;Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
+            item 1 [Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
         }
         outputs
         {
             item 1 Base.Bullets45Box,
-        }
-    }
-
-    craftRecipe ConvertTo223Box
-    {
-        timedAction     = OpenAmmoBox,
-        Time            = 30,
-        category        = Ammunition,
-        Tags            = InHandCraft;CanBeDoneInDark,
-        inputs
-        {
-            item 1 [Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
-        }
-        outputs
-        {
-            item 1 Base.223Box,
         }
     }
 
@@ -216,7 +184,7 @@ module Base
         Tags            = InHandCraft;CanBeDoneInDark,
         inputs
         {
-            item 1 [Base.223Box;Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
+            item 1 [Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.556Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
         }
         outputs
         {
@@ -232,7 +200,7 @@ module Base
         Tags            = InHandCraft;CanBeDoneInDark,
         inputs
         {
-            item 1 [Base.223Box;Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
+            item 1 [Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.Bullets9mmBox;Base.ShotgunShellsBox],
         }
         outputs
         {
@@ -248,7 +216,7 @@ module Base
         Tags            = InHandCraft;CanBeDoneInDark,
         inputs
         {
-            item 1 [Base.223Box;Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.Bullets9mmBox],
+            item 1 [Base.308Box;Base.Bullets38Box;Base.Bullets44Box;Base.Bullets45Box;Base.Bullets9mmBox],
         }
         outputs
         {

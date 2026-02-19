@@ -1,103 +1,107 @@
 module Base
 {
+    /***    Item Definitions    ***/
+
     item Bag_FullMoneyBag
     {
-        DisplayCategory         = Bag,
-        ItemType                = base:container,
-        Weight                  = 1.0,
-        Icon                    = DuffelBagWhite,
-        CanBeEquipped           = base:back,
-        CanHaveHoles            = false,
-        Capacity                = 18,
-        CloseSound              = CloseBag,
-        ClothingItem            = Bag_MoneyBag,
-        EquipSound              = EquipDuffleBag,
-        OpenSound               = OpenBag,
-        PutInSound              = PutItemInBag,
-        ReplaceInPrimaryHand    = Bag_DuffelBag_RHandTINT holdingbagright,
-        ReplaceInSecondHand     = Bag_DuffelBag_LHandTINT holdingbagleft,
-        RunSpeedModifier        = 0.95,
-        WeightReduction         = 65,
-        WorldStaticModel        = DuffelBag_Ground,
-        Tags                    = base:isfirefuel;base:isfiretinder;base:neverempty,
+        DisplayCategory             = Bag,
+        ItemType                    = base:container,
+        Weight                      = 1.0,
+        Icon                        = DuffelBagWhite,
+        CanBeEquipped               = base:back,
+        CanHaveHoles                = false,
+        Capacity                    = 18,
+        CloseSound                  = CloseBag,
+        ClothingItem                = Bag_MoneyBag,
+        EquipSound                  = EquipDuffleBag,
+        OpenSound                   = OpenBag,
+        PutInSound                  = PutItemInBag,
+        ReplaceInPrimaryHand        = Bag_DuffelBag_RHandTINT holdingbagright,
+        ReplaceInSecondHand         = Bag_DuffelBag_LHandTINT holdingbagleft,
+        RunSpeedModifier            = 0.95,
+        WeightReduction             = 65,
+        WorldStaticModel            = DuffelBag_Ground,
+        Tags                        = base:isfirefuel;base:isfiretinder;base:neverempty,
     }
 
     item Bag_FullBigMoneyBag
     {
-        DisplayCategory         = Bag,
-        ItemType                = base:container,
-        Weight                  = 2.0,
-        Icon                    = DuffelBagWhite,
-        CanBeEquipped           = base:back,
-        CanHaveHoles            = false,
-        Capacity                = 18,
-        CloseSound              = CloseBag,
-        ClothingItem            = Bag_MoneyBag,
-        EquipSound              = EquipDuffleBag,
-        OpenSound               = OpenBag,
-        PutInSound              = PutItemInBag,
-        ReplaceInPrimaryHand    = Bag_DuffelBag_RHandTINT holdingbagright,
-        ReplaceInSecondHand     = Bag_DuffelBag_LHandTINT holdingbagleft,
-        RunSpeedModifier        = 0.95,
-        WeightReduction         = 65,
-        WorldStaticModel        = DuffelBag_Ground,
-        Tags                    = base:isfirefuel;base:isfiretinder;base:neverempty,
+        DisplayCategory             = Bag,
+        ItemType                    = base:container,
+        Weight                      = 2.0,
+        Icon                        = DuffelBagWhite,
+        CanBeEquipped               = base:back,
+        CanHaveHoles                = false,
+        Capacity                    = 18,
+        CloseSound                  = CloseBag,
+        ClothingItem                = Bag_MoneyBag,
+        EquipSound                  = EquipDuffleBag,
+        OpenSound                   = OpenBag,
+        PutInSound                  = PutItemInBag,
+        ReplaceInPrimaryHand        = Bag_DuffelBag_RHandTINT holdingbagright,
+        ReplaceInSecondHand         = Bag_DuffelBag_LHandTINT holdingbagleft,
+        RunSpeedModifier            = 0.95,
+        WeightReduction             = 65,
+        WorldStaticModel            = DuffelBag_Ground,
+        Tags                        = base:isfirefuel;base:isfiretinder;base:neverempty,
     }
 
     item SurvivorMultitool
     {
-        DisplayCategory         = ToolWeapon,
-        MaxRange                = 1.0,
-        WeaponSprite            = Multitool_Knife,
-        MinAngle                = 0.65,
-        ItemType                = base:weapon,
-        MinimumSwingtime        = 2.0,
-        KnockBackOnNoDeath      = false,
-        SwingAmountBeforeImpact = 0.02,
-        Categories              = base:smallblade,
-        CloseKillMove           = Jaw_Stab,
-        ConditionLowerChanceOneIn = 15,
-        ConditionMax            = 10,
-        Weight                  = 1.0,
-        SplatNumber             = 2,
-        PushBackMod             = 0.01,
-        SubCategory             = Stab,
-        AimingMod               = 0.8,
-        MaxHitcount             = 1,
-        IsAimedHandWeapon       = true,
-        DoorDamage              = 1,
-        SwingAnim               = Stab,
-        MinRange                = 0.61,
-        Swingtime               = 2.0,
-        KnockdownMod            = 0.0,
-        SplatBloodOnNoDeath     = true,
-        Icon                    = MultiTool,
-        RunAnim                 = Run_Weapon2,
-        IdleAnim                = Idle_Weapon2,
-        BreakSound              = MultitoolBreak,
-        TreeDamage              = 0,
-        MetalValue              = 12.0,
-        CriticalChance          = 25.0,
-        CritDmgMultiplier       = 4.0,
-        MinDamage               = 0.3,
-        MaxDamage               = 0.6,
-        WeaponLength            = 0.19,
-        DamageCategory          = Slash,
-        DamageMakeHole          = true,
-        HitFloorSound           = MultitoolHit,
-        ImpactSound             = MultitoolStab,
-        DoorHitSound            = MultitoolHit,
-        HitSound                = MultitoolHit,
-        SwingSound              = MultitoolSwing,
-        EquipSound              = PocketKnifeEquip,
-        UnequipSound            = PocketKnifeUnequip,
-        AttachmentType          = Knife,
-        WorldStaticModel        = Multitool_Closed,
-        Researchablerecipes     = Forge_Crude_Blade;Forge_Small_Knife;MakeScrewdriver;Forge_Saw;MakeStoneBladeSaw,
-        Sharpness               = 1.0,
-        BaseSpeed               = 1.1,
+        DisplayCategory             = ToolWeapon,
+        MaxRange                    = 1.0,
+        WeaponSprite                = Multitool_Knife,
+        MinAngle                    = 0.65,
+        ItemType                    = base:weapon,
+        MinimumSwingtime            = 2.0,
+        KnockBackOnNoDeath          = false,
+        SwingAmountBeforeImpact     = 0.02,
+        Categories                  = base:smallblade,
+        CloseKillMove               = Jaw_Stab,
+        ConditionLowerChanceOneIn   = 15,
+        ConditionMax                = 10,
+        Weight                      = 1.0,
+        SplatNumber                 = 2,
+        PushBackMod                 = 0.01,
+        SubCategory                 = Stab,
+        AimingMod                   = 0.8,
+        MaxHitcount                 = 1,
+        IsAimedHandWeapon           = true,
+        DoorDamage                  = 1,
+        SwingAnim                   = Stab,
+        MinRange                    = 0.61,
+        Swingtime                   = 2.0,
+        KnockdownMod                = 0.0,
+        SplatBloodOnNoDeath         = true,
+        Icon                        = MultiTool,
+        RunAnim                     = Run_Weapon2,
+        IdleAnim                    = Idle_Weapon2,
+        BreakSound                  = MultitoolBreak,
+        TreeDamage                  = 0,
+        MetalValue                  = 12.0,
+        CriticalChance              = 25.0,
+        CritDmgMultiplier           = 4.0,
+        MinDamage                   = 0.3,
+        MaxDamage                   = 0.6,
+        WeaponLength                = 0.19,
+        DamageCategory              = Slash,
+        DamageMakeHole              = true,
+        HitFloorSound               = MultitoolHit,
+        ImpactSound                 = MultitoolStab,
+        DoorHitSound                = MultitoolHit,
+        HitSound                    = MultitoolHit,
+        SwingSound                  = MultitoolSwing,
+        EquipSound                  = PocketKnifeEquip,
+        UnequipSound                = PocketKnifeUnequip,
+        AttachmentType              = Knife,
+        WorldStaticModel            = Multitool_Closed,
+        Researchablerecipes         = Forge_Crude_Blade;Forge_Small_Knife;MakeScrewdriver;Forge_Saw;MakeStoneBladeSaw,
+        Sharpness                   = 1.0,
+        BaseSpeed                   = 1.1,
         Tags = base:ignorezombiedensity;base:bottleopener;base:cutplant;base:sharpknife;base:butcheranimal;base:useworldstaticmodel;base:canopener;base:screwdriver;base:pliers;base:removebullet;base:removeglass;base:smallfiles;base:scissors;base:awl;base:hasmetal;base:sharpenable;base:saw;base:metalsaw,
     }
+
+    /***    Money Management Recipes    ***/
 
     craftRecipe FillTheMoneyBag
     {
@@ -199,29 +203,8 @@ module Base
         }
     }
 
-    craftRecipe CraftSurvivorMultitool
-    {
-        timedAction     = CraftWeapon1H,
-        Time            = 300,
-        needTobeLearn   = false,
-        Tags            = InHandCraft;Survivalist,
-        xpAward         = Maintenance:5,
-        category        = Assembly,
-        inputs
-        {
-            item 1 [Base.Saw],
-            item 1 [Base.Wire],
-            item 1 tags[base:canopener],
-            item 1 tags[base:pliers],
-            item 1 tags[base:sharpenable],
-            item 1 tags[base:screwdriver],
-            item 1 tags[base:wrench],
-        }
-        outputs
-        {
-            item 1 Base.SurvivorMultitool,
-        }
-    }
+
+    /***    Vehicle Hot-wire and Key Making    ***/
 
     craftRecipe UnhotwireVehicle
     {
@@ -260,125 +243,7 @@ module Base
         }
     }
 
-    craftRecipe MakeMortarAndPestle
-    {
-        timedAction     = SharpenStakeWood,
-        time            = 300,
-        OnCreate        = RecipeCodeOnCreate.minorCondition,
-        Tags            = InHandCraft,
-        xpAward         = Carving:10,
-        category        = Carving,
-        NeedToBeLearn   = false,
-        inputs
-        {
-            item 1 tags[base:sharpknife;base:meatcleaver] mode:keep flags[Prop1;MayDegrade;IsNotDull],
-            item 1 [Base.Log;Base.Firewood] flags[Prop2],
-        }
-        outputs
-        {
-            item 1 Base.MortarPestle,
-        }
-    }
-
-    craftRecipe MakeSomeNails
-    {
-        timedAction     = Making,
-        time            = 200,
-        SkillRequired   = MetalWelding:2,
-        Tags            = InHandCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        inputs
-        {
-            item 1 [Base.SmallSheetMetal],
-            item 1 tags[base:sheetmetalsnips] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
-        }
-        outputs
-        {
-            item 1 Base.NailsBox,
-        }
-    }
-
-    craftRecipe MakeSomeNailsScrap
-    {
-        timedAction     = Making,
-        time            = 400,
-        SkillRequired   = MetalWelding:2,
-        Tags            = InHandCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        inputs
-        {
-            item 4 [Base.ScrapMetal],
-            item 1 tags[base:sheetmetalsnips] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
-        }
-        outputs
-        {
-            item 1 Base.NailsBox,
-        }
-    }
-
-    craftRecipe MakeSomeNailsBatch
-    {
-        timedAction     = Making,
-        time            = 400,
-        SkillRequired   = MetalWelding:2,
-        Tags            = InHandCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        inputs
-        {
-            item 1 [Base.SheetMetal],
-            item 1 tags[base:sheetmetalsnips] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
-        }
-        outputs
-        {
-            item 4 Base.NailsBox,
-        }
-    }
-
-    craftRecipe MakeANeedle
-    {
-        timedAction     = Making,
-        time            = 60,
-        SkillRequired   = MetalWelding:2,
-        Tags            = AnySurfaceCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        inputs
-        {
-            item 1 [Base.Nails],
-            item 1 tags[base:hammer] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
-            item 1 tags[base:pliers] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
-        }
-        outputs
-        {
-            item 1 Base.Needle,
-        }
-    }
-
-    craftRecipe MakeAPickAxeHead
-    {
-        timedAction     = Making,
-        time            = 350,
-        SkillRequired   = MetalWelding:2,
-        Tags            = AnySurfaceCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        inputs
-        {
-            item 2 [Base.SteelBarHalf],
-            item 1 [Base.SteelChunk],
-            item 1 tags[base:weldingmask] mode:keep,
-            item 4 [Base.BlowTorch],
-            item 2 [Base.WeldingRods],
-            item 1 tags[base:hammer] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
-        }
-        outputs
-        {
-            item 1 Base.PickAxeHead,
-        }
-    }
+    /***    Vehicle Parts     ***/
 
     craftRecipe CraftEnginePartsWeld
     {
@@ -470,6 +335,85 @@ module Base
         }
     }
 
+    /***    QOL Misc Things     ***/
+
+    craftRecipe MakeMortarAndPestle
+    {
+        timedAction     = SharpenStakeWood,
+        time            = 300,
+        OnCreate        = RecipeCodeOnCreate.minorCondition,
+        Tags            = InHandCraft,
+        xpAward         = Carving:10,
+        category        = Carving,
+        NeedToBeLearn   = false,
+        inputs
+        {
+            item 1 tags[base:sharpknife;base:meatcleaver] mode:keep flags[Prop1;MayDegrade;IsNotDull],
+            item 1 [Base.Log;Base.Firewood] flags[Prop2],
+        }
+        outputs
+        {
+            item 1 Base.MortarPestle,
+        }
+    }
+
+    craftRecipe MakeSomeNails
+    {
+        timedAction     = Making,
+        time            = 200,
+        SkillRequired   = MetalWelding:2,
+        Tags            = InHandCraft,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 1 tags[base:sheetmetalsnips] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+        }
+        outputs
+        {
+            item 1 Base.NailsBox,
+        }
+    }
+
+    craftRecipe MakeSomeNailsScrap
+    {
+        timedAction     = Making,
+        time            = 400,
+        SkillRequired   = MetalWelding:2,
+        Tags            = InHandCraft,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 4 [Base.ScrapMetal],
+            item 1 tags[base:sheetmetalsnips] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+        }
+        outputs
+        {
+            item 1 Base.NailsBox,
+        }
+    }
+
+    craftRecipe MakeSomeNailsBatch
+    {
+        timedAction     = Making,
+        time            = 400,
+        SkillRequired   = MetalWelding:2,
+        Tags            = InHandCraft,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SheetMetal],
+            item 1 tags[base:sheetmetalsnips] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+        }
+        outputs
+        {
+            item 4 Base.NailsBox,
+        }
+    }
+
     craftRecipe MakeASheet
     {
         timedAction     = SewingCloth,
@@ -487,6 +431,246 @@ module Base
         outputs
         {
             item 1 Base.Sheet,
+        }
+    }
+
+    craftRecipe MakeANeedle
+    {
+        timedAction     = Making,
+        time            = 60,
+        SkillRequired   = MetalWelding:2,
+        Tags            = AnySurfaceCraft,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.Nails],
+            item 1 tags[base:hammer] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+            item 1 tags[base:pliers] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+        }
+        outputs
+        {
+            item 1 Base.Needle,
+        }
+    }
+
+    craftRecipe CraftSurvivorMultitool
+    {
+        timedAction     = CraftWeapon1H,
+        Time            = 300,
+        needTobeLearn   = false,
+        Tags            = InHandCraft;Survivalist,
+        xpAward         = Maintenance:5,
+        category        = Assembly,
+        inputs
+        {
+            item 1 [Base.Saw],
+            item 1 [Base.Wire],
+            item 1 tags[base:canopener],
+            item 1 tags[base:pliers],
+            item 1 tags[base:sharpenable],
+            item 1 tags[base:screwdriver],
+            item 1 tags[base:wrench],
+        }
+        outputs
+        {
+            item 1 Base.SurvivorMultitool,
+        }
+    }
+
+    craftRecipe MakeAPickAxeHead
+    {
+        timedAction     = Making,
+        time            = 350,
+        SkillRequired   = MetalWelding:2,
+        Tags            = AnySurfaceCraft,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 2 [Base.SteelBarHalf],
+            item 1 [Base.SteelChunk],
+            item 1 tags[base:weldingmask] mode:keep,
+            item 4 [Base.BlowTorch],
+            item 2 [Base.WeldingRods],
+            item 1 tags[base:hammer] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+        }
+        outputs
+        {
+            item 1 Base.PickAxeHead,
+        }
+    }
+
+    craftRecipe MakeFiberglassTape
+    {
+        TimedAction     = Making,
+        Time            = 90,
+        tags            = AnySurfaceCraft,
+        category        = Essential,
+        inputs
+        {
+            item 1 tags[Tape],
+            item 6 tags[BrokenGlass],
+        }
+        outputs
+        {
+            item 1 Base.FiberglassTape,
+        }
+    }
+
+    craftRecipe MakeWoodGlue
+    {
+        TimedAction     = Making,
+        Time            = 120,
+        tags            = AnySurfaceCraft,
+        category        = Essential,
+        inputs
+        {
+            item 1 [Base.Saucepan;Base.Pot] mode:keep,
+            -fluid 0.2 [Water;TaintedWater],
+            item 1 [Base.Matches] mode:keep,
+            item 2 [Base.UnusableWood;Base.Plank],
+            item 2 [Base.SheetPaper2],
+        }
+        outputs
+        {
+            item 1 Base.Woodglue,
+        }
+    }
+
+    craftRecipe MakeTarp
+    {
+        TimedAction     = Making,
+        Time            = 120,
+        tags            = AnySurfaceCraft,
+        category        = Essential,
+        inputs
+        {
+            item 1 tags[Sharpenable] mode:keep,
+            item 1 [Base.Tsquare] mode:keep,
+            item 10 [Base.Garbagebag],
+        }
+        outputs
+        {
+            item 1 Base.Tarp,
+        }
+    }
+
+    craftRecipe MakeFishingHook
+    {
+        TimedAction     = Making,
+        Time            = 15,
+        tags            = InHandCraft,
+        category        = Essential,
+        inputs
+        {
+            item 1 tags[Sharpenable] mode:keep,
+            item 1 [Base.Paperclip],
+        }
+        outputs
+        {
+            item 1 Base.FishingHook,
+        }
+    }
+
+    craftRecipe MakeBurlapPiece
+    {
+        TimedAction     = Making,
+        Time            = 90,
+        Tags            = InHandCraft,
+        SkillRequired   = Tailoring:1,
+        xpAward         = Tailoring:10,
+        category        = Tailoring,
+
+        inputs
+        {
+            item 1 tags[SewingNeedle] mode:keep,
+            item 2 [Base.Thread],
+            item 3 [Base.GrassTuft],
+            item 1 [Base.Twine],
+
+        }
+        outputs
+        {
+            item 1 Base.BurlapPiece,
+        }
+    }
+
+    craftRecipe MakeDisinfectant
+    {
+        TimedAction     = Making,
+        Time            = 90,
+        tags            = AnySurfaceCraft,
+        category        = Medical,
+        inputs
+        {
+            item 1 [Base.Bleach] mode:keep,
+            -fluid 0.1 [Bleach],
+            item 1 [Base.Bucket;Base.BucketForged;Base.Pot;farming.WateredCan;Base.Sportsbottle;Base.Pot] mode:keep,
+            -fluid 0.9 [Water;TaintedWater],
+            item 1 [Base.Gloves_Surgical;Base.Gloves_Dish] mode:keep,
+            item 1 [Base.Hat_GasMask;Base.Hat_DustMask;Base.Hat_SurgicalMask;Base.SCBA;Base.Hat_BuildersRespirator;Base.Hat_ImprovisedGasMask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.Disinfectant,
+        }
+    }
+
+    craftRecipe MakeRopeFromRags
+    {
+        TimedAction     = Making,
+        Time            = 60,
+        Tags            = InHandCraft,
+
+        inputs
+        {
+            item 4 [Base.RippedSheets],
+        }
+        outputs
+        {
+            item 1 Base.Rope,
+        }
+    }
+
+    craftRecipe MakeTwineFromRope
+    {
+        TimedAction     = Making,
+        Time            = 60,
+        Tags            = InHandCraft,
+
+        inputs
+        {
+            item 1 [Base.Rope],
+        }
+        outputs
+        {
+            item 3 Base.Twine,
+        }
+    }
+
+    craftRecipe WashYourRags
+    {
+        TimedAction     = ScrubClothWithSoap,
+        Time            = 10,
+        Tags            = InHandCraft;Health,
+        category        = Medical,
+        inputs
+        {
+            item 1 [Base.BandageDirty;Base.DenimStripsDirty;Base.LeatherStripsDirty;Base.RippedSheetsDirty] mode:destroy mappers[ragType],
+            item 1 [*],
+            -fluid 0.1 [Water;TaintedWater],
+        }
+        outputs
+        {
+            item 1 mapper:ragType,
+        }
+        itemMapper ragType
+        {
+            Base.Bandage = Base.BandageDirty,
+            Base.DenimStrips = Base.DenimStripsDirty,
+            Base.LeatherStrips = Base.LeatherStripsDirty,
+            Base.RippedSheets = Base.RippedSheetsDirty,
         }
     }
 
