@@ -43,6 +43,8 @@ List of current things this mod does...
 - Added Dismantling of General Car Parts, serves as a fill-in for missing stuff or as a 2nd option
 - Added Fuelling Generators with a Gas Filled Barrel. It only needs to be beside generator and presto.
 - Added Repairing Broken Car Locks. Success is based on Mechanics level. But chance to fail exists.
+- Added Vehicle Recycling and Parts making, from earlier 42 builds I did.
+- Added Stop The Drop - When you flee & fall down, you won't drop your hat/other items. Idc for mechanic.
 
 ## Installation
 
