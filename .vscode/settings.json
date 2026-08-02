@@ -1,9 +1,19 @@
 {
+    "Lua.workspace.library": [
+        "${workspaceFolder}/media/lua/client",
+        "${workspaceFolder}/media/lua/server", 
+        "${workspaceFolder}/media/lua/shared",
+        "${workspaceFolder}/media/lua/server/WorldGen" 
+    ],
   "Lua.diagnostics.globals": [
     "ISBaseTimedAction",
     "getWorld",
     "getCore",
     "getPlayer",
+    "ISUI",
+    "Zomboid",
+    "LuaManager",
+    "Events",
     "getWorld",
     "getInventory",
     "getModData",
