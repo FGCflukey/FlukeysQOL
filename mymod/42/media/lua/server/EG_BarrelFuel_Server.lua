@@ -48,13 +48,25 @@ local function serverTick()
     local cell = getWorld():getCell()
     if not cell then return end
 
-    local objects = cell:getObjectList()
-    if not objects then return end
+    local maxX = cell:getWidth()
+    local maxY = cell:getHeight()
 
-    for i = 0, objects:size() - 1 do
-        local obj = objects:get(i)
-        if instanceof(obj, "IsoGenerator") then
-            updateGenerator(obj)
+    for x = 0, maxX - 1 do
+        for y = 0, maxY - 1 do
+            local square = cell:getGridSquare(x, y, 0)
+            if square then
+                local objects = square:getObjects()
+                if objects then
+                    for i = 0, objects:size() - 1 do
+                        local obj = objects:get(i)
+
+                        -- Safe instanceof check
+                        if obj and instanceof(obj, "IsoGenerator") then
+                            updateGenerator(obj)
+                        end
+                    end
+                end
+            end
         end
     end
 end

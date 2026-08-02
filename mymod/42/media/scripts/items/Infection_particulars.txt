@@ -190,7 +190,7 @@ module Base
         NeedToBeLearn   = true,
         SkillRequired   = FirstAid:2,
         Tags            = AnySurfaceCraft;Health,
-        category        = Medical,
+        category        = BloodCure,
         OnCreate        = OnCreate_FilledSyringes,
 
         inputs
@@ -213,7 +213,7 @@ module Base
         NeedToBeLearn   = true,
         SkillRequired   = FirstAid:2,
         Tags            = AnySurfaceCraft;Health,
-        category        = Medical,
+        category        = BloodCure,
         OnCreate        = OnCreate_FilledSyringes,
 
         inputs
@@ -239,7 +239,7 @@ module Base
         NeedToBeLearn   = true,
         SkillRequired   = FirstAid:2,
         Tags            = AnySurfaceCraft;Health,
-        category        = Medical,
+        category        = BloodCure,
 
         inputs
         {

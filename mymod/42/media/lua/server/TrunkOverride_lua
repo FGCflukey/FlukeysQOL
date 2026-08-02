@@ -1,0 +1,312 @@
+-- ============================================================
+--  DEBUG TOGGLE
+-- ============================================================
+local DEBUG = true
+
+-- ============================================================
+--  VEHICLE TRUNK OVERRIDE TABLE (PER-ID)
+-- ============================================================
+local VehicleOverrides = {
+
+    ["Base.CarNormal"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.CarStationWagon2"] = {
+        ["TruckBed"] = 300,
+    },
+
+    ["Base.CarTaxi"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.CarTaxi2"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.CarLightsKST"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.CarLightsRanger"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.ModernCar"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.ModernCar02"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.ModernCarLightsMeadeSheriff"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.OffRoad"] = {
+        ["TruckBed"] = 150,
+    },
+
+    ["Base.PickUpTruck"] = {
+        ["TruckBedOpen"] = 400,
+    },
+
+    ["Base.PickUpTruckLightsRanger"] = {
+        ["TruckBedOpen"] = 400,
+    },
+
+    ["Base.PickUpTruckMccoy"] = {
+        ["TruckBedOpen"] = 400,
+    },
+
+    ["Base.PickUpTruck_Camo"] = {
+        ["TruckBedOpen"] = 400,
+    },
+
+    ["Base.PickUpVan"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.PickUpVanLightsFire"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.PickUpVanLightsLouisvilleCounty"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.PickUpVanLightsKentuckyLumber"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.PickUpVanLightsRanger"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.PickUpVanMccoy"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.PickUpVan_Camo"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.SmallCar"] = {
+        ["TruckBed"] = 80,
+    },
+
+    ["Base.SmallCar02"] = {
+        ["TruckBed"] = 80,
+    },
+
+    ["Base.SportsCar"] = {
+        ["TruckBed"] = 150,
+    },
+
+    ["Base.StepVan"] = {
+        ["TruckBed"] = 500,
+    },
+
+    ["Base.StepVan_Butchers"] = {
+        ["TruckBed"] = 500,
+    },
+
+    ["Base.StepVan_Cereal"] = {
+        ["TruckBed"] = 500,
+    },
+
+    ["Base.StepVan_Genuine_Beer"] = {
+        ["TruckBed"] = 500,
+    },
+
+    ["Base.StepVan_MarineBites"] = {
+        ["TruckBed"] = 500,
+    },
+
+    ["Base.StepVan_Scarlet"] = {
+        ["TruckBed"] = 500,
+    },
+
+    ["Base.StepVan_LouisvilleMotorShop"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.StepVan_LouisvilleSWAT"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.StepVan_Propane"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.StepVan_SmartKut"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.StepVan_SouthEasternHosp"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.StepVan_SouthEasternPaint"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.Van"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.VanAmbulance"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.VanGreenes"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.VanKerrHomes"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.VanMail"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.VanMassGenFac"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.VanMeltingPointMetal"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.VanMobileMechanics"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.VanSeats"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.VanTransit"] = {
+        ["TruckBed"] = 400,
+    },
+
+    -- Underscore variants come AFTER the non-underscore ones
+
+    ["Base.Van_BugWipers"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.Van_CraftSupplies"] = {
+        ["TruckBed"] = 400,
+    },
+
+    ["Base.Van_KnoxDisti"] = {
+        ["TruckBed"] = 400,
+    },
+
+-- Custom Car definitions here
+
+    ["Base.92amgeneralM998"] = {
+        ["M998Trunk"] = 400,
+    },
+
+    ["Base.SemiTruckBox"] = {
+        ["TruckBed"] = 700,
+    },
+
+    ["Base.84corvetteC4"] = {
+        ["TruckBed"] = 150,
+    },
+
+    ["Base.ATAMustangClassic"] = {
+        ["TruckBed"] = 200,
+    },
+
+    ["Base.78lamboCountachLP400"] = {
+        ["LP400Trunk"] = 80,        -- Rear trunk
+        ["LP400TrunkFront"] = 50,   -- Front trunk
+    },
+
+    ["Base.78lamboCountachLP400S"] = {
+        ["LP400Trunk"] = 80,        -- Rear trunk
+        ["LP400TrunkFront"] = 50,   -- Front trunk
+    },
+
+    -- Add more vehicles here:
+    -- ["Base.CarNormal"] = { ["Trunk"] = 150 },
+    -- ["Base.PickUpTruck"] = { ["TruckBed"] = 250 },
+}
+
+-- ============================================================
+--  APPLY TRUNK-ONLY OVERRIDE TO A SINGLE VEHICLE
+-- ============================================================
+local function ApplyTrunkOverride(v)
+    if not v or v:isRemovedFromWorld() then return end
+
+    local script = v:getScript()
+    if not script then return end
+
+    local fullName = script:getFullName()
+    local cfg = VehicleOverrides[fullName]
+    if not cfg then return end
+
+    for j = 0, v:getPartCount() - 1 do
+        local p = v:getPartByIndex(j)
+        if p then
+            local c = p:getItemContainer()
+            if c then
+                local id = p:getId()
+                local newCap = cfg[id]
+
+                if DEBUG then
+                    print("[TrunkOverride DEBUG] " .. fullName ..
+                          " part ID=" .. tostring(id) ..
+                          " type=" .. tostring(c:getType()))
+                end
+
+                if newCap then
+                    c:setCapacity(newCap)
+                    print("[TrunkOverride] Set " .. fullName ..
+                          " container " .. id ..
+                          " to " .. newCap)
+                end
+            end
+        end
+    end
+end
+
+-- ============================================================
+--  CATCH BRAND-NEW VEHICLES THE MOMENT THEY SPAWN
+-- ============================================================
+Events.OnSpawnVehicleEnd.Add(ApplyTrunkOverride)
+
+-- ============================================================
+--  CATCH VEHICLES THE MOMENT SOMEONE GETS IN
+-- ============================================================
+local function OnEnterVehicleHandler(character)
+    if not character then return end
+    local v = character:getVehicle()
+    if not v then return end
+
+    local ok, err = pcall(ApplyTrunkOverride, v)
+    if not ok and DEBUG then
+        print("[TrunkOverride DEBUG] ApplyTrunkOverride failed on enter: " .. tostring(err))
+    end
+end
+Events.OnEnterVehicle.Add(OnEnterVehicleHandler)
+
+-- ============================================================
+--  NOTE ON WORLD-SWEEP
+-- ============================================================
+-- A periodic full-world sweep (via cell:getVehicles()) was tried here to
+-- catch vehicles that already existed in the world and are never spawned
+-- fresh or entered by the player. It was removed: cell:getVehicles():get(i)
+-- is not a valid call in this game version/build (fails on every index,
+-- not just out-of-range ones), so there was no safe way to iterate it.
+--
+-- In practice this isn't a real gap: OnSpawnVehicleEnd covers new spawns,
+-- and OnEnterVehicle applies the override the moment a player gets into
+-- any vehicle, including ones that already existed in the world. That
+-- covers every vehicle a player will actually use.

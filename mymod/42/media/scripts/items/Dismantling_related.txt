@@ -1,6 +1,25 @@
 module Base
 {
 
+    craftRecipe DismantleScannerModule
+    {
+        timedAction     = DismantleElectrical,
+        time            = 60,
+        Tags            = InHandCraft;Electrical,
+        category        = Electrical,
+        xpAward         = Electricity:2,
+        inputs
+        {
+            item 1 tags[base:screwdriver;base:sharpknife] mode:keep flags[MayDegradeVeryLight;IsNotDull],
+            item 1 [Base.ScannerModule] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.ElectronicsScrap,
+            item 1 Base.ElectricWire,
+        }
+    }
+
     craftRecipe DismantleReceiver
     {
         timedAction     = DismantleElectrical,
@@ -34,6 +53,25 @@ module Base
         outputs
         {
             item 1 Base.ElectronicsScrap,
+        }
+    }
+
+    craftRecipe DismantlePager
+    {
+        timedAction     = DismantleElectrical,
+        time            = 60,
+        Tags            = InHandCraft;Electrical,
+        category        = Electrical,
+        xpAward         = Electricity:2,
+        inputs
+        {
+            item 1 tags[base:screwdriver;base:sharpknife] mode:keep flags[MayDegradeVeryLight;IsNotDull],
+            item 1 [Base.Pager] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.ElectronicsScrap,
+            item 1 Base.Battery,
         }
     }
 

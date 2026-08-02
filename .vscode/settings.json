@@ -1,0 +1,22 @@
+{
+  "Lua.diagnostics.globals": [
+    "ISBaseTimedAction",
+    "getWorld",
+    "getCore",
+    "getPlayer",
+    "getWorld",
+    "getInventory",
+    "getModData",
+    "getDebug",
+    "getEventManager",
+    "getSoundManager",
+    "getWorldManager",
+    "getUIManager",
+    "getInputManager",
+    "getEventManager",
+    "getDebug",
+    "getWorld",
+    "getCore",
+    "getPlayer"
+  ]
+}

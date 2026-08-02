@@ -1,6 +1,14 @@
 ------------------------------------------------------------
--- SwapVehicle Context Menu (Hybrid Vehicle Detection)
+-- SwapVehicle Context Menu (Vehicle‑only, no cell scan)
 ------------------------------------------------------------
+
+local DEBUG = false  -- set to false to silence debug output
+
+local function dbg(msg)
+    if DEBUG then
+        print("[SwapVehicle DEBUG] " .. tostring(msg))
+    end
+end
 
 if not SwapVehicleRegistry then
     print("ERROR: SwapVehicleRegistry missing! (Vanilla/KI5 registry not loaded)")
@@ -8,82 +16,93 @@ if not SwapVehicleRegistry then
 end
 
 ------------------------------------------------------------
--- Fallback: nearest vehicle scan (your original method)
-------------------------------------------------------------
-local function SV_FindNearestVehicle(player)
-    local px, py = player:getX(), player:getY()
-    local vehicles = getCell():getVehicles()
-    local closest = nil
-    local closestDist = 3 -- tiles
-
-    for i = 0, vehicles:size() - 1 do
-        local v = vehicles:get(i)
-        local dx = v:getX() - px
-        local dy = v:getY() - py
-        local dist = math.sqrt(dx*dx + dy*dy)
-
-        if dist < closestDist then
-            closest = v
-            closestDist = dist
-        end
-    end
-
-    return closest
-end
-
-------------------------------------------------------------
--- Add context menu option
+-- Add context menu option (no nearest‑vehicle scan)
 ------------------------------------------------------------
 local function SV_AddContextMenu(playerIndex, context, worldobjects, test)
+    dbg("SV_AddContextMenu triggered")
+
     local player = getSpecificPlayer(playerIndex)
-    if not player then return end
+    if not player then
+        dbg("Player not found")
+        return
+    end
+
+    local vehicle = nil
 
     --------------------------------------------------------
-    -- 1) Try official helper
+    -- 1) Try official helper (vehicle under cursor)
     --------------------------------------------------------
-    local vehicle = nil
     if ISWorldObjectContextMenu.getVehicle then
         vehicle = ISWorldObjectContextMenu.getVehicle(worldobjects)
+        dbg("Helper vehicle: " .. tostring(vehicle))
     end
 
     --------------------------------------------------------
-    -- 2) If that failed, use nearest-vehicle scan
+    -- 2) If that failed, try player:getVehicle() (inside car)
     --------------------------------------------------------
     if not vehicle then
-        vehicle = SV_FindNearestVehicle(player)
-    end
-
-    --------------------------------------------------------
-    -- 3) If still nil, try player:getVehicle() (inside car)
-    --------------------------------------------------------
-    if not vehicle then
+        dbg("Trying player:getVehicle()")
         vehicle = player:getVehicle()
     end
 
-    if not vehicle then return end
+    --------------------------------------------------------
+    -- HARD GUARD: bail if not a valid BaseVehicle
+    --------------------------------------------------------
+    if not vehicle or not instanceof(vehicle, "BaseVehicle") then
+        dbg("No valid vehicle found, aborting context menu")
+        return
+    end
 
     --------------------------------------------------------
     -- Registry lookup
     --------------------------------------------------------
-    local script = vehicle:getScript():getFullName()
-    if not script then return end
+    local scriptObj = vehicle:getScript()
+    if not scriptObj then
+        dbg("Vehicle scriptObj nil")
+        return
+    end
+
+    local script = scriptObj:getFullName()
+    dbg("Vehicle script: " .. script)
 
     local group = SwapVehicleRegistry.Groups[script]
-    if not group then return end
+    if not group then
+        dbg("No group found for script")
+        return
+    end
 
     local variants = SwapVehicleRegistry.SwapPairs[group]
-    if not variants or #variants < 2 then return end
+    if not variants or #variants < 2 then
+        dbg("No swap variants found")
+        return
+    end
 
-    if test then return true end
+    if test then
+        dbg("Test mode active")
+        return true
+    end
 
     --------------------------------------------------------
     -- Add context menu option
     --------------------------------------------------------
+    dbg("Adding context menu option for vehicle swap")
+
     context:addOption("Swap Vehicle Vinyl", vehicle, function(v)
-        -- CRITICAL FIX: Normalize vehicle reference
+        dbg("Callback triggered for vehicle: " .. tostring(v))
+
+        if not v or not instanceof(v, "BaseVehicle") then
+            dbg("Callback received non‑vehicle, aborting")
+            return
+        end
+
         local worldVehicle = getVehicleById(v:getId())
+        if not worldVehicle then
+            dbg("getVehicleById failed")
+            return
+        end
 
         if SwapVehicle_UI and SwapVehicle_UI.Open then
+            dbg("Opening SwapVehicle_UI for group " .. tostring(group))
             SwapVehicle_UI.Open(player, worldVehicle, group, variants)
         else
             print("ERROR: SwapVehicle_UI.Open missing!")

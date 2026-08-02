@@ -1,7 +1,8 @@
 --========================================================
 -- SwapVehicle UI (Vertical Layout + Full Script Names)
 --========================================================
-require "ISSwapVinylAction"
+-- require "ISSwapVinylAction"
+local SwapAction = ISSwapVinylAction
 
 SwapVehicle_UI = ISCollapsableWindow:derive("SwapVehicle_UI")
 SwapVehicle_UI.instance = nil

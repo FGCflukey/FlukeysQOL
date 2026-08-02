@@ -21,6 +21,8 @@ function OB_ResetBarrelAction:isValid()
 
     local wrench = OrangeBarrelFluid.getPlayerWrench(self.character)
     if not wrench then
+        -- Option B: Player speech when missing wrench
+        self.character:Say("I need a pipe wrench to reset this barrel.")
         return false
     end
 

@@ -101,6 +101,87 @@ module Base
         Tags = base:ignorezombiedensity;base:bottleopener;base:cutplant;base:sharpknife;base:butcheranimal;base:useworldstaticmodel;base:canopener;base:screwdriver;base:pliers;base:removebullet;base:removeglass;base:smallfiles;base:scissors;base:awl;base:hasmetal;base:sharpenable;base:saw;base:metalsaw,
     }
 
+    item TireRepairKit
+    {
+        DisplayCategory         = VehicleMaintenance,
+        Weight                  = 0.2,
+        ItemType                = Drainable,
+        MaxUses                 = 5,
+        UseWhileEquipped        = FALSE,
+        Icon                    = FixAFlat,
+        Tooltip                 = Tooltip_FixAFlat,
+        MechanicsItem           = TRUE,
+        WorldStaticModel        = FixAFlat,
+
+        ReplaceOnDeplete        = None,
+    }
+
+    item SuspensionKit
+    {
+        DisplayCategory         = VehicleMaintenance,
+        Weight                  = 0.2,
+        ItemType                = Drainable,
+        MaxUses                 = 5,
+        UseWhileEquipped        = FALSE,
+        Icon                    = SuspensionKit,
+        Tooltip                 = Tooltip_SuspensionFix,
+        MechanicsItem           = TRUE,
+        WorldStaticModel        = FixAFlat,
+
+        ReplaceOnDeplete        = None,
+    }
+
+    item BrakeKit
+    {
+        DisplayCategory         = VehicleMaintenance,
+        Weight                  = 0.2,
+        ItemType                = Drainable,
+        MaxUses                 = 5,
+        UseWhileEquipped        = FALSE,
+        Icon                    = BrakeKit,
+        Tooltip                 = Tooltip_BrakeFix,
+        MechanicsItem           = TRUE,
+        WorldStaticModel        = FixAFlat,
+
+        ReplaceOnDeplete        = None,
+    }
+
+    item MufflerPatchKit
+    {
+        DisplayCategory         = VehicleMaintenance,
+        Weight                  = 0.2,
+        ItemType                = Drainable,
+        MaxUses                 = 5,
+        UseWhileEquipped        = FALSE,
+        Icon                    = MufflerPatchKit,
+        Tooltip                 = Tooltip_MufflerFix,
+        MechanicsItem           = TRUE,
+        WorldStaticModel        = FixAFlat,
+
+        ReplaceOnDeplete        = None,
+    }
+
+    model FixAFlat
+    {
+        mesh    = WorldItems/FixAFlat,
+        texture = WorldItems/FixAFlat,
+        scale   = 0.6,
+    }
+
+    item UpholsteryKit
+    {
+        DisplayCategory         = Material,
+        ItemType                = Drainable,
+        UseDelta                = 0.05,
+        UseWhileEquipped        = FALSE,
+        Icon                    = CarSewingKit,
+        Weight                  = 0.2,
+        cantBeConsolided        = TRUE,
+        SurvivalGear            = TRUE,
+        ReplaceOnDeplete        = Needle,
+        Tooltip                 = Tooltip_UpholsteryKit,
+    }
+
     /***    Money Management Recipes    ***/
 
     craftRecipe FillTheMoneyBag
@@ -108,7 +189,7 @@ module Base
         timedAction     = UnPackSack,
         time            = 30,
         Tags            = InHandCraft,
-        category        = Packing,
+        category        = Currency,
         inputs
         {
             item 5 [Base.MoneyBundle] mode:destroy,
@@ -125,7 +206,7 @@ module Base
         timedAction     = UnPackSack,
         time            = 30,
         Tags            = InHandCraft,
-        category        = Packing,
+        category        = Currency,
         inputs
         {
             item 10 [Base.MoneyBundle] mode:destroy,
@@ -176,7 +257,7 @@ module Base
         timedAction     = UnPackSack,
         time            = 15,
         Tags            = InHandCraft,
-        category        = Packing,
+        category        = Currency,
         inputs
         {
             item 1 [Base.Bag_DuffelBag] mode:destroy,
@@ -335,6 +416,32 @@ module Base
         }
     }
 
+    craftRecipe MakeUpholsteryRepairKit
+    {
+        timedAction     = Making,
+        time            = 180,
+        Tags            = AnySurfaceCraft,
+        category        = Essentials,
+        SkillRequired   = Tailoring:2,
+        xpAward         = Tailoring:13,
+        inputs
+        {
+            item 1 tags[base:sewingneedle],
+            item 5 [Base.Twine],
+        }
+        outputs
+        {
+            item 1 Base.UpholsteryKit,
+        }
+    }
+
+    fixing Fix Car Upholstery
+    {
+        Require = Base.NormalCarSeat1;Base.NormalCarSeat2;Base.NormalCarSeat3,
+        ConditionModifier = 1.1,
+        Fixer = Base.UpholsteryKit=2; Mechanics=1,
+    }
+
     /***    QOL Misc Things     ***/
 
     craftRecipe MakeMortarAndPestle
@@ -344,7 +451,7 @@ module Base
         OnCreate        = RecipeCodeOnCreate.minorCondition,
         Tags            = InHandCraft,
         xpAward         = Carving:10,
-        category        = Carving,
+        category        = Essentials,
         NeedToBeLearn   = false,
         inputs
         {
@@ -419,7 +526,7 @@ module Base
         timedAction     = SewingCloth,
         time            = 90,
         Tags            = InHandCraft,
-        category        = Tailoring,
+        category        = Essentials,
         needToBeLearn   = false,
         xpAward         = Tailoring:5,
         inputs
@@ -440,7 +547,7 @@ module Base
         time            = 60,
         SkillRequired   = MetalWelding:2,
         Tags            = AnySurfaceCraft,
-        category        = Metalworking,
+        category        = Essentials,
         xpAward         = MetalWelding:25,
         inputs
         {
@@ -461,7 +568,7 @@ module Base
         needTobeLearn   = false,
         Tags            = InHandCraft;Survivalist,
         xpAward         = Maintenance:5,
-        category        = Assembly,
+        category        = Essentials,
         inputs
         {
             item 1 [Base.Saw],
@@ -506,7 +613,7 @@ module Base
         TimedAction     = Making,
         Time            = 90,
         tags            = AnySurfaceCraft,
-        category        = Essential,
+        category        = Essentials,
         inputs
         {
             item 1 tags[Tape],
@@ -523,7 +630,7 @@ module Base
         TimedAction     = Making,
         Time            = 120,
         tags            = AnySurfaceCraft,
-        category        = Essential,
+        category        = Essentials,
         inputs
         {
             item 1 [Base.Saucepan;Base.Pot] mode:keep,
@@ -543,7 +650,7 @@ module Base
         TimedAction     = Making,
         Time            = 120,
         tags            = AnySurfaceCraft,
-        category        = Essential,
+        category        = Essentials,
         inputs
         {
             item 1 tags[Sharpenable] mode:keep,
@@ -561,7 +668,7 @@ module Base
         TimedAction     = Making,
         Time            = 15,
         tags            = InHandCraft,
-        category        = Essential,
+        category        = Essentials,
         inputs
         {
             item 1 tags[Sharpenable] mode:keep,
@@ -622,6 +729,7 @@ module Base
         TimedAction     = Making,
         Time            = 60,
         Tags            = InHandCraft,
+        category        = Essentials,
 
         inputs
         {
@@ -638,6 +746,7 @@ module Base
         TimedAction     = Making,
         Time            = 60,
         Tags            = InHandCraft,
+        category        = Essentials,
 
         inputs
         {
@@ -657,7 +766,7 @@ module Base
         category        = Medical,
         inputs
         {
-            item 1 [Base.BandageDirty;Base.DenimStripsDirty;Base.LeatherStripsDirty;Base.RippedSheetsDirty] mode:destroy mappers[ragType],
+            item 1 [Base.DenimStripsDirty;Base.LeatherStripsDirty;Base.RippedSheetsDirty] mode:destroy mappers[ragType],
             item 1 [*],
             -fluid 0.1 [Water;TaintedWater],
         }

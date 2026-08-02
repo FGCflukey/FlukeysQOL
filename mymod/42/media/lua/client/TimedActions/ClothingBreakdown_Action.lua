@@ -1,8 +1,12 @@
 -- ClothingBreakdown_Action.lua
 
-require "TimedActions.ISBaseTimedAction"
-require "ClothingBreakdown_Definitions"
-require "ClothingBreakdown_Material"
+-- require "TimedActions.ISBaseTimedAction"
+-- require "ClothingBreakdown_Definitions"
+-- require "ClothingBreakdown_Material"
+
+local BaseAction   = ISBaseTimedAction
+local Definitions  = ClothingBreakdown_Definitions
+local Material     = ClothingBreakdown_Material
 
 print("DEBUG: ClothingBreakdown_Action.lua LOADED")
 

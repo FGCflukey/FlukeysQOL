@@ -1,0 +1,102 @@
+-- Vehicle_Debug.lua
+-- Focused debug for real blood areas used by ISWashVehicle
+
+local lastPrint = 0
+
+local BLOOD_AREAS = {
+    "Front",
+    "Rear",
+    "Left",
+    "Right"
+}
+
+local function DebugVehicleState(player)
+    if not player then return end
+
+    local v = player:getVehicle()
+    if not v then return end  -- not in a vehicle
+
+    -- Print once per second
+    local now = getTimestampMs()
+    if now - lastPrint < 1000 then return end
+    lastPrint = now
+
+    print("========================================")
+    print("        VEHICLE DEBUG INFORMATION       ")
+    print("========================================")
+
+    -----------------------------------------------------
+    -- Rust (this one DOES exist)
+    -----------------------------------------------------
+    if v.getRust then
+        print("Rust:", v:getRust())
+    else
+        print("Rust: [method missing]")
+    end
+
+    -----------------------------------------------------
+    -- Skin index (important for texture-based overlays)
+    -----------------------------------------------------
+    if v.getSkinIndex then
+        print("SkinIndex:", v:getSkinIndex())
+    else
+        print("SkinIndex: [method missing]")
+    end
+
+    -----------------------------------------------------
+    -- Blood per AREA (REAL blood system)
+    -----------------------------------------------------
+    print("---- Blood Areas ----")
+    for _, areaId in ipairs(BLOOD_AREAS) do
+        if v.getBloodIntensity then
+            local val = v:getBloodIntensity(areaId)
+            print(areaId .. ":", val)
+        else
+            print(areaId .. ": [method missing]")
+        end
+    end
+
+    -----------------------------------------------------
+    -- Script areas (shows what the vehicle supports)
+    -----------------------------------------------------
+    print("---- Script Areas ----")
+    if v.getScript then
+        local script = v:getScript()
+        if script and script.getAreas then
+            local areas = script:getAreas()
+            for i = 0, areas:size()-1 do
+                local a = areas:get(i)
+                print("Area:", a:getId())
+            end
+        else
+            print("[no script areas]")
+        end
+    else
+        print("[no script]")
+    end
+
+    print("========================================")
+end
+
+Events.OnPlayerUpdate.Add(function(player)
+    DebugVehicleState(player)
+end)
+
+-----------------------------------------------------
+-- Manual blood dump (press B while in vehicle)
+-----------------------------------------------------
+Events.OnKeyPressed.Add(function(key)
+    if key == Keyboard.KEY_B then
+        local v = getSpecificPlayer(0):getVehicle()
+        if not v then print("No vehicle") return end
+
+        print("---- Blood Test (Manual) ----")
+        for _, areaId in ipairs(BLOOD_AREAS) do
+            if v.getBloodIntensity then
+                print(areaId .. ":", v:getBloodIntensity(areaId))
+            else
+                print(areaId .. ": [method missing]")
+            end
+        end
+    end
+end)

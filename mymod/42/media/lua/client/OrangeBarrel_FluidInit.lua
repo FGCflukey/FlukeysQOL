@@ -133,6 +133,11 @@ local function tryAttachEngineFluidComponent(barrel)
     pcall(function() component:setInputLocked(false) end)
     pcall(function() component:setCanPlayerEmpty(true) end)
 
+    -- ⭐ NEW: default fluid type
+    if component.setFluidType then
+        pcall(function() component:setFluidType("Gasoline") end)
+    end
+
     local okAttach, errAttach = pcall(function()
         GameEntityFactory.AddComponent(barrel, true, component)
     end)
@@ -215,10 +220,8 @@ function OrangeBarrelFluid.RemoveFluidComponent(barrel)
         if amount > 0 then
             OBFLog("RemoveFluidComponent: ABORT — barrel not empty!")
             if isClient() then
-                -- Client-side message
                 getPlayer():Say("Empty The Barrel Must Be Empty!")
             else
-                -- Server-side fallback
                 print("[OrangeBarrelFluid] Empty The Barrel Must Be Empty!")
             end
             return false
@@ -229,6 +232,11 @@ function OrangeBarrelFluid.RemoveFluidComponent(barrel)
     -- Remove component using the ONLY working API
     --------------------------------------------------
     if comp then
+        -- ⭐ NEW: clear fluid type before removal
+        if comp and comp.setFluidType then
+            pcall(function() comp:setFluidType("") end)
+        end
+
         local okB, errB = pcall(function()
             GameEntityFactory.RemoveComponent(barrel, comp)
         end)
@@ -295,6 +303,13 @@ function OrangeBarrelFluid.OnFillWorldObjectContextMenu(player, context, worldob
         if not wrench then
             local option = context:addOption(label, nil)
             option.notAvailable = true
+
+            -- Tooltip (Option B)
+            local tooltip = ISToolTip:new()
+            tooltip:initialise()
+            tooltip.description = "Requires Pipe Wrench"
+            option.toolTip = tooltip
+
             return
         end
 
@@ -307,6 +322,13 @@ function OrangeBarrelFluid.OnFillWorldObjectContextMenu(player, context, worldob
     if not wrench then
         local option = context:addOption(resetLabel, nil)
         option.notAvailable = true
+
+        -- Tooltip (Option B)
+        local tooltip = ISToolTip:new()
+        tooltip:initialise()
+        tooltip.description = "Requires Pipe Wrench"
+        option.toolTip = tooltip
+
         return
     end
 
@@ -324,7 +346,10 @@ function OrangeBarrelFluid.OnResetBarrel(playerObj, barrel)
     if not barrel:getSquare() then return end
 
     local wrench = OrangeBarrelFluid.getPlayerWrench(playerObj)
-    if not wrench then return end
+    if not wrench then
+        playerObj:Say("I need a pipe wrench to reset this barrel.") -- Option B
+        return
+    end
 
     -- SAFETY CHECK BEFORE QUEUING ACTION
     local comp = nil
@@ -338,11 +363,10 @@ function OrangeBarrelFluid.OnResetBarrel(playerObj, barrel)
         local amount = comp:getAmount()
         if amount > 0 then
             playerObj:Say("Empty The Barrel Must Be Empty!")
-            return -- DO NOT QUEUE ACTION
+            return
         end
     end
 
-    -- Normal walk + queue
     if not luautils.walkAdj(playerObj, barrel:getSquare()) then return end
 
     ISTimedActionQueue.add(OB_ResetBarrelAction:new(playerObj, barrel, wrench))
@@ -359,12 +383,67 @@ function OrangeBarrelFluid.OnConvertBarrel(playerObj, barrel)
     if not barrel:getSquare() then return end
 
     local wrench = OrangeBarrelFluid.getPlayerWrench(playerObj)
-    if not wrench then return end
+    if not wrench then
+        playerObj:Say("I need a pipe wrench to open this barrel.") -- Option B
+        return
+    end
 
     if not luautils.walkAdj(playerObj, barrel:getSquare()) then return end
 
     ISTimedActionQueue.add(OB_ConvertBarrelAction:new(playerObj, barrel, wrench, true))
 end
+
+--------------------------------------------------
+-- RIGHT-CLICK Barrel Info Tooltip (REPLACES unsupported hover tooltip)
+--------------------------------------------------
+
+Events.OnPreFillWorldObjectContextMenu.Add(function(player, context, worldobjects)
+    -- Find the barrel
+    local barrel = nil
+    for _, obj in ipairs(worldobjects) do
+        if OrangeBarrelFluid.IsOrangeBarrel(obj) then
+            barrel = obj
+            break
+        end
+    end
+    if not barrel then return end
+
+    -- Build tooltip text
+    local comp = nil
+    local okGet = pcall(function()
+        if barrel.getComponent and ComponentType and ComponentType.FluidContainer then
+            comp = barrel:getComponent(ComponentType.FluidContainer)
+        end
+    end)
+
+    local text = "Empty Barrel"
+    if comp then
+        local amount = comp.getAmount and comp:getAmount() or 0
+
+        -- ⭐ NEW: auto-clear fluid type when empty
+        if amount <= 0 then
+            if comp and comp.setFluidType then
+                pcall(function() comp:setFluidType("") end)
+            end
+        end
+
+        local capacity = comp.getCapacity and comp:getCapacity() or 200
+        local fluid = comp.getFluidType and comp:getFluidType() or "Unknown"
+
+        if amount <= 0 then
+            text = "Empty Barrel"
+        else
+            text = fluid .. " (" .. tostring(amount) .. " / " .. tostring(capacity) .. ")"
+        end
+    end
+
+    -- Add tooltip to context menu
+    local infoOption = context:addOption("Barrel Info", nil)
+    local tooltip = ISToolTip:new()
+    tooltip:initialise()
+    tooltip.description = text
+    infoOption.toolTip = tooltip
+end)
 
 --------------------------------------------------
 -- Event hook

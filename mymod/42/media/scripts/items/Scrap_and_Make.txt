@@ -1,9 +1,29 @@
 module Base
 {
 
+/* Simple Metal Scrapping */
+
+    craftRecipe ScrapEmptyCans
+    {
+        timedAction     = Making,
+        Time            = 50,
+        Tags            = AnySurfaceCraft;CanBeDoneInDark,
+        category        = Essentials,
+        
+        inputs
+        {
+            item 1 tags[base:emptycan] mode:destroy flags[Prop2],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+        }
+        outputs
+        {
+            item 1 Base.ScrapMetal,
+        }
+    }
+
 /* Scrapping Unusable Metal and making things */
 
-craftRecipe ScrapMetalFromUnusableMetal
+    craftRecipe ScrapMetalFromUnusableMetal
     {
         timedAction     = Making,
         Time            = 100,
@@ -14,7 +34,7 @@ craftRecipe ScrapMetalFromUnusableMetal
         inputs
         {
             item 1 tags[base:charcoal],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
             item 1 [Base.UnusableMetal],
         }
         outputs
@@ -23,7 +43,7 @@ craftRecipe ScrapMetalFromUnusableMetal
         }
     }
 
-craftRecipe MakeSheetMetalFromUnusableMetal
+    craftRecipe MakeSheetMetalFromUnusableMetal
     {
         time            = 200,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -32,7 +52,7 @@ craftRecipe MakeSheetMetalFromUnusableMetal
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 2 [Base.UnusableMetal],
         }
@@ -42,7 +62,7 @@ craftRecipe MakeSheetMetalFromUnusableMetal
         }
     }
 
-craftRecipe MakeMetalBarFromUnusableMetal
+    craftRecipe MakeMetalBarFromUnusableMetal
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -51,7 +71,7 @@ craftRecipe MakeMetalBarFromUnusableMetal
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.UnusableMetal],
         }
@@ -61,7 +81,7 @@ craftRecipe MakeMetalBarFromUnusableMetal
         }
     }
 
-craftRecipe MakeMetalPipeFromUnusableMetal
+    craftRecipe MakeMetalPipeFromUnusableMetal
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -70,7 +90,7 @@ craftRecipe MakeMetalPipeFromUnusableMetal
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.UnusableMetal],
         }
@@ -80,7 +100,7 @@ craftRecipe MakeMetalPipeFromUnusableMetal
         }
     }
 
-craftRecipe MakeWireFromUnusableMetal
+    craftRecipe MakeWireFromUnusableMetal
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -89,7 +109,7 @@ craftRecipe MakeWireFromUnusableMetal
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.UnusableMetal],
         }
@@ -99,7 +119,7 @@ craftRecipe MakeWireFromUnusableMetal
         }
     }
 
-craftRecipe MakeNailsFromUnusableMetal
+    craftRecipe MakeNailsFromUnusableMetal
     {
         time            = 100,
         timedAction     = Making,
@@ -110,8 +130,8 @@ craftRecipe MakeNailsFromUnusableMetal
         {
             item 1 tags[base:charcoal],
             item 1 [Base.UnusableMetal],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:headingtool] mode:keep,
         }
         outputs
@@ -120,7 +140,7 @@ craftRecipe MakeNailsFromUnusableMetal
         }
     }
 
-craftRecipe MakeScrewsFromUnusableMetal
+    craftRecipe MakeScrewsFromUnusableMetal
     {
         time            = 100,
         timedAction     = Making,
@@ -131,8 +151,8 @@ craftRecipe MakeScrewsFromUnusableMetal
         {
             item 1 tags[base:charcoal],
             item 1 [Base.UnusableMetal],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:headingtool] mode:keep,
         }
         outputs
@@ -143,7 +163,7 @@ craftRecipe MakeScrewsFromUnusableMetal
 
 /* Make things from Scrap Metal */
 
-craftRecipe MakeSheetMetalFromScrapMetal
+    craftRecipe MakeSheetMetalFromScrapMetal
     {
         time            = 200,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -152,7 +172,7 @@ craftRecipe MakeSheetMetalFromScrapMetal
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 2 [Base.ScrapMetal],
         }
@@ -162,7 +182,7 @@ craftRecipe MakeSheetMetalFromScrapMetal
         }
     }
 
-craftRecipe MakeMetalBarFromScrapMetal
+    craftRecipe MakeMetalBarFromScrapMetal
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -171,7 +191,7 @@ craftRecipe MakeMetalBarFromScrapMetal
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.ScrapMetal],
         }
@@ -181,7 +201,7 @@ craftRecipe MakeMetalBarFromScrapMetal
         }
     }
 
-craftRecipe MakeMetalPipeFromScrapMetal
+    craftRecipe MakeMetalPipeFromScrapMetal
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -190,7 +210,7 @@ craftRecipe MakeMetalPipeFromScrapMetal
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.ScrapMetal],
         }
@@ -200,7 +220,7 @@ craftRecipe MakeMetalPipeFromScrapMetal
         }
     }
 
-craftRecipe MakeWireFromScrapMetal
+    craftRecipe MakeWireFromScrapMetal
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -209,7 +229,7 @@ craftRecipe MakeWireFromScrapMetal
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.ScrapMetal],
         }
@@ -219,7 +239,7 @@ craftRecipe MakeWireFromScrapMetal
         }
     }
 
-craftRecipe MakeNailsFromScrapMetal
+    craftRecipe MakeNailsFromScrapMetal
     {
         time            = 100,
         timedAction     = Making,
@@ -230,8 +250,8 @@ craftRecipe MakeNailsFromScrapMetal
         {
             item 1 tags[base:charcoal],
             item 1 [Base.ScrapMetal],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:headingtool] mode:keep,
         }
         outputs
@@ -251,8 +271,8 @@ craftRecipe MakeScrewsFromScrapMetal
         {
             item 1 tags[base:charcoal],
             item 1 [Base.ScrapMetal],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:headingtool] mode:keep,
         }
         outputs
@@ -274,7 +294,7 @@ craftRecipe MakeScrewsFromScrapMetal
         inputs
         {
             item 1 tags[base:charcoal],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
             item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
         }
         outputs
@@ -283,7 +303,7 @@ craftRecipe MakeScrewsFromScrapMetal
         }
     }
 
-craftRecipe MakeSheetMetalFromIronScrapOrSteelScrap
+    craftRecipe MakeSheetMetalFromIronScrapOrSteelScrap
     {
         time            = 200,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -292,7 +312,7 @@ craftRecipe MakeSheetMetalFromIronScrapOrSteelScrap
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 2 tags[base:charcoal],
             item 2 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
         }
@@ -302,7 +322,7 @@ craftRecipe MakeSheetMetalFromIronScrapOrSteelScrap
         }
     }
 
-craftRecipe MakeMetalBarFromIronScrapOrSteelScrap
+    craftRecipe MakeMetalBarFromIronScrapOrSteelScrap
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -311,7 +331,7 @@ craftRecipe MakeMetalBarFromIronScrapOrSteelScrap
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
         }
@@ -321,7 +341,7 @@ craftRecipe MakeMetalBarFromIronScrapOrSteelScrap
         }
     }
 
-craftRecipe MakeMetalPipeFromIronScrapOrSteelScrap
+    craftRecipe MakeMetalPipeFromIronScrapOrSteelScrap
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -330,7 +350,7 @@ craftRecipe MakeMetalPipeFromIronScrapOrSteelScrap
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
         }
@@ -340,7 +360,7 @@ craftRecipe MakeMetalPipeFromIronScrapOrSteelScrap
         }
     }
 
-craftRecipe MakeWireFromIronScrapOrSteelScrap
+    craftRecipe MakeWireFromIronScrapOrSteelScrap
     {
         time            = 100,
         tags            = PrimitiveFurnace;PrimitiveForge,
@@ -349,7 +369,7 @@ craftRecipe MakeWireFromIronScrapOrSteelScrap
         inputs
         {
             item 1 [Base.CeramicCrucible] mode:keep  flags[IsEmpty],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:charcoal],
             item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
         }
@@ -359,7 +379,7 @@ craftRecipe MakeWireFromIronScrapOrSteelScrap
         }
     }
 
-craftRecipe MakeNailsFromIronScrapOrSteelScrap
+    craftRecipe MakeNailsFromIronScrapOrSteelScrap
     {
         time            = 100,
         timedAction     = Making,
@@ -370,8 +390,8 @@ craftRecipe MakeNailsFromIronScrapOrSteelScrap
         {
             item 1 tags[base:charcoal],
             item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:headingtool] mode:keep,
         }
         outputs
@@ -380,7 +400,7 @@ craftRecipe MakeNailsFromIronScrapOrSteelScrap
         }
     }
 
-craftRecipe MakeScrewsFromIronScrapOrSteelScrap
+    craftRecipe MakeScrewsFromIronScrapOrSteelScrap
     {
         time            = 100,
         timedAction     = Making,
@@ -391,8 +411,8 @@ craftRecipe MakeScrewsFromIronScrapOrSteelScrap
         {
             item 1 tags[base:charcoal],
             item 1 [Base.IronScrap;Base.SteelScrap] mappers[metalType],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:headingtool] mode:keep,
         }
         outputs
@@ -403,7 +423,7 @@ craftRecipe MakeScrewsFromIronScrapOrSteelScrap
 
 /* Other Misc Stuff to make */
 
-craftRecipe MakeWireandLimestoneIntoWeldingRods
+    craftRecipe MakeWireandLimestoneIntoWeldingRods
     {
         timedAction     = Making,
         Time            = 200,
@@ -414,9 +434,9 @@ craftRecipe MakeWireandLimestoneIntoWeldingRods
         inputs
         {
             item 2 tags[base:charcoal],
-            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeLight],
-            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeLight],
-            item 1 tags[base:pliers] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[Prop1;MayDegradeVeryLight],
+            item 1 tags[base:crudetongs;base:tongs] mode:keep flags[MayDegradeVeryLight],
+            item 1 tags[base:pliers] mode:keep flags[MayDegradeVeryLight],
             item 1 [Base.Wire],
             item 1 [Base.Limestone],
         }
@@ -426,7 +446,7 @@ craftRecipe MakeWireandLimestoneIntoWeldingRods
         }
     }
 
-craftRecipe MakeWireandElectronicsScrapIntoElectricWire
+    craftRecipe MakeWireandElectronicsScrapIntoElectricWire
     {
         timedAction     = MakingElectrical,
         time            = 50,
@@ -435,13 +455,30 @@ craftRecipe MakeWireandElectronicsScrapIntoElectricWire
         xpAward         = Electricity:20,
         inputs
         {
-            item 1 tags[base:pliers] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:pliers] mode:keep flags[MayDegradeVeryLight],
             item 1 [Base.ElectronicsScrap],
             item 1 [Base.Wire],
         }
         outputs
         {
             item 1 Base.ElectricWire,
+        }
+    }
+
+    craftRecipe MakeBoxOfPaperclips
+    {
+        timedAction     = Making,
+        time            = 140,
+        Tags            = InHandCraft,
+        category        = Essentials,
+        inputs
+        {
+            item 1 tags[base:pliers] mode:keep flags[MayDegradeVeryLight],
+            item 10 [Base.Wire],
+        }
+        outputs
+        {
+            item 1 Base.PaperclipBox,
         }
     }
 

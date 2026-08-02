@@ -1,0 +1,62 @@
+{
+    "Base.cfcombataxe": "Carbon Fibre Axe",
+    "Base.cflongreachaxe": "Carbon Fibre Long Reach Axe",
+    "Base.HCToywagon": "Toy Wagon",
+    "Base.HCHanddolly": "Hand Dolly",
+    "Base.ZombieMeat": "Zombie Meat",
+    "Base.BoxedSyringes": "Syringe Package",
+    "Base.BoxedLabTestTubes": "Test Tubes Package",
+    "Base.EmptySyringe": "Empty Syringe",
+    "Base.FilledSyringe": "Blood-Filled Syringe",
+    "Base.SyringeWithCure": "Syringe Containing The Cure",
+    "Base.LabTestTubeInfectedBlood": "Test Tube with Filtered Blood",
+    "Base.LabTestTube": "Test Tube",
+    "Base.CurezMagazine": "Cure That Infection!",
+    "Base.BoxedEngineParts": "Package of 10 Engine Parts",
+    "Base.BoxedElectronicsScrap": "Package of 50 Electronics Scrap",
+    "Base.BoxedElectricWire": "Package of 50 Electric Wire",
+    "Base.AlcoholWipesBox": "Box of Alcohol Wipes",
+
+    "Base.SpraycanWhite": "Spray Can (White)",
+    "Base.SpraycanBlack": "Spray Can (Black)",
+    "Base.SpraycanGray": "Spray Can (Gray)",
+    "Base.SpraycanDarkGray": "Spray Can (Dark-Gray)",
+
+    "Base.SpraycanRed": "Spray Can (Red)",
+    "Base.SpraycanBlue": "Spray Can (Blue)",
+    "Base.SpraycanGreen": "Spray Can (Green)",
+    "Base.SpraycanYellow": "Spray Can (Yellow)",
+    "Base.SpraycanOrange": "Spray Can (Orange)",
+    "Base.SpraycanPurple": "Spray Can (Purple)",
+
+    "Base.SpraycanPastelBlue": "Spray Can (Pastel-Blue)",
+    "Base.SpraycanPastelPink": "Spray Can (Pastel-Pink)",
+    "Base.SpraycanPastelGreen": "SprayCan (Pastel-Green)",
+    "Base.SpraycanPastelYellow": "SprayCan (Pastel-Yellow)",
+    "Base.SpraycanMauve": "Spray Can (Mauve)",
+
+    "Base.SpraycanBrown": "Spray Can (Brown)",
+    "Base.SpraycanTan": "Spray Can (Tan)",
+    "Base.SpraycanOlive": "Spray Can (Olive)",
+    "Base.SpraycanForestGreen": "Spray Can (Forest-Green)",
+
+    "Base.SpraycanPink": "Spray Can (Pink)",
+    "Base.SpraycanCyan": "Spray Can (Cyan)",
+    "Base.SpraycanVinylCoat": "Spray Can [Vinyl Finish]",
+    "Base.SandingBlock": "Sanding Pad",
+
+    "Base.Bag_FullMoneyBag": "Money Bag ($500)",
+    "Base.Bag_FullBigMoneyBag": "Money Bag ($1000)",
+
+    "Base.SurvivorMultitool": "Survivor Edition MultiTool",
+    "Base.SurvivorMortarPestle": "Mortar & Pestle",
+
+    "Base.DoorknobsBox": "Box of 10 Doorknobs",
+    "Base.HingesBox": "Box of 10 Door Hinges",
+
+    "Base.TireRepairKit": "Tire Repair Kit",
+    "Base.SuspensionKit": "Suspension Repair Kit",
+    "Base.BrakeKit": "Brake Repair Kit",
+    "Base.MufflerPatchKit": "Muffler Repair Kit",
+    "Base.UpholsteryKit": "Car Upholstery Kit"
+}

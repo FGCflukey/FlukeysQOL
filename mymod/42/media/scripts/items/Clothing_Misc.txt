@@ -1,0 +1,24 @@
+module Base
+{
+
+    craftRecipe CutWallet
+    {
+        timedAction     = RipClothing,
+        time            = 20,
+
+        Tags            = InHandCraft;CanBeDoneInDark,
+        OnTest          = WalletCut_OnTest,
+        OnCreate        = WalletCut_OnCreate,
+        inputs
+        {
+            item 1 [Base.Wallet;Base.Wallet_Male;Base.Wallet_Female;Base.Wallet_Hide] flags[AllowDestroyedItem;IsNotWorn;ItemCount],
+            item 1 tags[base:scissors;base:sharpknife] mode:keep flags[MayDegradeLight;Prop1;IsNotDull],
+        }
+
+        outputs
+        {
+            item 1 Base.LeatherStrips,
+        }
+    }
+
+}

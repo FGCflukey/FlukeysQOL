@@ -1,5 +1,7 @@
 module Base
 {
+
+    /*  General Items   */
     item BlowTorch
     {
         DisplayCategory = Tool,
@@ -134,6 +136,73 @@ module Base
             ContainerName = Canteen,
             Capacity = 1.0,
         }
+    }
+
+/*  Currencies  */
+
+    item Money
+    {
+        DisplayCategory = Currency,
+        ItemType = base:normal,
+        Weight = 0.01,
+        Icon = Money,
+        WorldStaticModel = Money,
+        Tags = base:isfirefuel;base:isfiretinder;base:fitswallet,
+        FireFuelRatio = 0.25,
+    }
+
+    item MoneyBundle
+    {
+        DisplayCategory = Currency,
+        ItemType = base:normal,
+        Weight = 0.5,
+        Icon = Money_Stack,
+        WorldStaticModel = MoneyBundle,
+        Tags = base:ignorezombiedensity;base:isfirefuel;base:isfiretinder,
+        FireFuelRatio = 0.25,
+        DoubleClickRecipe = UnbundleMoney,
+    }
+
+    item CreditCard
+    {
+        DisplayCategory = Currency,
+        ItemType = base:normal,
+        Weight = 0.1,
+        Icon = CreditCard,
+        WorldStaticModel = CreditCard,
+        Tags = base:fitswallet;base:applyownername,
+        OnCreate = ItemCodeOnCreate.onCreateIDCard,
+    }
+
+    item CreditCard_Stolen
+    {
+        DisplayCategory = Currency,
+        ItemType = base:normal,
+        Weight = 0.1,
+        Icon = CreditCard,
+        WorldStaticModel = CreditCard,
+        Tags = base:fitswallet,
+        OnCreate = ItemCodeOnCreate.onCreateIDCard,
+    }
+
+    craftRecipe Scrap_Gold_Jewellery
+    {
+        time = 50,
+    }
+
+    craftRecipe scrap_jewellery
+    {
+        time = 50,
+    }
+
+    craftRecipe Scrap_Silver_Jewellery
+    {
+        time = 50,
+    }
+
+    craftRecipe Scrap_Gold_Jewellery
+    {
+        time = 50,
     }
 
 }

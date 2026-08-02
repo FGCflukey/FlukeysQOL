@@ -1,10 +1,9 @@
 name=Flukeys QOL Mod-Pack for PZ
-description=Improving the Project Zomboid Experience! Private Only Use!
+description=Improving the Project Zomboid Experience! Private Use Only!
 id=mymod
 icon=LogoFGC.png
 author=justanothersteamclient
 poster=poster.png
 modversion=1.0
-versionMax=42.14
-versionMin=42.13
-require=\JB_MaxCapacityOverride
+versionMax=42.20
+versionMin=42.19

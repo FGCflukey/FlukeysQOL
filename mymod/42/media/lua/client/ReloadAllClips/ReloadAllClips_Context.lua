@@ -1,13 +1,15 @@
 -- media/lua/client/ReloadAllClips/ReloadAllClips_Context.lua
 
-require "ReloadAllClips.ReloadAllClips_Util"
-require "ReloadAllClips.ReloadAllClips_Core"
+-- require "ReloadAllClips_Util"
+-- require "ReloadAllClips_Core"
+local Util = ReloadAllClips_Util
+local Core = ReloadAllClips_Core
 
 local DEBUG = false
 
 local function dbg(msg)
     if DEBUG then
-        print("[ReloadAllClips:Core] " .. tostring(msg))
+        print("[ReloadAllClips:Context] " .. tostring(msg))
     end
 end
 
@@ -17,24 +19,37 @@ end
 local function collectItemsFromContext(items)
     local result = {}
 
-    for _, v in ipairs(items) do
+    dbg("collectItemsFromContext: raw items count=" .. tostring(#items))
+
+    for idx, v in ipairs(items) do
         if v.items then
             -- Stacked items
-            dbg("Expanding stacked items: count=" .. tostring(#v.items))
+            dbg("Expanding stacked items at index=" .. tostring(idx) ..
+                " | stackCount=" .. tostring(#v.items))
             for i = 1, #v.items do
                 local item = v.items[i]
                 if item and item.getFullType then
+                    dbg("  -> stacked item[" .. tostring(i) .. "] fullType=" ..
+                        tostring(item:getFullType()))
                     table.insert(result, item)
+                else
+                    dbg("  -> stacked item[" .. tostring(i) .. "] is invalid or has no getFullType")
                 end
             end
         else
             local item = v
             if item and item.getFullType then
+                dbg("Single item at index=" .. tostring(idx) ..
+                    " fullType=" .. tostring(item:getFullType()))
                 table.insert(result, item)
+            else
+                dbg("Single item at index=" .. tostring(idx) ..
+                    " is invalid or has no getFullType")
             end
         end
     end
 
+    dbg("collectItemsFromContext: flattened count=" .. tostring(#result))
     return result
 end
 
@@ -43,20 +58,28 @@ end
 ---------------------------------------------------------
 local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
     local playerObj = getSpecificPlayer(playerIndex)
-    if not playerObj then return end
+    if not playerObj then
+        dbg("OnFillInventoryObjectContextMenu: no playerObj for index=" .. tostring(playerIndex))
+        return
+    end
 
-    dbg("Context menu triggered.")
+    dbg("Context menu triggered for playerIndex=" .. tostring(playerIndex))
 
     local flatItems = collectItemsFromContext(items)
 
     -- Filter to magazines only
     local mags = {}
     for _, item in ipairs(flatItems) do
-        if ReloadAllClips_Util.isMagazine(item) then
-            dbg("Detected magazine: " .. item:getFullType())
+        local isMag = ReloadAllClips_Util.isMagazine(item)
+        dbg("Checking item fullType=" .. tostring(item:getFullType()) ..
+            " | isMagazine=" .. tostring(isMag))
+        if isMag then
+            dbg("Detected magazine: " .. tostring(item:getFullType()))
             table.insert(mags, item)
         end
     end
+
+    dbg("Total magazines detected=" .. tostring(#mags))
 
     if #mags == 0 then
         dbg("No magazines detected in selection.")
@@ -66,20 +89,30 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
     -- Group by bullet type
     local groups = ReloadAllClips_Util.groupMagazinesByBulletType(mags)
 
+    local groupCount = 0
+    for _ in pairs(groups) do groupCount = groupCount + 1 end
+    dbg("Total groups by bulletType=" .. tostring(groupCount))
+
     for bulletType, group in pairs(groups) do
-        dbg("Processing group for bulletType=" .. bulletType ..
+        dbg("Processing group for bulletType=" .. tostring(bulletType) ..
             " | magCount=" .. tostring(#group.mags))
 
         local inv = playerObj:getInventory()
         local bulletList = inv:getAllType(bulletType)
-        local bulletCount = bulletList:size()
+        local bulletCount = bulletList and bulletList:size() or 0
+
+        dbg("Inventory bullet lookup: bulletType=" .. tostring(bulletType) ..
+            " | bulletCount=" .. tostring(bulletCount))
 
         local pluralName = ReloadAllClips_Util.getPluralMagazineName(group.sampleMag)
 
         -------------------------------------------------
         -- Reload option
         -------------------------------------------------
-        if bulletCount > 0 and ReloadAllClips_Core.anyMagNeedsAmmo(group.mags) then
+        local needsAmmo = ReloadAllClips_Core.anyMagNeedsAmmo(group.mags)
+        dbg("Group needs ammo? " .. tostring(needsAmmo))
+
+        if bulletCount > 0 and needsAmmo then
             local label = "Reload All " .. pluralName
             dbg("Adding reload option: " .. label ..
                 " | bullets=" .. tostring(bulletCount))
@@ -90,13 +123,18 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
                 group
             )
         else
-            dbg("No reload option: either no bullets or all mags full.")
+            dbg("No reload option: either no bullets or all mags full. " ..
+                "bulletCount=" .. tostring(bulletCount) ..
+                " | needsAmmo=" .. tostring(needsAmmo))
         end
 
         -------------------------------------------------
         -- Unload option
         -------------------------------------------------
-        if ReloadAllClips_Core.anyMagHasAmmo(group.mags) then
+        local hasAmmo = ReloadAllClips_Core.anyMagHasAmmo(group.mags)
+        dbg("Group has ammo? " .. tostring(hasAmmo))
+
+        if hasAmmo then
             local label = "Unload All " .. pluralName
             dbg("Adding unload option: " .. label)
             context:addOption(

@@ -1,9 +1,46 @@
---
 -- PaintVehicle_Context.lua
 -- Context menu + spraycan-based repaint integration
---
 
 require "PaintVehicle_Action"
+
+-----------------------------------------------------
+-- CLEANLINESS CHECK (correct blood-area system)
+-----------------------------------------------------
+local function PV_needsCleaning(vehicle)
+    if not vehicle or not vehicle.getBloodIntensity then
+        return false
+    end
+
+    if vehicle:getBloodIntensity("Front") > 0 then return true end
+    if vehicle:getBloodIntensity("Rear") > 0 then return true end
+    if vehicle:getBloodIntensity("Left") > 0 then return true end
+    if vehicle:getBloodIntensity("Right") > 0 then return true end
+
+    return false
+end
+
+-----------------------------------------------------
+-- DEBUG PRINT (updated to show blood areas)
+-----------------------------------------------------
+local function PV_debugVehicleState(vehicle)
+    print("---- Vehicle Debug ----")
+
+    if not vehicle then
+        print("No vehicle object.")
+        return
+    end
+
+    print("Rust:", vehicle.getRust and vehicle:getRust() or "[missing]")
+    print("SkinIndex:", vehicle.getSkinIndex and vehicle:getSkinIndex() or "[missing]")
+
+    print("Blood Front:", vehicle:getBloodIntensity("Front"))
+    print("Blood Rear:",  vehicle:getBloodIntensity("Rear"))
+    print("Blood Left:",  vehicle:getBloodIntensity("Left"))
+    print("Blood Right:", vehicle:getBloodIntensity("Right"))
+
+    print("------------------------")
+end
+
 
 local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, worldobjects, test)
     if test then return end
@@ -13,6 +50,19 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
 
     local vehicle = ISVehicleMenu.getVehicleToInteractWith(playerObj)
     if not vehicle then return end
+
+    -----------------------------------------------------
+    -- DEBUG PRINT EVERY TIME YOU RIGHT-CLICK
+    -----------------------------------------------------
+    PV_debugVehicleState(vehicle)
+
+    -----------------------------------------------------
+    -- NEW: Block repaint if vehicle is dirty/bloody
+    -----------------------------------------------------
+    if PV_needsCleaning(vehicle) then
+        playerObj:Say("I think I should wash it first.")
+        return
+    end
 
     -----------------------------------------------------
     -- Script Name

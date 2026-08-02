@@ -1,0 +1,21 @@
+{
+    "Tooltip_item_ZombieMeat": "Ew Zombie Flesh!",
+    "Tooltip_item_ZBloodSyringeBox": "Package containing 50 Syringes",
+    "Tooltip_item_ZBloodTestTubeBox": "Package containing 10 Test Tubes",
+    "Tooltip_item_ZBloodSyringe": "Empty Syringe",
+    "Tooltip_item_ZBloodFilledSyringe": "Syringe Filled with Blood",
+    "Tooltip_item_ZCureFilledSyringe": "This syringe is Filled with Cure",
+    "Tooltip_item_ZomColaCure": "Totally not poison!",
+    "Tooltip_item_CurezMagazine": "Magazine for Crafting a Cure",
+    "Tooltip_LabTestTube": "Empty Test Tube",
+    "Tooltip_CmpTestTubeWithInfectedBlood": "Test Tube with Infected Blood",
+    "Tooltip_item_BoxedEngineParts": "Package of New Engine Parts",
+    "Tooltip_item_BoxedElectronicsScrap": "Package of Electronics Scrap",
+    "Tooltip_item_BoxedElectricWire": "Package of Electric Wire",
+    "Tooltip_SandingBlock": "A sanding block for vehicle bodywork",
+    "Tooltip_FixAFlat": "A repair kit to fix vehicle tires",
+    "Tooltip_SuspensionFix": "Repair kit to fix vehicle suspension",
+    "Tooltip_BrakeFix": "Repair kit to fix vehicle brakes",
+    "Tooltip_MufflerFix": "Repair kit to fix vehicle muffler",
+    "Tooltip_UpholsteryKit": "Repair kit to fix vehicle seats"
+}

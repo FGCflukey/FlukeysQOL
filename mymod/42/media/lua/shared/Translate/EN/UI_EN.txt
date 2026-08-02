@@ -1,4 +1,0 @@
-UI_EN = {
-    UI_trait_visuallearner = "Visual Learner",
-    UI_trait_visuallearnerdesc = "Learns skills directly from books instead of gaining skill XP boosts.",
-}

@@ -15,6 +15,22 @@ local function PV_isLargeVehicle(name)
 end
 
 -----------------------------------------------------
+-- BLOOD-AREA CLEANLINESS CHECK (correct system)
+-----------------------------------------------------
+local function PV_vehicleIsBloody(vehicle)
+    if not vehicle or not vehicle.getBloodIntensity then
+        return false
+    end
+
+    if vehicle:getBloodIntensity("Front") > 0 then return true end
+    if vehicle:getBloodIntensity("Rear") > 0 then return true end
+    if vehicle:getBloodIntensity("Left") > 0 then return true end
+    if vehicle:getBloodIntensity("Right") > 0 then return true end
+
+    return false
+end
+
+-----------------------------------------------------
 -- TIMED ACTION CLASS
 -----------------------------------------------------
 ISPaintVehicleAction = ISBaseTimedAction:derive("ISPaintVehicleAction")
@@ -53,6 +69,18 @@ end
 function ISPaintVehicleAction:update()
     self.character:faceThisObject(self.vehicle)
 
+    -----------------------------------------------------
+    -- CLEANLINESS CHECK (correct blood-area logic)
+    -----------------------------------------------------
+    if PV_vehicleIsBloody(self.vehicle) then
+        self.character:Say("I think I should wash it first.")
+        self:forceStop()
+        return
+    end
+
+    -----------------------------------------------------
+    -- ORIGINAL UPDATE LOGIC
+    -----------------------------------------------------
     local emitter = self.character:getEmitter()
     if emitter and self.loopSound and not emitter:isPlaying(self.loopSound) then
         self.loopSound = emitter:playSound("PaintVehicleSpray")
@@ -78,42 +106,6 @@ function ISPaintVehicleAction:perform()
     if self.hsv and self.vehicle then
         self.vehicle:setColorHSV(self.hsv[1], self.hsv[2], self.hsv[3])
         self.vehicle:transmitColorHSV()
-    end
-
-    -----------------------------------------------------
-    -- CLEAN VEHICLE AFTER PAINTING (SERVER-SAFE VERSION)
-    -----------------------------------------------------
-    local v = self.vehicle
-    if v and v:getId() then
-        local sv = getVehicleById(v:getId())
-
-        if sv then
-            -- Blood
-            if sv.setBloodIntensity and sv.getPartList then
-                local parts = sv:getPartList()
-                if parts then
-                    for i = 0, parts:size() - 1 do
-                        local part = parts:get(i)
-                        if part and part:getId() then
-                            sv:setBloodIntensity(part:getId(), 0)
-                        end
-                    end
-                end
-                if sv.transmitBlood then sv:transmitBlood() end
-            end
-
-            -- Dirt
-            if sv.setDirt then
-                sv:setDirt(0)
-                if sv.transmitDirt then sv:transmitDirt() end
-            end
-
-            -- Rust
-            if sv.setRust then
-                sv:setRust(0)
-                if sv.transmitRust then sv:transmitRust() end
-            end
-        end
     end
 
     -- Consume spraycan

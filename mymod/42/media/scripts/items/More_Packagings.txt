@@ -1,12 +1,59 @@
 module Base
 {
 
+/* Medical */
+
+    item AlcoholWipesBox
+    {
+        DisplayCategory     = FirstAid,
+        ItemType            = Normal,
+        Weight              = 3.0,
+        Icon                = GenericMedicalParcel2,
+        Medical             = true,
+        WorldStaticModel    = MedicalParcel_Green,
+        DoubleClickRecipe   = UnpackBoxOfAlcoholWipes,
+    }
+
+    craftRecipe PlaceAlcoholWipesInBox
+    {
+        timedAction     = PackingBox_Small,
+        time            = 30,
+        OnTest          = RecipeCodeOnTest.genericPacking,
+        OnCreate        = RecipeCodeOnCreate.placeInBox,
+        Tags            = InHandCraft;Packing,
+        category        = Packing,
+        inputs
+        {
+            item 50 [Base.AlcoholWipes],
+        }
+        outputs
+        {
+            item 1 Base.AlcoholWipesBox,
+        }
+    }
+
+    craftRecipe UnpackBoxOfAlcoholWipes
+    {
+        timedAction     = UnPackBox_Small,
+        time            = 50,
+        Tags            = InHandCraft;Packing;CanBeDoneInDark,
+        category        = Packing,
+        inputs
+        {
+            item 1 [Base.AlcoholWipesBox] flags[AllowFavorite;InheritFavorite],
+        }
+        outputs
+        {
+            item 10 Base.AlcoholWipes,
+        }
+    }
+
 /* Home and Carpentry */
 
     item HingesBox
     {
         DisplayCategory     = Material,
-        Type                = Normal,
+        ItemType            = base:normal,
         Weight              = 1,
         Icon                = Parcel_Small_Food,
         WorldStaticModel    = Parcel_Food_Small,
@@ -16,7 +63,7 @@ module Base
     item DoorknobsBox
     {
         DisplayCategory     = Material,
-        Type                = Normal,
+        ItemType            = base:normal,
         Weight              = 1,
         Icon                = Parcel_Small_Food,
         WorldStaticModel    = Parcel_Food_Small,
