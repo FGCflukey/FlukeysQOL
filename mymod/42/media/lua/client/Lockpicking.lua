@@ -95,19 +95,62 @@ local function clusterLocked(doors)
 end
 
 -------------------------------------------------
--- Tool checks
+-- Reliable recursive item search (42.20 safe)
+-------------------------------------------------
+
+local function findItemRecursive(container, itemTypes)
+    if not container then return nil end
+
+    if type(itemTypes) == "string" then
+        itemTypes = { itemTypes }
+    end
+
+    -- direct check
+    for _, t in ipairs(itemTypes) do
+        local item = container:getFirstType(t)
+        if item then return item end
+    end
+
+    -- nested containers
+    local items = container:getItems()
+    for i = 0, items:size() - 1 do
+        local obj = items:get(i)
+        if obj:IsInventoryContainer() then
+            local found = findItemRecursive(obj:getItemContainer(), itemTypes)
+            if found then return found end
+        end
+    end
+
+    return nil
+end
+
+-------------------------------------------------
+-- Tool checks (supports multitools)
 -------------------------------------------------
 
 local function hasLockpickTools(player)
     local inv = player:getInventory()
-    return inv:containsTypeRecurse("Screwdriver")
-       and inv:containsTypeRecurse("Paperclip")
+
+    local tool = findItemRecursive(inv, {
+        "Screwdriver",
+        "Base.Multitool",
+        "Base.SurvivorMultitool"
+    })
+
+    local paperclip = findItemRecursive(inv, "Paperclip")
+
+    return tool ~= nil and paperclip ~= nil
 end
 
 local function removeOnePaperclip(player)
     local inv = player:getInventory()
-    local pc = inv:getFirstTypeRecurse("Paperclip")
-    if pc then inv:Remove(pc) end
+    local pc = findItemRecursive(inv, "Paperclip")
+    if pc then
+        local container = pc:getContainer()
+        if container then
+            container:Remove(pc)
+        end
+    end
 end
 
 -------------------------------------------------
@@ -152,7 +195,7 @@ local function onPickLock(worldobjects, playerIndex)
     end
 
     if not hasLockpickTools(player) then
-        player:Say("I need a screwdriver and a paperclip.")
+        player:Say("I need a screwdriver or multitool, and a paperclip.")
         return
     end
 
@@ -162,7 +205,7 @@ local function onPickLock(worldobjects, playerIndex)
         LockpickTimedAction:new(
             player,
             door,
-            ZombRand(6, 11) * 30, -- 6–10 seconds
+            ZombRand(6, 11) * 30,
             function(player, door)
                 for _, d in ipairs(doors) do
                     unlockDoorObject(d)
@@ -204,7 +247,6 @@ local function onFillWorldObjectContextMenu(playerIndex, context, worldobjects, 
     if not hasLockpickTools(player) then return end
 
     context:addOption("Pick Lock", worldobjects, onPickLock, playerIndex)
-
 end
 
 Events.OnFillWorldObjectContextMenu.Add(onFillWorldObjectContextMenu)

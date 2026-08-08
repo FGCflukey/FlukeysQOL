@@ -3,7 +3,7 @@ module Base
 
     item CurezMagazine
     {
-        DisplayCategory         = SkillBook,
+        DisplayCategory         = RecipeResource,
         ItemType                = base:literature,
         Weight                  = 0.5,
         Icon                    = CurezMag,
@@ -15,7 +15,7 @@ module Base
         StaticModel             = Magazine,
         WorldStaticModel        = MagazineCureZ_Ground,
         Tags                    = base:magazine,
-        OnCreate                = SpecialLootSpawns.OnCreateRecipeMagazine,
+        OnCreate                = ItemCodeOnCreate.onCreateRecipeMagazine,
     }
 
     item ZombieMeat

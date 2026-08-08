@@ -1,12 +1,10 @@
 module Base
 {
 
-    fixing Patch Glove Box
+    fixing Fixing Glove Box
     {
         Require = Base.GloveBox1;Base.GloveBox2;Base.GloveBox3,
-
         GlobalItem = Base.Screws=4,
-
         ConditionModifier = 1.1,
 
         Fixer = Base.SmallSheetMetal=1;Mechanics=2,

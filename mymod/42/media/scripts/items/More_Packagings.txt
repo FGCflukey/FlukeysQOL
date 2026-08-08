@@ -14,39 +14,40 @@ module Base
         DoubleClickRecipe   = UnpackBoxOfAlcoholWipes,
     }
 
-    craftRecipe PlaceAlcoholWipesInBox
-    {
-        timedAction     = PackingBox_Small,
-        time            = 30,
-        OnTest          = RecipeCodeOnTest.genericPacking,
-        OnCreate        = RecipeCodeOnCreate.placeInBox,
-        Tags            = InHandCraft;Packing,
-        category        = Packing,
-        inputs
+        craftRecipe PlaceAlcoholWipesInBox
         {
-            item 50 [Base.AlcoholWipes],
+            timedAction     = PackingBox_Small,
+            time            = 30,
+            OnTest          = RecipeCodeOnTest.genericPacking,
+            OnCreate        = RecipeCodeOnCreate.placeInBox,
+            Tags            = InHandCraft;Packing,
+            category        = Packing,
+            inputs
+            {
+                item 50 [Base.AlcoholWipes],
+            }
+            outputs
+            {
+                item 1 Base.AlcoholWipesBox,
+            }
         }
-        outputs
-        {
-            item 1 Base.AlcoholWipesBox,
-        }
-    }
 
-    craftRecipe UnpackBoxOfAlcoholWipes
-    {
-        timedAction     = UnPackBox_Small,
-        time            = 50,
-        Tags            = InHandCraft;Packing;CanBeDoneInDark,
-        category        = Packing,
-        inputs
+        craftRecipe UnpackBoxOfAlcoholWipes
         {
-            item 1 [Base.AlcoholWipesBox] flags[AllowFavorite;InheritFavorite],
+            timedAction     = UnPackBox_Small,
+            time            = 50,
+            Tags            = InHandCraft;Packing;CanBeDoneInDark,
+            category        = Packing,
+            inputs
+            {
+                item 1 [Base.AlcoholWipesBox] flags[AllowFavorite;InheritFavorite],
+            }
+            outputs
+            {
+                item 10 Base.AlcoholWipes,
+            }
         }
-        outputs
-        {
-            item 10 Base.AlcoholWipes,
-        }
-    }
+
 
 /* Home and Carpentry */
 
@@ -57,6 +58,7 @@ module Base
         Weight              = 1,
         Icon                = Parcel_Small_Food,
         WorldStaticModel    = Parcel_Food_Small,
+        Tooltip             = Tooltip_HingesBox,
         Tags                = HasMetal;IgnoreZombieDensity,
     }
 
@@ -67,8 +69,76 @@ module Base
         Weight              = 1,
         Icon                = Parcel_Small_Food,
         WorldStaticModel    = Parcel_Food_Small,
+        Tooltip             = Tooltip_DoorknobsBox,
         Tags                = HasMetal;IgnoreZombieDensity,
     }
+
+        craftRecipe OpenBoxofHinges
+        {
+            timedAction             = UnPackBox,
+            Time                    = 15,
+            OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
+            Tags                    = InHandCraft;Packing,
+            recipeGroup             = OpenBox,
+            inputs
+            {
+                item 1 [Base.HingesBox] flags[AllowFavorite;InheritFavorite],
+            }
+            outputs
+            {
+                item 12 Base.Hinge,
+            }
+        }
+
+        craftRecipe OpenBoxofDoorknobs
+        {
+            timedAction             = UnPackBox,
+            Time                    = 15,
+            OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
+            Tags                    = InHandCraft;Packing,
+            recipeGroup             = OpenBox,
+            inputs
+            {
+                item 1 [Base.DoorknobsBox] flags[AllowFavorite;InheritFavorite],
+            }
+            outputs
+            {
+                item 12 Base.Doorknob,
+            }
+        }
+
+        craftRecipe MakeaBoxofHinges
+        {
+            timedAction         = PackingBox,
+            Time                = 15,
+            Tags                = InHandCraft;Packing,
+            category            = Packing,
+            inputs
+            {
+                item 10 [Base.Hinge] flags[AllowFavorite;InheritFavorite;ItemCount],
+            }
+            outputs
+            {
+                item 1 Base.HingesBox,
+            }
+        }
+
+        craftRecipe MakeaBoxofHinges
+        {
+            timedAction         = PackingBox,
+            Time                = 15,
+            Tags                = InHandCraft;Packing,
+            category            = Packing,
+            inputs
+            {
+                item 12 [Base.Doorknob] flags[AllowFavorite;InheritFavorite;ItemCount],
+            }
+            outputs
+            {
+                item 1 Base.DoorknobsBox,
+            }
+        }
+
 
 /* Engine Parts */
 
@@ -86,38 +156,38 @@ module Base
         Tooltip                 = Tooltip_item_BoxedEngineParts,
     }
 
-    craftRecipe OpenBoxofEngineParts
-    {
-        timedAction             = UnPackBox,
-        Time                    = 15,
-        OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
-        Tags                    = InHandCraft;Packing,
-        recipeGroup             = OpenBox,
-        inputs
+        craftRecipe OpenBoxofEngineParts
         {
-            item 1 [Base.BoxedEngineParts] flags[AllowFavorite;InheritFavorite],
+            timedAction             = UnPackBox,
+            Time                    = 15,
+            OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
+            Tags                    = InHandCraft;Packing,
+            recipeGroup             = OpenBox,
+            inputs
+            {
+                item 1 [Base.BoxedEngineParts] flags[AllowFavorite;InheritFavorite],
+            }
+            outputs
+            {
+                item 10 Base.EngineParts,
+            }
         }
-        outputs
-        {
-            item 10 Base.EngineParts,
-        }
-    }
 
-    craftRecipe MakeaBoxofEngineParts
-    {
-        timedAction         = PackingBox,
-        Time                = 15,
-        Tags                = InHandCraft;Packing,
-        category            = Packing,
-        inputs
+        craftRecipe MakeaBoxofEngineParts
         {
-            item 10 [Base.EngineParts] flags[AllowFavorite;InheritFavorite;ItemCount],
+            timedAction         = PackingBox,
+            Time                = 15,
+            Tags                = InHandCraft;Packing,
+            category            = Packing,
+            inputs
+            {
+                item 10 [Base.EngineParts] flags[AllowFavorite;InheritFavorite;ItemCount],
+            }
+            outputs
+            {
+                item 1 Base.BoxedEngineParts,
+            }
         }
-        outputs
-        {
-            item 1 Base.BoxedEngineParts,
-        }
-    }
 
 /* Electrical Stuff */
 
@@ -149,74 +219,70 @@ module Base
         Tooltip                 = Tooltip_item_BoxedElectricWire,
     }
 
-    craftRecipe OpenBoxofElectronicsScrap
-    {
-        timedAction             = UnPackBox,
-        Time                    = 15,
-        OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
-        Tags                    = InHandCraft;Packing,
-        recipeGroup             = OpenBox,
-        inputs
+        craftRecipe OpenBoxofElectronicsScrap
         {
-            item 1 [Base.BoxedElectronicsScrap] flags[AllowFavorite;InheritFavorite],
+            timedAction             = UnPackBox,
+            Time                    = 15,
+            OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
+            Tags                    = InHandCraft;Packing,
+            recipeGroup             = OpenBox,
+            inputs
+            {
+                item 1 [Base.BoxedElectronicsScrap] flags[AllowFavorite;InheritFavorite],
+            }
+            outputs
+            {
+                item 50 Base.ElectronicsScrap,
+            }
         }
-        outputs
-        {
-            item 50 Base.ElectronicsScrap,
-        }
-    }
 
-    craftRecipe MakeaBoxofElectronicsScrap
-    {
-        timedAction         = PackingBox,
-        Time                = 15,
-        Tags                = InHandCraft;Packing,
-        category            = Packing,
-        inputs
+        craftRecipe MakeaBoxofElectronicsScrap
         {
-            item 50 [Base.ElectronicsScrap] flags[AllowFavorite;InheritFavorite;ItemCount],
+            timedAction         = PackingBox,
+            Time                = 15,
+            Tags                = InHandCraft;Packing,
+            category            = Packing,
+            inputs
+            {
+                item 50 [Base.ElectronicsScrap] flags[AllowFavorite;InheritFavorite;ItemCount],
+            }
+            outputs
+            {
+                item 1 Base.BoxedElectronicsScrap,
+            }
         }
-        outputs
-        {
-            item 1 Base.BoxedElectronicsScrap,
-        }
-    }
 
-    /* --- Electric Wire Recipes --- */
-
-    craftRecipe OpenBoxofElectricWire
-    {
-        timedAction             = UnPackBox,
-        Time                    = 15,
-        OnCreate                = RecipeCodeOnCreate.unpackItemTypeFromBox,
-        Tags                    = InHandCraft;Packing,
-        recipeGroup             = OpenBox,
-        inputs
+        craftRecipe OpenBoxofElectricWire
         {
-            item 1 [Base.BoxedElectricWire] flags[AllowFavorite;InheritFavorite],
+            timedAction         = UnPackBox,
+            Time                = 15,
+            OnCreate            = RecipeCodeOnCreate.unpackItemTypeFromBox,
+            Tags                = InHandCraft;Packing,
+            recipeGroup         = OpenBox,
+            inputs
+            {
+                item 1 [Base.BoxedElectricWire] flags[AllowFavorite;InheritFavorite],
+            }
+            outputs
+            {
+                item 50 Base.ElectricWire,
+            }
         }
-        outputs
-        {
-            item 50 Base.ElectricWire,
-        }
-    }
 
-    craftRecipe MakeaBoxofElectricWire
-    {
-        timedAction         = PackingBox,
-        Time                = 15,
-        Tags                = InHandCraft;Packing,
-        category            = Packing,
-        inputs
+        craftRecipe MakeaBoxofElectricWire
         {
-            item 50 [Base.ElectricWire] flags[AllowFavorite;InheritFavorite;ItemCount],
+            timedAction         = PackingBox,
+            Time                = 15,
+            Tags                = InHandCraft;Packing,
+            category            = Packing,
+            inputs
+            {
+                item 50 [Base.ElectricWire] flags[AllowFavorite;InheritFavorite;ItemCount],
+            }
+            outputs
+            {
+                item 1 Base.BoxedElectricWire,
+            }
         }
-        outputs
-        {
-            item 1 Base.BoxedElectricWire,
-        }
-    }
-
-
 
 }

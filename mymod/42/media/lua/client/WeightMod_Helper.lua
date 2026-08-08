@@ -8,6 +8,8 @@ local customWeights = {
     ["Base.Twigs"] = 0.1,
     ["Base.Nails"] = 0.02,
     ["Base.Screws"] = 0.02,
+    ["Base.Hinge"] = 0.2,
+    ["Base.Doorknob"] = 0.2,
 }
 
 local function modifyWeight(itemName)

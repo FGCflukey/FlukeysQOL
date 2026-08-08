@@ -1,18 +1,17 @@
 --[[
-    Repairable Gloveboxes & Heaters
-    Timed action: welding-style heater repair.
+    Repairable Glovebox and Heater
+    A Timed action: Welding Heater repair.
 
     Built on top of The Indie Stone's ISBaseTimedAction (the standard PZ
-    pattern for queued character actions). The action equips a blowtorch,
-    plays the welding animation, emits noise, then forwards a parameterized
+    pattern for queued character actions). Purpose to forward a parameterized
     "repairHeater" message to the server when it completes.
 ]]
 
 require "TimedActions/ISBaseTimedAction"
 
-RGHHeaterRepairAction = ISBaseTimedAction:derive("RGHHeaterRepairAction")
+QOLHeaterRepairAction = ISBaseTimedAction:derive("QOLHeaterRepairAction")
 
-local NET_MODULE    = "RGH_vehicle"
+local NET_MODULE    = "QOL_vehicle"
 local NET_COMMAND   = "repairHeater"
 local SOUND_BASE_R  = 20
 
@@ -53,7 +52,7 @@ end
 ----------------------------------------------------------------
 -- Constructor
 ----------------------------------------------------------------
-function RGHHeaterRepairAction:new(character, part, blowtorch, mask, duration, materials, targetCondition)
+function QOLHeaterRepairAction:new(character, part, blowtorch, mask, duration, materials, targetCondition)
     local instance = setmetatable({}, self)
     self.__index = self
 
@@ -79,10 +78,10 @@ function RGHHeaterRepairAction:new(character, part, blowtorch, mask, duration, m
 end
 
 ----------------------------------------------------------------
--- Lifecycle
+-- Life cycle
 ----------------------------------------------------------------
 
-function RGHHeaterRepairAction:isValid()
+function QOLHeaterRepairAction:isValid()
     -- Must have vehicle + part
     if not self.vehicle or not self.part then return false end
 
@@ -113,19 +112,19 @@ function RGHHeaterRepairAction:isValid()
     return true
 end
 
-function RGHHeaterRepairAction:waitToStart()
+function QOLHeaterRepairAction:waitToStart()
     self.character:faceThisObject(self.vehicle)
     return self.character:shouldBeTurning()
 end
 
-function RGHHeaterRepairAction:update()
+function QOLHeaterRepairAction:update()
     self.character:faceThisObject(self.vehicle)
     self.blowtorch:setJobDelta(self:getJobDelta())
     self.character:setMetabolicTarget(Metabolics.LightWork)
 end
 
 -- ✔ FIXED animation: "Craft" works in B41/B42
-function RGHHeaterRepairAction:start()
+function QOLHeaterRepairAction:start()
     self.blowtorch:setJobType(self.jobType)
 
     self:setActionAnim(ANIM_NAME)
@@ -139,12 +138,12 @@ function RGHHeaterRepairAction:start()
         r, r)
 end
 
-function RGHHeaterRepairAction:stop()
+function QOLHeaterRepairAction:stop()
     hushTorch(self)
     ISBaseTimedAction.stop(self)
 end
 
-function RGHHeaterRepairAction:perform()
+function QOLHeaterRepairAction:perform()
     hushTorch(self)
 
     sendClientCommand(self.character, NET_MODULE, NET_COMMAND, {

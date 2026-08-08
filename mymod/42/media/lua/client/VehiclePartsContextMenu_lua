@@ -1,9 +1,8 @@
 --========================================================--
 --  Make Vehicle Parts - Right Click Submenu
---  Auto‑generated from your recipe file
 --========================================================--
 
-local function craft(recipeName, player)
+local function craft(target, recipeName, player)
     ISInventoryPaneContextMenu.onCraft(recipeName, player)
 end
 
@@ -84,16 +83,16 @@ local function addSubMenu(context, title, entries, player)
     end
 end
 
-Events.OnFillWorldObjectContextMenu.Add(function(player, context, worldobjects, test)
-    -- Only show if player has welding mask + blowtorch in inventory
-    local inv = getSpecificPlayer(player):getInventory()
+Events.OnFillWorldObjectContextMenu.Add(function(playerIndex, context, worldobjects, test)
+    if test then return end
 
-    -- Check for actual items, not tags (most reliable)
-    if not inv:containsTypeRecurse("WeldingMask") then return end
-    if not inv:containsTypeRecurse("BlowTorch") then return end
-    if not inv:containsTypeRecurse("SheetMetal") then return end
+    local player = getSpecificPlayer(playerIndex)
+    if not player then return end
 
-    -- Main parent menu
+    -- Always show the menu; vanilla crafting will handle missing-ingredient
+    -- feedback when the player actually attempts to craft. This avoids
+    -- relying on CraftRecipeManager introspection that's proven unreliable
+    -- to guess correctly on this build.
     local root = context:addOption("Make Vehicle Parts")
     local rootMenu = ISContextMenu:getNew(context)
     context:addSubMenu(root, rootMenu)

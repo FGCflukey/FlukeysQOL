@@ -5,6 +5,7 @@ module Base
     {
         WeightReduction             = 100,
         Weight                      = 6,
+        Type                        = Normal,
         ItemType                    = Container,
         Capacity                    = 100,
         Icon                        = HCToywagon,
@@ -12,12 +13,14 @@ module Base
         StaticModel                 = HCToywagon,
         WorldStaticModel            = HCToywagonfolded,
         RequiresEquippedBothHands   = FALSE,
+        CanBeEquipped               = Secondary,
     }
 
     item HCHanddolly
     {
         WeightReduction             = 100,
         Weight                      = 7,
+        Type                        = Normal,
         ItemType                    = Container,
         Capacity                    = 150,
         Icon                        = HCHanddolly,
@@ -25,6 +28,6 @@ module Base
         StaticModel                 = HCHanddolly,
         WorldStaticModel            = HCHanddolly,
         RequiresEquippedBothHands   = FALSE,
+        CanBeEquipped               = Secondary,
     }
-
 }

@@ -2,7 +2,7 @@
 -- Adds heater repair option + restores glovebox fixing recipes.
 
 require "Vehicles/ISUI/ISVehicleMechanics"
-require "RGH/HeaterRepairAction"
+require "QOL/HeaterRepairAction"
 require "ISUI/ISInventoryPaneContextMenu"
 
 ------------------------------------------------------------
@@ -109,7 +109,7 @@ local function addHeaterRepairOption(self, part)
         player:faceThisObject(part:getVehicle())
 
         ISTimedActionQueue.add(
-            RGHHeaterRepairAction:new(player, part, blowtorch, mask, duration, mats, targetCond)
+            QOLHeaterRepairAction:new(player, part, blowtorch, mask, duration, mats, targetCond)
         )
     end, playerObj, part, blowtorch, mask, targetCond)
 

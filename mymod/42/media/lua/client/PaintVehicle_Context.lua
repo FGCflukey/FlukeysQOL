@@ -54,7 +54,7 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
     -----------------------------------------------------
     -- DEBUG PRINT EVERY TIME YOU RIGHT-CLICK
     -----------------------------------------------------
-    PV_debugVehicleState(vehicle)
+--    PV_debugVehicleState(vehicle)
 
     -----------------------------------------------------
     -- NEW: Block repaint if vehicle is dirty/bloody

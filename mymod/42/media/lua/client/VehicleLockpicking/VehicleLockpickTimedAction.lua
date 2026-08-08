@@ -97,7 +97,12 @@ function VehicleLockpickTimedAction:perform()
             self.character:Say("The paperclip snapped.")
             local inv = self.character:getInventory()
             local pc = inv:getFirstTypeRecurse("Paperclip")
-            if pc then inv:Remove(pc) end
+            if pc then
+                local container = pc:getContainer()
+                if container then
+                    container:Remove(pc)
+                end
+            end
         else
             self.character:Say("The paperclip held.")
         end

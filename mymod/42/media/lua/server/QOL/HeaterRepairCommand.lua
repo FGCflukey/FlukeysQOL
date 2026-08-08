@@ -10,14 +10,14 @@
 
 if isClient() then return end
 
-local NET_MODULE = "RGH_vehicle"
+local NET_MODULE = "QOL_vehicle"
 
 ----------------------------------------------------------------
 -- Utility helpers
 ----------------------------------------------------------------
 
 -- Try a list of "getters" against a list of subjects until one returns a
--- positive number. Used to pull the conditionMax from either the part or
+-- positive number. Pulls the conditionMax from either the part or
 -- its installed inventory item, whichever exposes the API.
 local function firstPositive(subjects, methodName, fallback)
     for s = 1, #subjects do
@@ -39,7 +39,7 @@ local function maxConditionOf(part)
 end
 
 -- Drain `amount` uses from whatever drainable the player is currently
--- holding. Stops early if the item runs out.
+-- holding. Stops early if the item exhausted.
 local function drainHeldDrainable(player, amount)
     local held = player:getPrimaryHandItem()
     if held == nil or held.Use == nil then

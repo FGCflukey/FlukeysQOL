@@ -43,7 +43,7 @@ local qolMedsDistribTable = {
     "Base.BoxedLabTestTubes",  8.0,
     "Base.EmptySyringe",       12.0,
     "Base.LabTestTube",        9.0,
-    "Base.CurezMagazine",      6.0,
+    "Base.CurezMagazine",      3.0,
 }
 
 -- Storage Items
@@ -54,14 +54,18 @@ local qolStorageDistribTable = {
 
 -- Weapons
 local qolWeapDistribTable = {
-    "Base.cfcombataxe",         8.5,
-    "Base.cflongreachaxe",      8.5,
+    "Base.cfcombataxe",         5.0,
+    "Base.cflongreachaxe",      5.0,
 }
 
 -- Car / Mechanics
 local qolCarDistribTable = {
-    "Base.BoxedEngineParts",    9.0,
+    "Base.BoxedEngineParts",    7.0,
     "Base.SandingBlock",        7.0,
+    "Base.BrakeKit",            4.0,
+    "Base.SuspensionKit",       4.0,
+    "Base.MufflerPatchKit",     4.0,
+    "Base.TireRepairKit",       4.0,
 }
 
 -- Spray Cans

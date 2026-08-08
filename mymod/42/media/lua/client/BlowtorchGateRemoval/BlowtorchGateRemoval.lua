@@ -82,7 +82,7 @@ function BlowtorchGateRemoval.onFillWorldObjectContextMenu(playerNum, context, w
     end
 
     if gateObj and playerHasRequirements(player) then
-        context:addOption("Cut Through Gate", worldobjects, BlowtorchGateRemoval.startCutting, player, player:getSquare(), gateObj)
+        context:addOption("Cut Down Gate", worldobjects, BlowtorchGateRemoval.startCutting, player, player:getSquare(), gateObj)
     end
 end
 
