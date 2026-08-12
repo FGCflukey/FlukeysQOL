@@ -4,6 +4,64 @@
 require "PaintVehicle_Action"
 
 -----------------------------------------------------
+-- WEATHER CHECK
+-----------------------------------------------------
+local function PV_isBadWeather()
+    local climate = getClimateManager()
+
+    if climate:getRainIntensity() > 0 then return true end
+    if climate:getSnowIntensity() > 0 then return true end
+    if climate:getFogIntensity() > 0 then return true end
+
+    -- Thunderstorm detection (compatible with your build)
+    local storm = climate:getThunderStorm()
+    if storm and storm.active then return true end
+
+    return false
+end
+
+-----------------------------------------------------
+-- LIGHTING CHECK
+-----------------------------------------------------
+local function PV_hasEnoughLight(character)
+    local square = character:getSquare()
+    if not square then return false end
+
+    local playerIndex = character:getPlayerNum()
+
+    -- Indoors: must have some light
+    if not square:isOutside() then
+        return square:getLightLevel(playerIndex) > 0.3
+    end
+
+    -- Outdoors
+    local climate = getClimateManager()
+    local isNight = climate:getNightStrength() > 0.5
+
+    -- Daytime outdoors always OK
+    if not isNight then
+        return true
+    end
+
+    -- Night outdoors: must have strong artificial light
+    return square:getLightLevel(playerIndex) > 0.6
+end
+
+-----------------------------------------------------
+-- CLIMATE DEBUG
+-----------------------------------------------------
+local function PV_debugClimate()
+    local c = getClimateManager()
+    print("---- Climate Debug ----")
+    print("Rain:", c:getRainIntensity())
+    print("Snow:", c:getSnowIntensity())
+    print("Fog:", c:getFogIntensity())
+    print("Storm:", c:getThunderStorm())
+    print("NightStrength:", c:getNightStrength())
+    print("------------------------")
+end
+
+-----------------------------------------------------
 -- CLEANLINESS CHECK (correct blood-area system)
 -----------------------------------------------------
 local function PV_needsCleaning(vehicle)
@@ -52,12 +110,7 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
     if not vehicle then return end
 
     -----------------------------------------------------
-    -- DEBUG PRINT EVERY TIME YOU RIGHT-CLICK
-    -----------------------------------------------------
---    PV_debugVehicleState(vehicle)
-
-    -----------------------------------------------------
-    -- NEW: Block repaint if vehicle is dirty/bloody
+    -- CLEANLINESS BLOCK
     -----------------------------------------------------
     if PV_needsCleaning(vehicle) then
         playerObj:Say("I think I should wash it first.")
@@ -65,14 +118,80 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
     end
 
     -----------------------------------------------------
-    -- Script Name
+    -- REQUIRED ITEMS FIRST
     -----------------------------------------------------
+    local inv = playerObj:getInventory()
+
+    -- Must have sanding block
+    if not inv:contains("SandingBlock") then
+        return
+    end
+
+    -- Must have at least one spraycan
+    local SpraycanItems = {
+        White = "Base.SpraycanWhite",
+        Black = "Base.SpraycanBlack",
+        Gray = "Base.SpraycanGray",
+        DarkGray = "Base.SpraycanDarkGray",
+        Red = "Base.SpraycanRed",
+        Blue = "Base.SpraycanBlue",
+        Green = "Base.SpraycanGreen",
+        Yellow = "Base.SpraycanYellow",
+        Orange = "Base.SpraycanOrange",
+        Purple = "Base.SpraycanPurple",
+        PastelBlue = "Base.SpraycanPastelBlue",
+        PastelPink = "Base.SpraycanPastelPink",
+        PastelGreen = "Base.SpraycanPastelGreen",
+        PastelYellow = "Base.SpraycanPastelYellow",
+        Mauve = "Base.SpraycanMauve",
+        Brown = "Base.SpraycanBrown",
+        Tan = "Base.SpraycanTan",
+        Olive = "Base.SpraycanOlive",
+        ForestGreen = "Base.SpraycanForestGreen",
+        Pink = "Base.SpraycanPink",
+        Cyan = "Base.SpraycanCyan",
+    }
+
+    local hasAnySpraycan = false
+    for _, itemName in pairs(SpraycanItems) do
+        if inv:containsTypeRecurse(itemName) then
+            hasAnySpraycan = true
+            break
+        end
+    end
+
+    if not hasAnySpraycan then
+        return
+    end
+
+    -----------------------------------------------------
+    -- WEATHER BLOCK
+    -----------------------------------------------------
+
+    -- PV_debugClimate()  -- DEBUG PRINT
+
+    if PV_isBadWeather() then
+        playerObj:Say("I can't paint in this weather.")
+        return
+    end
+
+    -----------------------------------------------------
+    -- LIGHT BLOCK
+    -----------------------------------------------------
+    if not PV_hasEnoughLight(playerObj) then
+        playerObj:Say("It's too dark to paint.")
+        return
+    end
+
+    -----------------------------------------------------
+    -- (Rest of your file unchanged)
+    -----------------------------------------------------
+
+    -- Script Name
     local script = vehicle:getScript()
     local scriptName = script and script:getName() or ""
 
-    -----------------------------------------------------
-    -- Blocklist (keyword-based)
-    -----------------------------------------------------
+    -- Blocklist
     local blockedKeywords = {
         "Ambulance","Blacksmith","Burnt","Butchers","Cereal","CraftSupplies",
         "Fire","Florist","Fossoil","_Glass","Genuine_Beer","Gigamart","Greenes",
@@ -99,9 +218,7 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
         return
     end
 
-    -----------------------------------------------------
-    -- Check for "Vehicle" submenu
-    -----------------------------------------------------
+    -- Vehicle submenu detection
     local hasVehicleSubmenu = false
     if context and context.getOptionFromIndex and context.getOptionCount then
         local count = context:getOptionCount()
@@ -116,9 +233,7 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
         end
     end
 
-    -----------------------------------------------------
-    -- Fallback: allow repaint if HSV + no texture mask
-    -----------------------------------------------------
+    -- Fallback HSV repaint
     local allowRepaint = hasVehicleSubmenu
 
     if not allowRepaint then
@@ -132,65 +247,12 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
 
     if not allowRepaint then return end
 
-    -----------------------------------------------------
-    -- SPRAYCAN LOOKUP TABLE
-    -----------------------------------------------------
-    local SpraycanItems = {
-        White = "Base.SpraycanWhite",
-        Black = "Base.SpraycanBlack",
-        Gray = "Base.SpraycanGray",
-        DarkGray = "Base.SpraycanDarkGray",
-        Red = "Base.SpraycanRed",
-        Blue = "Base.SpraycanBlue",
-        Green = "Base.SpraycanGreen",
-        Yellow = "Base.SpraycanYellow",
-        Orange = "Base.SpraycanOrange",
-        Purple = "Base.SpraycanPurple",
-        PastelBlue = "Base.SpraycanPastelBlue",
-        PastelPink = "Base.SpraycanPastelPink",
-        PastelGreen = "Base.SpraycanPastelGreen",
-        PastelYellow = "Base.SpraycanPastelYellow",
-        Mauve = "Base.SpraycanMauve",
-        Brown = "Base.SpraycanBrown",
-        Tan = "Base.SpraycanTan",
-        Olive = "Base.SpraycanOlive",
-        ForestGreen = "Base.SpraycanForestGreen",
-        Pink = "Base.SpraycanPink",
-        Cyan = "Base.SpraycanCyan",
-    }
-
-    -----------------------------------------------------
-    -- Check if player has ANY spraycan
-    -----------------------------------------------------
-    local inv = playerObj:getInventory()
-    local hasAnySpraycan = false
-
-    for _, itemName in pairs(SpraycanItems) do
-        if inv:containsTypeRecurse(itemName) then
-            hasAnySpraycan = true
-            break
-        end
-    end
-
-    if not hasAnySpraycan then return end
-
-    -----------------------------------------------------
-    -- NEW REQUIREMENT: Must have Sanding Block
-    -----------------------------------------------------
-    if not inv:contains("SandingBlock") then
-        return
-    end
-
-    -----------------------------------------------------
-    -- MAIN OPTION
-    -----------------------------------------------------
+    -- Main option
     local mainOption = context:addOption("Repaint Vehicle", worldobjects, nil)
     local repaintMenu = ISContextMenu:getNew(context)
     context:addSubMenu(mainOption, repaintMenu)
 
-    -----------------------------------------------------
-    -- COLOR DEFINITIONS
-    -----------------------------------------------------
+    -- Color definitions
     local ColorValues = {
         White={0.00,0.00,1.00}, Black={0.00,0.00,0.10},
         Gray={0.00,0.00,0.50}, DarkGray={0.00,0.00,0.32},
@@ -209,9 +271,6 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
         Pink={0.92,0.88,1.00}, Cyan={0.50,0.94,0.86},
     }
 
-    -----------------------------------------------------
-    -- CALLBACKS
-    -----------------------------------------------------
     local function onChooseColor(_, playerObj, vehicle, hsv, spraycanItem)
         ISTimedActionQueue.add(
             ISPaintVehicleAction:new(playerObj, vehicle, hsv, spraycanItem, scriptName)
@@ -229,9 +288,6 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
         )
     end
 
-    -----------------------------------------------------
-    -- FLAT LIST OF COLORS
-    -----------------------------------------------------
     for colorName, hsv in pairs(ColorValues) do
         local sprayItemType = SpraycanItems[colorName]
         if sprayItemType then

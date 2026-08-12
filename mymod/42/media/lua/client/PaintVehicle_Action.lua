@@ -4,6 +4,64 @@
 require "TimedActions/ISBaseTimedAction"
 
 -----------------------------------------------------
+-- WEATHER CHECK
+-----------------------------------------------------
+local function PV_isBadWeather()
+    local climate = getClimateManager()
+
+    if climate:getRainIntensity() > 0 then return true end
+    if climate:getSnowIntensity() > 0 then return true end
+    if climate:getFogIntensity() > 0 then return true end
+
+    -- Thunderstorm detection (compatible with your build)
+    local storm = climate:getThunderStorm()
+    if storm and storm.active then return true end
+
+    return false
+end
+
+-----------------------------------------------------
+-- LIGHTING CHECK
+-----------------------------------------------------
+local function PV_hasEnoughLight(character)
+    local square = character:getSquare()
+    if not square then return false end
+
+    local playerIndex = character:getPlayerNum()
+
+    -- Indoors: must have some light
+    if not square:isOutside() then
+        return square:getLightLevel(playerIndex) > 0.3
+    end
+
+    -- Outdoors
+    local climate = getClimateManager()
+    local isNight = climate:getNightStrength() > 0.5
+
+    -- Daytime outdoors always OK
+    if not isNight then
+        return true
+    end
+
+    -- Night outdoors: must have strong artificial light
+    return square:getLightLevel(playerIndex) > 0.6
+end
+
+-----------------------------------------------------
+-- CLIMATE DEBUG
+-----------------------------------------------------
+local function PV_debugClimate()
+    local c = getClimateManager()
+    print("---- Climate Debug ----")
+    print("Rain:", c:getRainIntensity())
+    print("Snow:", c:getSnowIntensity())
+    print("Fog:", c:getFogIntensity())
+    print("Storm:", c:getThunderStorm())
+    print("NightStrength:", c:getNightStrength())
+    print("------------------------")
+end
+
+-----------------------------------------------------
 -- LARGE VEHICLE CHECK
 -----------------------------------------------------
 local function PV_isLargeVehicle(name)
@@ -15,7 +73,7 @@ local function PV_isLargeVehicle(name)
 end
 
 -----------------------------------------------------
--- BLOOD-AREA CLEANLINESS CHECK (correct system)
+-- BLOOD CLEANLINESS CHECK
 -----------------------------------------------------
 local function PV_vehicleIsBloody(vehicle)
     if not vehicle or not vehicle.getBloodIntensity then
@@ -39,14 +97,34 @@ function ISPaintVehicleAction:isValid()
     if not self.vehicle or self.vehicle:isRemovedFromWorld() then return false end
     if not self.character or self.character:isDead() then return false end
 
-    -- Must have spraycan
+    -----------------------------------------------------
+    -- REQUIRED ITEMS FIRST
+    -----------------------------------------------------
     if self.spraycan then
         if self.spraycan:getCurrentUses() <= 0 then return false end
         if not self.character:getInventory():contains(self.spraycan) then return false end
     end
 
-    -- Must have sanding block
     if not self.character:getInventory():contains("SandingBlock") then
+        return false
+    end
+
+    -----------------------------------------------------
+    -- WEATHER BLOCK
+    -----------------------------------------------------
+
+    -- PV_debugClimate()  -- DEBUG PRINT
+
+    if PV_isBadWeather() then
+        self.character:Say("The weather is too bad to paint.")
+        return false
+    end
+
+    -----------------------------------------------------
+    -- LIGHT BLOCK
+    -----------------------------------------------------
+    if not PV_hasEnoughLight(self.character) then
+        self.character:Say("I need more light to paint.")
         return false
     end
 
@@ -69,18 +147,12 @@ end
 function ISPaintVehicleAction:update()
     self.character:faceThisObject(self.vehicle)
 
-    -----------------------------------------------------
-    -- CLEANLINESS CHECK (correct blood-area logic)
-    -----------------------------------------------------
     if PV_vehicleIsBloody(self.vehicle) then
         self.character:Say("I think I should wash it first.")
         self:forceStop()
         return
     end
 
-    -----------------------------------------------------
-    -- ORIGINAL UPDATE LOGIC
-    -----------------------------------------------------
     local emitter = self.character:getEmitter()
     if emitter and self.loopSound and not emitter:isPlaying(self.loopSound) then
         self.loopSound = emitter:playSound("PaintVehicleSpray")
@@ -102,13 +174,11 @@ function ISPaintVehicleAction:perform()
         emitter:stopSound(self.loopSound)
     end
 
-    -- Apply color
     if self.hsv and self.vehicle then
         self.vehicle:setColorHSV(self.hsv[1], self.hsv[2], self.hsv[3])
         self.vehicle:transmitColorHSV()
     end
 
-    -- Consume spraycan
     if self.spraycan then
         local maxUses = self.spraycan:getMaxUses()
         local before  = self.spraycan:getCurrentUses()

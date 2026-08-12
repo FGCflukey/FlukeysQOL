@@ -178,9 +178,9 @@ function SwapVehicle_Server_Handle(player, args)
     local oldTankCondition = oldTankItem and oldTankItem:getCondition()
     local oldTankFuel = oldTankPart and oldTankPart:getContainerContentAmount()
 
-    print("[SwapVehicle] Old tank item: " .. tostring(oldTankType))
-    print("[SwapVehicle] Old tank condition: " .. tostring(oldTankCondition))
-    print("[SwapVehicle] Old tank fuel: " .. tostring(oldTankFuel))
+    -- print("[SwapVehicle] Old tank item: " .. tostring(oldTankType))
+    -- print("[SwapVehicle] Old tank condition: " .. tostring(oldTankCondition))
+    -- print("[SwapVehicle] Old tank fuel: " .. tostring(oldTankFuel))
 
     --------------------------------------------------------
     -- Capture battery
@@ -205,7 +205,7 @@ function SwapVehicle_Server_Handle(player, args)
     end
 
     --------------------------------------------------------
-    -- Save position + rotation (SAFE)
+    -- Save position + rotation (SAFE) -- must all happen BEFORE removal
     --------------------------------------------------------
     local x, y, z = vehicle:getX(), vehicle:getY(), vehicle:getZ()
 
@@ -224,6 +224,12 @@ function SwapVehicle_Server_Handle(player, args)
         forward = vehicle:getForwardDirection()
     end
 
+    -- Capture quaternion rotation from OLD vehicle (must happen before permanentlyRemove)
+    local rot = nil
+    if vehicle.getWorldRotation then
+        rot = vehicle:getWorldRotation()
+    end
+
     --------------------------------------------------------
     -- Remove old vehicle
     --------------------------------------------------------
@@ -232,20 +238,22 @@ function SwapVehicle_Server_Handle(player, args)
     --------------------------------------------------------
     -- Spawn new vehicle
     --------------------------------------------------------
-    local newVehicle = addVehicle(newScript, x, y, z)
+    local spawnSquare = getCell():getGridSquare(math.floor(x), math.floor(y), math.floor(z))
+    if not spawnSquare then
+        -- print("[SwapVehicle] ERROR: No valid grid square at " .. tostring(x) .. "," .. tostring(y) .. "," .. tostring(z))
+        return
+    end
+
+    -- print("[SwapVehicle] Attempting addVehicleDebug with script: '" .. tostring(newScript) .. "'")
+    local newVehicle = addVehicleDebug(newScript, IsoDirections.N, nil, spawnSquare)
+    -- print("[SwapVehicle] addVehicleDebug returned: " .. tostring(newVehicle))
     if not newVehicle then return end
 
     local newVehicleId = newVehicle:getId()
 
     --------------------------------------------------------
-    -- Force new vehicle to old transform (Quaternion‑Based)
+    -- Force new vehicle to old transform (Quaternion-Based)
     --------------------------------------------------------
-
-    -- Capture quaternion rotation from old vehicle
-    local rot = nil
-    if vehicle.getWorldRotation then
-        rot = vehicle:getWorldRotation()
-    end
 
     -- Apply position
     if newVehicle.setX then newVehicle:setX(x) end
@@ -256,7 +264,7 @@ function SwapVehicle_Server_Handle(player, args)
         newVehicle:setWorldPos(x, y, z)
     end
 
-    -- Apply rotation using quaternion
+    -- Apply rotation using quaternion captured from the old vehicle
     if rot and newVehicle.setWorldRotation then
         newVehicle:setWorldRotation(rot)
     end
@@ -330,10 +338,10 @@ function SwapVehicle_Server_Handle(player, args)
         local newTankPart = newVehicle:getPartById("GasTank")
 
         if newTankPart then
-            print("[SwapVehicle] Removing new car's default tank item")
+            -- print("[SwapVehicle] Removing new car's default tank item")
             newTankPart:setInventoryItem(nil)
 
-            print("[SwapVehicle] Installing tank item: " .. tostring(oldTankType))
+            -- print("[SwapVehicle] Installing tank item: " .. tostring(oldTankType))
             local newTankItem = instanceItem(oldTankType)
 
             if newTankItem then
@@ -341,10 +349,10 @@ function SwapVehicle_Server_Handle(player, args)
                 newTankPart:setInventoryItem(newTankItem)
                 newTankPart:setContainerContentAmount(oldTankFuel or 0)
 
-                print("[SwapVehicle] Tank condition restored: " .. tostring(oldTankCondition))
-                print("[SwapVehicle] Tank fuel restored: " .. tostring(oldTankFuel))
+                -- print("[SwapVehicle] Tank condition restored: " .. tostring(oldTankCondition))
+                -- print("[SwapVehicle] Tank fuel restored: " .. tostring(oldTankFuel))
             else
-                print("[SwapVehicle] ERROR: Failed to create tank item " .. tostring(oldTankType))
+                -- print("[SwapVehicle] ERROR: Failed to create tank item " .. tostring(oldTankType))
             end
         else
             print("[SwapVehicle] ERROR: New vehicle has no GasTank part")
