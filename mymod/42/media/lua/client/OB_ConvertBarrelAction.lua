@@ -145,18 +145,18 @@ function OB_ConvertBarrelAction:perform()
     if not self.barrel then
         OBFLog("perform: barrel is nil, aborting conversion")
     else
-        -- The actual mutation happens server-side (see OrangeBarrelFluid_Server.lua)
-        -- so it's authoritative and syncs correctly to every client.
+        -- The actual mutation happens server-side (see OrangeBarrelFluid_Server.lua).
+        -- We identify the barrel by square, not by object-list index — that list's
+        -- order isn't guaranteed to match between client and server at the moment
+        -- the command arrives, which caused index-based lookups to fail sometimes.
         local square = self.barrel:getSquare()
-        local objects = square and square:getObjects()
-        local index = objects and objects:indexOf(self.barrel) or -1
-        if square and index >= 0 then
-            OBFLog("perform: requesting server conversion, index =", index)
+        if square then
+            OBFLog("perform: requesting server conversion at", square:getX(), square:getY(), square:getZ())
             sendClientCommand(self.character, "OrangeBarrelFluid", "convert", {
-                x = square:getX(), y = square:getY(), z = square:getZ(), index = index
+                x = square:getX(), y = square:getY(), z = square:getZ()
             })
         else
-            OBFLog("perform: could not locate barrel on its square, aborting")
+            OBFLog("perform: barrel has no square, aborting")
         end
     end
 

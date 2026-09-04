@@ -182,6 +182,8 @@ function OrangeBarrelFluid.AddFluidComponent(barrel)
         OBFLog("AddFluidComponent: fallback modData applied")
     end
 
+    pcall(function() barrel:setName("Gas Barrel") end)
+
     return true
 end
 
@@ -258,6 +260,8 @@ function OrangeBarrelFluid.RemoveFluidComponent(barrel)
     md.OB_FluidCapacity = nil
     md.OB_FluidName = nil
     OBFLog("RemoveFluidComponent: cleared modData fallback")
+
+    pcall(function() barrel:setName("") end)
 
     --------------------------------------------------
     -- Sync

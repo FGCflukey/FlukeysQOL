@@ -14,19 +14,25 @@ local function findBarrel(args)
         return nil
     end
 
+    -- Scan for the barrel by sprite rather than trusting a client-supplied
+    -- object-list index: that list's order isn't guaranteed to match between
+    -- client and server at the moment the command arrives. This mirrors how
+    -- the client's own context menu already picks a target barrel.
     local objects = square:getObjects()
-    if not objects or args.index == nil or args.index < 0 or args.index >= objects:size() then
-        OBSLog("findBarrel: invalid index", tostring(args.index))
+    if not objects then
+        OBSLog("findBarrel: square has no objects")
         return nil
     end
 
-    local obj = objects:get(args.index)
-    if not obj or not OrangeBarrelFluid.IsOrangeBarrel(obj) then
-        OBSLog("findBarrel: object at index is not an orange barrel")
-        return nil
+    for i = 0, objects:size() - 1 do
+        local obj = objects:get(i)
+        if obj and OrangeBarrelFluid.IsOrangeBarrel(obj) then
+            return obj, square
+        end
     end
 
-    return obj, square
+    OBSLog("findBarrel: no orange barrel found on square")
+    return nil
 end
 
 local function isPlayerAdjacent(player, square)
