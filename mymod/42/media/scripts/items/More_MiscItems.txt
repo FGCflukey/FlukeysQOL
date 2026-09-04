@@ -623,19 +623,47 @@ module Base
         }
     }
 
-    craftRecipe MakeWoodGlue
+    craftRecipe MakeSuperGlue
     {
-        TimedAction     = Making,
-        Time            = 120,
-        tags            = AnySurfaceCraft,
+        timedAction     = Making,
+        time            = 300,
+        Tags            = InHandCraft;CanBeDoneFromFloor;Survivalist,
         category        = Essentials,
+        NeedToBeLearn   = false,
         inputs
         {
-            item 1 [Base.Saucepan;Base.Pot] mode:keep,
-            -fluid 0.2 [Water;TaintedWater],
+            item 1 [Base.Plank;Base.UnusableWood],
+            item 1 tags[base:saw;base:smallsaw;base:crudesaw] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[MayDegradeVeryLight],
+            item 1 [Base.Flour],
             item 1 [Base.Matches] mode:keep,
-            item 2 [Base.UnusableWood;Base.Plank],
-            item 2 [Base.SheetPaper2],
+            -fluid 0.2 [Water;TaintedWater],
+            item 1 [Base.Glue],
+            item 1 [Base.Vinegar],
+        }
+        outputs
+        {
+            item 1 Base.Superglue,
+        }
+    }
+
+    craftRecipe MakeWoodGlue
+    {
+        timedAction     = Making,
+        time            = 300,
+        Tags            = InHandCraft;CanBeDoneFromFloor;Survivalist,
+        category        = Essentials,
+        NeedToBeLearn   = false,
+        inputs
+        {
+            item 1 [Base.Plank;Base.UnusableWood],
+            item 1 tags[base:saw;base:smallsaw;base:crudesaw] mode:keep flags[MayDegradeLight],
+            item 1 tags[base:hammer;base:clubhammer] mode:keep flags[MayDegradeVeryLight],
+            item 1 [Base.Charcoal],
+            item 1 [Base.Matches] mode:keep,
+            item 1 [Base.Flour],
+            -fluid 0.2 [Water;TaintedWater],
+            item 1 [Base.Vinegar],
         }
         outputs
         {
@@ -798,6 +826,77 @@ module Base
         outputs
         {
             item 1 damnCraft.RubberStrip,
+        }
+    }
+
+    /***    Converted B41 Recipes     ***/
+
+    craftRecipe MakeWeldingMask
+    {
+        timedAction     = MakeWeldingMaskAction,
+        time            = 150,
+        Tags            = InHandCraft;Welding,
+        category        = Welding,
+        xpAward         = MetalWelding:20,
+        inputs
+        {
+            item 4 [Base.SmallSheetMetal],
+            item 5 [Base.Nails],
+            item 1 [Base.Plank],
+            item 1 [Base.Glasses;Base.Glasses_SafetyGoggles;Base.Glasses_Shooting;Base.Glasses_SkiGoggles;Base.Glasses_Sun;Base.Glasses_Aviators],
+            item 1 tags[base:hammer] mode:keep flags[MayDegradeVeryLight],
+            item 1 tags[base:saw;base:smallsaw;base:crudesaw] mode:keep flags[MayDegradeLight],
+        }
+        outputs
+        {
+            item 1 Base.WeldingMask,
+        }
+    }
+
+    timedAction MakeWeldingMaskAction
+    {
+        metabolics      = Default,
+        actionAnim      = BlowTorchFloor,
+        sound           = BlowTorch,
+        prop1           = Base.CraftingWeldingTorch,
+        prop2           = Base.WeldingMask,
+    }
+
+    craftRecipe CarveButtonsFromWood
+    {
+        timedAction     = Making,
+        time            = 200,
+        Tags            = InHandCraft,
+        category        = Carpentry,
+        SkillRequired   = Woodwork:2,
+        xpAward         = Woodwork:10,
+        inputs
+        {
+            item 1 [Base.Plank],
+            item 1 tags[base:sharpknife;base:meatcleaver] mode:keep flags[Prop1;MayDegrade;IsNotDull],
+        }
+        outputs
+        {
+            item 10 Base.Button,
+        }
+    }
+
+    craftRecipe CarveButtonsFromLog
+    {
+        timedAction     = Making,
+        time            = 400,
+        Tags            = InHandCraft,
+        category        = Carpentry,
+        SkillRequired   = Woodwork:2,
+        xpAward         = Woodwork:10,
+        inputs
+        {
+            item 1 [Base.Log],
+            item 1 tags[base:sharpknife;base:meatcleaver] mode:keep flags[Prop1;MayDegrade;IsNotDull],
+        }
+        outputs
+        {
+            item 30 Base.Button,
         }
     }
 

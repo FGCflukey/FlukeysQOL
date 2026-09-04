@@ -54,6 +54,7 @@
     "ConvertDuffleMoney": "Convert Duffle Bag to Money Bag",
     "ConvertMoneyDuffle": "Convert Money Bag to Duffle Bag",
 
+    "MakeSuperGlue": "Make Super Glue",
     "CraftSurvivorMultitool": "Make Survivor Edition MultiTool",
     "MakeKeyBlank": "Make a Car Key",
     "MakeRubberStrip": "Make RubberStrip",
@@ -182,6 +183,14 @@
     "MakeNormalSuspension3": "Make Regular Suspension (Sport)",
     "MakeModernSuspension1": "Make Performance Suspension (Standard)",
     "MakeModernSuspension2": "Make Performance Suspension (Heavy-Duty)",
-    "MakeModernSuspension3": "Make Performance Suspension (Sport)"
+    "MakeModernSuspension3": "Make Performance Suspension (Sport)",
+
+    "MakeWeldingMask": "Make Welding Mask",
+    "CarveButtonsFromWood": "Carve Buttons from Wood",
+    "CarveButtonsFromLog": "Carve Buttons from Log",
+
+    "DismantleRemoteController": "Dismantle Remote Controller",
+    "DismantleAlarmClock": "Dismantle Alarm Clock",
+    "DismantleAmplifier": "Dismantle Amplifier"
 }
 

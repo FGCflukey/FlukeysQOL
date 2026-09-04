@@ -100,4 +100,58 @@ module Base
         }
     }
 
+    craftRecipe DismantleRemoteController
+    {
+        timedAction     = DismantleElectrical,
+        time            = 30,
+        Tags            = InHandCraft;Electrical,
+        category        = Electrical,
+        xpAward         = Electricity:2,
+        inputs
+        {
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight],
+            item 1 [Base.RemoteCraftedV1;Base.RemoteCraftedV2;Base.RemoteCraftedV3] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.ElectronicsScrap,
+        }
+    }
+
+    craftRecipe DismantleAlarmClock
+    {
+        timedAction     = DismantleElectrical,
+        time            = 30,
+        Tags            = InHandCraft;Electrical,
+        category        = Electrical,
+        xpAward         = Electricity:2,
+        inputs
+        {
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight],
+            item 1 [Base.AlarmClock2] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.ElectronicsScrap,
+        }
+    }
+
+    craftRecipe DismantleAmplifier
+    {
+        timedAction     = DismantleElectrical,
+        time            = 30,
+        Tags            = InHandCraft;Electrical,
+        category        = Electrical,
+        xpAward         = Electricity:2,
+        inputs
+        {
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight],
+            item 1 [Base.Amplifier] mode:destroy,
+        }
+        outputs
+        {
+            item 1 Base.ScrapMetal,
+        }
+    }
+
 }
