@@ -191,6 +191,9 @@
 
     "DismantleRemoteController": "Dismantle Remote Controller",
     "DismantleAlarmClock": "Dismantle Alarm Clock",
-    "DismantleAmplifier": "Dismantle Amplifier"
+    "DismantleAmplifier": "Dismantle Amplifier",
+
+    "ConvertDIYBatteryToDeepCycle": "Convert DIY Battery to 200Ah Deep Cycle Battery",
+    "ConvertDeepCycleToSuperBattery": "Convert 200Ah Battery to 400Ah Deep Cycle Battery"
 }
 

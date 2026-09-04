@@ -900,4 +900,43 @@ module Base
         }
     }
 
+    /***    PSR Solar Revolution Battery Upgrades     ***/
+
+    craftRecipe ConvertDIYBatteryToDeepCycle
+    {
+        timedAction     = Making,
+        time            = 200,
+        Tags            = InHandCraft,
+        category        = Electrical,
+        NeedToBeLearn   = false,
+        inputs
+        {
+            item 1 [PSR.DIYBattery] mode:destroy,
+            item 2 [Base.ElectronicsScrap] mode:destroy,
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight],
+        }
+        outputs
+        {
+            item 1 PSR.DeepCycleBattery,
+        }
+    }
+
+    craftRecipe ConvertDeepCycleToSuperBattery
+    {
+        timedAction     = Making,
+        time            = 200,
+        Tags            = InHandCraft,
+        category        = Electrical,
+        NeedToBeLearn   = false,
+        inputs
+        {
+            item 1 [PSR.DeepCycleBattery] mode:destroy,
+            item 2 [Base.ElectronicsScrap] mode:destroy,
+        }
+        outputs
+        {
+            item 1 PSR.SuperBattery,
+        }
+    }
+
 }
