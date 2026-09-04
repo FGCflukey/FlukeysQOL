@@ -6,33 +6,6 @@ require "TimedActions/ISBaseTimedAction"
 CashOutATMAction = ISBaseTimedAction:derive("CashOutATMAction")
 
 -----------------------------------------------------
--- RECURSIVE CREDIT CARD SEARCH
------------------------------------------------------
-local function findCreditCardRecursive(container)
-    if not container then return nil end
-
-    -- Direct cards in this container
-    local cards = container:getAllType("CreditCard")
-    if cards and not cards:isEmpty() then
-        return cards:get(0)
-    end
-
-    -- Search inside subcontainers
-    local items = container:getItems()
-    if items then
-        for i = 0, items:size() - 1 do
-            local item = items:get(i)
-            if item and item:IsInventoryContainer() then
-                local found = findCreditCardRecursive(item:getItemContainer())
-                if found then return found end
-            end
-        end
-    end
-
-    return nil
-end
-
------------------------------------------------------
 -- ACTION VALIDITY
 -----------------------------------------------------
 function CashOutATMAction:isValid()
@@ -116,55 +89,16 @@ function CashOutATMAction:perform()
         emitter:stopSound(self.atmSound)
     end
 
-    local inv = self.character:getInventory()
-
     -----------------------------------------------------
-    -- FIND & REMOVE CREDIT CARD RECURSIVELY
+    -- HAND OFF TO SERVER (MP-safe)
+    --
+    -- Server does the authoritative find+remove+payout AND
+    -- syncs it properly via sendAddItemToContainer /
+    -- sendRemoveItemFromContainer. No client-side prediction
+    -- needed anymore -- the server-side sync is instant and
+    -- reliable now that it's using the right functions.
     -----------------------------------------------------
-    local card = findCreditCardRecursive(inv)
-
-    if not card then
-        self.character:Say("Card not found.")
-        restorePrimary(self)
-        ISBaseTimedAction.perform(self)
-        return
-    end
-
-    -- Remove from correct container
-    local cardContainer = card:getContainer()
-    if cardContainer then
-        cardContainer:Remove(card)
-    else
-        inv:Remove(card)
-    end
-
-    -----------------------------------------------------
-    -- DETERMINE PAYOUT
-    -----------------------------------------------------
-    local payout = 0
-    if ZombRand(100) >= 45 then
-        payout = ZombRand(0, 501) -- 0–500
-    end
-
-    -----------------------------------------------------
-    -- GIVE MONEY
-    -----------------------------------------------------
-    if payout > 0 then
-        local bundles = math.floor(payout / 100)
-        local remainder = payout % 100
-
-        for i = 1, bundles do
-            inv:AddItem("Base.MoneyBundle")
-        end
-
-        for i = 1, remainder do
-            inv:AddItem("Base.Money")
-        end
-
-        self.character:Say("Withdrew $" .. payout)
-    else
-        self.character:Say("Transaction failed")
-    end
+    sendClientCommand(self.character, "ATM", "cashOut", {})
 
     restorePrimary(self)
     ISBaseTimedAction.perform(self)
@@ -177,7 +111,7 @@ function CashOutATMAction:new(character, atm, card)
     local o = ISBaseTimedAction.new(self, character)
     o.character = character
     o.atm = atm
-    o.card = card -- still stored for compatibility, but not relied on
+    o.card = card -- kept for compatibility, not relied on
     o.maxTime = 600
     o.stopOnWalk = true
     o.stopOnRun = true
@@ -187,3 +121,26 @@ function CashOutATMAction:new(character, atm, card)
 
     return o
 end
+
+-----------------------------------------------------
+-- SERVER RESULT FEEDBACK (chat bubble)
+--
+-- The server can't reliably trigger Say() on a specific
+-- client from server-side Lua, so it sends the outcome back
+-- and the owning client says it locally instead.
+-----------------------------------------------------
+local function OnServerCommand(module, command, args)
+    if module ~= "ATM" or command ~= "result" then return end
+
+    local player = getPlayer()
+    if not player then return end
+
+    if args.reason == "noCard" then
+        player:Say("Card not found.")
+    elseif args.payout and args.payout > 0 then
+        player:Say("Withdrew $" .. args.payout)
+    else
+        player:Say("Transaction failed")
+    end
+end
+Events.OnServerCommand.Add(OnServerCommand)

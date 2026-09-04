@@ -174,23 +174,42 @@ function ISPaintVehicleAction:perform()
         emitter:stopSound(self.loopSound)
     end
 
-    if self.hsv and self.vehicle then
-        self.vehicle:setColorHSV(self.hsv[1], self.hsv[2], self.hsv[3])
-        self.vehicle:transmitColorHSV()
-    end
+    local drainFraction = self.spraycan and (PV_isLargeVehicle(self.scriptName) and 1.0 or 0.5) or nil
 
-    if self.spraycan then
-        local maxUses = self.spraycan:getMaxUses()
-        local before  = self.spraycan:getCurrentUses()
+    if isClient() then
+        -- MP: ask the server to apply the color (and drain the spraycan) on
+        -- its own authoritative copies so both actually persist. Doing this
+        -- locally would only ever affect our own screen/inventory until the
+        -- next server sync silently reverts it.
+        local spraycanID = self.spraycan and self.spraycan:getID() or nil
+        print("[PaintVehicle] Client sending spraycanID:", spraycanID, "drainFraction:", drainFraction)
 
-        local drainAmount = PV_isLargeVehicle(self.scriptName) and 1.0 or 0.5
-        local drainUses   = math.floor(maxUses * drainAmount + 0.001)
+        sendClientCommand(self.character, "PaintVehicle", "paint", {
+            vehicleID     = self.vehicle and self.vehicle:getId() or nil,
+            h             = self.hsv and self.hsv[1] or nil,
+            s             = self.hsv and self.hsv[2] or nil,
+            v             = self.hsv and self.hsv[3] or nil,
+            spraycanID    = spraycanID,
+            drainFraction = drainFraction,
+        })
+    else
+        -- Solo / hosting as the server: safe to mutate directly.
+        if self.hsv and self.vehicle then
+            self.vehicle:setColorHSV(self.hsv[1], self.hsv[2], self.hsv[3])
+            self.vehicle:transmitColorHSV()
+        end
 
-        local after = math.max(0, before - drainUses)
-        self.spraycan:setCurrentUses(after)
+        if self.spraycan then
+            -- Spraycans are Drainable items (governed by UseDelta in the
+            -- script), not Uses-count items, so drain via UsedDelta:
+            -- 1.0 = full, 0.0 = empty.
+            local before = self.spraycan:getUsedDelta()
+            local after  = math.max(0, before - drainFraction)
+            self.spraycan:setUsedDelta(after)
 
-        if after <= 0 then
-            self.character:getInventory():Remove(self.spraycan)
+            if after <= 0 then
+                self.character:getInventory():Remove(self.spraycan)
+            end
         end
     end
 

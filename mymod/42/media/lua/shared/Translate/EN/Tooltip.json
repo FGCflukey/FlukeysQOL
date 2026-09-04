@@ -12,12 +12,18 @@
     "Tooltip_item_BoxedEngineParts": "Box of 10 unused Engine Parts",
     "Tooltip_item_BoxedElectronicsScrap": "Box of Electronics Scrap",
     "Tooltip_item_BoxedElectricWire": "Box of Electric Wire",
-    "Tooltip_SandingBlock": "Sanding block for vehicle bodywork",
+    "Tooltip_SandingBlock": "Sanding Block for vehicle bodywork",
+    "Tooltip_SprayPaintCan": "Spray Paint for Repainting Vanilla Car",
+    "Tooltip_SprayVinylCan": "Spray Vinyl for Swapping Vinyl on Vanilla Car",
     "Tooltip_FixAFlat": "Repair kit for vehicle tires",
     "Tooltip_SuspensionFix": "Repair kit for vehicle suspension",
     "Tooltip_BrakeFix": "Repair kit for vehicle brakes",
     "Tooltip_MufflerFix": "Repair kit for vehicle muffler",
+    "Tooltip_CarBodyFix": "Repair Kit for vehicle body",
+    "Tooltip_GasTankFix": "Repair Kit for gas tanks",
     "Tooltip_UpholsteryKit": "Repair kit for vehicle seats",
+    "Tooltip_BatteryCleanerKit": "Repair kit for vehicle batteries",
     "Tooltip_HingesBox": "Box of 12 Hinges",
-    "Tooltip_DoorknobsBox": "Box of 12 Doorknobs"
+    "Tooltip_DoorknobsBox": "Box of 12 Doorknobs",
+    "Tooltip_eer_RebuildEngine": "The engine quality will be repaired to max"
 }

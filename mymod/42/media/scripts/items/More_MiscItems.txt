@@ -112,7 +112,6 @@ module Base
         Tooltip                 = Tooltip_FixAFlat,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-
         ReplaceOnDeplete        = None,
     }
 
@@ -127,7 +126,6 @@ module Base
         Tooltip                 = Tooltip_SuspensionFix,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-
         ReplaceOnDeplete        = None,
     }
 
@@ -142,7 +140,6 @@ module Base
         Tooltip                 = Tooltip_BrakeFix,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-
         ReplaceOnDeplete        = None,
     }
 
@@ -157,7 +154,48 @@ module Base
         Tooltip                 = Tooltip_MufflerFix,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
+        ReplaceOnDeplete        = None,
+    }
 
+    item BodyRepairKit
+    {
+        DisplayCategory         = VehicleMaintenance,
+        Weight                  = 0.2,
+        ItemType                = Drainable,
+        MaxUses                 = 5,
+        UseWhileEquipped        = FALSE,
+        Icon                    = MufflerPatchKit,
+        Tooltip                 = Tooltip_CarBodyFix,
+        MechanicsItem           = TRUE,
+        WorldStaticModel        = FixAFlat,
+        ReplaceOnDeplete        = None,
+    }
+
+    item GasTankRepairKit
+    {
+        DisplayCategory         = VehicleMaintenance,
+        Weight                  = 0.2,
+        ItemType                = Drainable,
+        MaxUses                 = 5,
+        UseWhileEquipped        = FALSE,
+        Icon                    = MufflerPatchKit,
+        Tooltip                 = Tooltip_GasTankFix,
+        MechanicsItem           = TRUE,
+        WorldStaticModel        = FixAFlat,
+        ReplaceOnDeplete        = None,
+    }
+
+    item BatteryCleanerKit
+    {
+        DisplayCategory         = VehicleMaintenance,
+        Weight                  = 0.2,
+        ItemType                = Drainable,
+        MaxUses                 = 5,
+        UseWhileEquipped        = FALSE,
+        Icon                    = BrakeKit,
+        Tooltip                 = Tooltip_BatteryCleanerKit,
+        MechanicsItem           = TRUE,
+        WorldStaticModel        = FixAFlat,
         ReplaceOnDeplete        = None,
     }
 
@@ -284,46 +322,6 @@ module Base
         }
     }
 
-
-    /***    Vehicle Hot-wire and Key Making    ***/
-
-    craftRecipe UnhotwireVehicle
-    {
-        timedAction     = Making,
-        time            = 200,
-        SkillRequired   = Electricity:1;Mechanics:2,
-        Tags            = InHandCraft,
-        category        = Electrical,
-        xpAward         = Electricity:10,
-        OnCreate        = unHotwire,
-        inputs
-        {
-            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
-        }
-        outputs
-        {
-        }
-    }
-
-    craftRecipe MakeCarKey
-    {
-        timedAction     = Making,
-        time            = 300,
-        SkillRequired   = MetalWelding:4;Mechanics:2,
-        Tags            = InHandCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        OnCreate        = addKey,
-        inputs
-        {
-            item 1 [Base.SmallSheetMetal],
-            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
-        }
-        outputs
-        {
-        }
-    }
-
     /***    Vehicle Parts     ***/
 
     craftRecipe CraftEnginePartsWeld
@@ -371,7 +369,7 @@ module Base
         {
             item 1 tags[base:hammer] mode:keep flags[MayDegradeVeryLight],
             item 1 tags[base:saw;base:smallsaw;base:crudesaw] mode:keep flags[MayDegradeLight],
-            item 1 tags[Wrench] mode:keep flags[Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop1],
             item 1 tags[Pipewrench] mode:keep,
             item 2 [Base.ScrapMetal;4:Base.CopperScrap],
             item 2 [Base.UnusableMetal;4:Base.IronScrap;4:Base.SteelScrap],
@@ -780,6 +778,26 @@ module Base
             Base.DenimStrips = Base.DenimStripsDirty,
             Base.LeatherStrips = Base.LeatherStripsDirty,
             Base.RippedSheets = Base.RippedSheetsDirty,
+        }
+    }
+
+    /*  KI5 workaround recipe for RubberStrip    */
+
+    craftRecipe MakeRubberStrip
+    {
+        TimedAction     = Making,
+        Time            = 60,
+        Tags            = InHandCraft,
+        category        = Essentials,
+
+        inputs
+        {
+            item 1 tags[base:sharpknife;base:meatcleaver] mode:keep flags[Prop1;MayDegrade;IsNotDull],
+            item 1 [Base.TirePiece],
+        }
+        outputs
+        {
+            item 1 damnCraft.RubberStrip,
         }
     }
 

@@ -1,0 +1,20 @@
+module Base
+{
+    craftRecipe MakeKeyBlank
+    {
+        time            = 250,
+        Tags            = InHandCraft,
+        category        = Metalworking,
+        SkillRequired   = MetalWelding:2,
+        xpAward         = MetalWelding:15,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 1 [Base.Multitool] mode:keep flags[MayDegradeVeryLight;NoBrokenItems],
+        }
+        outputs
+        {
+            item 1 Base.Key_Blank,
+        }
+    }
+}

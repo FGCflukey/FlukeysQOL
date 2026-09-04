@@ -3,242 +3,264 @@ module Base
 
     item SpraycanWhite
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_White.png,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZWhite,
         WorldStaticModel    = spraycanTZWhite,
     }
 
     item SpraycanBlack
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Black,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZBlack,
         WorldStaticModel    = spraycanTZBlack,
     }
 
     item SpraycanGray
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Gray,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZGray,
         WorldStaticModel    = spraycanTZGray,
     }
 
     item SpraycanDarkGray
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_DarkGray,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZDarkGray,
         WorldStaticModel    = spraycanTZDarkGray,
     }
 
     item SpraycanRed
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Red,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZRed,
         WorldStaticModel    = spraycanTZRed,
     }
     
     item SpraycanBlue
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Blue,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZBlue,
         WorldStaticModel    = spraycanTZBlue,
     }
 
     item SpraycanGreen
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Green,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZGreen,
         WorldStaticModel    = spraycanTZGreen,
     }
 
     item SpraycanYellow
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Yellow,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZYellow,
         WorldStaticModel    = spraycanTZYellow,
     }
 
     item SpraycanOrange
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Orange,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZOrange,
         WorldStaticModel    = spraycanTZOrange,
     }
 
     item SpraycanPurple
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Purple,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZPurple,
         WorldStaticModel    = spraycanTZPurple,
     }
 
     item SpraycanPastelBlue
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_PastelBlue,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZPastelBlue,
         WorldStaticModel    = spraycanTZPastelBlue,
     }
 
     item SpraycanPastelPink
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_PastelPink,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZPastelPink,
         WorldStaticModel    = spraycanTZPastelPink,
     }
 
     item SpraycanPastelGreen
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_PastelGreen,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZPastelGreen,
         WorldStaticModel    = spraycanTZPastelGreen,
     }
 
     item SpraycanPastelYellow
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_PastelYellow,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZPastelYellow,
         WorldStaticModel    = spraycanTZPastelYellow,
     }
 
     item SpraycanMauve
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Mauve,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZMauve,
         WorldStaticModel    = spraycanTZMauve,
     }
 
     item SpraycanBrown
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Brown,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZBrown,
         WorldStaticModel    = spraycanTZBrown,
     }
 
     item SpraycanTan
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Tan,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZTan,
         WorldStaticModel    = spraycanTZTan,
     }
 
     item SpraycanOlive
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Olive,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZOlive,
         WorldStaticModel    = spraycanTZOlive,
     }
 
     item SpraycanForestGreen
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_ForestGreen,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZForestGreen,
         WorldStaticModel    = spraycanTZForestGreen,
     }
 
     item SpraycanPink
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Pink,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZPink,
         WorldStaticModel    = spraycanTZPink,
     }
 
     item SpraycanCyan
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Cyan,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZCyan,
         WorldStaticModel    = spraycanTZCyan,
     }
 
     item SpraycanVinylCoat
     {
-        ItemType            = Drainable,
+        ItemType            = base:normal,
         Icon                = TZ_Spraycan_Vinyl,
-        UseDelta            = 0.025,
+        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
+        Tooltip             = Tooltip_SprayVinylCan,
         StaticModel         = spraycanTZDarkGray,
         WorldStaticModel    = spraycanTZDarkGray,
     }
@@ -249,9 +271,9 @@ module Base
         DisplayCategory     = Tool,
         Weight              = 1.0,
         Icon                = SandingBlock,
+        Tooltip             = Tooltip_SandingBlock,
         StaticModel         = SandingBlock,
         WorldStaticModel    = SandingBlock,
-        Tooltip             = Tooltip_SandingBlock,
     }
 
 }

@@ -1,6 +1,25 @@
 module Base
 {
 
+    craftRecipe MakeQuickDirtyGlassPane
+    {
+        timedAction     = Making,
+        Time            = 120,
+        SkillRequired   = Glassmaking:4,
+        Tags            = InHandCraft;CanBeDoneInDark,
+        category        = Glassmaking,
+        inputs
+        {
+            item 2 [Base.BrokenGlass],
+            item 2 tags[base:epoxy],
+            item 1 [Base.Scalpel] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.GlassPanel,
+        }
+    }
+
     /***    Vehicle Windows     ***/
 
     craftRecipe MakeStandardWindshield

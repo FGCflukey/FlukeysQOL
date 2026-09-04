@@ -1,0 +1,79 @@
+module Base
+{
+
+    item BastardSword
+    {
+        DisplayCategory             = Weapon,
+        ItemType                    = base:weapon,
+        Weight                      = 3.5,
+        Icon                        = BastardSword,
+        AttachmentType              = BigBlade,
+        BaseSpeed                   = 1,
+        BreakSound                  = MacheteBreak,
+        Categories                  = base:longblade,
+        ConditionLowerChanceOneIn   = 60,
+        ConditionMax                = 13,
+        CritDmgMultiplier           = 6,
+        CriticalChance              = 45,
+        DamageCategory              = Slash,
+        DamageMakeHole              = TRUE,
+        DoorDamage                  = 10,
+        DoorHitSound                = MacheteHit,
+        DropSound                   = ScrapSwordDrop,
+        HitAngleMod                 = -30.0,
+        HitFloorSound               = MacheteHit,
+        HitSound                    = MacheteHit,
+        ImpactSound                 = ScrapSwordHit,
+        KnockBackOnNoDeath          = TRUE,
+        KnockdownMod                = 2,
+        MaxDamage                   = 10,
+        MaxHitCount                 = 5,
+        MaxRange                    = 1.6,
+        MinAngle                    = 0.70,
+        MinDamage                   = 10,
+        MinRange                    = 0.61,
+        MinimumSwingTime            = 4,
+        PushBackMod                 = 0.6,
+        RequiresEquippedBothHands   = true,
+        RunAnim                     = Run_Weapon2,
+        SplatBloodOnNoDeath         = false,
+        SplatNumber                 = 1,
+        SubCategory                 = Swinging,
+        SwingAmountBeforeImpact     = 0.02,
+        SwingAnim                   = Bat,
+        SwingSound                  = MacheteSwing,
+        SwingTime                   = 4,
+        Tags                        = base:choptree;base:cutplant;base:butcheranimal;base:ignorezombiedensity;base:hasmetal;base:sharpenable;base:smeltableironlarge,
+        TreeDamage                  = 10,
+        TwoHandWeapon               = TRUE,
+        WeaponLength                = 0.6,
+        WeaponSprite                = BastardSword,
+        Sharpness                   = 1.0,
+        OnBreak                     = OnBreak.Sword_Scrap,
+    }
+
+    craftRecipe FixBastardSwordMetal
+    {
+        time                        = 180,
+        AllowBatchCraft             = false,
+        Tags                        = AnySurfaceCraft,
+        category                    = Repair,
+        timedAction                 = CraftWeapon1H,
+        xpAward                     = Maintenance:15,
+        SkillRequired               = Maintenance:3,
+        OnCreate                    = RecipeCodeOnCreate.genericEvenBetterFixing,
+        inputs
+        {
+            item 1 [Base.BastardSword] mode:keep flags[IsDamaged],
+            item 1 [Base.SteelPiece;Base.IronPiece] flags[Prop2],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 [Base.WeldingRods],
+            item 1 tags[base:epoxy],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+        }
+    }
+
+}

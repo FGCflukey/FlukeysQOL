@@ -1,9 +1,8 @@
+require("Vehicles/ISUI/ISVehicleMenu")
+
 local function isLockBroken(part)
     local door = part:getDoor()
-    if door and door.isLockBroken then
-        return door:isLockBroken()
-    end
-    return part:getModData().LockBroken == true
+    return door ~= nil and door:isLockBroken()
 end
 
 local function playerHasTools(player)
@@ -20,6 +19,29 @@ local function canRepairLock(player)
     if mech < 0 then return false end
 
     return true
+end
+
+-- Mirrors VehicleLockMechanicsUI's walkToPart: without this, the repair action still
+-- runs and completes on its timer, but the vehicle-work animation has nowhere to
+-- attach to since the character was never moved to the door's area, so it silently
+-- doesn't play.
+local function walkToPart(playerObj, part)
+    if playerObj:getVehicle() == part:getVehicle() then
+        return
+    end
+    local area = part:getArea()
+    if not area then
+        return
+    end
+    ISTimedActionQueue.add(ISPathFindAction:pathToVehicleArea(playerObj, part:getVehicle(), area))
+end
+
+local function onRepairCarLock(playerObj, part)
+    if playerObj:getVehicle() ~= part:getVehicle() and playerObj:getVehicle() then
+        ISVehicleMenu.onExit(playerObj)
+    end
+    walkToPart(playerObj, part)
+    ISTimedActionQueue.add(RepairCarLockAction:new(playerObj, part))
 end
 
 local function addRepairCarLockOption(playerIndex, context, worldobjects, test)
@@ -40,7 +62,7 @@ local function addRepairCarLockOption(playerIndex, context, worldobjects, test)
                     "Repair Car Door Lock (" .. doorId .. ")",
                     vehicle,
                     function()
-                        ISTimedActionQueue.add(RepairCarLockAction:new(player, vehicle, part))
+                        onRepairCarLock(player, part)
                     end
                 )
             end

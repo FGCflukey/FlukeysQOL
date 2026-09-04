@@ -43,6 +43,7 @@ local qolMedsDistribTable = {
     "Base.BoxedLabTestTubes",  8.0,
     "Base.EmptySyringe",       12.0,
     "Base.LabTestTube",        9.0,
+    "Base.AntibioticsBox",     5.0,
     "Base.CurezMagazine",      3.0,
 }
 
@@ -50,12 +51,15 @@ local qolMedsDistribTable = {
 local qolStorageDistribTable = {
     "Base.HCHanddolly",         3.0,
     "Base.HCToywagon",          4.0,
+    "Base.HingesBox",           3.0,
+    "Base.DoorknobsBox",        3.0,
 }
 
 -- Weapons
 local qolWeapDistribTable = {
     "Base.cfcombataxe",         5.0,
     "Base.cflongreachaxe",      5.0,
+    "Base.BastardSword",        5.0,
 }
 
 -- Car / Mechanics
@@ -65,7 +69,11 @@ local qolCarDistribTable = {
     "Base.BrakeKit",            4.0,
     "Base.SuspensionKit",       4.0,
     "Base.MufflerPatchKit",     4.0,
+    "Base.GasTankRepairKit",    4.0,
+    "Base.BodyRepairKit",       4.0,
     "Base.TireRepairKit",       4.0,
+    "Base.BatteryCleanerKit",   4.0,
+    "Base.Superglue",           6.0,
 }
 
 -- Spray Cans
@@ -92,6 +100,9 @@ local qolSprayDistribTable = {
     "Base.SpraycanPink",         2.0,
     "Base.SpraycanCyan",         2.0,
     "Base.SpraycanVinylCoat",    4.0,
+    "Base.Superglue",            2.0,
+    "Base.HingesBox",            2.0,
+    "Base.DoorknobsBox",         2.0,
 }
 
 ---------------------------------------------------------

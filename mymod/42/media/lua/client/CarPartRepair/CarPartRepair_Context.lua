@@ -6,7 +6,7 @@
 local Util = CarPartRepair_Util
 local Action = CarPartRepair_Action
 
-local DEBUG = false
+local DEBUG = true
 local function dbg(msg) if DEBUG then print("[CarPartRepair:Context] " .. tostring(msg)) end end
 
 local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
@@ -60,21 +60,30 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
         tip.description = "Requirements:\n"
 
         -- Tool
-        if not player:getInventory():contains(rule.required.tool) then
+        if not CarPartRepair_Util.containsFullType(player:getInventory(), rule.required.tool) then
             tip.description = tip.description .. " - " .. rule.required.tool .. " (Missing)\n"
         else
             tip.description = tip.description .. " - " .. rule.required.tool .. "\n"
         end
 
+        -- Second tool (e.g. TirePump) -- optional, only some rules use it
+        if rule.required.tool2 then
+            if not CarPartRepair_Util.containsFullType(player:getInventory(), rule.required.tool2) then
+                tip.description = tip.description .. " - " .. rule.required.tool2 .. " (Missing)\n"
+            else
+                tip.description = tip.description .. " - " .. rule.required.tool2 .. "\n"
+            end
+        end
+
         -- Material
-        if not player:getInventory():containsType(rule.required.material) then
+        if not CarPartRepair_Util.containsFullType(player:getInventory(), rule.required.material) then
             tip.description = tip.description .. " - " .. rule.required.material .. " (Missing)\n"
         else
             tip.description = tip.description .. " - " .. rule.required.material .. "\n"
         end
 
         -- Kit
-        if not player:getInventory():contains(rule.required.kit) then
+        if not CarPartRepair_Util.containsFullType(player:getInventory(), rule.required.kit) then
             tip.description = tip.description .. " - " .. rule.required.kit .. " (Missing)\n"
         else
             tip.description = tip.description .. " - " .. rule.required.kit .. "\n"
@@ -87,7 +96,7 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
     ---------------------------------------------------------
     -- If everything is OK, add the real repair option
     ---------------------------------------------------------
-    context:addOption("Repair " .. partName, player, CarPartRepair_Action.startRepair, item, rule)
+    context:addOption("Repair " .. partName, player, CarPartRepair_Action.startRepair, item, rule, partName)
 end
 
 Events.OnFillInventoryObjectContextMenu.Add(OnFillInventoryObjectContextMenu)

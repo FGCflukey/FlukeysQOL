@@ -482,4 +482,27 @@ craftRecipe MakeScrewsFromScrapMetal
         }
     }
 
+    craftRecipe MakeNutsandBolts
+    
+    {
+        timedAction   = Welding_Surface,
+        Time          = 150,
+        SkillRequired = MetalWelding:5,
+        Tags          = AnySurfaceCraft;Welding;CanBeDoneFromFloor,
+        xpAward       = MetalWelding:30,
+        inputs
+        {
+            item 1 [Base.HandDrill] mode:keep,
+            item 1 [Base.BoltCutters] mode:keep flags[Prop1],
+            item 1 [Base.ViseGrips] mode:keep,
+            item 1 [Base.Saw] mode:keep,
+            item 3 [Base.SteelPiece],
+            item 2 [Base.SteelBarQuarter] flags[Prop2],
+        }
+        outputs
+        {
+            item 1 Base.NutsBolts,
+        }
+    }
+
 }

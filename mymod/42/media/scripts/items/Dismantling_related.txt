@@ -30,7 +30,7 @@ module Base
         inputs
         {
             item 1 tags[base:screwdriver;base:sharpknife] mode:keep flags[MayDegradeVeryLight;IsNotDull],
-            item 1 [Base.RadioReceiver] mode:destroy,
+            item 1 [Base.RadioReceiver;Base.Receiver] mode:destroy,
         }
         outputs
         {

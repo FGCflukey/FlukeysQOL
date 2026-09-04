@@ -1,0 +1,234 @@
+module Base
+{
+
+    /*  Superglue Fixing    */
+    item Superglue
+    {
+        ItemType                = Drainable,
+        UseDelta                = 0.1,
+        UseWhileEquipped        = FALSE,
+        DisplayName             = Super Glue,
+        Icon                    = Superglue,
+        Weight                  = 0.1,
+        WorldStaticModel        = Toothpaste,
+    }
+
+    model Superglue
+    {
+        mesh = WorldItems/Superglue,
+        texture = WorldItems/Superglue,
+        scale = 0.6,
+    }
+
+    /*  Windows and Windshields  */
+
+    fixing Fix Windshield 3
+    {
+        Require = Base.Windshield1;Base.Windshield2;Base.Windshield3;Base.RearWindshield1;Base.RearWindshield2;Base.RearWindshield3,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+    fixing Fix FrontWindows 3
+    {
+        Require = Base.FrontWindow1;Base.FrontWindow2;Base.FrontWindow3;Base.FrontWindow8,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+    fixing Fix RearWindows 3
+    {
+        Require = Base.RearWindow1;Base.RearWindow2;Base.RearWindow3;Base.RearWindow8,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+    /*  Tire Fixing  */
+
+    fixing Fix Tire 2
+    {
+        Require = Base.OldTire1;Base.OldTire2;Base.OldTire3;Base.NormalTire1;Base.NormalTire2;Base.NormalTire3;Base.ModernTire1;Base.ModernTire2;Base.ModernTire3;Base.OldTire8;Base.NormalTire8;Base.ModernTire8,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=2,
+    }
+
+    /*  Hood Fixing  */
+
+    fixing Fix Hood Welding
+    {
+        Require = Base.EngineDoor1;Base.EngineDoor2;Base.EngineDoor3;Base.EngineDoor8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.9,
+
+        Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=2,
+    }
+    
+    fixing Fix Hood Welding 2
+    {
+        Require = Base.EngineDoor1;Base.EngineDoor2;Base.EngineDoor3;Base.EngineDoor8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal=1;MetalWelding=3;Mechanics=3,
+    }
+
+
+    /*   Trunk Lid Repair    */
+
+    fixing Fix Trunk Lid Welding
+    {
+        Require = Base.TrunkDoor1;Base.TrunkDoor2;Base.TrunkDoor3;Base.TrunkDoor8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.9,
+
+        Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=2,
+    }
+
+    fixing Fix Trunk Lid Welding 2
+    {
+        Require = Base.TrunkDoor1;Base.TrunkDoor2;Base.TrunkDoor3;Base.TrunkDoor8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=3,
+    }
+
+    /*   Brake Repair  */
+
+    fixing Fix Brake Welding
+    {
+        Require = Base.OldBrake1;Base.OldBrake2;Base.OldBrake3;Base.NormalBrake1;Base.NormalBrake2;Base.NormalBrake3;Base.ModernBrake1;Base.ModernBrake2;Base.ModernBrake3;Base.OldBrake8;Base.NormalBrake8;Base.ModernBrake8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.9,
+
+        Fixer = Base.SmallSheetMetal;MetalWelding=3;Mechanics=2,
+    }
+
+    fixing Fix Brake Welding 2
+    {
+        Require = Base.OldBrake1;Base.OldBrake2;Base.OldBrake3;Base.NormalBrake1;Base.NormalBrake2;Base.NormalBrake3;Base.ModernBrake1;Base.ModernBrake2;Base.ModernBrake3;Base.OldBrake8;Base.NormalBrake8;Base.ModernBrake8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=3,
+    }
+
+    fixing Fix Brake Metal 3
+    {
+        Require = Base.OldBrake1;Base.OldBrake2;Base.OldBrake3;Base.NormalBrake1;Base.NormalBrake2;Base.NormalBrake3;Base.ModernBrake1;Base.ModernBrake2;Base.ModernBrake3;Base.OldBrake8;Base.NormalBrake8;Base.ModernBrake8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.7,
+
+        Fixer = Base.ScrapMetal=2;MetalWelding=3;Mechanics=3,
+    }
+
+    /*   Muffler Repair  */
+
+    fixing Fix Muffler Welding
+    {
+        Require = Base.OldCarMuffler1;Base.OldCarMuffler2;Base.OldCarMuffler3;Base.NormalCarMuffler1;Base.NormalCarMuffler2;Base.NormalCarMuffler3;Base.ModernCarMuffler1;Base.ModernCarMuffler2;Base.ModernCarMuffler3;Base.OldCarMuffler8;Base.NormalCarMuffler8;Base.ModernCarMuffler8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.9,
+
+        Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=2,
+    }
+
+    fixing Fix Muffler Welding 2
+    {
+        Require = Base.OldCarMuffler1;Base.OldCarMuffler2;Base.OldCarMuffler3;Base.NormalCarMuffler1;Base.NormalCarMuffler2;Base.NormalCarMuffler3;Base.ModernCarMuffler1;Base.ModernCarMuffler2;Base.ModernCarMuffler3;Base.OldCarMuffler8;Base.NormalCarMuffler8;Base.ModernCarMuffler8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=3,
+    }
+
+    fixing Fix Muffler Metal 3
+    {
+        Require = Base.OldCarMuffler1;Base.OldCarMuffler2;Base.OldCarMuffler3;Base.NormalCarMuffler1;Base.NormalCarMuffler2;Base.NormalCarMuffler3;Base.ModernCarMuffler1;Base.ModernCarMuffler2;Base.ModernCarMuffler3;Base.OldCarMuffler8;Base.NormalCarMuffler8;Base.ModernCarMuffler8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.7,
+
+        Fixer = Base.ScrapMetal=2;MetalWelding=3;Mechanics=3,
+    }
+
+    /*   Suspension Repair  */
+
+    fixing Fix Suspension Welding
+    {
+        Require = Base.NormalSuspension1;Base.NormalSuspension2;Base.NormalSuspension3;Base.ModernSuspension1;Base.ModernSuspension2;Base.ModernSuspension3;Base.NormalSuspension8;Base.ModernSuspension8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.9,
+
+        Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=2,
+    }
+
+    fixing Fix Suspension Welding 2
+    {
+        Require = Base.NormalSuspension1;Base.NormalSuspension2;Base.NormalSuspension3;Base.ModernSuspension1;Base.ModernSuspension2;Base.ModernSuspension3;Base.NormalSuspension8;Base.ModernSuspension8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=3,
+    }
+
+    fixing Fix Suspension Welding 3
+    {
+        Require = Base.NormalSuspension1;Base.NormalSuspension2;Base.NormalSuspension3;Base.ModernSuspension1;Base.ModernSuspension2;Base.ModernSuspension3;Base.NormalSuspension8;Base.ModernSuspension8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.7,
+
+        Fixer = Base.ScrapMetal;MetalWelding=3;Mechanics=2,
+    }
+
+    /*   Double Door Repair     */
+
+    fixing Fix Double Door
+    {
+        Require = Base.RearCarDoorDouble1;Base.RearCarDoorDouble2;Base.RearCarDoorDouble3;Base.RearCarDoorDouble8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 0.9,
+
+        Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=3,
+    }
+
+    fixing Fix Double Door Welding
+    {
+        Require = Base.RearCarDoorDouble1;Base.RearCarDoorDouble2;Base.RearCarDoorDouble3;Base.RearCarDoorDouble8,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=3,
+    }
+
+    /*   Car Seat Repair    */
+
+    fixing Fix Car seat 2
+    {
+        Require = Base.NormalCarSeat1;Base.BigCarSeat1;Base.SportCarSeat1;Base.NormalCarSeat2;Base.BigCarSeat2;Base.SportCarSeat2;Base.NormalCarSeat3;Base.BigCarSeat3;Base.SportCarSeat3;Base.NormalCarSeat8;Base.BigCarSeat8;Base.SportCarSeat8,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=2;MetalWelding=3;Mechanics=1,
+    }
+
+    fixing Fix LightBulb
+    {
+        Require = Base.LightBulb,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.ElectricWire=2; Electricity=1,
+    }
+
+    fixing Fix Battery
+    {
+        Require = Base.CarBattery1;Base.CarBattery2;Base.CarBattery3;Base.CarBattery8,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.BatteryCleanerKit=1;Mechanics=1,
+        Fixer = Base.ElectronicsScrap=4;Electricity=2,
+    }
+
+}

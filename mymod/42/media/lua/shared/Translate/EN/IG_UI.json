@@ -2,6 +2,7 @@
         "IGUI_CraftingCategories_BloodCure": "Blood Cure",
         "IGUI_CraftingCategories_Ammunition": "Ammunition",
         "IGUI_CraftingCategories_Essentials": "Essentials",
-
-        "IGUI_ItemCat_Currency": "Currency"
+        "IGUI_CraftingCategories_Currency": "Currency",
+        "IGUI_ItemCat_Currency": "Currency",
+        "IGUI_EER_RebuildEngine": "Rebuild Engine"
 }

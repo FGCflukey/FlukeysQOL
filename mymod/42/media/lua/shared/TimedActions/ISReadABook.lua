@@ -657,10 +657,21 @@ function ISReadABook:isBook(item)
     return string.match(item:getType(), "Book")
 end
 
+-- function ISReadABook:serverStart()
+--     local numPages = 5
+--    if self.item:getNumberOfPages() > 0 then
+--        numPages = self.item:getNumberOfPages()
+--    end
+--    emulateAnimEvent(self.netAction, self.maxTime * 8.0 / numPages, "ReadAPage", nil)
+-- end
+
 function ISReadABook:serverStart()
     local numPages = 5
     if self.item:getNumberOfPages() > 0 then
-        numPages = self.item:getNumberOfPages()
+        numPages = self.item:getNumberOfPages() - (self.startPage or 0)
+        if numPages <= 0 then
+            numPages = 1
+        end
     end
     emulateAnimEvent(self.netAction, self.maxTime * 8.0 / numPages, "ReadAPage", nil)
 end

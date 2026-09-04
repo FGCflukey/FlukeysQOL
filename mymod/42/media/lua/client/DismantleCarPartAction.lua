@@ -5,7 +5,7 @@ local DEBUG = false
 
 local function dbg(msg)
     if DEBUG then
-        print("[DismantleCarPart] " .. tostring(msg))
+        print("[DismantleCarPart][Client] " .. tostring(msg))
     end
 end
 
@@ -50,98 +50,57 @@ end
 function DismantleCarPartAction:perform()
     dbg("perform()")
 
+    if self.sound then
+        self.character:stopOrTriggerSound(self.sound)
+        self.sound = nil
+    end
+
     local inv = self.character:getInventory()
     if not inv then
-        dbg("ERROR: inventory nil")
+        dbg("ERROR: inventory nil, aborting")
         return ISBaseTimedAction.perform(self)
     end
 
     local name = string.lower(self.partName or "")
     local glass = isGlassPart(name)
 
-    local torch = inv:getFirstTypeRecurse("BlowTorch")
-    local mask  = inv:getFirstTypeRecurse("WeldingMask")
-    local scalpel = inv:getFirstTypeRecurse("Scalpel")
-
-    dbg("torch=" .. tostring(torch))
-    dbg("mask=" .. tostring(mask))
-    dbg("scalpel=" .. tostring(scalpel))
-    dbg("glass=" .. tostring(glass))
-
+    -- Client-side pre-check only, for responsiveness. The server re-validates
+    -- everything independently before touching any inventory state.
     if glass then
+        local scalpel = inv:getFirstTypeRecurse("Scalpel")
         if not scalpel then
-            dbg("Missing scalpel for glass dismantle")
+            dbg("Missing scalpel for glass dismantle (client pre-check)")
             return ISBaseTimedAction.perform(self)
         end
     else
-        local uses = 0
-        if torch and torch.getCurrentUses then
-            uses = torch:getCurrentUses()
-        end
-
-        dbg("torch current uses=" .. tostring(uses))
+        local torch = inv:getFirstTypeRecurse("BlowTorch")
+        local mask  = inv:getFirstTypeRecurse("WeldingMask")
+        local uses  = (torch and torch.getCurrentUses) and torch:getCurrentUses() or 0
 
         if uses <= 0 or not mask then
-            dbg("Missing blowtorch or mask")
+            dbg("Missing blowtorch/uses/mask (client pre-check)")
             return ISBaseTimedAction.perform(self)
         end
-
-        dbg("Consuming blowtorch fuel")
-        if torch.setCurrentUses then
-            torch:setCurrentUses(math.max(uses - 1, 0))
-        end
     end
 
-    if self.sound then
-        self.character:stopOrTriggerSound(self.sound)
-        self.sound = nil
+    if not self.part or not self.part.getID then
+        dbg("ERROR: part missing or has no ID, aborting")
+        return ISBaseTimedAction.perform(self)
     end
 
-    if string.find(name, "trunkdoor") or string.find(name, "enginedoor") then
-        inv:AddItem("Base.SheetMetal")
-        inv:AddItem("Base.SheetMetal")
+    dbg("Sending dismantle command to server for partID=" .. tostring(self.part:getID()))
 
-    elseif string.find(name, "frontdoor") or string.find(name, "reardoor") then
-        inv:AddItem("Base.SheetMetal")
+    sendClientCommand(self.character, "CarPartDismantle", "dismantle", {
+        partID   = self.part:getID(),
+        partName = self.partName,
+    })
 
-        local wires = ZombRand(1, 4)
-        local bolts = ZombRand(1, 5)
-        local screws = ZombRand(1, 5)
+    -- NOTE: no local inv:AddItem / inv:Remove / setCurrentUses here.
+    -- The server is authoritative and will push the actual container
+    -- changes back via sendRemoveItemFromContainer / sendAddItemToContainer
+    -- / syncItemFields.
 
-        for i = 1, wires do inv:AddItem("Base.ElectricWire") end
-        for i = 1, bolts do inv:AddItem("Base.NutsBolts") end
-        for i = 1, screws do inv:AddItem("Base.Screws") end
-
-    elseif string.find(name, "bumper") then
-        local bars = ZombRand(1, 3)
-        local bolts = ZombRand(1, 5)
-
-        for i = 1, bars do inv:AddItem("Base.SteelBar") end
-        for i = 1, bolts do inv:AddItem("Base.NutsBolts") end
-
-    elseif
-        string.find(name, "frontwindow") or
-        string.find(name, "frontsidewindow") or
-        string.find(name, "rearwindow") or
-        string.find(name, "rearsidewindow")
-    then
-        inv:AddItem("Base.GlassPanel")
-
-    elseif
-        string.find(name, "windshield") or
-        string.find(name, "rearwindshield")
-    then
-        inv:AddItem("Base.GlassPanel")
-        inv:AddItem("Base.GlassPanel")
-
-    else
-        inv:AddItem("Base.SheetMetal")
-    end
-
-    dbg("Removing part from inventory")
-    inv:Remove(self.part)
-
-    dbg("perform() finished")
+    dbg("perform() finished (server pending)")
     ISBaseTimedAction.perform(self)
 end
 

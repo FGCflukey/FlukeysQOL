@@ -100,6 +100,22 @@ local function PV_debugVehicleState(vehicle)
 end
 
 
+-----------------------------------------------------
+-- PROXIMITY CHECK
+-----------------------------------------------------
+-- getVehicleToInteractWith() can return a vehicle even when the player
+-- isn't actually near it (e.g. last-targeted vehicle), which was causing
+-- the weather/light messages to fire on any right-click. Gate on real
+-- distance before doing anything else.
+local PV_INTERACT_RANGE = 3 -- tiles
+
+local function PV_isPlayerNearVehicle(playerObj, vehicle)
+    if not playerObj or not vehicle then return false end
+    local dx = playerObj:getX() - vehicle:getX()
+    local dy = playerObj:getY() - vehicle:getY()
+    return (dx * dx + dy * dy) <= (PV_INTERACT_RANGE * PV_INTERACT_RANGE)
+end
+
 local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, worldobjects, test)
     if test then return end
 
@@ -108,6 +124,8 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
 
     local vehicle = ISVehicleMenu.getVehicleToInteractWith(playerObj)
     if not vehicle then return end
+
+    if not PV_isPlayerNearVehicle(playerObj, vehicle) then return end
 
     -----------------------------------------------------
     -- CLEANLINESS BLOCK

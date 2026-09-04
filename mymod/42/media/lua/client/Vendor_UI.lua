@@ -55,78 +55,12 @@ local function countMoneyRecursive(container)
 end
 
 -----------------------------------------------------
--- REMOVE MONEY (supports breaking bags)
+-- NOTE: money removal / change-giving now happens
+-- server-authoritatively in lua\server\Vendor_Server.lua.
+-- The client only does a quick pre-check with
+-- countMoneyRecursive above; it never mutates the
+-- container directly.
 -----------------------------------------------------
-
-local function removeMoneyRecursive(container, amount, playerInv, allowBreak)
-    if amount <= 0 or not container then return amount end
-    allowBreak = allowBreak ~= false
-
-    local function removeType(typeName, value)
-        local items = container:getAllType(typeName)
-        while amount >= value and items and not items:isEmpty() do
-            local itm = items:get(0)
-            container:Remove(itm)
-            amount = amount - value
-
-            if MONEY_BAG_TYPES[typeName] then
-                playerInv:AddItem("Base.Bag_MoneyBag")
-            end
-
-            items = container:getAllType(typeName)
-        end
-    end
-
-    removeType("Bag_FullBigMoneyBag", 1000)
-    removeType("Bag_FullMoneyBag", 500)
-    removeType("MoneyBundle", 100)
-    removeType("Money", 1)
-
-    local items = container:getItems()
-    if items then
-        for i = 0, items:size() - 1 do
-            if amount <= 0 then break end
-            local item = items:get(i)
-            if item and item:IsInventoryContainer() then
-                amount = removeMoneyRecursive(item:getItemContainer(), amount, playerInv, false)
-            end
-        end
-    end
-
-    if allowBreak and amount > 0 then
-        local big = container:getAllType("Bag_FullBigMoneyBag")
-        if big and not big:isEmpty() then
-            container:Remove(big:get(0))
-            playerInv:AddItem("Base.Bag_MoneyBag")
-            amount = amount - 1000
-            return amount
-        end
-
-        local small = container:getAllType("Bag_FullMoneyBag")
-        if small and not small:isEmpty() then
-            container:Remove(small:get(0))
-            playerInv:AddItem("Base.Bag_MoneyBag")
-            amount = amount - 500
-            return amount
-        end
-    end
-
-    return amount
-end
-
------------------------------------------------------
--- GIVE CHANGE
------------------------------------------------------
-
-local function giveChange(inv, change)
-    if change <= 0 then return end
-
-    local bundles = math.floor(change / 100)
-    local singles = change % 100
-
-    for i = 1, bundles do inv:AddItem("Base.MoneyBundle") end
-    for i = 1, singles do inv:AddItem("Base.Money") end
-end
 
 -----------------------------------------------------
 -- WINDOW CLASS
@@ -315,17 +249,21 @@ end
 -- ACTION BUTTON (BUY OR SELL)
 -----------------------------------------------------
 function VendorWindow:onAction()
+    -- print("[VendorMod-DEBUG] onAction called, activeTab=" .. tostring(self.activeTab))
+
     local player = self.player
     local inv = player:getInventory()
 
     local selectedIndex = self.list.selected
     local selected = selectedIndex and self.list.items[selectedIndex]
     if not selected then
+        -- print("[VendorMod-DEBUG] no selection (selectedIndex=" .. tostring(selectedIndex) .. ")")
         player:Say("I should pick something first.")
         return
     end
 
     local entry = selected.item
+    -- print("[VendorMod-DEBUG] selected entry.id=" .. tostring(entry and entry.id))
 
     if self.activeTab == "Sell" then
         return self:handleSell(entry, inv, player)
@@ -335,38 +273,33 @@ function VendorWindow:onAction()
 end
 
 -----------------------------------------------------
--- BUY LOGIC (with sound)
+-- BUY LOGIC
+-- Client only does a quick affordability pre-check for
+-- instant feedback. The actual money removal + item grant
+-- happens server-side in Vendor_Server.lua. Sound/message/
+-- list refresh fire from the buySuccess/buyFail response
+-- (see OnServerCommand_Vendor below).
 -----------------------------------------------------
 function VendorWindow:handleBuy(entry, inv, player)
+    -- print("[VendorMod-DEBUG] handleBuy called for entry.id=" .. tostring(entry and entry.id))
+
     local price = entry.price or 0
     local totalMoney = countMoneyRecursive(inv)
+    -- print("[VendorMod-DEBUG] price=" .. tostring(price) .. " totalMoney=" .. tostring(totalMoney))
 
     if totalMoney < price then
         player:Say("I don't have enough money.")
         return
     end
 
-    local leftover = removeMoneyRecursive(inv, price, inv)
-
-    if leftover < 0 then
-        giveChange(inv, math.abs(leftover))
-        leftover = 0
-    end
-
-    if leftover > 0 then
-        player:Say("Error removing money.")
-        return
-    end
-
-    inv:AddItem(entry.id)
-
-    getSoundManager():PlayWorldSound("vendingdispense", player:getSquare(), 0, 10, 1.0, false)
-
-    player:Say("Bought " .. entry.name .. " for $" .. price)
+    -- print("[VendorMod-DEBUG] sending buyItem command to server")
+    sendClientCommand(player, "VendorMod", "buyItem", { itemId = entry.id })
+    -- print("[VendorMod-DEBUG] sendClientCommand call returned")
 end
 
 -----------------------------------------------------
 -- SELL LOGIC
+-- Same story: pre-check only, server does the real work.
 -----------------------------------------------------
 function VendorWindow:handleSell(entry, inv, player)
     local count = inv:getCountType(entry.id)
@@ -375,14 +308,7 @@ function VendorWindow:handleSell(entry, inv, player)
         return
     end
 
-    local item = inv:FindAndReturn(entry.id)
-    inv:Remove(item)
-
-    giveChange(inv, entry.price)
-
-    player:Say("Sold " .. entry.name .. " for $" .. entry.price)
-
-    self:populateList()
+    sendClientCommand(player, "VendorMod", "sellItem", { itemId = entry.id })
 end
 
 -----------------------------------------------------
@@ -427,3 +353,37 @@ function VendorUI.open(player)
     window:addToUIManager()
     VendorUI.instance = window
 end
+
+-----------------------------------------------------
+-- SERVER RESPONSE HANDLER (buy/sell confirmation)
+-----------------------------------------------------
+local function OnServerCommand_Vendor(module, command, args)
+    if module ~= "VendorMod" then return end
+
+    local player = getPlayer()
+    if not player then return end
+
+    if command == "buySuccess" then
+        getSoundManager():PlayWorldSound("vendingdispense", player:getSquare(), 0, 10, 1.0, false)
+        player:Say("Bought " .. args.name .. " for $" .. args.price)
+        if VendorUI.instance then VendorUI.instance:populateList() end
+
+    elseif command == "buyFail" then
+        if args.reason == "money" then
+            player:Say("I don't have enough money.")
+        elseif args.reason == "invalid_item" then
+            player:Say("That item isn't available right now.")
+        else
+            player:Say("Something went wrong with that purchase.")
+        end
+
+    elseif command == "sellSuccess" then
+        player:Say("Sold " .. args.name .. " for $" .. args.price)
+        if VendorUI.instance then VendorUI.instance:populateList() end
+
+    elseif command == "sellFail" then
+        player:Say("I don't have any of that to sell.")
+    end
+end
+
+Events.OnServerCommand.Add(OnServerCommand_Vendor)

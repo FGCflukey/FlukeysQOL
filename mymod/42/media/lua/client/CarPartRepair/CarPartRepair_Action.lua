@@ -12,7 +12,6 @@ function ISRepairCarPartAction:isValid()
 end
 
 function ISRepairCarPartAction:update()
-    -- Loop sound
     local emitter = self.character:getEmitter()
     if emitter and self.sound and not emitter:isPlaying(self.sound) then
         self.sound = emitter:playSound("Sewing")
@@ -56,34 +55,22 @@ function ISRepairCarPartAction:perform()
 
     self.character:setPrimaryHandItem(self.originalPrimary)
 
-    -- Skill cap
-    local lvl = self.character:getPerkLevel(Perks.Mechanics)
-    local caps = self.rule.skillCaps
-    local maxRepair =
-        (lvl <= 4) and caps[1] or
-        (lvl <= 8) and caps[2] or
-        caps[3]
-
-    local oldCond = self.item:getCondition()
-    local targetCond = math.min(maxRepair, oldCond + self.rule.repairAmount)
-
-    dbg("oldCond=" .. oldCond .. " targetCond=" .. targetCond)
-    self.item:setCondition(targetCond)
-
-    -- Consume kit
-    if self.kit and self.kit.getCurrentUses then
-        self.kit:setCurrentUses(self.kit:getCurrentUses() - 1)
-    end
-
-    -- Consume material
-    if self.material then
-        self.character:getInventory():Remove(self.material)
-    end
+    -- IMPORTANT: we no longer mutate condition / consume the kit or
+    -- material locally. All of that now happens server-side in
+    -- CarPartRepair_Server.lua, which re-validates everything itself
+    -- (never trusts the client) and is the source of truth.
+    --
+    -- We DO send an optimistic local hint so the UI feels responsive,
+    -- but the server's follow-up command is what actually sticks.
+    sendClientCommand(self.character, "CarPartRepair", "repairPart", {
+        itemID    = self.item:getID(),
+        partName  = self.partName,
+    })
 
     ISBaseTimedAction.perform(self)
 end
 
-function CarPartRepair_Action.startRepair(player, item, rule)
+function CarPartRepair_Action.startRepair(player, item, rule, partName)
     dbg("startRepair: " .. item:getFullType())
 
     local inv = player:getInventory()
@@ -92,11 +79,11 @@ function CarPartRepair_Action.startRepair(player, item, rule)
     local material = inv:getFirstTypeRecurse(rule.required.material)
     local kit      = inv:getFirstTypeRecurse(rule.required.kit)
 
-    local action = ISRepairCarPartAction:new(player, item, tool, material, kit, rule)
+    local action = ISRepairCarPartAction:new(player, item, tool, material, kit, rule, partName)
     ISTimedActionQueue.add(action)
 end
 
-function ISRepairCarPartAction:new(character, item, tool, material, kit, rule)
+function ISRepairCarPartAction:new(character, item, tool, material, kit, rule, partName)
     local o = ISBaseTimedAction.new(self, character)
     o.character = character
     o.item      = item
@@ -104,6 +91,7 @@ function ISRepairCarPartAction:new(character, item, tool, material, kit, rule)
     o.material  = material
     o.kit       = kit
     o.rule      = rule
+    o.partName  = partName
 
     local lvl = character:getPerkLevel(Perks.Mechanics)
     o.maxTime = 1200 - (lvl * 100)
@@ -115,3 +103,27 @@ function ISRepairCarPartAction:new(character, item, tool, material, kit, rule)
 
     return o
 end
+
+---------------------------------------------------------
+-- Server's authoritative result comes back here. The server
+-- has already applied the real state change; this just lets us
+-- give the player feedback and correct the UI if anything about
+-- our optimistic guess was wrong (e.g. someone else used the last
+-- kit charge in the meantime).
+---------------------------------------------------------
+local function OnServerCommand(module, command, args)
+    if module ~= "CarPartRepair" then return end
+
+    if command == "repairResult" then
+        local player = getSpecificPlayer(0)
+        if not player then return end
+
+        if args.success then
+            player:Say("That should hold.")
+        else
+            player:Say("Couldn't finish the repair.")
+            dbg("Server rejected repair: " .. tostring(args.reason))
+        end
+    end
+end
+Events.OnServerCommand.Add(OnServerCommand)

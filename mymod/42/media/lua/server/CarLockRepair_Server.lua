@@ -1,2 +1,7 @@
--- No server initialization needed.
--- File kept intentionally empty to avoid load errors.
+-- No server-side handler needed.
+--
+-- Door lock state is not a modData flag -- it lives on the vanilla door object
+-- (door:isLockBroken()/door:setLockBroken()) and syncs authoritatively via the
+-- engine's own vehicle:transmitPartDoor(part) call, the same way VLMRepairVehicleLock
+-- does it. That transmit is the client->server->broadcast round trip; a bespoke
+-- sendClientCommand/OnClientCommand handler here would be redundant.

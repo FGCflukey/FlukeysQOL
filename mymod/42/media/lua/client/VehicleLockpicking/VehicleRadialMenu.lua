@@ -1,6 +1,6 @@
 require "VehicleLockpicking/VehicleLockpicking"
 
-local LP_DEBUG = true
+local LP_DEBUG = false
 local function lpdbg(...) if LP_DEBUG then print("[LockpickRadial]", ...) end end
 
 local old_showRadial = ISVehicleMenu.showRadialMenu

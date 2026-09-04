@@ -1,0 +1,55 @@
+module Base
+{
+    fixing Fix Hood Welding 6
+    {
+       Require = ATA2.ATAMustangHood2Item3;ATA2.ATAMustangHood3Item3;ATA2.ATAMustangHood4Item3,
+       GlobalItem = Base.BlowTorch=2,
+       ConditionModifier = 1.2,
+
+       Fixer = Base.SheetMetal;MetalWelding=1;Mechanics=2,
+       Fixer = Base.SmallSheetMetal=2;MetalWelding=1;Mechanics=2,
+    }
+
+    fixing Fix HoodATAMustang
+    {
+       Require = ATA2.ATAMustangHood2Item3;ATA2.ATAMustangHood3Item3;ATA2.ATAMustangHood4Item3,
+       GlobalItem = Base.Screws=8,
+       ConditionModifier = 0.5,
+
+       Fixer = Base.SheetMetal;Mechanics=2,
+    }
+
+    fixing Fix Roof Welding 5
+    {
+       Require = Base.82porsche911targaRoof3,
+       GlobalItem = Base.Screws=8,
+       ConditionModifier = 0.5,
+
+       Fixer = Base.SheetMetal;Mechanics=2,
+    }
+
+    fixing Fix W900 Tire
+    {
+        Require = Base.DoubleOldTire2;Base.DoubleNormalTire2;Base.DoubleModernTire2;Base.AxleOldTire2;Base.AxleNormalTire2;Base.AxleModernTire2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=2,
+    }
+
+    fixing Fix Windshield 6
+    {
+        Require = Base.92amgeneralM998Windshield2;Base.M35A2WindShield2;Base.92jeepYJWindshield2;Base.92jeepYJWindshieldRear2;Base.88ChevyS10Windshield2;Base.88ChevyS10WindshieldRear2;Base.DG70Windshield3;Base.DG70WindshieldRear3;Base.82porsche911Windshield3;Base.82porsche911WindshieldRear3;Base.82porsche911targaWindshieldRear3,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+    fixing Fix FrontWindows 6
+    {
+        Require = Base.92amgeneralM998SideWindow2;Base.M35A2SideWindow2;Base.92jeepYJFrontSideWindow2;Base.92jeepYJRearSideWindow2;Base.88ChevyS10WindowSide2;Base.DG70FrontSideWindow3;Base.DG70RearSideWindow3;Base.82porsche911FrontSideWindow3;Base.82porsche911RearSideWindow3,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+}

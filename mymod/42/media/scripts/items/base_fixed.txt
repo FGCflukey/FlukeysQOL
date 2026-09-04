@@ -1,6 +1,180 @@
 module Base
 {
 
+    item FirewoodBundle
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 2.5,
+        Icon = Firewood_Bundle,
+        StaticModel = FirewoodBundle,
+        WorldStaticModel = FirewoodBundle,
+        Tags = base:isfirefuel,
+        FireFuelRatio = 1.35,
+        DoubleClickRecipe = UnbundleFirewood,
+    }
+
+    item Firewood
+    {
+        DisplayCategory = MaterialWeapon,
+        ItemType = base:weapon,
+        Weight = 1.0,
+        Icon = Firewood_Log,
+        BaseSpeed = 1.2,
+        BreakSound = BrokenLargeBranchBreak,
+        Categories = base:improvised;base:smallblunt,
+        ConditionLowerChanceOneIn = 5,
+        ConditionMax = 1,
+        CritDmgMultiplier = 2.0,
+        CriticalChance = 5.0,
+        DoorDamage = 2,
+        DoorHitSound = BrokenLargeBranchHit,
+        DropSound = BrokenLargeBranchDrop,
+        HitFloorSound = BrokenLargeBranchHit,
+        HitSound = BrokenLargeBranchHit,
+        KnockBackOnNoDeath = false,
+        KnockdownMod = 2.0,
+        MaxDamage = 0.7,
+        MaxHitcount = 2,
+        MaxRange = 1.1,
+        MinAngle = 0.65,
+        MinDamage = 0.4,
+        MinRange = 0.61,
+        MinimumSwingtime = 4.0,
+        PushBackMod = 0.3,
+        SplatBloodOnNoDeath = false,
+        SplatNumber = 1,
+        SubCategory = Swinging,
+        SwingAmountBeforeImpact = 0.02,
+        SwingAnim = Bat,
+        SwingSound = BrokenLargeBranchSwing,
+        Swingtime = 4.0,
+        Tags = base:isfirefuel;base:makewoodcharcoalmedium,
+        TreeDamage = 0,
+        WeaponLength = 0.23,
+        WeaponSprite = Firewood,
+        AttachmentType = BigBlade,
+        FireFuelRatio = 0.75,
+    }
+
+    item Log
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 4.0,
+        Icon = Logs,
+        StaticModel = Log,
+        WorldStaticModel = Log,
+        Tags = base:isfirefuel;base:log,
+        Researchablerecipes = CarveGoblets;CarveBucket,
+    }
+
+    item Plank
+    {
+        DisplayCategory = MaterialWeapon,
+        ItemType = base:weapon,
+        Weight = 1.5,
+        Icon = Plank,
+        AttachmentType = Shovel,
+        BaseSpeed = 0.9,
+        BreakSound = PlankBreak,
+        Categories = base:improvised;base:blunt,
+        ConditionLowerChanceOneIn = 2,
+        ConditionMax = 10,
+        CritDmgMultiplier = 2.0,
+        CriticalChance = 30.0,
+        DoorDamage = 5,
+        DoorHitSound = PlankHit,
+        DropSound = PlankDrop,
+        HitFloorSound = PlankHit,
+        HitSound = PlankHit,
+        IdleAnim = Idle_Weapon2,
+        KnockBackOnNoDeath = false,
+        KnockdownMod = 2.0,
+        MaxDamage = 0.6,
+        MaxHitcount = 2,
+        MaxRange = 1.3,
+        MinAngle = 0.75,
+        MinDamage = 0.4,
+        MinRange = 0.61,
+        MinimumSwingtime = 4.0,
+        PushBackMod = 0.3,
+        RunAnim = Run_Weapon2,
+        SplatBloodOnNoDeath = false,
+        SplatNumber = 1,
+        SubCategory = Swinging,
+        SwingAmountBeforeImpact = 0.02,
+        SwingAnim = Bat,
+        SwingSound = PlankSwing,
+        Swingtime = 4.0,
+        TreeDamage = 0,
+        TwoHandWeapon = true,
+        WeaponSprite = Plank,
+        OnBreak = OnBreak.Plank,
+        Tags = base:nomaintenancexp;base:isfirefuel;base:repairwithglue;base:repairwithtape,
+        Researchablerecipes = MakeSawPlank;CarveWoodenSpade,
+    }
+
+    item Twigs
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 0.1,
+        Icon = Twigs,
+        WorldStaticModel = Twigs,
+        Tags = base:isfirefuel;base:isfiretinder,
+    }
+
+    item Nails
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 0.02,
+        Icon = Nails,
+        AlwaysWelcomeGift = true,
+        count = 5,
+        MetalValue = 1.0,
+        SurvivalGear = true,
+        WorldStaticModel = Nails,
+        Tags = base:fishinghook;base:hasmetal,
+        Researchablerecipes = Forge_Nails;Forge_Heading_Tool,
+    }
+
+    item Screws
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 0.02,
+        Icon = Screws,
+        AlwaysWelcomeGift = true,
+        count = 5,
+        MetalValue = 1.0,
+        WorldStaticModel = Screws,
+        Tags = base:hasmetal,
+    }
+
+    item Hinge
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 0.2,
+        Icon = Doorhinge,
+        MetalValue = 10.0,
+        WorldStaticModel = DoorHinge,
+        Tags = base:hasmetal,
+    }
+
+    item Doorknob
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 0.2,
+        Icon = DoorKnob,
+        MetalValue = 10.0,
+        WorldStaticModel = DoorKnob,
+        Tags = base:hasmetal,
+    }
+
     /*  General Items   */
     item BlowTorch
     {
@@ -183,6 +357,51 @@ module Base
         WorldStaticModel = CreditCard,
         Tags = base:fitswallet,
         OnCreate = ItemCodeOnCreate.onCreateIDCard,
+    }
+
+    item Woodglue
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Weight = 1.0,
+        Icon = Woodglue,
+        ConsolidateOption = ContextMenu_Merge,
+        SurvivalGear = true,
+        Tooltip = Tooltip_FixItems,
+        UseDelta = 0.2,
+        UseWhileEquipped = false,
+        WorldStaticModel = WoodGlue,
+        Tags = base:glue,
+    }
+
+    item Epoxy
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Weight = 0.5,
+        Icon = EpoxyApplicator,
+        ConsolidateOption = ContextMenu_Merge,
+        SurvivalGear = true,
+        UseDelta = 0.2,
+        UseWhileEquipped = false,
+        WorldStaticModel = Epoxy,
+        Tags = base:epoxy,
+        Tooltip = Tooltip_item_Epoxy,
+    }
+
+    item Glue
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Weight = 0.5,
+        Icon = Glue,
+        ConsolidateOption = ContextMenu_Merge,
+        SurvivalGear = true,
+        Tooltip = Tooltip_FixItems,
+        UseDelta = 0.2,
+        UseWhileEquipped = false,
+        WorldStaticModel = Glue,
+        Tags = base:glue,
     }
 
     craftRecipe Scrap_Gold_Jewellery

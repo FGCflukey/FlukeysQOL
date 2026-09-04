@@ -1,48 +1,6 @@
 module Base
 {
 
-    craftRecipe RecycleHood
-    {
-        timedAction     = Making,
-        Time            = 60,
-        SkillRequired   = MetalWelding:2,
-        Tags            = InHandCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        inputs
-        {
-            item 1 [Base.EngineDoor1;Base.EngineDoor2;Base.EngineDoor3] mode:destroy,
-            item 1 tags[Wrench] mode:keep flags[Prop1;MayDegradeLight],
-            item 2 [Base.BlowTorch] flags[Prop2],
-            item 1 tags[WeldingMask] mode:keep,
-        }
-        outputs
-        {
-            item 2 Base.SheetMetal,
-        }
-    }
-
-    craftRecipe RecycleTrunkLid
-    {
-        timedAction     = Making,
-        Time            = 60,
-        SkillRequired   = MetalWelding:2,
-        Tags            = InHandCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        inputs
-        {
-            item 1 [Base.TrunkDoor1;Base.TrunkDoor2;Base.TrunkDoor3] mode:destroy,
-            item 1 tags[Wrench] mode:keep flags[Prop1;MayDegradeLight],
-            item 2 [Base.BlowTorch] flags[Prop2],
-            item 1 tags[WeldingMask] mode:keep,
-        }
-        outputs
-        {
-            item 2 Base.SheetMetal,
-        }
-    }
-
     craftRecipe RecycleMuffler
     {
         timedAction     = Making,
@@ -54,9 +12,9 @@ module Base
         inputs
         {
             item 1 [Base.OldCarMuffler1;Base.OldCarMuffler2;Base.OldCarMuffler3;Base.NormalCarMuffler1;Base.NormalCarMuffler2;Base.NormalCarMuffler3;Base.ModernCarMuffler1;Base.ModernCarMuffler2;Base.ModernCarMuffler3] mode:destroy,
-            item 1 tags[Wrench] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:wrench] mode:keep flags[Prop1;MayDegradeLight],
             item 2 [Base.BlowTorch] flags[Prop2],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -75,9 +33,9 @@ module Base
         inputs
         {
             item 1 [Base.NormalGasTank1;Base.NormalGasTank2;Base.NormalGasTank3;Base.BigGasTank1;Base.BigGasTank2;Base.BigGasTank3;Base.SmallGasTank1;Base.SmallGasTank2;Base.SmallGasTank3] mode:destroy,
-            item 1 tags[Wrench] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:wrench] mode:keep flags[Prop1;MayDegradeLight],
             item 2 [Base.BlowTorch] flags[Prop2],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -96,9 +54,9 @@ module Base
         inputs
         {
             item 1 [Base.NormalSuspension1;Base.NormalSuspension2;Base.NormalSuspension3;Base.ModernSuspension1;Base.ModernSuspension2;Base.ModernSuspension3] mode:destroy,
-            item 1 tags[Wrench] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:wrench] mode:keep flags[Prop1;MayDegradeLight],
             item 2 [Base.BlowTorch] flags[Prop2],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -117,34 +75,13 @@ module Base
         inputs
         {
             item 1 [Base.OldBrake1;Base.OldBrake2;Base.OldBrake3;Base.NormalBrake1;Base.NormalBrake2;Base.NormalBrake3;Base.ModernBrake1;Base.ModernBrake2;Base.ModernBrake3] mode:destroy,
-            item 1 tags[Wrench] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 tags[base:wrench] mode:keep flags[Prop1;MayDegradeLight],
             item 2 [Base.BlowTorch] flags[Prop2],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
             item 2 Base.ScrapMetal,
-        }
-    }
-
-    craftRecipe RecycleDoor
-    {
-        timedAction     = Making,
-        Time            = 60,
-        SkillRequired   = MetalWelding:2,
-        Tags            = InHandCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:25,
-        OnCreate        = GiveBack_DoorStuff,
-        inputs
-        {
-            item 1 [Base.FrontCarDoor1;Base.FrontCarDoor2;Base.FrontCarDoor3;Base.RearCarDoor1;Base.RearCarDoor2;Base.RearCarDoor3;Base.RearCarDoorDouble1;Base.RearCarDoorDouble2;Base.RearCarDoorDouble3] mode:destroy,
-            item 1 tags[Wrench] mode:keep flags[Prop1;MayDegradeLight],
-            item 2 [Base.BlowTorch] flags[Prop2],
-            item 1 tags[WeldingMask] mode:keep,
-        }
-        outputs
-        {
         }
     }
 
@@ -160,8 +97,8 @@ module Base
         inputs
         {
             item 1 [Base.NormalCarSeat1;Base.NormalCarSeat2;Base.NormalCarSeat3] mode:destroy,
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
         }
         outputs
         {

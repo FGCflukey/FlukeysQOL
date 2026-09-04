@@ -1,44 +1,20 @@
--- Corpse Cleanup - With Zombie Meat Harvesting
+-- Corpse Cleanup - Client Timed Action (MP Safe)
+
+CorpseCleanupDebug = true
+
+local function CCDebug(msg)
+    if CorpseCleanupDebug then
+        print("[CorpseCleanup CLIENT] " .. tostring(msg))
+    end
+end
+
+CCDebug("CorpseCleanup_Action.lua loaded")
 
 CorpseCleanupAction = ISBaseTimedAction:derive("CorpseCleanupAction")
 
-local function DropCorpseInventory(corpse)
-    if not corpse then return end
-
-    local square = corpse:getSquare()
-    if not square then return end
-
-    local container = corpse:getContainer()
-    if not container then return end
-
-    local items = {}
-    for i = 0, container:getItems():size() - 1 do
-        table.insert(items, container:getItems():get(i))
-    end
-
-    for _, item in ipairs(items) do
-        container:Remove(item)
-        square:AddWorldInventoryItem(item, 0, 0, 0)
-    end
-end
-
--- Skill‑based zombie meat yield
-local function getZombieMeatYield(character)
-    local perk = character:getPerkLevel(Perks.Butchering)
-
-    if perk < 2 then
-        return ZombRand(1, 3)      -- 1–2
-    elseif perk < 4 then
-        return ZombRand(1, 4)      -- 1–3
-    elseif perk < 6 then
-        return ZombRand(3, 6)      -- 3–5
-    else
-        return ZombRand(5, 11)     -- 5–10
-    end
-end
-
 function CorpseCleanupAction:isValid()
-    return self.corpse ~= nil and self.corpse:getSquare() ~= nil
+    CCDebug("isValid() called")
+    return self.corpse ~= nil
 end
 
 function CorpseCleanupAction:update()
@@ -46,20 +22,14 @@ function CorpseCleanupAction:update()
 end
 
 function CorpseCleanupAction:start()
-    -- Butchering skill requirement (safety check)
-    local requiredLevel = 2
-    if self.character:getPerkLevel(Perks.Butchering) < requiredLevel then
-        self.character:Say("I don't know how to butcher a corpse yet.")
-        self:forceStop()
-        return
-    end
-
+    CCDebug("Timed action started")
     self:setActionAnim("Dig")
     self.character:reportEvent("EventDig")
     self.sound = self.character:getEmitter():playSound("DissectCorpseKnives")
 end
 
 function CorpseCleanupAction:stop()
+    CCDebug("Timed action stopped")
     if self.sound then
         self.character:getEmitter():stopSound(self.sound)
     end
@@ -67,68 +37,69 @@ function CorpseCleanupAction:stop()
 end
 
 function CorpseCleanupAction:perform()
+    CCDebug("Timed action perform() reached")
+
     if self.sound then
         self.character:getEmitter():stopSound(self.sound)
     end
 
-    local sq = self.corpse:getSquare()
+    CCDebug("Sending server command (coords + username)")
 
-    -- Drop corpse inventory
-    DropCorpseInventory(self.corpse)
+    sendClientCommand(self.character, "CorpseCleanup", "Butcher", {
+        x = self.corpse:getX(),
+        y = self.corpse:getY(),
+        z = self.corpse:getZ(),
 
-    -- Remove corpse cleanly
-    if sq then
-        sq:removeCorpse(self.corpse, true)
-    end
+        playerID = self.character:getUsername(),
 
-    -- Blood effect (42.14+ clothing system)
-    local function AddBloodToClothes(character, amount)
-        local worn = character:getWornItems()
-        if not worn then return end
+        originalPrimary = self.originalPrimary and self.originalPrimary:getID() or nil,
+        originalSecondary = self.originalSecondary and self.originalSecondary:getID() or nil,
+    })
 
-        for i = 0, worn:size() - 1 do
-            local item = worn:getItemByIndex(i)
-            if item and item.setBloodLevel and item.getBloodLevel then
-                local current = item:getBloodLevel()
-                item:setBloodLevel(math.min(1, current + amount))
-            end
-        end
-    end
-
-    AddBloodToClothes(self.character, 0.2)
-
-    -- Inventory + skill‑based meat yield
-    local inv = self.character:getInventory()
-    local count = getZombieMeatYield(self.character)
-    inv:AddItems("Base.ZombieMeat", count)
-
-    -- Restore original hand items
-    if self.originalPrimary
-       and self.originalPrimary:getContainer() == inv
-       and not self.originalPrimary:isBroken() then
-        self.character:setPrimaryHandItem(self.originalPrimary)
-    else
-        self.character:setPrimaryHandItem(nil)
-    end
-
-    if self.originalSecondary
-       and self.originalSecondary:getContainer() == inv
-       and not self.originalSecondary:isBroken() then
-        self.character:setSecondaryHandItem(self.originalSecondary)
-    else
-        self.character:setSecondaryHandItem(nil)
-    end
+    CCDebug("Server command sent")
 
     ISBaseTimedAction.perform(self)
 end
 
 function CorpseCleanupAction:new(character, corpse, tool, time, originalPrimary, originalSecondary)
+    CCDebug("Creating new timed action")
     local o = ISBaseTimedAction.new(self, character)
     o.character = character
     o.corpse = corpse
     o.tool = tool
-    o.maxTime = 200
+    o.maxTime = time or 200
     o.originalPrimary = originalPrimary
     o.originalSecondary = originalSecondary
     return o
 end
+
+-------------------------------------------------
+-- RE-EQUIP HANDLER (server tells us to restore hands)
+-------------------------------------------------
+-- Client-driven equip changes sync properly both ways; the same change
+-- made directly by the server does not visually update the owning
+-- client until it forces its own resync. See CorpseCleanup_Server.lua.
+Events.OnServerCommand.Add(function(module, command, args)
+    if module ~= "CorpseCleanup" or command ~= "ReEquip" then return end
+
+    local player = getPlayer()
+    if not player then return end
+
+    CCDebug("Received ReEquip command, restoring hand items")
+
+    if args.originalPrimary then
+        local prim = player:getInventory():getItemById(args.originalPrimary)
+        if prim then
+            player:setPrimaryHandItem(prim)
+            CCDebug("Re-equipped primary")
+        end
+    end
+
+    if args.originalSecondary then
+        local sec = player:getInventory():getItemById(args.originalSecondary)
+        if sec then
+            player:setSecondaryHandItem(sec)
+            CCDebug("Re-equipped secondary")
+        end
+    end
+end)

@@ -1,0 +1,80 @@
+module Base
+{
+	fixing Fix 92 AM General M998 Trunk Welding
+	{
+	   Require = Base.M998Trunk2;Base.M998Roofrack1_Item;Base.M101A3Trunk2,
+	   GlobalItem = Base.BlowTorch=5,
+	   ConditionModifier = 1.2,
+
+       Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=2,
+       Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=2,
+	}
+
+	fixing Fix 92 AM General M998 Hood Welding
+	{
+	   Require = Base.M998EngineDoor2,
+	   GlobalItem = Base.BlowTorch=5,
+	   ConditionModifier = 1.2,
+
+       Fixer = Base.SheetMetal;MetalWelding=1;Mechanics=2,
+       Fixer = Base.SmallSheetMetal=2;MetalWelding=1;Mechanics=2,
+	}
+
+   fixing Fix 92 AM General M998 Hood
+	{
+	   Require = Base.M998EngineDoor2,
+	   GlobalItem = Base.Screws=8,
+	   ConditionModifier = 0.5,
+
+       Fixer = Base.SheetMetal;Mechanics=2,
+	}
+
+	fixing Fix 92 AM General M998 Lid Welding
+    {
+       Require = Base.M998TrunkDoor2;Base.M101A3TrunkDoor2;Base.M101A3TrunkDoorTwo2;Base.M101TrunkDoor2,
+       GlobalItem = Base.BlowTorch=5,
+       ConditionModifier = 1.2,
+
+       Fixer = Base.SheetMetal;MetalWelding=1;Mechanics=2,
+       Fixer = Base.SmallSheetMetal=2;MetalWelding=1;Mechanics=2,
+    }
+
+   fixing Fix 92 AM General M998 Lid
+	{
+      Require = Base.M998TrunkDoor2;Base.M101A3TrunkDoor2;Base.M101A3TrunkDoorTwo2;Base.M101TrunkDoor2,
+	   GlobalItem = Base.Screws=8,
+	   ConditionModifier = 0.5,
+
+       Fixer = Base.SheetMetal;Mechanics=2,
+	}
+
+	fixing Fix 92 AM General M998 Door Welding
+	{
+	   Require = Base.M998CarFrontDoor2;Base.M998CarRearDoor2,
+	   GlobalItem = Base.BlowTorch=5,
+	   ConditionModifier = 1.2,
+
+       Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=3,
+       Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=3,
+	}
+
+	fixing Fix 92 AM General M998 Armor Welding
+    {
+       Require = Base.M998TrunkBarrier1_Item;Base.M998CarFrontDoorArmor1_Item;Base.M998CarRearDoorArmor1_Item;Base.M998WindshieldArmor1_Item;Base.M998WindshieldArmor2_Item;Base.M998BackCover1_Item;Base.M998Bullbar1_Item;Base.M998Bullbar2_Item;Base.M101A3Cover1_Item,
+       GlobalItem = Base.BlowTorch=5,
+       ConditionModifier = 0.75,
+
+       Fixer = Base.SheetMetal;MetalWelding=4;Mechanics=4,
+       Fixer = Base.SmallSheetMetal=2;MetalWelding=4;Mechanics=4,
+    }
+
+    fixing Fix 92 AM General M998 Muffler Welding
+    {
+       Require = Base.M998Muffler1_Item;Base.M998Muffler2_Item,
+       GlobalItem = Base.BlowTorch=5,
+       ConditionModifier = 0.75,
+
+       Fixer = Base.SheetMetal;MetalWelding=4;Mechanics=4,
+       Fixer = Base.SmallSheetMetal=2;MetalWelding=4;Mechanics=4,
+    }
+}

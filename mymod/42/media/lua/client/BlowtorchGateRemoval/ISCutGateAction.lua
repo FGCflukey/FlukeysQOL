@@ -88,15 +88,12 @@ function ISCutGateAction:perform()
         self.torch:Use()
     end
 
-    -- Remove gate
-    self.square:transmitRemoveItemFromSquare(self.obj)
-    self.square:RemoveTileObject(self.obj)
-
-    -- Scrap metal drop (0–5)
-    local dropCount = ZombRand(0, 6)
-    for i = 1, dropCount do
-        self.square:AddWorldInventoryItem("Base.ScrapMetal", 0, 0, 0)
-    end
+    -- Request server-authoritative gate removal (fixes MP desync)
+    sendClientCommand(self.character, "BlowtorchGateRemoval", "cutGate", {
+        x = self.square:getX(),
+        y = self.square:getY(),
+        z = self.square:getZ(),
+    })
 
     -- Return blowtorch
     if self.torch and self.originalContainer then

@@ -21,4 +21,24 @@ module Base
         }
     }
 
+    craftRecipe RecycleSheetsToThread
+    {
+        timedAction     = SewingCloth,
+        time            = 20,
+        Tags            = AnySurfaceCraft,
+        category        = Tailoring,
+        SkillRequired   = Tailoring:1,
+        inputs
+        {
+            item 1 tags[base:scissors;base:sharpknife] mode:keep flags[MayDegradeLight;Prop1;IsNotDull],
+            item 2 [Base.RippedSheets] flags[Prop2] mode:destroy,
+        }
+
+        outputs
+        {
+            item 1 Base.Thread,
+        }
+    }
+
+
 }

@@ -31,9 +31,10 @@ end
 function ZomInfectionCureAction:perform()
     self.item:setJobDelta(0.0)
 
-    sendClientCommand(self.character, "ZomInfection", "Cure", {})
-
-    self.item:Use()
+    -- Do NOT mutate the item client-side (self.item:Use()) - that only
+    -- changes the client's local prediction and desyncs from the server's
+    -- authoritative inventory on reconnect. Server does the real removal.
+    sendClientCommand(self.character, "ZomInfection", "Cure", { itemID = self.item:getID() })
 
     ISBaseTimedAction.perform(self)
 end

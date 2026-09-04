@@ -10,14 +10,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 4 [Base.MetalPipe],
             item 2 [Base.NutsBolts],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -32,18 +32,18 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 2 [Base.MetalBar],
             item 4 [Base.Screws],
             item 2 [Base.NutsBolts],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -58,7 +58,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
@@ -66,10 +66,10 @@ module Base
             item 4 [Base.Screws],
             item 2 [Base.NutsBolts],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -84,7 +84,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 8 [Base.SheetMetal],
@@ -92,10 +92,10 @@ module Base
             item 4 [Base.Screws],
             item 4 [Base.NutsBolts],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -110,14 +110,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 3 [Base.SheetMetal],
             item 2 [Base.SmallSheetMetal],
             item 1 [Base.MetalPipe],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -132,14 +132,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 2 [Base.SmallSheetMetal],
             item 1 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -151,17 +151,17 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:10;Mechanics:4,
+        SkillRequired   = MetalWelding:25;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 3 [Base.SmallSheetMetal],
             item 1 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -176,14 +176,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 2 [Base.SmallSheetMetal],
             item 1 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -195,17 +195,17 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:8;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:6,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 3 [Base.SmallSheetMetal],
             item 2 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -220,14 +220,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 4 [Base.MetalPipe],
             item 2 [Base.NutsBolts],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -244,14 +244,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 4 [Base.MetalPipe],
             item 2 [Base.NutsBolts],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -266,7 +266,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 6 [Base.SheetMetal],
@@ -274,10 +274,10 @@ module Base
             item 4 [Base.Screws],
             item 2 [Base.NutsBolts],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -292,7 +292,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 6 [Base.SheetMetal],
@@ -300,10 +300,10 @@ module Base
             item 4 [Base.Screws],
             item 2 [Base.NutsBolts],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -318,7 +318,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 10 [Base.SheetMetal],
@@ -326,10 +326,10 @@ module Base
             item 4 [Base.Screws],
             item 4 [Base.NutsBolts],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -344,14 +344,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 2 [Base.SmallSheetMetal],
             item 1 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -366,14 +366,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 4 [Base.SmallSheetMetal],
             item 2 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -385,17 +385,17 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:10;Mechanics:4,
+        SkillRequired   = MetalWelding:25;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 3 [Base.SmallSheetMetal],
             item 2 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -410,14 +410,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 3 [Base.SmallSheetMetal],
             item 2 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -429,17 +429,17 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:8;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:6,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 3 [Base.SmallSheetMetal],
             item 2 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -454,14 +454,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 4 [Base.MetalPipe],
             item 2 [Base.NutsBolts],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -478,14 +478,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 4 [Base.MetalPipe],
             item 2 [Base.NutsBolts],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -500,7 +500,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 3 [Base.SheetMetal],
@@ -508,10 +508,10 @@ module Base
             item 4 [Base.Screws],
             item 2 [Base.NutsBolts],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -526,7 +526,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 3 [Base.SheetMetal],
@@ -534,10 +534,10 @@ module Base
             item 4 [Base.Screws],
             item 2 [Base.NutsBolts],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -552,7 +552,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 6 [Base.SheetMetal],
@@ -560,10 +560,10 @@ module Base
             item 4 [Base.Screws],
             item 4 [Base.NutsBolts],
             item 1 [Base.ElectronicsScrap],
-            item 1 tags[Screwdriver] mode:keep flags[MayDegradeLight;Prop1],
-            item 1 tags[Wrench] mode:keep flags[Prop2;MayDegradeLight],
+            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeLight;Prop1],
+            item 1 tags[base:wrench] mode:keep flags[Prop2;MayDegradeLight],
             item 2 [Base.BlowTorch],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -578,14 +578,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 3 [Base.SheetMetal],
             item 2 [Base.SmallSheetMetal],
             item 2 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -600,14 +600,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 4 [Base.SmallSheetMetal],
             item 1 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -619,17 +619,17 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:10;Mechanics:4,
+        SkillRequired   = MetalWelding:25;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 3 [Base.SmallSheetMetal],
             item 1 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -644,14 +644,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 3 [Base.SmallSheetMetal],
             item 2 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -663,17 +663,17 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:8;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:6,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 5 [Base.SheetMetal],
             item 3 [Base.SmallSheetMetal],
             item 2 [Base.MetalPipe],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -688,14 +688,14 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
             item 4 [Base.MetalPipe],
             item 2 [Base.NutsBolts],
             item 2 [Base.BlowTorch] flags[Prop1],
-            item 1 tags[WeldingMask] mode:keep,
+            item 1 tags[base:weldingmask] mode:keep,
         }
         outputs
         {
@@ -712,7 +712,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 2 [Base.SheetMetal],
@@ -736,7 +736,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 4 [Base.SheetMetal],
@@ -760,7 +760,7 @@ module Base
         SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 2 [Base.SheetMetal],
@@ -781,10 +781,10 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:8;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:6,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 2 [Base.SheetMetal],
@@ -805,10 +805,10 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:8;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:6,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 2 [Base.SheetMetal],
@@ -829,10 +829,10 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:8;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:6,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
-        xpAward         = MetalWelding:20,
+        xpAward         = MetalWelding:25,
         inputs
         {
             item 2 [Base.SheetMetal],
@@ -846,6 +846,366 @@ module Base
         outputs
         {
             item 1 Base.ModernTire1,
+        }
+    }
+
+    /* ==========================================================
+       BRAKE RECIPES
+       Ingredients are IDENTICAL across every tier/quality.
+       Only SkillRequired, Time, and xpAward change.
+       ========================================================== */
+
+    /* ---------- Old Brake (entry-level: <4 Mechanics or <4 Welding) ---------- */
+
+    craftRecipe MakeOldBrake1
+    {
+        timedAction     = Welding,
+        Time            = 90,
+        SkillRequired   = MetalWelding:1;Mechanics:1,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.OldBrake1,
+        }
+    }
+
+    craftRecipe MakeOldBrake2
+    {
+        timedAction     = Welding,
+        Time            = 100,
+        SkillRequired   = MetalWelding:2;Mechanics:2,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.OldBrake2,
+        }
+    }
+
+    craftRecipe MakeOldBrake3
+    {
+        timedAction     = Welding,
+        Time            = 110,
+        SkillRequired   = MetalWelding:3;Mechanics:3,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.OldBrake3,
+        }
+    }
+
+    /* ---------- Regular Brake ("Normal") ---------- */
+
+    craftRecipe MakeNormalBrake1
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:6,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalBrake1,
+        }
+    }
+
+    craftRecipe MakeNormalBrake2
+    {
+        timedAction     = Welding,
+        Time            = 140,
+        SkillRequired   = MetalWelding:8;Mechanics:7,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalBrake2,
+        }
+    }
+
+    craftRecipe MakeNormalBrake3
+    {
+        timedAction     = Welding,
+        Time            = 160,
+        SkillRequired   = MetalWelding:8;Mechanics:8,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalBrake3,
+        }
+    }
+
+    /* ---------- Performance Brake ("Modern") - locked until Mechanics 8 / Welding 8 ---------- */
+
+    craftRecipe MakeModernBrake1
+    {
+        timedAction     = Welding,
+        Time            = 150,
+        SkillRequired   = MetalWelding:8;Mechanics:8,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernBrake1,
+        }
+    }
+
+    craftRecipe MakeModernBrake2
+    {
+        timedAction     = Welding,
+        Time            = 170,
+        SkillRequired   = MetalWelding:9;Mechanics:9,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernBrake2,
+        }
+    }
+
+    craftRecipe MakeModernBrake3
+    {
+        timedAction     = Welding,
+        Time            = 190,
+        SkillRequired   = MetalWelding:10;Mechanics:10,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:30,
+        inputs
+        {
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernBrake3,
+        }
+    }
+
+
+    /* ==========================================================
+       SUSPENSION RECIPES
+       Ingredients are IDENTICAL across every tier/quality.
+       Only SkillRequired, Time, and xpAward change.
+       (No "Old" suspension tier exists in the base item set.)
+       ========================================================== */
+
+    /* ---------- Regular Suspension ("Normal") ---------- */
+
+    craftRecipe MakeNormalSuspension1
+    {
+        timedAction     = Welding,
+        Time            = 120,
+        SkillRequired   = MetalWelding:8;Mechanics:6,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 2 [Base.MetalBar],
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalSuspension1,
+        }
+    }
+
+    craftRecipe MakeNormalSuspension2
+    {
+        timedAction     = Welding,
+        Time            = 140,
+        SkillRequired   = MetalWelding:8;Mechanics:7,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 2 [Base.MetalBar],
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalSuspension2,
+        }
+    }
+
+    craftRecipe MakeNormalSuspension3
+    {
+        timedAction     = Welding,
+        Time            = 160,
+        SkillRequired   = MetalWelding:8;Mechanics:8,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 2 [Base.MetalBar],
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.NormalSuspension3,
+        }
+    }
+
+    /* ---------- Performance Suspension ("Modern") - locked until Mechanics 8 / Welding 8 ---------- */
+
+    craftRecipe MakeModernSuspension1
+    {
+        timedAction     = Welding,
+        Time            = 150,
+        SkillRequired   = MetalWelding:8;Mechanics:8,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 2 [Base.MetalBar],
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernSuspension1,
+        }
+    }
+
+    craftRecipe MakeModernSuspension2
+    {
+        timedAction     = Welding,
+        Time            = 170,
+        SkillRequired   = MetalWelding:9;Mechanics:9,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:25,
+        inputs
+        {
+            item 2 [Base.MetalBar],
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernSuspension2,
+        }
+    }
+
+    craftRecipe MakeModernSuspension3
+    {
+        timedAction     = Welding,
+        Time            = 190,
+        SkillRequired   = MetalWelding:10;Mechanics:10,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:30,
+        inputs
+        {
+            item 2 [Base.MetalBar],
+            item 1 [Base.SmallSheetMetal],
+            item 2 [Base.NutsBolts],
+            item 2 [Base.SteelChunk],
+            item 2 [Base.BlowTorch] flags[Prop1],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 1 Base.ModernSuspension3,
         }
     }
 
