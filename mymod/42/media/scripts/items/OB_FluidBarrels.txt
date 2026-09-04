@@ -1,0 +1,78 @@
+module Base
+{
+    item Mov_OrangeBarrel
+    {
+        DisplayCategory = Furniture,
+        ItemType = base:moveable,
+        Icon = Drum_Orange,
+        Weight = 20.0,
+        WorldObjectSprite = industry_01_22,
+        Tags = base:petrol,
+        component FluidContainer
+        {
+            ContainerName = OrangeBarrel,
+            Capacity = 0.0,
+            Fluids
+            {
+                fluid = Petrol:1.0,
+            }
+        }
+    }
+
+    item Mov_DarkGreenBarrel
+    {
+        DisplayCategory = Furniture,
+        ItemType = base:moveable,
+        Icon = Drum_Green,
+        Weight = 20.0,
+        WorldObjectSprite = location_military_generic_01_14,
+        Tags = base:petrol,
+        component FluidContainer
+        {
+            ContainerName = OrangeBarrel,
+            Capacity = 0.0,
+            Fluids
+            {
+                fluid = Petrol:1.0,
+            }
+        }
+    }
+
+    item Mov_LightGreenBarrel
+    {
+        DisplayCategory = Furniture,
+        ItemType = base:moveable,
+        Icon = Drum_Olive,
+        Weight = 20.0,
+        WorldObjectSprite = location_military_generic_01_6,
+        Tags = base:petrol,
+        component FluidContainer
+        {
+            ContainerName = OrangeBarrel,
+            Capacity = 0.0,
+            Fluids
+            {
+                fluid = Petrol:1.0,
+            }
+        }
+    }
+
+    item MetalDrum
+    {
+        DisplayCategory = Furniture,
+        ItemType = base:moveable,
+        Icon = Drum_Grey,
+        Weight = 20.0,
+        WorldObjectSprite = crafted_01_32,
+        Tags = base:petrol,
+        component FluidContainer
+        {
+            ContainerName = OrangeBarrel,
+            Capacity = 0.0,
+            Fluids
+            {
+                fluid = Petrol:1.0,
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
 require "TimedActions/ISBaseTimedAction"
+require "OrangeBarrelFluid_Shared"
 
 OB_ResetBarrelAction = ISBaseTimedAction:derive("OB_ResetBarrelAction")
 
@@ -121,11 +122,20 @@ function OB_ResetBarrelAction:perform()
         self.wrench:setJobDelta(0.0)
     end
 
-    local ok, res = pcall(OrangeBarrelFluid.RemoveFluidComponent, self.barrel)
-    if ok then
-        OBFLog("perform: RemoveFluidComponent returned:", tostring(res))
-    else
-        OBFLog("perform: RemoveFluidComponent errored:", res)
+    -- The actual mutation happens server-side (see OrangeBarrelFluid_Server.lua)
+    -- so it's authoritative and syncs correctly to every client.
+    if self.barrel then
+        local square = self.barrel:getSquare()
+        local objects = square and square:getObjects()
+        local index = objects and objects:indexOf(self.barrel) or -1
+        if square and index >= 0 then
+            OBFLog("perform: requesting server reset, index =", index)
+            sendClientCommand(self.character, "OrangeBarrelFluid", "reset", {
+                x = square:getX(), y = square:getY(), z = square:getZ(), index = index
+            })
+        else
+            OBFLog("perform: could not locate barrel on its square, aborting")
+        end
     end
 
     ISBaseTimedAction.perform(self)

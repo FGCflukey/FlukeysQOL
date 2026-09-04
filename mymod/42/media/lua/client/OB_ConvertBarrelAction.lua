@@ -1,4 +1,5 @@
 require "TimedActions/ISBaseTimedAction"
+require "OrangeBarrelFluid_Shared"
 
 OB_ConvertBarrelAction = ISBaseTimedAction:derive("OB_ConvertBarrelAction")
 
@@ -144,15 +145,18 @@ function OB_ConvertBarrelAction:perform()
     if not self.barrel then
         OBFLog("perform: barrel is nil, aborting conversion")
     else
-        if OrangeBarrelFluid and OrangeBarrelFluid.AddFluidComponent then
-            local ok, res = pcall(OrangeBarrelFluid.AddFluidComponent, self.barrel)
-            if ok then
-                OBFLog("perform: AddFluidComponent returned:", tostring(res))
-            else
-                OBFLog("perform: AddFluidComponent errored:", res)
-            end
+        -- The actual mutation happens server-side (see OrangeBarrelFluid_Server.lua)
+        -- so it's authoritative and syncs correctly to every client.
+        local square = self.barrel:getSquare()
+        local objects = square and square:getObjects()
+        local index = objects and objects:indexOf(self.barrel) or -1
+        if square and index >= 0 then
+            OBFLog("perform: requesting server conversion, index =", index)
+            sendClientCommand(self.character, "OrangeBarrelFluid", "convert", {
+                x = square:getX(), y = square:getY(), z = square:getZ(), index = index
+            })
         else
-            OBFLog("perform: OrangeBarrelFluid.AddFluidComponent not available")
+            OBFLog("perform: could not locate barrel on its square, aborting")
         end
     end
 
