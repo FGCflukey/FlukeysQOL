@@ -12,6 +12,8 @@ module Base
         {
             ContainerName = OrangeBarrel,
             Capacity = 200.0,
+            InitialPercentMin = 0.0,
+            InitialPercentMax = 0.0,
             Fluids
             {
                 fluid = Petrol:1.0,
@@ -31,6 +33,8 @@ module Base
         {
             ContainerName = OrangeBarrel,
             Capacity = 200.0,
+            InitialPercentMin = 0.0,
+            InitialPercentMax = 0.0,
             Fluids
             {
                 fluid = Petrol:1.0,
@@ -50,6 +54,8 @@ module Base
         {
             ContainerName = OrangeBarrel,
             Capacity = 200.0,
+            InitialPercentMin = 0.0,
+            InitialPercentMax = 0.0,
             Fluids
             {
                 fluid = Petrol:1.0,
@@ -69,6 +75,8 @@ module Base
         {
             ContainerName = OrangeBarrel,
             Capacity = 200.0,
+            InitialPercentMin = 0.0,
+            InitialPercentMax = 0.0,
             Fluids
             {
                 fluid = Petrol:1.0,
