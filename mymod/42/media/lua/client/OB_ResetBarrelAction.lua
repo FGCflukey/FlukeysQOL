@@ -3,7 +3,7 @@ require "TimedActions/ISBaseTimedAction"
 OB_ResetBarrelAction = ISBaseTimedAction:derive("OB_ResetBarrelAction")
 
 -- Debug toggle
-local OB_DEBUG = false   -- set to true to enable logging
+local OB_DEBUG = true   -- set to true to enable logging
 
 local function OBFLog(...)
     if not OB_DEBUG then return end

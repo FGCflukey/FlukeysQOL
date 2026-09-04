@@ -1,9 +1,9 @@
 OrangeBarrelFluid = OrangeBarrelFluid or {}
-OrangeBarrelFluid.DEBUG = false
+OrangeBarrelFluid.DEBUG = true
 
 local function OBFLog(...)
     if not OrangeBarrelFluid.DEBUG then return end
-    -- print("[OrangeBarrelFluid]", ...)
+    print("[OrangeBarrelFluid]", ...)
 end
 
 -- Shared label helper
@@ -82,17 +82,26 @@ function OrangeBarrelFluid.HasFluidComponent(barrel)
         return false
     end
 
-    -- Engine component check
+    -- Engine component check — must be OUR component, not another mod's
+    -- (e.g. LG Extended Plumbing attaches its own FluidContainer to the
+    -- same vanilla barrel sprites for its water network)
     local ok, res = pcall(function()
-        if ComponentType and ComponentType.FluidContainer and barrel.hasComponent then
-            return barrel:hasComponent(ComponentType.FluidContainer)
+        if ComponentType and ComponentType.FluidContainer and barrel.hasComponent and barrel.getComponent then
+            if barrel:hasComponent(ComponentType.FluidContainer) then
+                local comp = barrel:getComponent(ComponentType.FluidContainer)
+                if comp and comp.getContainerName then
+                    return comp:getContainerName() == "OrangeBarrel"
+                end
+            end
         end
         return false
     end)
 
     if ok and res then
-        OBFLog("HasFluidComponent: engine reports fluid component present")
+        OBFLog("HasFluidComponent: engine reports OUR fluid component present")
         return true
+    elseif ok then
+        OBFLog("HasFluidComponent: engine component present but NOT ours (or none)")
     end
 
     -- Fallback modData
