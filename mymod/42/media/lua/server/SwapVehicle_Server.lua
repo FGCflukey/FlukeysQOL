@@ -144,6 +144,23 @@ local function GetDistanceToVehicle(player, vehicle)
 end
 
 ------------------------------------------------------------
+-- Ownership gate: require the vehicle's actual key so a
+-- player can't walk a parking lot re-skinning cars that
+-- aren't theirs. A vehicle with no key system (keyId -1)
+-- can't be gated this way, so it's allowed through.
+------------------------------------------------------------
+local function PlayerHasVehicleKey(player, vehicle)
+    local keyId = vehicle:getKeyId()
+    if not keyId or keyId == -1 then return true end
+
+    local inv = player:getInventory()
+    local keyItem = inv:getFirstTypeEvalRecurse("Key", function(item)
+        return item:getKeyId() == keyId
+    end)
+    return keyItem ~= nil
+end
+
+------------------------------------------------------------
 -- Occupant check: refuse to swap out from under a driver or
 -- passenger (own player included).
 ------------------------------------------------------------
@@ -212,6 +229,15 @@ function SwapVehicle_Server_Handle(player, args)
     --------------------------------------------------------
     if VehicleHasOccupants(vehicle) then
         print("[SwapVehicle] Rejected: vehicle " .. tostring(args.vehicleId) .. " has an occupant")
+        return
+    end
+
+    --------------------------------------------------------
+    -- Player must hold this vehicle's key -- prevents mass
+    -- re-skinning of cars the player doesn't own.
+    --------------------------------------------------------
+    if not PlayerHasVehicleKey(player, vehicle) then
+        print("[SwapVehicle] Rejected: " .. tostring(player:getUsername()) .. " does not have the key for vehicle " .. tostring(args.vehicleId))
         return
     end
 

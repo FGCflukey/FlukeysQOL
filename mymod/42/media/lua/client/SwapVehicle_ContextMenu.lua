@@ -63,6 +63,23 @@ local function PV_needsCleaning(vehicle)
 end
 
 ------------------------------------------------------------
+-- Ownership gate: require the vehicle's actual key so
+-- randoms can't walk a parking lot re-skinning cars that
+-- aren't theirs. A vehicle with no key system (keyId -1)
+-- can't be gated this way, so it's allowed through.
+------------------------------------------------------------
+local function PV_hasVehicleKey(player, vehicle)
+    local keyId = vehicle:getKeyId()
+    if not keyId or keyId == -1 then return true end
+
+    local inv = player:getInventory()
+    local keyItem = inv:getFirstTypeEvalRecurse("Key", function(item)
+        return item:getKeyId() == keyId
+    end)
+    return keyItem ~= nil
+end
+
+------------------------------------------------------------
 -- Registry check
 ------------------------------------------------------------
 
@@ -105,6 +122,12 @@ local function SV_AddContextMenu(playerIndex, context, worldobjects, test)
     end
 
     dbg("Vehicle detected: " .. tostring(vehicle))
+
+    if not PV_hasVehicleKey(player, vehicle) then
+        dbg("Blocked: player does not have this vehicle's key")
+        if not test then player:Say("I don't have the key to this car.") end
+        return
+    end
 
     PV_debugClimate()
 

@@ -54,6 +54,17 @@ local function PV_vehicleIsBloody(vehicle)
     return false
 end
 
+local function PV_hasVehicleKey(character, vehicle)
+    local keyId = vehicle:getKeyId()
+    if not keyId or keyId == -1 then return true end
+
+    local inv = character:getInventory()
+    local keyItem = inv:getFirstTypeEvalRecurse("Key", function(item)
+        return item:getKeyId() == keyId
+    end)
+    return keyItem ~= nil
+end
+
 ------------------------------------------------------------
 -- isValid(): runs BEFORE the action starts
 ------------------------------------------------------------
@@ -62,10 +73,11 @@ function ISSwapVinylAction:isValid()
     local sq = self.vehicle:getSquare()
     if not sq then return false end
 
-    -- Weather / Light / Cleanliness gating
+    -- Weather / Light / Cleanliness / ownership gating
     if PV_isBadWeather() then return false end
     if not PV_hasEnoughLight(self.character) then return false end
     if PV_vehicleIsBloody(self.vehicle) then return false end
+    if not PV_hasVehicleKey(self.character, self.vehicle) then return false end
 
     -- Require SpraycanVinylCoat AND SandingBlock (main inventory only)
     local inv = self.character:getInventory()
