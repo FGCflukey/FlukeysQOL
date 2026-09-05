@@ -123,40 +123,10 @@ local function SV_AddContextMenu(playerIndex, context, worldobjects, test)
 
     dbg("Vehicle detected: " .. tostring(vehicle))
 
-    if not PV_hasVehicleKey(player, vehicle) then
-        dbg("Blocked: player does not have this vehicle's key")
-        if not test then player:Say("I don't have the key to this car.") end
-        return
-    end
-
-    PV_debugClimate()
-
     --------------------------------------------------------
-    -- Weather / Light / Cleanliness gating
-    -- (Say() suppressed when `test` is true, since the game
-    -- probes context menu builders in test mode without the
-    -- player actually right-clicking.)
-    --------------------------------------------------------
-    if PV_isBadWeather() then
-        dbg("Blocked: bad weather")
-        if not test then player:Say("I can't apply vinyl in this weather.") end
-        return
-    end
-
-    if not PV_hasEnoughLight(player) then
-        dbg("Blocked: not enough light")
-        if not test then player:Say("It's too dark to apply vinyl.") end
-        return
-    end
-
-    if PV_needsCleaning(vehicle) then
-        dbg("Blocked: vehicle is bloody")
-        if not test then player:Say("I think I should wash it first.") end
-        return
-    end
-
-    --------------------------------------------------------
-    -- Registry lookup (OPTION D)
+    -- Registry lookup FIRST — vehicles that simply aren't
+    -- part of any swap group should never show this option
+    -- at all, regardless of weather/key/materials.
     --------------------------------------------------------
     local scriptObj = vehicle:getScript()
     if not scriptObj then
@@ -184,30 +154,39 @@ local function SV_AddContextMenu(playerIndex, context, worldobjects, test)
         return true
     end
 
+    PV_debugClimate()
+
     --------------------------------------------------------
-    -- Inventory gating
+    -- Evaluate every requirement up front so the option can
+    -- always be shown, greyed out with a tooltip explaining
+    -- what's missing, instead of blocking with a chat message
+    -- on every right-click.
     --------------------------------------------------------
     local inv = player:getInventory()
 
-    if not inv:contains("SandingBlock") then
-        dbg("Missing sanding block")
-        player:Say("I need a sanding block.")
-        return
-    end
+    local hasKey     = PV_hasVehicleKey(player, vehicle)
+    local weatherOk  = not PV_isBadWeather()
+    local lightOk    = PV_hasEnoughLight(player)
+    local cleanOk    = not PV_needsCleaning(vehicle)
+    local hasSanding = inv:contains("SandingBlock")
+    local hasSpray   = inv:contains("SpraycanVinylCoat")
 
-    if not inv:contains("SpraycanVinylCoat") then
-        dbg("Missing vinyl spraycan")
-        player:Say("I need vinyl spray paint.")
-        return
-    end
+    local allOk = hasKey and weatherOk and lightOk and cleanOk and hasSanding and hasSpray
 
     --------------------------------------------------------
-    -- Add context menu option
+    -- Add context menu option (always shown; disabled + a
+    -- tooltip when a requirement isn't met, mirroring the
+    -- vanilla "Dismantle Vehicle Chassis" requirements list).
     --------------------------------------------------------
-    dbg("Adding context menu option for vehicle swap")
+    dbg("Adding context menu option for vehicle swap, allOk=" .. tostring(allOk))
 
-    context:addOption("Swap Vehicle Vinyl", vehicle, function(v)
+    local option = context:addOption("Swap Vehicle Vinyl", vehicle, function(v)
         dbg("Callback triggered for vehicle: " .. tostring(v))
+
+        if not allOk then
+            dbg("Callback fired while requirements unmet, ignoring")
+            return
+        end
 
         if not v or not instanceof(v, "BaseVehicle") then
             dbg("Callback received non‑vehicle, aborting")
@@ -227,6 +206,34 @@ local function SV_AddContextMenu(playerIndex, context, worldobjects, test)
             print("ERROR: SwapVehicle_UI.Open missing!")
         end
     end)
+
+    if allOk then
+        option.notAvailable = false
+        return
+    end
+
+    option.notAvailable = true
+
+    local function reqLine(ok, text)
+        local rgb = ok and " <RGB:1,1,1>" or " <RGB:1,0,0>"
+        return rgb .. text .. " <LINE>"
+    end
+
+    local tip = ISToolTip:new()
+    tip:initialise()
+    tip:setVisible(true)
+
+    tip.description = "Requirements:" .. " <LINE>"
+    if vehicle:getKeyId() and vehicle:getKeyId() ~= -1 then
+        tip.description = tip.description .. reqLine(hasKey, "Vehicle key")
+    end
+    tip.description = tip.description .. reqLine(weatherOk, "Clear weather")
+    tip.description = tip.description .. reqLine(lightOk, "Enough light")
+    tip.description = tip.description .. reqLine(cleanOk, "Vehicle is clean")
+    tip.description = tip.description .. reqLine(hasSanding, "Sanding Block")
+    tip.description = tip.description .. reqLine(hasSpray, "Vinyl Spray Paint")
+
+    option.toolTip = tip
 end
 
 Events.OnFillWorldObjectContextMenu.Add(SV_AddContextMenu)
