@@ -267,14 +267,17 @@ function SwapVehicle_Server_Handle(player, args)
         local condition = sanding:getCondition()
         if condition > 1 then
             sanding:setCondition(condition - 1)
+            if sanding.syncItemFields then sanding:syncItemFields() end
         else
             invCheck:Remove(sanding)
+            sendRemoveItemFromContainer(invCheck, sanding)
         end
     end
 
     local spray = invCheck:getFirstType("SpraycanVinylCoat")
     if spray then
         invCheck:Remove(spray)
+        sendRemoveItemFromContainer(invCheck, spray)
     end
 
     local partSet = SwapVehicleRegistry.PartSets[group] or SwapVehicleRegistry.PartSets.Default
