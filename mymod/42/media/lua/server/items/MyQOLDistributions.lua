@@ -60,6 +60,7 @@ local qolWeapDistribTable = {
     "Base.cfcombataxe",         5.0,
     "Base.cflongreachaxe",      5.0,
     "Base.BastardSword",        5.0,
+    "Base.CanteenFLuKeez",      4.0,
 }
 
 -- Car / Mechanics
