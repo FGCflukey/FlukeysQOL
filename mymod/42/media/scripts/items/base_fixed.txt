@@ -312,6 +312,35 @@ module Base
         }
     }
 
+    item CanteenFLuKeez
+    {
+        DisplayCategory = WaterContainer,
+        ItemType = base:clothing,
+        Weight = 0.3,
+        DisplayName = FLuKeez's Canteen,
+        ClothingItem = CanteenCowboy,
+        BodyLocation = base:satchel,
+        IconsForTexture = CanteenCowboy;Canteen_Green;Canteen_Camo;CanteenCowboy,
+        Tags = base:hasmetal;base:ismemento,
+        StaticModel = CanteenCowboy_Ground,
+        WorldStaticModel = CanteenCowboy_Ground,
+        EatType = Bourbon,
+        CanHaveHoles = false,
+        WaterResistance = 1.0,
+        component FluidContainer
+        {
+            ContainerName = WesternCanteen,
+            Capacity = 3.0,
+            InitialPercentMin = 0.0,
+            InitialPercentMax = 1.0,
+            CustomDrinkSound = DrinkingFromBottlePlastic,
+            Fluids
+            {
+                fluid = Water:1.0,
+            }
+        }
+    }
+
 /*  Currencies  */
 
     item Money
