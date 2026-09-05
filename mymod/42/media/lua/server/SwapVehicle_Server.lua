@@ -130,19 +130,153 @@ local function RestoreLootFromReferences(newVehicle, loot)
 end
 
 ------------------------------------------------------------
+-- Server-side trust boundary: everything below re-validates
+-- what the client already checked, since `args` comes from a
+-- ClientCommand and cannot be trusted as-is.
+------------------------------------------------------------
+local MAX_INTERACT_DISTANCE = 3 -- tiles; generous vs. vanilla vehicle interaction range
+local SWAP_COOLDOWN_SECONDS = 3
+
+local function GetDistanceToVehicle(player, vehicle)
+    local dx = player:getX() - vehicle:getX()
+    local dy = player:getY() - vehicle:getY()
+    return math.sqrt(dx * dx + dy * dy)
+end
+
+------------------------------------------------------------
+-- Occupant check: refuse to swap out from under a driver or
+-- passenger (own player included).
+------------------------------------------------------------
+local function VehicleHasOccupants(vehicle)
+    local players = getOnlinePlayers()
+    for i = 0, players:size() - 1 do
+        local p = players:get(i)
+        if p and p:getVehicle() == vehicle then
+            return true
+        end
+    end
+    return false
+end
+
+------------------------------------------------------------
+-- Per-player cooldown to prevent command spam / rapid re-swap
+-- abuse on the same or different vehicles.
+------------------------------------------------------------
+local lastSwapTime = {}
+
+local function IsOnCooldown(player)
+    local id = player:getUsername()
+    local now = getTimestamp()
+    local last = lastSwapTime[id]
+    return last ~= nil and (now - last) < SWAP_COOLDOWN_SECONDS
+end
+
+local function MarkSwapTime(player)
+    lastSwapTime[player:getUsername()] = getTimestamp()
+end
+
+------------------------------------------------------------
 -- Main Swap Handler
 ------------------------------------------------------------
 function SwapVehicle_Server_Handle(player, args)
+    if not player or not args then return end
+
+    local newScript = args.newScript
+    if type(newScript) ~= "string" or newScript == "" then
+        print("[SwapVehicle] Rejected: invalid newScript from " .. tostring(player and player:getUsername()))
+        return
+    end
+
+    if IsOnCooldown(player) then
+        print("[SwapVehicle] Rejected: " .. tostring(player:getUsername()) .. " is on cooldown")
+        return
+    end
+
     local vehicle = getVehicleById(args.vehicleId)
-    if not vehicle then return end
+    if not vehicle then
+        print("[SwapVehicle] Rejected: vehicle not found for id " .. tostring(args.vehicleId))
+        return
+    end
+
+    --------------------------------------------------------
+    -- Proximity check: player must actually be near the
+    -- vehicle they're claiming to swap.
+    --------------------------------------------------------
+    if GetDistanceToVehicle(player, vehicle) > MAX_INTERACT_DISTANCE then
+        print("[SwapVehicle] Rejected: " .. tostring(player:getUsername()) .. " too far from vehicle " .. tostring(args.vehicleId))
+        return
+    end
+
+    --------------------------------------------------------
+    -- Nobody may be sitting in the vehicle during a swap.
+    --------------------------------------------------------
+    if VehicleHasOccupants(vehicle) then
+        print("[SwapVehicle] Rejected: vehicle " .. tostring(args.vehicleId) .. " has an occupant")
+        return
+    end
 
     local oldScript = vehicle:getScript():getFullName()
-    local newScript = args.newScript
 
     --------------------------------------------------------
     -- Determine part set
     --------------------------------------------------------
     local group = SwapVehicleRegistry.Groups[oldScript]
+    if not group then
+        print("[SwapVehicle] Rejected: no registry group for script " .. tostring(oldScript))
+        return
+    end
+
+    --------------------------------------------------------
+    -- newScript must be a registered swap variant of the
+    -- vehicle's own group, not an arbitrary script.
+    --------------------------------------------------------
+    local variants = SwapVehicleRegistry.SwapPairs[group]
+    local validVariant = false
+    if variants then
+        for _, v in ipairs(variants) do
+            if v == newScript then
+                validVariant = true
+                break
+            end
+        end
+    end
+    if not validVariant then
+        print("[SwapVehicle] Rejected: " .. tostring(newScript) .. " is not a valid swap variant for group " .. tostring(group))
+        return
+    end
+
+    --------------------------------------------------------
+    -- Player must actually have the required materials.
+    --------------------------------------------------------
+    local invCheck = player:getInventory()
+    if not invCheck:contains("SandingBlock") or not invCheck:contains("SpraycanVinylCoat") then
+        print("[SwapVehicle] Rejected: " .. tostring(player:getUsername()) .. " missing required items")
+        return
+    end
+
+    --------------------------------------------------------
+    -- All checks passed: lock in the cooldown and consume
+    -- materials here (server-authoritative), so a spoofed
+    -- client command can't skip the cost the way the client-
+    -- side ISSwapVinylAction used to enforce on its own.
+    --------------------------------------------------------
+    MarkSwapTime(player)
+
+    local sanding = invCheck:getFirstType("SandingBlock")
+    if sanding then
+        local condition = sanding:getCondition()
+        if condition > 1 then
+            sanding:setCondition(condition - 1)
+        else
+            invCheck:Remove(sanding)
+        end
+    end
+
+    local spray = invCheck:getFirstType("SpraycanVinylCoat")
+    if spray then
+        invCheck:Remove(spray)
+    end
+
     local partSet = SwapVehicleRegistry.PartSets[group] or SwapVehicleRegistry.PartSets.Default
 
     --------------------------------------------------------

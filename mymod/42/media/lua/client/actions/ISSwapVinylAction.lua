@@ -155,23 +155,9 @@ function ISSwapVinylAction:perform()
         return
     end
 
-    -- Consume SpraycanVinylCoat
-    local inv = self.character:getInventory()
-    local spray = inv:getFirstType("SpraycanVinylCoat")
-    if spray then
-        inv:Remove(spray)
-    end
-
-    -- Use (but do not destroy) SandingBlock
-    local sanding = inv:getFirstType("SandingBlock")
-    if sanding then
-        local condition = sanding:getCondition()
-        if condition > 1 then
-            sanding:setCondition(condition - 1)
-        else
-            inv:Remove(sanding)
-        end
-    end
+    -- Materials are consumed server-side in SwapVehicle_Server_Handle
+    -- once it re-validates the request, so the cost can't be skipped
+    -- by a client that sends the "Swap" command directly.
 
     -- Perform the actual vinyl swap
     SwapVehicle_Client.SendSwapRequest(self.character, self.vehicle, self.newScript)

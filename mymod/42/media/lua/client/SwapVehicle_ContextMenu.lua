@@ -92,25 +92,10 @@ local function SV_AddContextMenu(playerIndex, context, worldobjects, test)
         return
     end
 
-    PV_debugClimate()
-
     --------------------------------------------------------
-    -- Weather / Light / Cleanliness gating
-    --------------------------------------------------------
-    if PV_isBadWeather() then
-        dbg("Blocked: bad weather")
-        player:Say("I can't apply vinyl in this weather.")
-        return
-    end
-
-    if not PV_hasEnoughLight(player) then
-        dbg("Blocked: not enough light")
-        player:Say("It's too dark to apply vinyl.")
-        return
-    end
-
-    --------------------------------------------------------
-    -- Vehicle detection (UPDATED)
+    -- Vehicle detection FIRST — unrelated right-clicks (no
+    -- vehicle nearby) must not trigger vinyl-specific gating
+    -- or chat messages.
     --------------------------------------------------------
     local vehicle = SV_FindVehicle(player)
 
@@ -121,12 +106,29 @@ local function SV_AddContextMenu(playerIndex, context, worldobjects, test)
 
     dbg("Vehicle detected: " .. tostring(vehicle))
 
+    PV_debugClimate()
+
     --------------------------------------------------------
-    -- Cleanliness gating
+    -- Weather / Light / Cleanliness gating
+    -- (Say() suppressed when `test` is true, since the game
+    -- probes context menu builders in test mode without the
+    -- player actually right-clicking.)
     --------------------------------------------------------
+    if PV_isBadWeather() then
+        dbg("Blocked: bad weather")
+        if not test then player:Say("I can't apply vinyl in this weather.") end
+        return
+    end
+
+    if not PV_hasEnoughLight(player) then
+        dbg("Blocked: not enough light")
+        if not test then player:Say("It's too dark to apply vinyl.") end
+        return
+    end
+
     if PV_needsCleaning(vehicle) then
         dbg("Blocked: vehicle is bloody")
-        player:Say("I think I should wash it first.")
+        if not test then player:Say("I think I should wash it first.") end
         return
     end
 
