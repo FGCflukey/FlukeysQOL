@@ -41,8 +41,14 @@ function Commands.cutKey(player, args)
     end
 
     local inv = player:getInventory()
-    inv:Remove(blank)
-    sendRemoveItemFromContainer(inv, blank)
+
+    -- blank was located via getFirstTypeRecurse(), so it may actually
+    -- live inside a nested container (e.g. a backpack) rather than the
+    -- top-level inventory -- removing it from the wrong container is a
+    -- silent no-op, so remove it from wherever it actually is.
+    local blankContainer = blank:getContainer() or inv
+    blankContainer:Remove(blank)
+    sendRemoveItemFromContainer(blankContainer, blank)
 
     inv:AddItem(key)
     key:syncItemFields()
