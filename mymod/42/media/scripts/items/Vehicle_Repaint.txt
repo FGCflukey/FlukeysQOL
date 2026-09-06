@@ -5,7 +5,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_White.png,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -17,7 +16,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Black,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -29,7 +27,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Gray,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -41,7 +38,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_DarkGray,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -53,19 +49,17 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Red,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
         StaticModel         = spraycanTZRed,
         WorldStaticModel    = spraycanTZRed,
     }
-    
+
     item SpraycanBlue
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Blue,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -77,7 +71,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Green,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -89,7 +82,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Yellow,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -101,7 +93,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Orange,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -113,7 +104,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Purple,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -125,7 +115,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_PastelBlue,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -137,7 +126,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_PastelPink,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -149,7 +137,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_PastelGreen,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -161,7 +148,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_PastelYellow,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -173,7 +159,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Mauve,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -185,7 +170,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Brown,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -197,7 +181,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Tan,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -209,7 +192,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Olive,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -221,7 +203,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_ForestGreen,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -233,7 +214,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Pink,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -245,7 +225,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Cyan,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayPaintCan,
@@ -257,7 +236,6 @@ module Base
     {
         ItemType            = base:normal,
         Icon                = TZ_Spraycan_Vinyl,
-        MaxUses             = 40,
         UseWhileEquipped    = false,
         Weight              = 0.5,
         Tooltip             = Tooltip_SprayVinylCan,

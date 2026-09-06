@@ -308,7 +308,7 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
 
     local function onChooseColor(_, playerObj, vehicle, hsv, spraycanItem)
         ISTimedActionQueue.add(
-            ISPaintVehicleAction:new(playerObj, vehicle, hsv, spraycanItem, scriptName)
+            ISPaintVehicleAction:new(playerObj, vehicle, hsv, spraycanItem)
         )
     end
 
@@ -319,7 +319,7 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
             ZombRandFloat(0.5,1.0)
         }
         ISTimedActionQueue.add(
-            ISPaintVehicleAction:new(playerObj, vehicle, hsv, nil, scriptName)
+            ISPaintVehicleAction:new(playerObj, vehicle, hsv, nil)
         )
     end
 

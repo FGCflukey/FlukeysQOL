@@ -62,17 +62,6 @@ local function PV_debugClimate()
 end
 
 -----------------------------------------------------
--- LARGE VEHICLE CHECK
------------------------------------------------------
-local function PV_isLargeVehicle(name)
-    if not name then return false end
-    return string.find(name, "Van")
-        or string.find(name, "Truck")
-        or string.find(name, "Pickup")
-        or string.find(name, "SUV")
-end
-
------------------------------------------------------
 -- BLOOD CLEANLINESS CHECK
 -----------------------------------------------------
 local function PV_vehicleIsBloody(vehicle)
@@ -114,7 +103,6 @@ function ISPaintVehicleAction:isValid()
     -- REQUIRED ITEMS FIRST
     -----------------------------------------------------
     if self.spraycan then
-        if self.spraycan:getCurrentUses() <= 0 then return false end
         if not self.character:getInventory():contains(self.spraycan) then return false end
     end
 
@@ -195,23 +183,19 @@ function ISPaintVehicleAction:perform()
         emitter:stopSound(self.loopSound)
     end
 
-    local drainFraction = self.spraycan and (PV_isLargeVehicle(self.scriptName) and 1.0 or 0.5) or nil
-
     if isClient() then
-        -- MP: ask the server to apply the color (and drain the spraycan) on
+        -- MP: ask the server to apply the color (and consume the spraycan) on
         -- its own authoritative copies so both actually persist. Doing this
         -- locally would only ever affect our own screen/inventory until the
         -- next server sync silently reverts it.
         local spraycanID = self.spraycan and self.spraycan:getID() or nil
-        print("[PaintVehicle] Client sending spraycanID:", spraycanID, "drainFraction:", drainFraction)
 
         sendClientCommand(self.character, "PaintVehicle", "paint", {
-            vehicleID     = self.vehicle and self.vehicle:getId() or nil,
-            h             = self.hsv and self.hsv[1] or nil,
-            s             = self.hsv and self.hsv[2] or nil,
-            v             = self.hsv and self.hsv[3] or nil,
-            spraycanID    = spraycanID,
-            drainFraction = drainFraction,
+            vehicleID  = self.vehicle and self.vehicle:getId() or nil,
+            h          = self.hsv and self.hsv[1] or nil,
+            s          = self.hsv and self.hsv[2] or nil,
+            v          = self.hsv and self.hsv[3] or nil,
+            spraycanID = spraycanID,
         })
     else
         -- Solo / hosting as the server: safe to mutate directly.
@@ -220,17 +204,10 @@ function ISPaintVehicleAction:perform()
             self.vehicle:transmitColorHSV()
         end
 
+        -- One can per repaint, regardless of vehicle size -- same rule
+        -- as the vinyl swap system.
         if self.spraycan then
-            -- Spraycans are Drainable items (governed by UseDelta in the
-            -- script), not Uses-count items, so drain via UsedDelta:
-            -- 1.0 = full, 0.0 = empty.
-            local before = self.spraycan:getUsedDelta()
-            local after  = math.max(0, before - drainFraction)
-            self.spraycan:setUsedDelta(after)
-
-            if after <= 0 then
-                self.character:getInventory():Remove(self.spraycan)
-            end
+            self.character:getInventory():Remove(self.spraycan)
         end
     end
 
@@ -241,13 +218,12 @@ function ISPaintVehicleAction:perform()
     ISBaseTimedAction.perform(self)
 end
 
-function ISPaintVehicleAction:new(character, vehicle, hsv, spraycan, scriptName)
+function ISPaintVehicleAction:new(character, vehicle, hsv, spraycan)
     local o = ISBaseTimedAction.new(self, character)
     o.character   = character
     o.vehicle     = vehicle
     o.hsv         = hsv
     o.spraycan    = spraycan
-    o.scriptName  = scriptName
 
     o.maxTime     = 600
     o.stopOnWalk  = true

@@ -76,20 +76,6 @@ local function isBlockedCommercial(name)
 end
 
 ------------------------------------------------------------
--- Same large-vehicle test as PaintVehicle_Action.lua, used to
--- recompute the spraycan drain server-side instead of trusting
--- whatever drainFraction the client sends (a spoofed 0 would
--- otherwise mean a free, unlimited repaint).
-------------------------------------------------------------
-local function isLargeVehicle(name)
-    if not name then return false end
-    return string.find(name, "Van")
-        or string.find(name, "Truck")
-        or string.find(name, "Pickup")
-        or string.find(name, "SUV")
-end
-
-------------------------------------------------------------
 -- Recognised spraycan item types -- a spoofed spraycanID must
 -- resolve to one of these, not an arbitrary item.
 ------------------------------------------------------------
@@ -112,29 +98,19 @@ local function PV_findItemByID(inv, id)
 
     if inv.getItemById then
         local ok, item = pcall(function() return inv:getItemById(id) end)
-        if ok and item then
-            print("[PaintVehicle] findItemByID: getItemById matched requestedID=" .. tostring(id) .. " resolvedID=" .. tostring(item:getID()) .. " uses=" .. tostring(item:getCurrentUses()) .. "/" .. tostring(item:getMaxUses()))
-            return item
-        end
+        if ok and item then return item end
     end
 
     if inv.getItemWithIDRecursiv then
         local ok, item = pcall(function() return inv:getItemWithIDRecursiv(id) end)
-        if ok and item then
-            print("[PaintVehicle] findItemByID: getItemWithIDRecursiv matched requestedID=" .. tostring(id) .. " resolvedID=" .. tostring(item:getID()) .. " uses=" .. tostring(item:getCurrentUses()) .. "/" .. tostring(item:getMaxUses()))
-            return item
-        end
+        if ok and item then return item end
     end
 
     if inv.getItemWithID then
         local ok, item = pcall(function() return inv:getItemWithID(id) end)
-        if ok and item then
-            print("[PaintVehicle] findItemByID: getItemWithID matched requestedID=" .. tostring(id) .. " resolvedID=" .. tostring(item:getID()) .. " uses=" .. tostring(item:getCurrentUses()) .. "/" .. tostring(item:getMaxUses()))
-            return item
-        end
+        if ok and item then return item end
     end
 
-    print("[PaintVehicle] findItemByID: NO MATCH for requestedID=" .. tostring(id))
     return nil
 end
 
@@ -207,10 +183,6 @@ local function OnClientCommand_PaintVehicle(module, command, player, args)
             print("[PaintVehicle] Rejected: invalid spraycan from " .. tostring(player:getUsername()))
             return
         end
-        if spraycan:getCurrentUses() <= 0 then
-            print("[PaintVehicle] Rejected: spraycan already empty")
-            return
-        end
     end
 
     --------------------------------------------------------
@@ -235,29 +207,15 @@ local function OnClientCommand_PaintVehicle(module, command, player, args)
     vehicle:transmitColorHSV()
 
     if spraycan then
-        -- drainFraction is recomputed here rather than trusting
-        -- args.drainFraction, so a spoofed command can't paint
-        -- for free.
-        local maxUses = spraycan:getMaxUses()
-        local before = spraycan:getCurrentUses()
-        local drainFraction = isLargeVehicle(scriptName) and 1.0 or 0.5
-        local drainUses = math.floor(maxUses * drainFraction + 0.001)
-        local after = math.max(0, before - drainUses)
-        spraycan:setCurrentUses(after)
-
-        print("[PaintVehicle] Spraycan drained:", before, "/", maxUses, "->", after)
-
-        if after <= 0 then
-            -- spraycan may have been found inside a nested container
-            -- (e.g. a backpack) via the recursive ID lookup above, so
-            -- remove it from its actual container, not assume it's
-            -- top-level -- same lesson as the CarKeyCraft blank-key bug.
-            local container = spraycan:getContainer() or inv
-            container:Remove(spraycan)
-            sendRemoveItemFromContainer(container, spraycan)
-        else
-            spraycan:syncItemFields()
-        end
+        -- One can per repaint, regardless of vehicle size -- same rule
+        -- as the vinyl swap system. spraycan may have been found inside
+        -- a nested container (e.g. a backpack) via the recursive ID
+        -- lookup above, so remove it from its actual container, not
+        -- assume it's top-level -- same lesson as the CarKeyCraft
+        -- blank-key bug.
+        local container = spraycan:getContainer() or inv
+        container:Remove(spraycan)
+        sendRemoveItemFromContainer(container, spraycan)
     end
 end
 
