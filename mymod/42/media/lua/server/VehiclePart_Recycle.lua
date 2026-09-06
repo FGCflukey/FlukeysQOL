@@ -1,7 +1,22 @@
 local function giveItems(character, items)
     local inv = character:getInventory()
-    for _, item in ipairs(items) do
-        inv:AddItem(item)
+    local square = character:getSquare()
+
+    for _, itemType in ipairs(items) do
+        local item = inv:AddItem(itemType)
+
+        if item and inv:contains(item) then
+            -- Without this, the server's inventory is correctly updated
+            -- but the owning client never hears about it until something
+            -- else forces a full resync (e.g. a reconnect) -- same bug
+            -- class as the vinyl/paint spraycans and the CarKeyCraft key.
+            sendAddItemToContainer(inv, item)
+        elseif square then
+            -- Couldn't fit in inventory for whatever reason (e.g. a
+            -- sub-container that's genuinely full) -- drop it at the
+            -- character's feet instead of silently losing it.
+            square:AddWorldInventoryItem(itemType, ZombRand(0, 100) / 100, ZombRand(0, 100) / 100, 0)
+        end
     end
 end
 
