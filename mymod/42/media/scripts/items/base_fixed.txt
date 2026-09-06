@@ -329,7 +329,7 @@ module Base
         WaterResistance = 1.0,
         component FluidContainer
         {
-            ContainerName = WesternCanteen,
+            ContainerName = CanteenFLuKeez,
             Capacity = 3.0,
             InitialPercentMin = 0.0,
             InitialPercentMax = 1.0,
