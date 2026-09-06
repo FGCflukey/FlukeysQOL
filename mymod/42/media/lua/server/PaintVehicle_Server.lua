@@ -112,19 +112,29 @@ local function PV_findItemByID(inv, id)
 
     if inv.getItemById then
         local ok, item = pcall(function() return inv:getItemById(id) end)
-        if ok and item then return item end
+        if ok and item then
+            print("[PaintVehicle] findItemByID: getItemById matched requestedID=" .. tostring(id) .. " resolvedID=" .. tostring(item:getID()) .. " uses=" .. tostring(item:getCurrentUses()) .. "/" .. tostring(item:getMaxUses()))
+            return item
+        end
     end
 
     if inv.getItemWithIDRecursiv then
         local ok, item = pcall(function() return inv:getItemWithIDRecursiv(id) end)
-        if ok and item then return item end
+        if ok and item then
+            print("[PaintVehicle] findItemByID: getItemWithIDRecursiv matched requestedID=" .. tostring(id) .. " resolvedID=" .. tostring(item:getID()) .. " uses=" .. tostring(item:getCurrentUses()) .. "/" .. tostring(item:getMaxUses()))
+            return item
+        end
     end
 
     if inv.getItemWithID then
         local ok, item = pcall(function() return inv:getItemWithID(id) end)
-        if ok and item then return item end
+        if ok and item then
+            print("[PaintVehicle] findItemByID: getItemWithID matched requestedID=" .. tostring(id) .. " resolvedID=" .. tostring(item:getID()) .. " uses=" .. tostring(item:getCurrentUses()) .. "/" .. tostring(item:getMaxUses()))
+            return item
+        end
     end
 
+    print("[PaintVehicle] findItemByID: NO MATCH for requestedID=" .. tostring(id))
     return nil
 end
 
