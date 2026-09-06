@@ -52,4 +52,20 @@ module Base
         Fixer = Base.Superglue=1;Mechanics=3,
     }
 
+    fixing Fix Windshield 7
+    {
+        Require = Base.78lamboCountachWindshield3;Base.78lamboCountachRearWindshield3,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+    fixing Fix FrontWindows 7
+    {
+        Require = Base.78lamboCountachFrontSideWindow3;Base.78lamboCountachRearSideWindow3,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
 }
