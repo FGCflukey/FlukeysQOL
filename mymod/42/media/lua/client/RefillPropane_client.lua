@@ -143,7 +143,7 @@ local function RP_onFillWorldObjectContextMenu(player, context, worldobjects, te
         end
     end
 
-    RP_addRefillOption(context, "Fill Propane Torch", torches, playerObj, pumpObj)
+    RP_addRefillOption(context, "Fill Welding Torch", torches, playerObj, pumpObj)
     RP_addRefillOption(context, "Fill Propane Tank", tanks, playerObj, pumpObj)
 end
 
