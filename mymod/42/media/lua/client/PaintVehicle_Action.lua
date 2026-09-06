@@ -89,6 +89,20 @@ local function PV_vehicleIsBloody(vehicle)
 end
 
 -----------------------------------------------------
+-- OWNERSHIP CHECK (same rule as the vinyl swap system)
+-----------------------------------------------------
+local function PV_hasVehicleKey(character, vehicle)
+    local keyId = vehicle:getKeyId()
+    if not keyId or keyId == -1 then return true end
+
+    local inv = character:getInventory()
+    local keyItem = inv:getFirstTypeEvalRecurse("Key", function(item)
+        return item:getKeyId() == keyId
+    end)
+    return keyItem ~= nil
+end
+
+-----------------------------------------------------
 -- TIMED ACTION CLASS
 -----------------------------------------------------
 ISPaintVehicleAction = ISBaseTimedAction:derive("ISPaintVehicleAction")
@@ -106,6 +120,14 @@ function ISPaintVehicleAction:isValid()
     end
 
     if not self.character:getInventory():contains("SandingBlock") then
+        return false
+    end
+
+    -----------------------------------------------------
+    -- OWNERSHIP BLOCK
+    -----------------------------------------------------
+    if not PV_hasVehicleKey(self.character, self.vehicle) then
+        self.character:Say("I don't have the key to this car.")
         return false
     end
 

@@ -101,6 +101,20 @@ end
 
 
 -----------------------------------------------------
+-- OWNERSHIP CHECK (same rule as the vinyl swap system)
+-----------------------------------------------------
+local function PV_hasVehicleKey(player, vehicle)
+    local keyId = vehicle:getKeyId()
+    if not keyId or keyId == -1 then return true end
+
+    local inv = player:getInventory()
+    local keyItem = inv:getFirstTypeEvalRecurse("Key", function(item)
+        return item:getKeyId() == keyId
+    end)
+    return keyItem ~= nil
+end
+
+-----------------------------------------------------
 -- PROXIMITY CHECK
 -----------------------------------------------------
 -- getVehicleToInteractWith() can return a vehicle even when the player
@@ -116,9 +130,53 @@ local function PV_isPlayerNearVehicle(playerObj, vehicle)
     return (dx * dx + dy * dy) <= (PV_INTERACT_RANGE * PV_INTERACT_RANGE)
 end
 
-local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, worldobjects, test)
-    if test then return end
+local SpraycanItems = {
+    White = "Base.SpraycanWhite",
+    Black = "Base.SpraycanBlack",
+    Gray = "Base.SpraycanGray",
+    DarkGray = "Base.SpraycanDarkGray",
+    Red = "Base.SpraycanRed",
+    Blue = "Base.SpraycanBlue",
+    Green = "Base.SpraycanGreen",
+    Yellow = "Base.SpraycanYellow",
+    Orange = "Base.SpraycanOrange",
+    Purple = "Base.SpraycanPurple",
+    PastelBlue = "Base.SpraycanPastelBlue",
+    PastelPink = "Base.SpraycanPastelPink",
+    PastelGreen = "Base.SpraycanPastelGreen",
+    PastelYellow = "Base.SpraycanPastelYellow",
+    Mauve = "Base.SpraycanMauve",
+    Brown = "Base.SpraycanBrown",
+    Tan = "Base.SpraycanTan",
+    Olive = "Base.SpraycanOlive",
+    ForestGreen = "Base.SpraycanForestGreen",
+    Pink = "Base.SpraycanPink",
+    Cyan = "Base.SpraycanCyan",
+}
 
+-- Blocklist
+local blockedKeywords = {
+    "Ambulance","Blacksmith","Burnt","Butchers","Cereal","CraftSupplies",
+    "Fire","Florist","Fossoil","_Glass","Genuine_Beer","Gigamart","Greenes",
+    "Heralds","Jorgensen","JoyToy","Knox","Landscaping","Laundry","LectroMax",
+    "LightsKST","Locksmith","LouisvilleCounty","LouisvillePD","LouisvilleSWAT",
+    "Lumber","Mail","Masonry","MassGen","MassGenFac","McCoy","Mccoy",
+    "MeltingPoint","News","OvoFarm","Plonkies","Police","Postal","Prison",
+    "Radio","Ranger","Scarlet","SouthEasternHosp","SouthEasternPaint",
+    "Spiffo","Taxi","Trailer","Transit","Trippy","Uncloggers","Utility",
+    "YingsWood","Zippee",
+}
+
+local function isBlockedCommercial(name)
+    for _, keyword in ipairs(blockedKeywords) do
+        if string.find(name, keyword) then
+            return true
+        end
+    end
+    return false
+end
+
+local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, worldobjects, test)
     local playerObj = getSpecificPlayer(playerNum)
     if not playerObj then return end
 
@@ -128,108 +186,12 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
     if not PV_isPlayerNearVehicle(playerObj, vehicle) then return end
 
     -----------------------------------------------------
-    -- CLEANLINESS BLOCK
+    -- ELIGIBILITY GATING (silent) -- vehicles that simply
+    -- can't be repainted at all shouldn't show this option
+    -- no matter the weather/key/materials state.
     -----------------------------------------------------
-    if PV_needsCleaning(vehicle) then
-        playerObj:Say("I think I should wash it first.")
-        return
-    end
-
-    -----------------------------------------------------
-    -- REQUIRED ITEMS FIRST
-    -----------------------------------------------------
-    local inv = playerObj:getInventory()
-
-    -- Must have sanding block
-    if not inv:contains("SandingBlock") then
-        return
-    end
-
-    -- Must have at least one spraycan
-    local SpraycanItems = {
-        White = "Base.SpraycanWhite",
-        Black = "Base.SpraycanBlack",
-        Gray = "Base.SpraycanGray",
-        DarkGray = "Base.SpraycanDarkGray",
-        Red = "Base.SpraycanRed",
-        Blue = "Base.SpraycanBlue",
-        Green = "Base.SpraycanGreen",
-        Yellow = "Base.SpraycanYellow",
-        Orange = "Base.SpraycanOrange",
-        Purple = "Base.SpraycanPurple",
-        PastelBlue = "Base.SpraycanPastelBlue",
-        PastelPink = "Base.SpraycanPastelPink",
-        PastelGreen = "Base.SpraycanPastelGreen",
-        PastelYellow = "Base.SpraycanPastelYellow",
-        Mauve = "Base.SpraycanMauve",
-        Brown = "Base.SpraycanBrown",
-        Tan = "Base.SpraycanTan",
-        Olive = "Base.SpraycanOlive",
-        ForestGreen = "Base.SpraycanForestGreen",
-        Pink = "Base.SpraycanPink",
-        Cyan = "Base.SpraycanCyan",
-    }
-
-    local hasAnySpraycan = false
-    for _, itemName in pairs(SpraycanItems) do
-        if inv:containsTypeRecurse(itemName) then
-            hasAnySpraycan = true
-            break
-        end
-    end
-
-    if not hasAnySpraycan then
-        return
-    end
-
-    -----------------------------------------------------
-    -- WEATHER BLOCK
-    -----------------------------------------------------
-
-    -- PV_debugClimate()  -- DEBUG PRINT
-
-    if PV_isBadWeather() then
-        playerObj:Say("I can't paint in this weather.")
-        return
-    end
-
-    -----------------------------------------------------
-    -- LIGHT BLOCK
-    -----------------------------------------------------
-    if not PV_hasEnoughLight(playerObj) then
-        playerObj:Say("It's too dark to paint.")
-        return
-    end
-
-    -----------------------------------------------------
-    -- (Rest of your file unchanged)
-    -----------------------------------------------------
-
-    -- Script Name
     local script = vehicle:getScript()
     local scriptName = script and script:getName() or ""
-
-    -- Blocklist
-    local blockedKeywords = {
-        "Ambulance","Blacksmith","Burnt","Butchers","Cereal","CraftSupplies",
-        "Fire","Florist","Fossoil","_Glass","Genuine_Beer","Gigamart","Greenes",
-        "Heralds","Jorgensen","JoyToy","Knox","Landscaping","Laundry","LectroMax",
-        "LightsKST","Locksmith","LouisvilleCounty","LouisvillePD","LouisvilleSWAT",
-        "Lumber","Mail","Masonry","MassGen","MassGenFac","McCoy","Mccoy",
-        "MeltingPoint","News","OvoFarm","Plonkies","Police","Postal","Prison",
-        "Radio","Ranger","Scarlet","SouthEasternHosp","SouthEasternPaint",
-        "Spiffo","Taxi","Trailer","Transit","Trippy","Uncloggers","Utility",
-        "YingsWood","Zippee",
-    }
-
-    local function isBlockedCommercial(name)
-        for _, keyword in ipairs(blockedKeywords) do
-            if string.find(name, keyword) then
-                return true
-            end
-        end
-        return false
-    end
 
     if isBlockedCommercial(scriptName) then
         print("[VehiclePaint] Blocked repaint for commercial vehicle:", scriptName)
@@ -265,8 +227,64 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
 
     if not allowRepaint then return end
 
-    -- Main option
+    if test then return true end
+
+    -----------------------------------------------------
+    -- Evaluate every requirement up front so the option can
+    -- always be shown, greyed out with a tooltip explaining
+    -- what's missing, instead of blocking with a chat message
+    -- on every right-click.
+    -----------------------------------------------------
+    local inv = playerObj:getInventory()
+
+    local hasKey      = PV_hasVehicleKey(playerObj, vehicle)
+    local weatherOk   = not PV_isBadWeather()
+    local lightOk     = PV_hasEnoughLight(playerObj)
+    local cleanOk     = not PV_needsCleaning(vehicle)
+    local hasSanding  = inv:contains("SandingBlock")
+
+    local hasAnySpraycan = false
+    for _, itemName in pairs(SpraycanItems) do
+        if inv:containsTypeRecurse(itemName) then
+            hasAnySpraycan = true
+            break
+        end
+    end
+
+    local allOk = hasKey and weatherOk and lightOk and cleanOk and hasSanding and hasAnySpraycan
+
+    -----------------------------------------------------
+    -- Main option (always shown; disabled + tooltip when a
+    -- requirement isn't met, mirroring the vinyl swap menu).
+    -----------------------------------------------------
     local mainOption = context:addOption("Repaint Vehicle", worldobjects, nil)
+
+    if not allOk then
+        mainOption.notAvailable = true
+
+        local function reqLine(ok, text)
+            local rgb = ok and " <RGB:1,1,1>" or " <RGB:1,0,0>"
+            return rgb .. text .. " <LINE>"
+        end
+
+        local tip = ISToolTip:new()
+        tip:initialise()
+        tip:setVisible(true)
+
+        tip.description = "Requirements:" .. " <LINE>"
+        if vehicle:getKeyId() and vehicle:getKeyId() ~= -1 then
+            tip.description = tip.description .. reqLine(hasKey, "Vehicle key")
+        end
+        tip.description = tip.description .. reqLine(weatherOk, "Clear weather")
+        tip.description = tip.description .. reqLine(lightOk, "Enough light")
+        tip.description = tip.description .. reqLine(cleanOk, "Vehicle is clean")
+        tip.description = tip.description .. reqLine(hasSanding, "Sanding Block")
+        tip.description = tip.description .. reqLine(hasAnySpraycan, "Spray Paint (any color)")
+
+        mainOption.toolTip = tip
+        return
+    end
+
     local repaintMenu = ISContextMenu:getNew(context)
     context:addSubMenu(mainOption, repaintMenu)
 
