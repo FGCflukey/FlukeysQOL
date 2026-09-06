@@ -107,11 +107,10 @@ local function PV_hasVehicleKey(player, vehicle)
     local keyId = vehicle:getKeyId()
     if not keyId or keyId == -1 then return true end
 
-    local inv = player:getInventory()
-    local keyItem = inv:getFirstTypeEvalRecurse("Key", function(item)
-        return item:getKeyId() == keyId
-    end)
-    return keyItem ~= nil
+    -- Same check vanilla uses (VehicleUtils.RequiredKeyNotFound) --
+    -- a manual getFirstTypeEvalRecurse("Key", ...) search is fragile
+    -- since it depends on the key item's exact getType() string.
+    return player:getInventory():haveThisKeyId(keyId)
 end
 
 -----------------------------------------------------
