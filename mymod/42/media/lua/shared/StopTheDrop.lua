@@ -1,3 +1,11 @@
+-- Must live in lua/shared/, not lua/client/ -- the zombie-hit roll that
+-- decides whether a hat/glasses item falls off (IsoGameCharacter's
+-- helmetFall check) is resolved with server authority in multiplayer.
+-- A client-only listener would zero out ChanceToFall on the client's own
+-- copy of the item, but the server's copy (the one actually rolled
+-- against) would never be touched, so items would keep falling despite
+-- the client believing it had fixed them.
+
 local function StopTheDrop(player)
     if not player or player:isDead() then return end
 
