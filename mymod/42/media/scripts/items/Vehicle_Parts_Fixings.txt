@@ -8,6 +8,7 @@ module Base
         UseDelta                = 0.1,
         UseWhileEquipped        = FALSE,
         DisplayName             = Super Glue,
+        ConsolidateOption       = ContextMenu_Merge,
         Icon                    = Superglue,
         Weight                  = 0.1,
         WorldStaticModel        = Toothpaste,
