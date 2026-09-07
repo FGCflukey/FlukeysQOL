@@ -91,19 +91,47 @@ function VendorWindow:initialise()
     self.activeTab = "All"
 
     -----------------------------------------------------
+    -- TAB COLORS
+    -----------------------------------------------------
+    self.tabActiveBg = { r = 0.28, g = 0.35, b = 0.55, a = 1 }
+    self.tabActiveBorder = { r = 0.55, g = 0.68, b = 1.0, a = 1 }
+    self.tabInactiveBg = { r = 0.08, g = 0.08, b = 0.1, a = 1 }
+    self.tabInactiveBorder = { r = 0.4, g = 0.4, b = 0.45, a = 1 }
+
+    -----------------------------------------------------
     -- CREATE TAB BUTTONS
+    -- Widths are sized to each tab's text; actual screen
+    -- position is assigned by layoutTabs() so the strip
+    -- can scroll when it doesn't fit the window.
     -----------------------------------------------------
     self.tabButtons = {}
-    local x = 10
-    for _, tab in ipairs(self.tabs) do
-        local btn = ISButton:new(x, 30, 80, 25, tab, self, VendorWindow.onTab)
+    self.tabWidths = {}
+    self.tabScrollIndex = 1
+
+    for i, tab in ipairs(self.tabs) do
+        local textW = getTextManager():MeasureStringX(UIFont.Small, tab)
+        self.tabWidths[i] = math.max(60, textW + 20)
+
+        local btn = ISButton:new(10, 30, self.tabWidths[i], 25, tab, self, VendorWindow.onTab)
         btn.internal = tab
         btn:initialise()
         btn:instantiate()
+        self:styleTabButton(btn, tab == self.activeTab)
         self:addChild(btn)
         table.insert(self.tabButtons, btn)
-        x = x + 85
     end
+
+    self.tabScrollLeftBtn = ISButton:new(10, 30, 20, 25, "<", self, VendorWindow.onTabScrollLeft)
+    self.tabScrollLeftBtn:initialise()
+    self.tabScrollLeftBtn:instantiate()
+    self.tabScrollLeftBtn:setVisible(false)
+    self:addChild(self.tabScrollLeftBtn)
+
+    self.tabScrollRightBtn = ISButton:new(10, 30, 20, 25, ">", self, VendorWindow.onTabScrollRight)
+    self.tabScrollRightBtn:initialise()
+    self.tabScrollRightBtn:instantiate()
+    self.tabScrollRightBtn:setVisible(false)
+    self:addChild(self.tabScrollRightBtn)
 
     -----------------------------------------------------
     -- LIST BOX
@@ -141,6 +169,7 @@ function VendorWindow:initialise()
 
     self.onResize = VendorWindow.onResize
 
+    self:layoutTabs()
     self:populateList()
 end
 
@@ -169,7 +198,119 @@ end
 function VendorWindow:onTab(button)
     self.activeTab = button.internal
     self.actionButton:setTitle(self.activeTab == "Sell" and "Sell" or "Buy")
+
+    for _, btn in ipairs(self.tabButtons) do
+        self:styleTabButton(btn, btn.internal == self.activeTab)
+    end
+
     self:populateList()
+end
+
+-----------------------------------------------------
+-- TAB STYLING
+-----------------------------------------------------
+function VendorWindow:styleTabButton(btn, active)
+    local bg = active and self.tabActiveBg or self.tabInactiveBg
+    local border = active and self.tabActiveBorder or self.tabInactiveBorder
+
+    btn:setBackgroundRGBA(bg.r, bg.g, bg.b, bg.a)
+    btn:setBorderRGBA(border.r, border.g, border.b, border.a)
+    btn:setBackgroundColorMouseOverRGBA(
+        math.min(1, bg.r + 0.12),
+        math.min(1, bg.g + 0.12),
+        math.min(1, bg.b + 0.12),
+        1
+    )
+end
+
+-----------------------------------------------------
+-- TAB SCROLL HANDLERS
+-----------------------------------------------------
+function VendorWindow:onTabScrollLeft()
+    self.tabScrollIndex = math.max(1, self.tabScrollIndex - 1)
+    self:layoutTabs()
+end
+
+function VendorWindow:onTabScrollRight()
+    self.tabScrollIndex = self.tabScrollIndex + 1
+    self:layoutTabs()
+end
+
+-----------------------------------------------------
+-- TAB LAYOUT
+-- Tabs are sized to their text and placed left-to-right
+-- in a virtual strip. When the strip is wider than the
+-- window, arrow buttons page hidden tabs into view instead
+-- of requiring the window to be stretched to see them.
+-----------------------------------------------------
+function VendorWindow:layoutTabs()
+    local margin = 10
+    local spacing = 4
+    local arrowW = 20
+    local tabY = 30
+    local availX = margin
+    local availW = self.width - margin * 2
+
+    local totalW = -spacing
+    for _, w in ipairs(self.tabWidths) do
+        totalW = totalW + w + spacing
+    end
+
+    local needsScroll = totalW > availW
+    local viewportX, viewportW
+
+    if needsScroll then
+        viewportX = availX + arrowW + spacing
+        viewportW = availW - (arrowW + spacing) * 2
+
+        self.tabScrollLeftBtn:setX(availX)
+        self.tabScrollLeftBtn:setY(tabY)
+        self.tabScrollLeftBtn:setVisible(true)
+
+        self.tabScrollRightBtn:setX(availX + availW - arrowW)
+        self.tabScrollRightBtn:setY(tabY)
+        self.tabScrollRightBtn:setVisible(true)
+    else
+        viewportX = availX
+        viewportW = availW
+        self.tabScrollIndex = 1
+
+        self.tabScrollLeftBtn:setVisible(false)
+        self.tabScrollRightBtn:setVisible(false)
+    end
+
+    -- Clamp scrolling so the last tab never leaves a trailing
+    -- gap at the right edge of the strip.
+    local maxScrollIndex = 1
+    if needsScroll then
+        local acc = -spacing
+        for i = #self.tabWidths, 1, -1 do
+            acc = acc + self.tabWidths[i] + spacing
+            if acc > viewportW then
+                maxScrollIndex = i + 1
+                break
+            end
+            maxScrollIndex = i
+        end
+    end
+    self.tabScrollIndex = math.max(1, math.min(self.tabScrollIndex, maxScrollIndex))
+
+    local x = viewportX
+    for i, btn in ipairs(self.tabButtons) do
+        if i < self.tabScrollIndex then
+            btn:setVisible(false)
+        else
+            local w = self.tabWidths[i]
+            if x + w <= viewportX + viewportW + 0.5 then
+                btn:setX(x)
+                btn:setY(tabY)
+                btn:setVisible(true)
+                x = x + w + spacing
+            else
+                btn:setVisible(false)
+            end
+        end
+    end
 end
 
 -----------------------------------------------------
@@ -177,6 +318,8 @@ end
 -----------------------------------------------------
 function VendorWindow:onResize()
     ISCollapsableWindow.onResize(self)
+
+    self:layoutTabs()
 
     if self.list then
         self.list:setWidth(self.width - 20)
