@@ -3,7 +3,7 @@ module Base
 
     craftRecipe RecycleMuffler
     {
-        timedAction     = Making,
+        timedAction     = Welding,
         Time            = 60,
         SkillRequired   = MetalWelding:2,
         Tags            = InHandCraft;CanBeDoneFromFloor;CanBeDoneInDark,
@@ -24,7 +24,7 @@ module Base
 
     craftRecipe RecycleGasTank
     {
-        timedAction     = Making,
+        timedAction     = Welding,
         Time            = 60,
         SkillRequired   = MetalWelding:2,
         Tags            = InHandCraft;CanBeDoneFromFloor;CanBeDoneInDark,
@@ -45,7 +45,7 @@ module Base
 
     craftRecipe RecycleSuspension
     {
-        timedAction     = Making,
+        timedAction     = Welding,
         Time            = 60,
         SkillRequired   = MetalWelding:2,
         Tags            = InHandCraft;CanBeDoneFromFloor;CanBeDoneInDark,
@@ -66,7 +66,7 @@ module Base
 
     craftRecipe RecycleBrake
     {
-        timedAction     = Making,
+        timedAction     = Welding,
         Time            = 60,
         SkillRequired   = MetalWelding:2,
         Tags            = InHandCraft;CanBeDoneFromFloor;CanBeDoneInDark,
