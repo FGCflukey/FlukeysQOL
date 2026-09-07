@@ -9,6 +9,10 @@
 require "Vendor_Items"
 require "Vendor_SellItems"
 
+local function noise(msg)
+    print("[VendorMod] " .. tostring(msg))
+end
+
 -- print("[VendorMod-DEBUG] Vendor_Server.lua loaded")
 
 -----------------------------------------------------
@@ -233,7 +237,7 @@ local function OnClientCommand_Vendor(module, command, player, args)
 
         sendAddItemToContainer(inv, newItem)
 
-        noise("[VendorMod] " .. username .. " bought " .. entry.name .. " for $" .. price)
+        noise(username .. " bought " .. entry.name .. " for $" .. price)
         sendServerCommand(player, "VendorMod", "buySuccess", { name = entry.name, price = price })
 
     elseif command == "sellItem" then
@@ -258,7 +262,7 @@ local function OnClientCommand_Vendor(module, command, player, args)
 
         giveChange(inv, entry.price or 0)
 
-        noise("[VendorMod] " .. username .. " sold " .. entry.name .. " for $" .. (entry.price or 0))
+        noise(username .. " sold " .. entry.name .. " for $" .. (entry.price or 0))
         sendServerCommand(player, "VendorMod", "sellSuccess", { name = entry.name, price = entry.price })
     end
 end
