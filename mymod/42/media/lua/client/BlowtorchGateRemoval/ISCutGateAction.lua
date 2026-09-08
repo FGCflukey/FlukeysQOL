@@ -48,10 +48,16 @@ function ISCutGateAction:start()
         self.originalContainer = self.torch:getContainer()
     end
 
-    -- Welding mask (clothing)
-    local mask = findItemRecursive(self.character:getInventory(), "WeldingMask")
-    if mask then
-        self.character:setWornItem(mask:getBodyLocation(), mask)
+    -- Welding mask (clothing) -- remembers whatever was worn in that
+    -- slot before so it can be restored instead of just being dropped,
+    -- and syncs the change so it doesn't desync from the server's view
+    -- of the character (see restoreMask below for the other half of this).
+    self.mask = findItemRecursive(self.character:getInventory(), "WeldingMask")
+    if self.mask then
+        self.maskLocation = self.mask:getBodyLocation()
+        self.previousMask = self.character:getWornItem(self.maskLocation)
+        self.character:setWornItem(self.maskLocation, self.mask)
+        sendEquip(self.character)
     end
 
     -- Welding animation
@@ -66,6 +72,21 @@ function ISCutGateAction:start()
 end
 
 ---------------------------------------------------------
+-- Restore whatever was worn before we put the mask on
+-- (called from both stop() and perform() so it's cleaned
+-- up whether the action finishes or gets interrupted).
+---------------------------------------------------------
+function ISCutGateAction:restoreMask()
+    if not self.mask or self.maskRestored then return end
+    self.maskRestored = true
+
+    if self.character:getWornItem(self.maskLocation) == self.mask then
+        self.character:setWornItem(self.maskLocation, self.previousMask)
+        sendEquip(self.character)
+    end
+end
+
+---------------------------------------------------------
 -- Stop
 ---------------------------------------------------------
 function ISCutGateAction:stop()
@@ -73,6 +94,7 @@ function ISCutGateAction:stop()
     if self.sound then
         self.character:stopOrTriggerSound(self.sound)
     end
+    self:restoreMask()
 end
 
 ---------------------------------------------------------
@@ -104,6 +126,8 @@ function ISCutGateAction:perform()
 
     -- XP
     self.character:getXp():AddXP(Perks.MetalWelding, 5)
+
+    self:restoreMask()
 
     ISBaseTimedAction.perform(self)
 end
