@@ -90,7 +90,10 @@ end
 -- Start timed action
 ---------------------------------------------------------
 function BlowtorchGateRemoval.startCutting(worldobjects, player, square, gateObj)
-    ISTimedActionQueue.add(ISCutGateAction:new(player, player:getSquare(), gateObj, 150))
+    -- Use the gate's own square, not the player's -- the gate is usually
+    -- on the tile in front of the player, not the one they're standing on,
+    -- and the server looks up the gate at these exact coordinates.
+    ISTimedActionQueue.add(ISCutGateAction:new(player, gateObj:getSquare(), gateObj, 150))
 end
 
 Events.OnFillWorldObjectContextMenu.Add(BlowtorchGateRemoval.onFillWorldObjectContextMenu)
