@@ -36,12 +36,23 @@ function ISRepairCarPartAction:start()
     end
 end
 
+-- Shared with perform() below so the tool we auto-equipped in start()
+-- always gets swapped back out, whether the repair finishes or gets
+-- interrupted (stopOnWalk/stopOnRun/stopOnAim are all true here, so
+-- interruption is easy) -- otherwise the tool stays stuck equipped.
+local function restorePrimary(self)
+    if self.tool then
+        self.character:setPrimaryHandItem(self.originalPrimary)
+    end
+end
+
 function ISRepairCarPartAction:stop()
     local emitter = self.character:getEmitter()
     if emitter and self.sound then
         emitter:stopSound(self.sound)
     end
 
+    restorePrimary(self)
     ISBaseTimedAction.stop(self)
 end
 
@@ -53,7 +64,7 @@ function ISRepairCarPartAction:perform()
         emitter:stopSound(self.sound)
     end
 
-    self.character:setPrimaryHandItem(self.originalPrimary)
+    restorePrimary(self)
 
     -- IMPORTANT: we no longer mutate condition / consume the kit or
     -- material locally. All of that now happens server-side in
