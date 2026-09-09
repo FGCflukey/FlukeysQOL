@@ -112,7 +112,6 @@ module Base
         Tooltip                 = Tooltip_FixAFlat,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-        ReplaceOnDeplete        = None,
     }
 
     item SuspensionKit
@@ -126,7 +125,6 @@ module Base
         Tooltip                 = Tooltip_SuspensionFix,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-        ReplaceOnDeplete        = None,
     }
 
     item BrakeKit
@@ -140,7 +138,6 @@ module Base
         Tooltip                 = Tooltip_BrakeFix,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-        ReplaceOnDeplete        = None,
     }
 
     item MufflerPatchKit
@@ -154,7 +151,6 @@ module Base
         Tooltip                 = Tooltip_MufflerFix,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-        ReplaceOnDeplete        = None,
     }
 
     item BodyRepairKit
@@ -168,7 +164,6 @@ module Base
         Tooltip                 = Tooltip_CarBodyFix,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-        ReplaceOnDeplete        = None,
     }
 
     item GasTankRepairKit
@@ -182,7 +177,6 @@ module Base
         Tooltip                 = Tooltip_GasTankFix,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-        ReplaceOnDeplete        = None,
     }
 
     item BatteryCleanerKit
@@ -196,7 +190,6 @@ module Base
         Tooltip                 = Tooltip_BatteryCleanerKit,
         MechanicsItem           = TRUE,
         WorldStaticModel        = FixAFlat,
-        ReplaceOnDeplete        = None,
     }
 
     model FixAFlat
