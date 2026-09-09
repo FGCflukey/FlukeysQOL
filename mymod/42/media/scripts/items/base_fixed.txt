@@ -453,4 +453,105 @@ module Base
         time = 50,
     }
 
+    /* Wallpapers */
+
+    item Wallpaper_BeigeStripe
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Icon = Wallpaper_BeigeStripe,
+        Weight = 2.0,
+        WorldStaticModel = Wallpaper_BeigeStripe,
+        UseDelta = 0.1,
+        UseWhileEquipped = false,
+        cantBeConsolided = true,
+        Tags = base:wallpaper,
+        Tooltip = Tooltip_item_Wallpaper,
+    }
+
+    item Wallpaper_BlackFloral
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Icon = Wallpaper_BlackFloral,
+        Weight = 2.0,
+        WorldStaticModel = Wallpaper_BlackFloral,
+        UseDelta = 0.1,
+        UseWhileEquipped = false,
+        cantBeConsolided = true,
+        Tags = base:wallpaper,
+        Tooltip = Tooltip_item_Wallpaper,
+    }
+
+    item Wallpaper_BlueStripe
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Icon = Wallpaper_BlueStripe,
+        Weight = 2.0,
+        WorldStaticModel = Wallpaper_BlueStripe,
+        UseDelta = 0.1,
+        UseWhileEquipped = false,
+        cantBeConsolided = true,
+        Tags = base:wallpaper,
+        Tooltip = Tooltip_item_Wallpaper,
+    }
+
+    item Wallpaper_GreenDiamond
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Icon = Wallpaper_GreenDiamond,
+        Weight = 2.0,
+        WorldStaticModel = Wallpaper_GreenDiamond,
+        UseDelta = 0.1,
+        UseWhileEquipped = false,
+        cantBeConsolided = true,
+        Tags = base:wallpaper,
+        Tooltip = Tooltip_item_Wallpaper,
+    }
+
+    item Wallpaper_GreenFloral
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Icon = Wallpaper_GreenFloral,
+        Weight = 2.0,
+        WorldStaticModel = Wallpaper_GreenFloral,
+        UseDelta = 0.1,
+        UseWhileEquipped = false,
+        cantBeConsolided = true,
+        Tags = base:wallpaper,
+        Tooltip = Tooltip_item_Wallpaper,
+    }
+
+    item Wallpaper_PinkChevron
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Icon = Wallpaper_PinkChevron,
+        Weight = 2.0,
+        WorldStaticModel = Wallpaper_PinkChevron,
+        UseDelta = 0.1,
+        UseWhileEquipped = false,
+        cantBeConsolided = true,
+        Tags = base:wallpaper,
+        Tooltip = Tooltip_item_Wallpaper,
+    }
+
+    item Wallpaper_PinkFloral
+    {
+        DisplayCategory = Material,
+        ItemType = base:drainable,
+        Icon = Wallpaper_PinkFloral,
+        Weight = 2.0,
+        WorldStaticModel = Wallpaper_PinkFloral,
+        UseDelta = 0.1,
+        UseWhileEquipped = false,
+        cantBeConsolided = true,
+        Tags = base:wallpaper,
+        Tooltip = Tooltip_item_Wallpaper,
+    }
+
+
 }
