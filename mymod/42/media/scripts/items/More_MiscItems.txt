@@ -209,7 +209,7 @@ module Base
         Weight                  = 0.2,
         cantBeConsolided        = TRUE,
         SurvivalGear            = TRUE,
-        ReplaceOnDeplete        = Needle,
+        ReplaceOnDeplete        = Base.Needle,
         Tooltip                 = Tooltip_UpholsteryKit,
     }
 

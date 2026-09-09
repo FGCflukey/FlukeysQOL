@@ -142,15 +142,22 @@ local function OnKeyPressed(key)
     md.ClimbNotNearFenceCount   = 0
     md.ClimbProtectionTickAge   = 0
 
-    -- Unequip both
+    -- Unequip both. Deliberately NOT removed from the inventory container
+    -- (this used to call inv:Remove() here) -- that left each item
+    -- referenced only by a live object reference sitting in modData, with
+    -- no sendRemoveItemFromContainer() to tell the server it left the
+    -- container. That's both a guaranteed MP desync for the duration of
+    -- the climb and a permanent-item-loss risk if the game crashes or the
+    -- player disconnects before OnTick below gets a chance to restore it.
+    -- Neither HCHanddolly nor HCToywagon needs to leave the inventory to
+    -- stop being visibly held -- they're plain equippable containers, so
+    -- unequipping alone (leaving them sitting safely in a normal, synced
+    -- container the whole time) gets the same result with none of that risk.
     player:setPrimaryHandItem(nil)
     player:setSecondaryHandItem(nil)
+    sendEquip(player)
 
-    -- Remove from inventory
-    if primary then inv:Remove(primary) end
-    inv:Remove(secondary)
-
-    -- print("### PRE-CLIMB REMOVE:", fullType)
+    -- print("### PRE-CLIMB UNEQUIP:", fullType)
 end
 
 Events.OnKeyPressed.Add(OnKeyPressed)
@@ -191,19 +198,23 @@ local function OnTick()
         return
     end
 
+    -- Both items never left the inventory container (see OnKeyPressed
+    -- above), so restoring is just re-equipping them -- no inv:AddItem()
+    -- needed, and no risk of them already being gone from a crash/reload
+    -- in between, since they were never homeless to begin with.
     local inv = player:getInventory()
     if inv then
-        if primary then
-            inv:AddItem(primary)
+        if primary and inv:contains(primary) then
             player:setPrimaryHandItem(primary)
             -- print("### RESTORED PRIMARY AFTER CLIMB:", primary:getFullType())
         end
 
-        if secondary then
-            inv:AddItem(secondary)
+        if secondary and inv:contains(secondary) then
             player:setSecondaryHandItem(secondary)
             -- print("### RESTORED SECONDARY AFTER CLIMB:", secondary:getFullType())
         end
+
+        sendEquip(player)
     else
         -- print("### ERROR: NO INVENTORY AVAILABLE TO RESTORE ITEMS INTO")
     end

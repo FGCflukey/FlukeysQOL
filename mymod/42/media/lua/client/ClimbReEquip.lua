@@ -19,6 +19,7 @@ function ISClimbThroughWindow:perform()
 
     if primary then player:setPrimaryHandItem(primary) end
     if secondary then player:setSecondaryHandItem(secondary) end
+    if primary or secondary then sendEquip(player) end
 end
 
 ------------------------------------------------------------
@@ -43,5 +44,6 @@ if ISClimbOverFence then
 
         if primary then player:setPrimaryHandItem(primary) end
         if secondary then player:setSecondaryHandItem(secondary) end
+        if primary or secondary then sendEquip(player) end
     end
 end

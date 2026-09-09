@@ -14,44 +14,6 @@ local function dbg(msg)
 end
 
 ---------------------------------------------------------
--- Tiny 1‑tick action to clear hands after all reloads
----------------------------------------------------------
-local function queueClearHands(playerObj)
-    dbg("queueClearHands: queuing 1-tick hand clear action for " .. tostring(playerObj))
-
-    local action = ISBaseTimedAction:new(playerObj)
-
-    function action:isValid()
-        dbg("queueClearHands:isValid()")
-        return true
-    end
-
-    function action:update()
-        -- nothing
-    end
-
-    function action:start()
-        dbg("queueClearHands:start()")
-    end
-
-    function action:stop()
-        dbg("queueClearHands:stop()")
-        ISBaseTimedAction.stop(self)
-    end
-
-    function action:perform()
-        dbg("queueClearHands:perform() - clearing hands")
-        ISBaseTimedAction.perform(self)
-        self.character:setPrimaryHandItem(nil)
-        self.character:setSecondaryHandItem(nil)
-        dbg("Hands cleared after reload/unload chain.")
-    end
-
-    action.maxTime = 1
-    ISTimedActionQueue.add(action)
-end
-
----------------------------------------------------------
 -- Any magazine needs ammo?
 ---------------------------------------------------------
 function ReloadAllClips_Core.anyMagNeedsAmmo(mags)
@@ -150,12 +112,6 @@ function ReloadAllClips_Core.doReloadAll(playerObj, group)
             dbg("Magazine already full, skipping: " .. tostring(mag:getFullType()))
         end
     end
-
-    ---------------------------------------------------------
-    -- Clear hands after the chain finishes
-    ---------------------------------------------------------
-    dbg("doReloadAll: queuing hand clear after reload chain")
-    queueClearHands(playerObj)
 end
 
 ---------------------------------------------------------
@@ -185,8 +141,4 @@ function ReloadAllClips_Core.doUnloadAll(playerObj, group)
             dbg("Magazine empty, skipping: " .. tostring(mag:getFullType()))
         end
     end
-
-    -- Clear hands after the entire chain finishes
-    dbg("doUnloadAll: queuing hand clear after unload chain")
-    queueClearHands(playerObj)
 end

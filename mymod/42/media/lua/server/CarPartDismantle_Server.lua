@@ -152,9 +152,15 @@ local function onClientCommand(module, command, player, args)
             return
         end
 
+        -- Use() (not a raw setCurrentUses() decrement) is what actually
+        -- respects UseDelta -- getCurrentUses() on a Drainable item is a
+        -- 0.0-1.0 fraction, not an integer count, so "uses - 1" on a full
+        -- torch (1.0) drove it straight to 0 in a single dismantle instead
+        -- of costing one real UseDelta unit. Same bug family as the repair
+        -- kits; see CarPartRepair_Server.lua for the same fix.
         dbg("Consuming one blowtorch use (was " .. tostring(uses) .. ")")
-        torch:setCurrentUses(math.max(uses - 1, 0))
-        syncItemFields(player, torch)
+        torch:Use()
+        sendItemStats(torch)
     end
 
     -- All checks passed - perform the actual, authoritative mutation.

@@ -33,6 +33,17 @@ function CorpseCleanupAction:stop()
     if self.sound then
         self.character:getEmitter():stopSound(self.sound)
     end
+
+    -- Interrupted (walked away, ran, aimed) before perform() could send the
+    -- Butcher command, so the server's ReEquip response below is never
+    -- coming -- restore the original hand items directly here instead.
+    -- Set unconditionally (not just when non-nil) since the context menu
+    -- unconditionally overwrote both hands, including clearing an
+    -- originally-empty one -- restoring must be able to clear it back too.
+    self.character:setPrimaryHandItem(self.originalPrimary)
+    self.character:setSecondaryHandItem(self.originalSecondary)
+    sendEquip(self.character)
+
     ISBaseTimedAction.stop(self)
 end
 
