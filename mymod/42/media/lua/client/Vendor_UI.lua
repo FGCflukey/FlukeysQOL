@@ -67,6 +67,17 @@ end
 -----------------------------------------------------
 VendorWindow = ISCollapsableWindow:derive("VendorWindow")
 
+-- Height reserved above the list for the "Item" / "Price" column
+-- header, and the right-edge padding the price column's text is
+-- right-aligned against. Both the header (drawn in render(), in
+-- window-relative coordinates) and each row (drawn in
+-- drawListItem(), in list-relative coordinates) use PRICE_COL_PAD so
+-- their columns line up -- the list sits inset 10px from each side
+-- of the window, so window-relative and list-relative right edges
+-- are already 10px apart and cancel out against that same inset.
+VendorWindow.LIST_HEADER_H = 20
+VendorWindow.PRICE_COL_PAD = 20
+
 function VendorWindow:initialise()
     ISCollapsableWindow.initialise(self)
 
@@ -134,9 +145,10 @@ function VendorWindow:initialise()
     self:addChild(self.tabScrollRightBtn)
 
     -----------------------------------------------------
-    -- LIST BOX
+    -- LIST BOX (offset down to leave room for the column
+    -- header drawn in render() below)
     -----------------------------------------------------
-    self.list = ISScrollingListBox:new(10, 60, self.width - 20, self.height - 130)
+    self.list = ISScrollingListBox:new(10, 60 + VendorWindow.LIST_HEADER_H, self.width - 20, self.height - 130 - VendorWindow.LIST_HEADER_H)
     self.list:initialise()
     self.list:instantiate()
     self.list.itemheight = 22
@@ -178,6 +190,23 @@ end
 -----------------------------------------------------
 function VendorWindow:render()
     ISCollapsableWindow.render(self)
+
+    -----------------------------------------------------
+    -- LIST COLUMN HEADER ("Item" / "Price")
+    -- Drawn here (window-relative coords) rather than inside the
+    -- list itself, so it stays put above the list while the list's
+    -- own content scrolls underneath it.
+    -----------------------------------------------------
+    local headerY = 60
+
+    self:drawText("Item", 20, headerY + 2, 0.7, 0.7, 0.7, 1, UIFont.Small)
+
+    local priceLabel = "Price"
+    local priceLabelW = getTextManager():MeasureStringX(UIFont.Small, priceLabel)
+    local priceLabelX = self.width - 10 - VendorWindow.PRICE_COL_PAD - priceLabelW
+    self:drawText(priceLabel, priceLabelX, headerY + 2, 0.7, 0.7, 0.7, 1, UIFont.Small)
+
+    self:drawRect(10, headerY + VendorWindow.LIST_HEADER_H - 2, self.width - 20, 1, 0.5, 0.4, 0.4, 0.4)
 
     -- Center the footer text
     local textWidth = getTextManager():MeasureStringX(UIFont.Small, self.footerText)
@@ -323,7 +352,7 @@ function VendorWindow:onResize()
 
     if self.list then
         self.list:setWidth(self.width - 20)
-        self.list:setHeight(self.height - 130)
+        self.list:setHeight(self.height - 130 - VendorWindow.LIST_HEADER_H)
     end
 
     if self.actionButton then
@@ -351,8 +380,7 @@ function VendorWindow:populateList()
     if self.activeTab == "Sell" then
         for _, entry in ipairs(VendorSellItems) do
             local count = inv:getCountType(entry.id)
-            local text = string.format("%s  -  $%d (x%d)", entry.name, entry.price, count)
-            self.list:addItem(text, entry)
+            self.list:addItem(entry.name, { entry = entry, qty = count })
         end
         return
     end
@@ -367,8 +395,7 @@ function VendorWindow:populateList()
             entry._category = currentCategory
 
             if self.activeTab == "All" or entry._category == self.activeTab then
-                local text = string.format("%s  -  $%d", entry.name, entry.price)
-                self.list:addItem(text, entry)
+                self.list:addItem(entry.name, { entry = entry })
             end
         end
     end
@@ -379,12 +406,22 @@ end
 -----------------------------------------------------
 function VendorWindow.drawListItem(self, y, item, alt)
     local data = item.item
+    local entry = data.entry
 
     if self.selected == item.index then
         self:drawRect(0, y, self.width, self.itemheight, 0.3, 0.3, 0.6, 1)
     end
 
-    self:drawText(item.text, 10, y + 2, 1, 1, 1, 1, UIFont.Small)
+    self:drawText(entry.name, 10, y + 2, 1, 1, 1, 1, UIFont.Small)
+
+    local priceText = "$" .. tostring(entry.price)
+    if data.qty then
+        priceText = priceText .. "  (x" .. data.qty .. ")"
+    end
+    local priceW = getTextManager():MeasureStringX(UIFont.Small, priceText)
+    local priceX = self.width - VendorWindow.PRICE_COL_PAD - priceW
+    self:drawText(priceText, priceX, y + 2, 1, 1, 1, 1, UIFont.Small)
+
     return y + self.itemheight
 end
 
@@ -405,7 +442,7 @@ function VendorWindow:onAction()
         return
     end
 
-    local entry = selected.item
+    local entry = selected.item.entry
     -- print("[VendorMod-DEBUG] selected entry.id=" .. tostring(entry and entry.id))
 
     if self.activeTab == "Sell" then
