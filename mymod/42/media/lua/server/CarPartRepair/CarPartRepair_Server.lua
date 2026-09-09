@@ -114,31 +114,40 @@ local function OnClientCommand(module, command, player, args)
         end
     end
 
-    -- Consume kit (re-fetched server-side, not the client's reference)
+    -- Consume kit (re-fetched server-side, not the client's reference).
+    -- Use() (not a raw setCurrentUses() decrement) is what actually
+    -- handles "hit zero -> remove/replace per ReplaceOnDeplete" -- these
+    -- kits have ReplaceOnDeplete = None and no KeepOnDeplete, so they're
+    -- meant to vanish once used up. A manual field poke skipped that,
+    -- which is why an emptied kit used to sit in inventory forever.
+    -- sendItemStats() is the same pairing vanilla uses after Use()
+    -- (see ISApplyMakeUp.lua) -- it covers both the "still has uses
+    -- left" and "just got removed" cases.
     local kit = inv:getFirstTypeRecurse(rule.required.kit)
-    if kit and kit.getCurrentUses then
-        kit:setCurrentUses(kit:getCurrentUses() - 1)
-        if kit.syncItemFields then
-            kit:syncItemFields()
-        end
+    if kit then
+        kit:Use()
+        sendItemStats(kit)
     end
 
     -- Drain the tool's uses if this rule opts into it (BlowTorch fuel,
-    -- unlike the reusable Wrench which is never consumed). Same
-    -- setCurrentUses()/syncItemFields() pattern as the kit above.
+    -- unlike the reusable Wrench which is never consumed). Same Use()
+    -- reasoning as the kit above -- called once per use so a tool that
+    -- lacks KeepOnDeplete still gets removed/replaced correctly instead
+    -- of jumping straight past zero.
     if rule.toolConsumesUses then
         local tool = inv:getFirstTypeRecurse(rule.required.tool)
-        if tool and tool.getCurrentUses and tool.setCurrentUses then
+        if tool then
             local drainAmount = rule.toolUsesPerRepair or 1
-            local newUses = math.max(0, tool:getCurrentUses() - drainAmount)
-            tool:setCurrentUses(newUses)
-            dbg("Tool drained: " .. rule.required.tool .. " -> uses=" .. newUses)
-            if tool.syncItemFields then
-                tool:syncItemFields()
+            for i = 1, drainAmount do
+                if not inv:contains(tool) then break end
+                tool:Use()
             end
+            if inv:contains(tool) then
+                sendItemStats(tool)
+            end
+            dbg("Tool drained: " .. rule.required.tool)
         else
-            dbg("!!! rule.toolConsumesUses is true but " .. tostring(rule.required.tool) ..
-                " has no getCurrentUses/setCurrentUses -- check its item script type !!!")
+            dbg("!!! rule.toolConsumesUses is true but " .. tostring(rule.required.tool) .. " not found !!!")
         end
     end
 
