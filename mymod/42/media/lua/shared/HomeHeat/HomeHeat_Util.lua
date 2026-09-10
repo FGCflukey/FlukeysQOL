@@ -50,10 +50,19 @@ end
 -- name are actually rebranded; this sprite-name check has to
 -- match what the pack really contains.
 -----------------------------------------------------
+local function matchesRadiatorSprite(name)
+    return name ~= nil and string.match(name, "^eds_hk_[0-3]$") ~= nil
+end
+
 function HomeHeat_Util.isRadiator(isoObject)
     if not isoObject then return false end
-    local texture = isoObject:getTextureName()
-    return texture ~= nil and string.match(texture, "^eds_hk_[0-3]$") ~= nil
+
+    if matchesRadiatorSprite(isoObject:getTextureName()) then return true end
+
+    local sprite = isoObject:getSprite()
+    if sprite and matchesRadiatorSprite(sprite:getName()) then return true end
+
+    return false
 end
 
 -----------------------------------------------------
