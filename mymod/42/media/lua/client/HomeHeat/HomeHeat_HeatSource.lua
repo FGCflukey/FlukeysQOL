@@ -28,6 +28,39 @@ end
 Events.OnObjectAdded.Add(register)
 
 -----------------------------------------------------
+-- Active fallback scan around the local player. OnObjectAdded alone
+-- only reliably catches a radiator placed fresh during THIS session --
+-- one that already existed before you connected/reconnected doesn't
+-- necessarily re-fire it, leaving this client's registry empty for an
+-- object that's otherwise completely real and interactable. Scanning
+-- a modest area around the player directly (same approach the earlier
+-- debug SCAN used successfully) closes that gap.
+-----------------------------------------------------
+local SCAN_RADIUS = HomeHeat_Util.HEAT_RADIUS + 4
+
+local function scanForRadiators()
+    local player = getPlayer()
+    if not player then return end
+
+    local cell = getCell()
+    local px = math.floor(player:getX())
+    local py = math.floor(player:getY())
+    local pz = player:getZ()
+
+    for dx = -SCAN_RADIUS, SCAN_RADIUS do
+        for dy = -SCAN_RADIUS, SCAN_RADIUS do
+            local sq = cell:getGridSquare(px + dx, py + dy, pz)
+            if sq then
+                local objs = sq:getObjects()
+                for i = 0, objs:size() - 1 do
+                    register(objs:get(i))
+                end
+            end
+        end
+    end
+end
+
+-----------------------------------------------------
 -- Sync one radiator's local heat source to its current
 -- modData (on/preset) and power state. Returns false if
 -- the entry is stale and should be dropped from the registry.
@@ -91,6 +124,8 @@ local function OnTick()
     tickCounter = tickCounter + 1
     if tickCounter < TICKS_BETWEEN_SCANS then return end
     tickCounter = 0
+
+    scanForRadiators()
 
     for k, entry in pairs(knownRadiators) do
         if not updateOne(k, entry) then
