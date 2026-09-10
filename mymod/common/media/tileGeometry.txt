@@ -4,14 +4,14 @@ tileGeometry
 
     tileset
     {
-        name = HomeHeat_test,
+        name = eds_hk_test,
     }
 
     tileset
     {
-        name = HomeHeat,
+        name = eds_hk,
 
-        /* HomeHeat_0 */
+        /* eds_hk_0 */
         tile
         {
             xy = 0x0,
@@ -52,7 +52,7 @@ tileGeometry
             }
         }
 
-        /* HomeHeat_1 */
+        /* eds_hk_1 */
         tile
         {
             xy = 1x0,
@@ -93,7 +93,7 @@ tileGeometry
             }
         }
 
-        /* HomeHeat_2 */
+        /* eds_hk_2 */
         tile
         {
             xy = 2x0,
@@ -134,7 +134,7 @@ tileGeometry
             }
         }
 
-        /* HomeHeat_3 */
+        /* eds_hk_3 */
         tile
         {
             xy = 3x0,

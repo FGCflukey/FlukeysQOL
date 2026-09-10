@@ -41,11 +41,19 @@ end
 -- Matched by sprite texture name, same approach vanilla-
 -- adjacent moveable mods use since a placed moveable's
 -- iso object doesn't carry its originating item type directly.
+--
+-- The sprite itself is still named "eds_hk_0".."eds_hk_3"
+-- -- that's baked as fixed strings into the compiled .pack
+-- texture atlas (verified by hex-dumping it), so it can't be
+-- renamed without corrupting the pack. Only the item's own
+-- identity (Base.HomeHeatRadiator) and its in-game display
+-- name are actually rebranded; this sprite-name check has to
+-- match what the pack really contains.
 -----------------------------------------------------
 function HomeHeat_Util.isRadiator(isoObject)
     if not isoObject then return false end
     local texture = isoObject:getTextureName()
-    return texture ~= nil and string.match(texture, "^HomeHeat_[0-3]$") ~= nil
+    return texture ~= nil and string.match(texture, "^eds_hk_[0-3]$") ~= nil
 end
 
 -----------------------------------------------------

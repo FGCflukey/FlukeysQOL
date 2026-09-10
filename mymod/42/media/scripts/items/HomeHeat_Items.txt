@@ -5,7 +5,7 @@ module Base
         DisplayCategory = Electronics,
         DisplayName     = Home Heat Radiator,
         ItemType         = base:moveable,
-        WorldObjectSprite = HomeHeat_0,
+        WorldObjectSprite = eds_hk_0,
         Weight           = 15,
         Icon             = HomeHeatRadiator,
     }
