@@ -76,6 +76,30 @@ local function OnFillWorldObjectContextMenu(playerNum, context, worldobjects, te
             end
         end
     end
+
+    -- TEMP DEBUG: dump every object on the player's own square and its 4
+    -- neighbours directly, bypassing click hit-testing entirely -- this
+    -- tells us whether the radiator object actually exists nearby at all,
+    -- independent of whether the game considers it a clickable target.
+    if DEBUG then
+        local cell = getCell()
+        local px, py, pz = player:getX(), player:getY(), player:getZ()
+        local offsets = { {0,0}, {0,-1}, {0,1}, {-1,0}, {1,0} }
+        for _, off in ipairs(offsets) do
+            local sq = cell:getGridSquare(px + off[1], py + off[2], pz)
+            if sq then
+                local objs = sq:getObjects()
+                for i = 0, objs:size() - 1 do
+                    local obj = objs:get(i)
+                    local tex = "nil"
+                    local ok, t = pcall(function() return obj:getTextureName() end)
+                    if ok and t then tex = t end
+                    dbg("  SCAN sq(" .. (px+off[1]) .. "," .. (py+off[2]) .. "," .. pz ..
+                        ") obj=" .. tostring(obj) .. " textureName=" .. tex)
+                end
+            end
+        end
+    end
 end
 
 Events.OnFillWorldObjectContextMenu.Add(OnFillWorldObjectContextMenu)
