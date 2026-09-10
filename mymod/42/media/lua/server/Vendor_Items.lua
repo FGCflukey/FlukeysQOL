@@ -28,6 +28,7 @@ VendorItems = {
     { id = "Base.GasTankRepairKit",     name = "FLukeez - Gas Tank Repair Kit",     price = 150 },
     { id = "Base.BatteryCleanerKit",    name = "FLukeez - Battery Repair Kit",      price = 150 },
     { id = "Base.Superglue",            name = "Super Glue",                    price = 50 },
+    { id = "Base.HomeHeatRadiator",     name = "Home Heat Radiator",            price = 250 },
 
     {category = "PaintBuckets" },
 

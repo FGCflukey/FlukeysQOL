@@ -1,0 +1,98 @@
+tdef      HomeHeat
+HomeHeat.png
+               BlocksPlacement
+
+CanScrap
+
+CustomItem
+Base.HomeHeatRadiator
+CustomName
+Home Heat Radiator
+Facing
+E
+GroupName
+Electric
+IsLow
+
+IsMoveAble
+
+Material
+MetalPipe
+Material2
+MetalPlates
+MaterialType
+Metal_Solid
+PickUpWeight
+150
+   BlocksPlacement
+
+CanScrap
+
+CustomItem
+Base.HomeHeatRadiator
+CustomName
+Home Heat Radiator
+Facing
+S
+GroupName
+Electric
+IsLow
+
+IsMoveAble
+
+Material
+MetalPipe
+Material2
+MetalPlates
+MaterialType
+Metal_Solid
+PickUpWeight
+150
+   BlocksPlacement
+
+CanScrap
+
+CustomItem
+Base.HomeHeatRadiator
+CustomName
+Home Heat Radiator
+Facing
+W
+GroupName
+Electric
+IsLow
+
+IsMoveAble
+
+Material
+MetalPipe
+Material2
+MetalPlates
+MaterialType
+Metal_Solid
+PickUpWeight
+150
+   BlocksPlacement
+
+CanScrap
+
+CustomItem
+Base.HomeHeatRadiator
+CustomName
+Home Heat Radiator
+Facing
+N
+GroupName
+Electric
+IsLow
+
+IsMoveAble
+
+Material
+MetalPipe
+Material2
+MetalPlates
+MaterialType
+Metal_Solid
+PickUpWeight
+150

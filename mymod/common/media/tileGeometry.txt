@@ -1,0 +1,178 @@
+tileGeometry
+{
+    VERSION = 2,
+
+    tileset
+    {
+        name = HomeHeat_test,
+    }
+
+    tileset
+    {
+        name = HomeHeat,
+
+        /* HomeHeat_0 */
+        tile
+        {
+            xy = 0x0,
+
+            box
+            {
+                translate = -2785x-392x103,
+                rotate = 0x0x0,
+                min = -1130x0x-2837,
+                max = 1130x7505x2837,
+            }
+
+            cylinder
+            {
+                translate = -3176x6073x3099,
+                rotate = 759x0x0,
+                radius1 = 511,
+                radius2 = 511,
+                height = 241,
+            }
+
+            cylinder
+            {
+                translate = -3176x6460x-3000,
+                rotate = 759x0x0,
+                radius1 = 511,
+                radius2 = 511,
+                height = 531,
+            }
+
+            cylinder
+            {
+                translate = -3176x309x2965,
+                rotate = 759x0x0,
+                radius1 = 511,
+                radius2 = 511,
+                height = 241,
+            }
+        }
+
+        /* HomeHeat_1 */
+        tile
+        {
+            xy = 1x0,
+
+            box
+            {
+                translate = -103x-392x-2785,
+                rotate = 0x-899802x0,
+                min = -1130x0x-2837,
+                max = 1130x7505x2837,
+            }
+
+            cylinder
+            {
+                translate = 2877x6080x-3176,
+                rotate = 900052x-899287x900052,
+                radius1 = 511,
+                radius2 = 511,
+                height = 241,
+            }
+
+            cylinder
+            {
+                translate = -3049x6240x-3176,
+                rotate = 900052x-899287x900052,
+                radius1 = 511,
+                radius2 = 511,
+                height = 225,
+            }
+
+            cylinder
+            {
+                translate = 2851x316x-3176,
+                rotate = 900052x-899287x900052,
+                radius1 = 511,
+                radius2 = 511,
+                height = 241,
+            }
+        }
+
+        /* HomeHeat_2 */
+        tile
+        {
+            xy = 2x0,
+
+            box
+            {
+                translate = 2581x-647x-106,
+                rotate = 0x198x0,
+                min = -1130x0x-2837,
+                max = 1130x7621x2837,
+            }
+
+            cylinder
+            {
+                translate = 2348x6073x2853,
+                rotate = 713x0x0,
+                radius1 = 511,
+                radius2 = 511,
+                height = 241,
+            }
+
+            cylinder
+            {
+                translate = 2693x6460x-3062,
+                rotate = 713x0x0,
+                radius1 = 511,
+                radius2 = 511,
+                height = 211,
+            }
+
+            cylinder
+            {
+                translate = 2293x309x2850,
+                rotate = 713x0x0,
+                radius1 = 511,
+                radius2 = 511,
+                height = 241,
+            }
+        }
+
+        /* HomeHeat_3 */
+        tile
+        {
+            xy = 3x0,
+
+            box
+            {
+                translate = -202x-675x2785,
+                rotate = 1799855x899802x-1799855,
+                min = -1130x0x-2837,
+                max = 1130x7505x2837,
+            }
+
+            cylinder
+            {
+                translate = 2756x6073x3176,
+                rotate = 900000x899287x-900000,
+                radius1 = 511,
+                radius2 = 511,
+                height = 241,
+            }
+
+            cylinder
+            {
+                translate = -3148x6117x3176,
+                rotate = 900000x899287x-900000,
+                radius1 = 511,
+                radius2 = 511,
+                height = 237,
+            }
+
+            cylinder
+            {
+                translate = 2769x309x3176,
+                rotate = 900000x899287x-900000,
+                radius1 = 511,
+                radius2 = 511,
+                height = 241,
+            }
+        }
+    }
+}
