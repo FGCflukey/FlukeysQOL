@@ -161,6 +161,12 @@ end
 -- BUTTON HANDLERS
 -----------------------------------------------------
 function HomeHeatWindow:sendSetState(on, presetKey)
+    -- TEMP DEBUG: safe to remove once preset-switching is confirmed working.
+    print("[HomeHeat:UI] sendSetState on=" .. tostring(on) .. " presetKey=" .. tostring(presetKey) ..
+        " at x=" .. tostring(self.isoObject:getX()) ..
+        " y=" .. tostring(self.isoObject:getY()) ..
+        " z=" .. tostring(self.isoObject:getZ()))
+
     sendClientCommand(self.player, "HomeHeat", "setState", {
         x = self.isoObject:getX(),
         y = self.isoObject:getY(),
