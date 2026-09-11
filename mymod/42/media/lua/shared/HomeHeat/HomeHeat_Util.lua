@@ -22,7 +22,14 @@ HomeHeat_Util.PRESETS = {
     { key = "hot",  label = "Hot",    tempC = 34 },
 }
 HomeHeat_Util.DEFAULT_PRESET = "warm"
-HomeHeat_Util.HEAT_RADIUS = 7
+
+-- In-game testing confirmed heat propagation respects walls/room
+-- boundaries (doesn't cross into an adjacent room through a dividing
+-- wall, drops instantly at a doorway threshold) -- so a bigger radius
+-- just fills the room more evenly rather than leaking into neighbours.
+-- Bumped well past the old 7 on that basis; may still want further
+-- tuning once tested against your actual room sizes.
+HomeHeat_Util.HEAT_RADIUS = 12
 
 function HomeHeat_Util.presetByKey(key)
     for _, preset in ipairs(HomeHeat_Util.PRESETS) do
