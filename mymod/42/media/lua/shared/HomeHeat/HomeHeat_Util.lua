@@ -6,19 +6,23 @@
 HomeHeat_Util = {}
 
 -----------------------------------------------------
--- PRESETS (Celsius) -- these are what get sent over the
--- network and stored; the client-side C/F toggle only
--- changes how they're displayed, never what's stored.
--- Tweak tempC here if the felt warmth needs recalibrating
--- after in-game testing.
+-- PRESETS -- tempC is the IsoHeatSource's own radiated
+-- source temperature, not the felt room temperature.
+-- In-game testing on a cold snowy night showed a fairly
+-- consistent ~7C gap between source temp and felt temp
+-- at typical standing distance (nominal 15/20/24 read as
+-- roughly 8/13/17), so these run well above the old
+-- 15/20/24 figures to compensate -- same reasoning Ed's
+-- original mod used (his own source temps ran 25-40+ for
+-- an intended room feel much lower than that).
 -----------------------------------------------------
 HomeHeat_Util.PRESETS = {
-    { key = "cool", label = "Cool", tempC = 15 },
-    { key = "warm", label = "Warm", tempC = 20 },
-    { key = "hot",  label = "Hot",  tempC = 24 },
+    { key = "cool", label = "Cool",   tempC = 22 },
+    { key = "warm", label = "Normal", tempC = 28 },
+    { key = "hot",  label = "Hot",    tempC = 34 },
 }
 HomeHeat_Util.DEFAULT_PRESET = "warm"
-HomeHeat_Util.HEAT_RADIUS = 6
+HomeHeat_Util.HEAT_RADIUS = 7
 
 function HomeHeat_Util.presetByKey(key)
     for _, preset in ipairs(HomeHeat_Util.PRESETS) do
@@ -63,19 +67,4 @@ function HomeHeat_Util.isRadiator(isoObject)
     if sprite and matchesRadiatorSprite(sprite:getName()) then return true end
 
     return false
-end
-
------------------------------------------------------
--- Display helpers (client-side only, but harmless if
--- called from shared code)
------------------------------------------------------
-function HomeHeat_Util.celsiusToFahrenheit(c)
-    return (c * 9 / 5) + 32
-end
-
-function HomeHeat_Util.formatTemp(tempC, useFahrenheit)
-    if useFahrenheit then
-        return math.floor(HomeHeat_Util.celsiusToFahrenheit(tempC) + 0.5) .. "F"
-    end
-    return math.floor(tempC + 0.5) .. "C"
 end

@@ -1,6 +1,6 @@
 -- HomeHeat_UI.lua
 -- Right-click settings dialog for a placed HomeHeat radiator:
--- on/off, 3 presets (Cool/Warm/Hot), and a C/F display toggle.
+-- on/off and 3 presets (Cool/Normal/Hot).
 
 require "ISUI/ISCollapsableWindow"
 require "ISUI/ISButton"
@@ -51,7 +51,7 @@ function HomeHeatWindow:initialise()
     local x = 10
     local y = 40
     for _, preset in ipairs(HomeHeat_Util.PRESETS) do
-        local btn = ISButton:new(x, y, 110, 30, self:presetLabel(preset), self, HomeHeatWindow.onPreset)
+        local btn = ISButton:new(x, y, 110, 30, preset.label, self, HomeHeatWindow.onPreset)
         btn.internal = preset.key
         btn:initialise()
         btn:instantiate()
@@ -61,17 +61,12 @@ function HomeHeatWindow:initialise()
     end
 
     -----------------------------------------------------
-    -- ON/OFF + UNIT TOGGLE
+    -- ON/OFF BUTTON
     -----------------------------------------------------
-    self.onOffButton = ISButton:new(10, 80, 110, 30, "Turn On", self, HomeHeatWindow.onToggle)
+    self.onOffButton = ISButton:new(10, 80, 175, 30, "Turn On", self, HomeHeatWindow.onToggle)
     self.onOffButton:initialise()
     self.onOffButton:instantiate()
     self:addChild(self.onOffButton)
-
-    self.unitButton = ISButton:new(125, 80, 60, 30, "C", self, HomeHeatWindow.onToggleUnit)
-    self.unitButton:initialise()
-    self.unitButton:instantiate()
-    self:addChild(self.unitButton)
 
     -----------------------------------------------------
     -- CLOSE BUTTON
@@ -82,10 +77,6 @@ function HomeHeatWindow:initialise()
     self:addChild(self.closeButton)
 
     self:refreshFromObject()
-end
-
-function HomeHeatWindow:presetLabel(preset)
-    return preset.label .. " (" .. HomeHeat_Util.formatTemp(preset.tempC, self.useFahrenheit) .. ")"
 end
 
 -----------------------------------------------------
@@ -126,7 +117,7 @@ function HomeHeatWindow:render()
         statusText = "No Power"
     elseif self.on then
         local preset = HomeHeat_Util.presetByKey(self.presetKey)
-        statusText = "On - " .. self:presetLabel(preset)
+        statusText = "On - " .. preset.label
     else
         statusText = "Off"
     end
@@ -161,12 +152,6 @@ end
 -- BUTTON HANDLERS
 -----------------------------------------------------
 function HomeHeatWindow:sendSetState(on, presetKey)
-    -- TEMP DEBUG: safe to remove once preset-switching is confirmed working.
-    print("[HomeHeat:UI] sendSetState on=" .. tostring(on) .. " presetKey=" .. tostring(presetKey) ..
-        " at x=" .. tostring(self.isoObject:getX()) ..
-        " y=" .. tostring(self.isoObject:getY()) ..
-        " z=" .. tostring(self.isoObject:getZ()))
-
     sendClientCommand(self.player, "HomeHeat", "setState", {
         x = self.isoObject:getX(),
         y = self.isoObject:getY(),
@@ -182,14 +167,6 @@ end
 
 function HomeHeatWindow:onToggle()
     self:sendSetState(not self.on, self.presetKey)
-end
-
-function HomeHeatWindow:onToggleUnit()
-    self.useFahrenheit = not self.useFahrenheit
-    self.unitButton:setTitle(self.useFahrenheit and "F" or "C")
-    for i, preset in ipairs(HomeHeat_Util.PRESETS) do
-        self.presetButtons[i]:setTitle(self:presetLabel(preset))
-    end
 end
 
 function HomeHeatWindow:onClose()
@@ -209,7 +186,6 @@ function HomeHeatWindow:new(x, y, width, height, player, isoObject)
     o.title = "Home Heat Radiator"
     o.resizable = false
     o.moveWithMouse = true
-    o.useFahrenheit = false
     return o
 end
 
