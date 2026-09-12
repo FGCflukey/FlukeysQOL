@@ -31,7 +31,7 @@ function AutomakerUI:new(x, y, w, h, player)
     self.__index = self
 
     o.player = player
-    o.title = "Automaker: Please create your vehicle outside in an open area!"
+    o.title = "AutoMaker: Please Build Your Vehicle Outside In An Open Area!"
     o.resizable = false
     return o
 end
