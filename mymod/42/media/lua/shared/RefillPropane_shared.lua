@@ -33,6 +33,18 @@ function RefillPropane.findNearbyPump(square)
     return nil
 end
 
+-----------------------------------------------------
+-- Does the pump's own square have power? Generator
+-- coverage, or grid power indoors -- same check this
+-- mod pack already uses elsewhere (see HomeHeat_Util).
+-- Pumps sit outside, so in practice this means a nearby
+-- generator, same as every other powered appliance mod.
+-----------------------------------------------------
+function RefillPropane.hasPower(square)
+    if not square then return false end
+    return square:haveElectricity() or (square:hasGridPower() and not square:isOutside())
+end
+
 function RefillPropane.isAdjacentToSquare(playerObj, targetSquare)
     if not playerObj or not targetSquare then return false end
     return playerObj:getSquare():isAdjacentTo(targetSquare)

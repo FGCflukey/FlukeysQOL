@@ -7,6 +7,7 @@ ISRefillPropaneAction = ISBaseTimedAction:derive("ISRefillPropaneAction")
 function ISRefillPropaneAction:isValid()
     if not self.item or not self.pumpObj then return false end
     if not self.pumpObj:getSquare() then return false end
+    if not RefillPropane.hasPower(self.pumpObj:getSquare()) then return false end
     return RefillPropane.isAdjacentToSquare(self.character, self.pumpObj:getSquare())
 end
 
@@ -89,8 +90,14 @@ local function RP_queueRefill(playerObj, item, pumpObj)
     ISTimedActionQueue.add(ISRefillPropaneAction:new(playerObj, item, pumpObj))
 end
 
-local function RP_addRefillOption(context, label, items, playerObj, pumpObj)
+local function RP_addRefillOption(context, label, items, playerObj, pumpObj, powered)
     if #items == 0 then return end
+
+    if not powered then
+        local opt = context:addOption(label .. " (No Power)", nil, nil)
+        opt.notAvailable = true
+        return
+    end
 
     if #items == 1 then
         local item = items[1]
@@ -143,8 +150,9 @@ local function RP_onFillWorldObjectContextMenu(player, context, worldobjects, te
         end
     end
 
-    RP_addRefillOption(context, "Fill Welding Torch", torches, playerObj, pumpObj)
-    RP_addRefillOption(context, "Fill Propane Tank", tanks, playerObj, pumpObj)
+    local powered = RefillPropane.hasPower(pumpObj:getSquare())
+    RP_addRefillOption(context, "Fill Welding Torch", torches, playerObj, pumpObj, powered)
+    RP_addRefillOption(context, "Fill Propane Tank", tanks, playerObj, pumpObj, powered)
 end
 
 Events.OnFillWorldObjectContextMenu.Add(RP_onFillWorldObjectContextMenu)

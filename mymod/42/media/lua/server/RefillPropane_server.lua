@@ -23,6 +23,11 @@ function Commands.refill(player, args)
         return
     end
 
+    if not RefillPropane.hasPower(pumpObj:getSquare()) then
+        RP_log("rejected: pump has no power, for " .. tostring(player:getUsername()))
+        return
+    end
+
     local item = findItemById(player, args.itemID)
     if not item then
         RP_log("rejected: item " .. tostring(args.itemID) .. " not found for " .. tostring(player:getUsername()))
