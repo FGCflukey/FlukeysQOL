@@ -1,0 +1,5 @@
+{
+    "Sandbox_Automaker": "Automaker",
+    "Sandbox_Automaker_fullbuild": "Spawn fully repaired vehicles",
+    "Sandbox_Automaker_fullbuild_tooltip": "If off, built vehicles spawn stripped of parts and needing repair instead of fully finished."
+}

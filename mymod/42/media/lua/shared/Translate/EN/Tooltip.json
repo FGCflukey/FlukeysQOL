@@ -25,5 +25,8 @@
     "Tooltip_BatteryCleanerKit": "Repair kit for vehicle batteries",
     "Tooltip_HingesBox": "Box of 12 Hinges",
     "Tooltip_DoorknobsBox": "Box of 12 Doorknobs",
-    "Tooltip_eer_RebuildEngine": "The engine quality will be repaired to max"
+    "Tooltip_eer_RebuildEngine": "The engine quality will be repaired to max",
+    "Tooltip_AutomakerMag1": "Teaches the basics of building a Standard vehicle from scratch",
+    "Tooltip_AutomakerMag2": "Teaches how to build a Heavy Duty vehicle from scratch",
+    "Tooltip_AutomakerMag3": "Teaches how to build a Sport vehicle from scratch"
 }

@@ -1,0 +1,7 @@
+VERSION = 1,
+
+option Automaker.fullbuild
+{
+	type = boolean, default = true,
+	page = Automaker, translation = Sandbox_Automaker_fullbuild,
+}
