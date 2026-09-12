@@ -25,12 +25,28 @@ local function getSquareFromWorldObjects(worldobjects)
     return nil
 end
 
+-- Animal corpses (killed wildlife) use the exact same IsoDeadBody class
+-- and the same per-square dead-body list as human/zombie corpses, so
+-- square:getDeadBodys() returns both indiscriminately. This feature is
+-- zombie-corpse cleanup specifically (it hardcodes Base.ZombieMeat as
+-- the yield) -- running it on an animal would destroy the real,
+-- butcherable animal corpse and hand out fake zombie meat instead of
+-- the actual meat/hide/head/feathers vanilla's animal butchering gives.
+-- isAnimal() is vanilla's own established way to tell them apart --
+-- see ISWorldObjectContextMenu.lua's handleGrabCorpseSubmenu(), which
+-- excludes animal corpses from its own corpse-grab menu the same way.
 local function findCorpseOnSquare(square)
     if not square then return nil end
     local dead = square.getDeadBodys and square:getDeadBodys() or nil
-    if dead and dead:size() > 0 then
-        return dead:get(0)
+    if not dead then return nil end
+
+    for i = 0, dead:size() - 1 do
+        local body = dead:get(i)
+        if body and not (body.isAnimal and body:isAnimal()) then
+            return body
+        end
     end
+
     return nil
 end
 

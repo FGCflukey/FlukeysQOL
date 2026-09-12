@@ -10,6 +10,14 @@ end
 
 CCDebug("CorpseCleanup_Server.lua loaded")
 
+-- Animal corpses share the exact same IsoDeadBody class and per-square
+-- list as human/zombie corpses. This feature is zombie-corpse cleanup
+-- specifically (hardcodes Base.ZombieMeat as the yield), so an animal
+-- corpse must never match here -- re-checked server-side same as the
+-- client (see CorpseCleanup_Context.lua), since the client's word on
+-- which corpse it means is never trusted. isAnimal() is vanilla's own
+-- established way to tell them apart (ISWorldObjectContextMenu.lua's
+-- handleGrabCorpseSubmenu excludes animal corpses the same way).
 local function fallbackCorpseLookup(x, y, z)
     CCDebug("Fallback corpse lookup at " .. x .. "," .. y .. "," .. z)
 
@@ -20,9 +28,14 @@ local function fallbackCorpseLookup(x, y, z)
     end
 
     local dead = sq:getDeadBodys()
-    if dead and dead:size() > 0 then
-        CCDebug("Fallback corpse found")
-        return dead:get(0)
+    if dead then
+        for i = 0, dead:size() - 1 do
+            local body = dead:get(i)
+            if body and not (body.isAnimal and body:isAnimal()) then
+                CCDebug("Fallback corpse found")
+                return body
+            end
+        end
     end
 
     CCDebug("Fallback corpse NOT found")
