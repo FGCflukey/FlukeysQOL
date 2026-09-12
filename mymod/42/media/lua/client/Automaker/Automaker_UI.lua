@@ -172,6 +172,8 @@ function AutomakerTab:initialise()
         self:onSelectVehicle()
     else
         self.descriptionPanel:setText("No vehicles in this category.")
+        self.descriptionPanel:paginate()
+        self.buildButton:setEnable(false)
     end
 end
 
@@ -181,6 +183,26 @@ function AutomakerTab:onSelectVehicle()
 
     self.preview.javaObject:fromLua2("setVehicleScript", self.previewKey, item.vehicle.fullName)
     self:updateDescription(item.vehicle)
+end
+
+-----------------------------------------------------
+-- Keep requirements/button state current while the window
+-- is open (e.g. the player picks up more sheet metal without
+-- re-selecting a vehicle) -- throttled, matching the cadence
+-- HomeHeat's client-side heat source scan already uses.
+-----------------------------------------------------
+local TICKS_BETWEEN_REFRESH = 30
+function AutomakerTab:update()
+    ISPanelJoypad.update(self)
+
+    self.refreshTickCounter = (self.refreshTickCounter or 0) + 1
+    if self.refreshTickCounter < TICKS_BETWEEN_REFRESH then return end
+    self.refreshTickCounter = 0
+
+    local item = self.list.items[self.list.selected]
+    if item then
+        self:updateDescription(item.vehicle)
+    end
 end
 
 function AutomakerTab:updateDescription(v)
@@ -214,6 +236,13 @@ function AutomakerTab:updateDescription(v)
     description = description .. " <LINE> " .. (hasRecipe and "<RGB:0,1,0>" or "<RGB:1,0,0>") .. "Recipe: " .. recipeName
 
     self.descriptionPanel:setText(description)
+    self.descriptionPanel:paginate()
+
+    -- ISRichTextPanel:setText() only stores the text -- paginate() is
+    -- what actually renders it. Missing that call is why the box
+    -- showed blank before.
+    local ok = Automaker_Util.canBuild(player, mechanictype)
+    self.buildButton:setEnable(ok)
 end
 
 function AutomakerTab:onBuildClick()
