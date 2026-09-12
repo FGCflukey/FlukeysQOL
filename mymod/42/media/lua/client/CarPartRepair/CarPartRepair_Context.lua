@@ -59,8 +59,14 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
 
         tip.description = "Requirements:\n"
 
+        -- All four checks below are recursive (getFirstTypeRecurse) so the
+        -- tooltip agrees with canRepairPart() above about what counts as
+        -- "present" -- a worn backpack or dolly, not just main inventory.
+        local inv = player:getInventory()
+
         -- Tool
-        if not CarPartRepair_Util.containsFullType(player:getInventory(), rule.required.tool) then
+        local haveTool = inv:getFirstTypeRecurse(rule.required.tool)
+        if not haveTool then
             tip.description = tip.description .. " - " .. rule.required.tool .. " (Missing)\n"
         else
             tip.description = tip.description .. " - " .. rule.required.tool .. "\n"
@@ -68,7 +74,8 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
 
         -- Second tool (e.g. TirePump) -- optional, only some rules use it
         if rule.required.tool2 then
-            if not CarPartRepair_Util.containsFullType(player:getInventory(), rule.required.tool2) then
+            local haveTool2 = inv:getFirstTypeRecurse(rule.required.tool2)
+            if not haveTool2 then
                 tip.description = tip.description .. " - " .. rule.required.tool2 .. " (Missing)\n"
             else
                 tip.description = tip.description .. " - " .. rule.required.tool2 .. "\n"
@@ -76,14 +83,16 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
         end
 
         -- Material
-        if not CarPartRepair_Util.containsFullType(player:getInventory(), rule.required.material) then
+        local haveMaterial = inv:getFirstTypeRecurse(rule.required.material)
+        if not haveMaterial then
             tip.description = tip.description .. " - " .. rule.required.material .. " (Missing)\n"
         else
             tip.description = tip.description .. " - " .. rule.required.material .. "\n"
         end
 
         -- Kit
-        if not CarPartRepair_Util.containsFullType(player:getInventory(), rule.required.kit) then
+        local haveKit = inv:getFirstTypeRecurse(rule.required.kit)
+        if not haveKit then
             tip.description = tip.description .. " - " .. rule.required.kit .. " (Missing)\n"
         else
             tip.description = tip.description .. " - " .. rule.required.kit .. "\n"

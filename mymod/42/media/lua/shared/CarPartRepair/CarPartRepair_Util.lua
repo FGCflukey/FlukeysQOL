@@ -127,31 +127,6 @@ function CarPartRepair_Util.findItemByID(inv, id)
 end
 
 ---------------------------------------------------------
--- Check whether an inventory contains an item of the given
--- fullType (e.g. "Base.SheetMetal"). We use one hand-rolled
--- check everywhere instead of mixing inv:contains() and
--- inv:containsType() -- those are two different built-in
--- methods and we hit a real bug from them apparently expecting
--- different string formats (contains() worked with "Base.X",
--- containsType() did not, even with a confirmed-correct item
--- in inventory). This is slower but predictable and gives us
--- one thing to trust.
----------------------------------------------------------
-function CarPartRepair_Util.containsFullType(inv, fullType)
-    if not inv or not fullType then return false end
-
-    local items = inv:getItems()
-    for i = 0, items:size() - 1 do
-        local it = items:get(i)
-        if it and it:getFullType() == fullType then
-            return true
-        end
-    end
-
-    return false
-end
-
----------------------------------------------------------
 -- Keyword boundary check for PascalCase item fullTypes.
 -- PZ item names concatenate words directly with no separator
 -- (e.g. "FrontDoor2", "TailgateWI"), so we can't require a
@@ -217,17 +192,28 @@ function CarPartRepair_Util.canRepairPart(player, item, rule)
 
     local inv = player:getInventory()
 
-    if not CarPartRepair_Util.containsFullType(inv, rule.required.tool) then
+    -- Tool/material presence is checked recursively (getFirstTypeRecurse,
+    -- same call already used below for the kit) so a tool or material
+    -- sitting in a worn backpack or dolly counts -- not just the top-level
+    -- main inventory. containsFullType() only ever walked getItems() at
+    -- the top level, which is why these used to report "Missing" for
+    -- anything not dragged into main inventory first.
+    local tool = inv:getFirstTypeRecurse(rule.required.tool)
+    if not tool then
         return false, "Missing tool"
     end
 
     -- Optional second required tool. Only Tire uses this right now
     -- (TirePump) -- checked for presence like any tool, never consumed.
-    if rule.required.tool2 and not CarPartRepair_Util.containsFullType(inv, rule.required.tool2) then
-        return false, "Missing second tool"
+    if rule.required.tool2 then
+        local tool2 = inv:getFirstTypeRecurse(rule.required.tool2)
+        if not tool2 then
+            return false, "Missing second tool"
+        end
     end
 
-    if not CarPartRepair_Util.containsFullType(inv, rule.required.material) then
+    local material = inv:getFirstTypeRecurse(rule.required.material)
+    if not material then
         return false, "Missing material"
     end
 

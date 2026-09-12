@@ -137,12 +137,19 @@ local function OnClientCommand(module, command, player, args)
     if rule.toolConsumesUses then
         local tool = inv:getFirstTypeRecurse(rule.required.tool)
         if tool then
+            -- Checking tool:getContainer() instead of inv:contains(tool) --
+            -- the tool can now be recursively found inside a worn backpack
+            -- or dolly, and inv:contains() only ever checked the top-level
+            -- main inventory. getContainer() asks the item itself where it
+            -- currently lives (nil once Use() has fully depleted/removed
+            -- it), which is correct regardless of which container it
+            -- started in.
             local drainAmount = rule.toolUsesPerRepair or 1
             for i = 1, drainAmount do
-                if not inv:contains(tool) then break end
+                if not tool:getContainer() then break end
                 tool:Use()
             end
-            if inv:contains(tool) then
+            if tool:getContainer() then
                 sendItemStats(tool)
             end
             dbg("Tool drained: " .. rule.required.tool)
@@ -156,11 +163,24 @@ local function OnClientCommand(module, command, player, args)
     -- syncItemFields() doesn't apply here -- using your established
     -- sendRemoveItemFromContainer pattern instead, same as your other
     -- server-authoritative mods use for this exact situation.
+    --
+    -- IMPORTANT: capture the material's actual container BEFORE removing
+    -- it, and use that captured reference for both the Remove() call and
+    -- the sync call. Now that materials can be recursively found inside a
+    -- worn backpack or dolly (not just top-level inv), removing via the
+    -- top-level `inv` would be the wrong container entirely -- and even
+    -- for a top-level item, re-deriving item:getContainer() a second time
+    -- AFTER removal reliably comes back nil (it's cleared the instant
+    -- Remove() severs the link), which is exactly the bug that crashed
+    -- the server outright in Automaker's build-material consumption and
+    -- silently desynced it when tried client-side instead. Capturing the
+    -- reference first avoids both failure modes.
     local material = inv:getFirstTypeRecurse(rule.required.material)
     if material then
-        inv:Remove(material)
+        local materialContainer = material:getContainer() or inv
+        materialContainer:Remove(material)
         if sendRemoveItemFromContainer then
-            sendRemoveItemFromContainer(inv, material)
+            sendRemoveItemFromContainer(materialContainer, material)
         else
             dbg("!!! sendRemoveItemFromContainer not available, material removal may lag until resync !!!")
         end
