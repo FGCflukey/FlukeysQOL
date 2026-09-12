@@ -41,36 +41,52 @@ Commands.CreateVehicle = function(player, args)
         return
     end
 
-    vehicle:putKeyInIgnition(vehicle:createVehicleKey())
+    -- Everything below is native vehicle setup -- wrapped in pcall so a
+    -- signature mismatch in any ONE of these calls (like putKeyInIgnition
+    -- below, which threw "expected 2 arguments, got 1" until this fix --
+    -- B42 now requires the source container as a second argument) can't
+    -- also silently skip TakeMaterials at the end, leaving the vehicle
+    -- built but materials never consumed. The vehicle spawn itself
+    -- already happened above regardless of what happens in here.
+    local ok, err = pcall(function()
+        local key = vehicle:createVehicleKey()
+        player:getInventory():AddItem(key)
+        sendAddItemToContainer(player:getInventory(), key)
+        vehicle:putKeyInIgnition(key, player:getInventory())
 
-    if SandboxVars.Automaker.fullbuild then
-        vehicle:repair()
+        if SandboxVars.Automaker.fullbuild then
+            vehicle:repair()
 
-        local gastank = vehicle:getPartById("GasTank")
-        if gastank then
-            gastank:setContainerContentAmount(0.0)
+            local gastank = vehicle:getPartById("GasTank")
+            if gastank then
+                gastank:setContainerContentAmount(0.0)
+            end
+
+            local frontDoor = vehicle:getPartById("DoorFrontLeft")
+            if frontDoor and frontDoor:getDoor() then
+                frontDoor:getDoor():setLocked(false)
+                frontDoor:getDoor():setLockBroken(false)
+            end
+        else
+            local i = 0
+            local part = vehicle:getPartByIndex(i)
+            while part ~= nil do
+                part:setInventoryItem(nil)
+                i = i + 1
+                part = vehicle:getPartByIndex(i)
+            end
         end
 
-        local frontDoor = vehicle:getPartById("DoorFrontLeft")
-        if frontDoor and frontDoor:getDoor() then
-            frontDoor:getDoor():setLocked(false)
-            frontDoor:getDoor():setLockBroken(false)
-        end
-    else
-        local i = 0
-        local part = vehicle:getPartByIndex(i)
-        while part ~= nil do
-            part:setInventoryItem(nil)
-            i = i + 1
-            part = vehicle:getPartByIndex(i)
-        end
+        vehicle:setEngineFeature(
+            PZMath.clamp(player:getPerkLevel(Perks.Mechanics) * 10 + (ZombRand(30) - 15), 50, 100),
+            vehicle:getEngineLoudness(),
+            vehicle:getEnginePower()
+        )
+    end)
+
+    if not ok then
+        print("[Automaker] WARNING: post-spawn setup failed for " .. tostring(player:getUsername()) .. ": " .. tostring(err))
     end
-
-    vehicle:setEngineFeature(
-        PZMath.clamp(player:getPerkLevel(Perks.Mechanics) * 10 + (ZombRand(30) - 15), 50, 100),
-        vehicle:getEngineLoudness(),
-        vehicle:getEnginePower()
-    )
 
     print("[Automaker] " .. tostring(player:getUsername()) .. " built " .. tostring(args.VehicleID))
 
