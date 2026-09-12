@@ -2,11 +2,12 @@
 -- Server-authoritative vehicle spawning for Automaker.
 --
 -- Re-validates skill levels and recipe knowledge here (both are plain
--- character state, safe and cheap to check server-side). Material
--- consumption also happens directly here via buildUtil.consumeMaterial
--- -- its real source (read in full) branches on isServer() and is
--- designed to be called this way, so there's no need for the
--- client-round-trip the original B41 mod used.
+-- character state, safe and cheap to check server-side). The
+-- material-on-ground check is NOT duplicated here -- calling
+-- buildUtil.consumeMaterial directly server-side was tried and
+-- crashed (see Automaker_Util.lua's takeMaterials for details), so
+-- material consumption happens client-side in response to
+-- TakeMaterials below -- the same round-trip the original mod used.
 
 if isClient() then return end
 
@@ -87,7 +88,7 @@ Commands.CreateVehicle = function(player, args)
 
     print("[Automaker] " .. tostring(player:getUsername()) .. " built " .. tostring(args.VehicleID))
 
-    Automaker_Util.takeMaterials(player, mechanictype)
+    sendServerCommand(player, "Automaker", "TakeMaterials", { MechanicType = mechanictype })
 end
 
 local function OnClientCommand(module, command, player, args)

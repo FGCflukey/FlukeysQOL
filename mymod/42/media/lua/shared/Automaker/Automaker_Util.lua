@@ -187,23 +187,30 @@ function Automaker_Util.canBuild(player, mechanictype)
 end
 
 -----------------------------------------------------
--- Consumes materials for a build. Called server-side, directly after
--- spawning the vehicle. buildUtil.consumeMaterial's real source
--- branches on isServer() and expects ISItem.player to be the actual
--- player object (not a player number) when called that way, so this
--- takes the player object directly rather than using getPlayer().
+-- Consumes materials for a build. Client-side, in response to the
+-- server's TakeMaterials confirmation sent after it's already spawned
+-- the vehicle -- the same round-trip the original B41 mod used.
+--
+-- Tried calling buildUtil.consumeMaterial directly server-side instead
+-- (its source reads as isServer()-aware, expecting the real player
+-- object rather than a player number), but that crashed the server on
+-- the very first item: a NullPointerException inside vanilla's own
+-- sendRemoveItemFromContainer, because item:getContainer() comes back
+-- nil the moment it's re-checked right after Remove() clears it.
+-- Reverted to this client round-trip, which is confirmed not to crash.
 --
 -- All materials use the "Base." module prefix -- ElectricWire is
 -- declared under `module Base` in vanilla's normal.txt like every
 -- other material here; a leftover "Radio." prefix ported from the
 -- B41 original meant it could never be found/consumed.
 -----------------------------------------------------
-function Automaker_Util.takeMaterials(player, mechanictype)
-    local buildCheat = player:isBuildCheat()
+function Automaker_Util.takeMaterials(mechanictype)
+    local player = getPlayer()
+    local buildCheat = isAdmin() and player:isBuildCheat()
     local materials = Automaker_Util.getMaterialReq(mechanictype, buildCheat)
 
     local ISItem = {}
-    ISItem.player = player
+    ISItem.player = player:getPlayerNum()
     ISItem.sq = player:getSquare()
     ISItem.modData = {}
 
