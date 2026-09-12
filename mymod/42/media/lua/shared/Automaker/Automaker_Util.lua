@@ -187,28 +187,28 @@ function Automaker_Util.canBuild(player, mechanictype)
 end
 
 -----------------------------------------------------
--- Consumes materials for a build. Client-side only, matching
--- buildUtil's established usage pattern (same module vanilla's
--- own wall/furniture building menu uses) -- called in response
--- to the server's TakeMaterials confirmation after it's already
--- spawned the vehicle, same round-trip the original mod used.
+-- Consumes materials for a build. Called server-side, directly after
+-- spawning the vehicle. buildUtil.consumeMaterial's real source
+-- branches on isServer() and expects ISItem.player to be the actual
+-- player object (not a player number) when called that way, so this
+-- takes the player object directly rather than using getPlayer().
+--
+-- All materials use the "Base." module prefix -- ElectricWire is
+-- declared under `module Base` in vanilla's normal.txt like every
+-- other material here; a leftover "Radio." prefix ported from the
+-- B41 original meant it could never be found/consumed.
 -----------------------------------------------------
-function Automaker_Util.takeMaterials(mechanictype)
-    local player = getPlayer()
-    local buildCheat = isAdmin() and player:isBuildCheat()
+function Automaker_Util.takeMaterials(player, mechanictype)
+    local buildCheat = player:isBuildCheat()
     local materials = Automaker_Util.getMaterialReq(mechanictype, buildCheat)
 
     local ISItem = {}
-    ISItem.player = player:getPlayerNum()
+    ISItem.player = player
     ISItem.sq = player:getSquare()
     ISItem.modData = {}
 
     for m, c in pairs(materials) do
-        if m == "ElectricWire" then
-            ISItem.modData["need:Radio." .. m] = c
-        else
-            ISItem.modData["need:Base." .. m] = c
-        end
+        ISItem.modData["need:Base." .. m] = c
     end
 
     buildUtil.consumeMaterial(ISItem)

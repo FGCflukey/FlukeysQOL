@@ -2,18 +2,11 @@
 -- Server-authoritative vehicle spawning for Automaker.
 --
 -- Re-validates skill levels and recipe knowledge here (both are plain
--- character state, safe and cheap to check server-side). The
--- material-on-ground check is NOT duplicated here -- it depends on
--- buildUtil.getMaterialOnGround/consumeMaterial, the same vanilla
--- module the wall/furniture build menu uses, and that module's
--- server-side safety isn't confirmed the way the rest of this file's
--- calls are. The client already gates its own Build button on the
--- full check (materials included) before ever sending this command,
--- and the material consumption itself happens client-side in response
--- to TakeMaterials below -- the exact same round-trip the original
--- mod used. This mirrors the original's trust model (a private mod
--- for a small friend group, not hardened against a modified client)
--- rather than guessing at an untested "more secure" alternative.
+-- character state, safe and cheap to check server-side). Material
+-- consumption also happens directly here via buildUtil.consumeMaterial
+-- -- its real source (read in full) branches on isServer() and is
+-- designed to be called this way, so there's no need for the
+-- client-round-trip the original B41 mod used.
 
 if isClient() then return end
 
@@ -42,17 +35,21 @@ Commands.CreateVehicle = function(player, args)
     end
 
     -- Everything below is native vehicle setup -- wrapped in pcall so a
-    -- signature mismatch in any ONE of these calls (like putKeyInIgnition
-    -- below, which threw "expected 2 arguments, got 1" until this fix --
-    -- B42 now requires the source container as a second argument) can't
-    -- also silently skip TakeMaterials at the end, leaving the vehicle
-    -- built but materials never consumed. The vehicle spawn itself
-    -- already happened above regardless of what happens in here.
+    -- signature mismatch in any ONE of these calls can't also silently
+    -- skip material consumption at the end, leaving the vehicle built
+    -- but materials never taken. The vehicle spawn itself already
+    -- happened above regardless of what happens in here.
+    --
+    -- vehicle:putKeyInIgnition(key, ???) is deliberately NOT called --
+    -- B42 requires a 2nd argument and two different guesses at its type
+    -- (ItemContainer, then int) both threw. The key still goes straight
+    -- into the player's inventory, which is confirmed working; it's
+    -- just not pre-inserted into the ignition, a minor convenience loss
+    -- not worth a third blind guess at an undocumented native signature.
     local ok, err = pcall(function()
         local key = vehicle:createVehicleKey()
         player:getInventory():AddItem(key)
         sendAddItemToContainer(player:getInventory(), key)
-        vehicle:putKeyInIgnition(key, player:getInventory())
 
         if SandboxVars.Automaker.fullbuild then
             vehicle:repair()
@@ -90,7 +87,7 @@ Commands.CreateVehicle = function(player, args)
 
     print("[Automaker] " .. tostring(player:getUsername()) .. " built " .. tostring(args.VehicleID))
 
-    sendServerCommand(player, "Automaker", "TakeMaterials", { MechanicType = mechanictype })
+    Automaker_Util.takeMaterials(player, mechanictype)
 end
 
 local function OnClientCommand(module, command, player, args)
