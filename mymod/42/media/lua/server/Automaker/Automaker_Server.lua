@@ -29,6 +29,15 @@ Commands.CreateVehicle = function(player, args)
         return
     end
 
+    -- The client-side context menu already hides "Build Vehicle" entirely
+    -- unless the player is carrying Base.AutomakerMag3 -- re-checked here
+    -- too, same as skill/recipe above, since the client's word is never
+    -- trusted for anything that gates the actual build.
+    if not player:getInventory():getFirstTypeRecurse("Base.AutomakerMag3") then
+        print("[Automaker] Rejected build for " .. tostring(player:getUsername()) .. ": missing reference magazine")
+        return
+    end
+
     local vehicle = addVehicleDebug(tostring(args.VehicleID), IsoDirections.E, nil, player:getSquare())
     if not vehicle then
         print("[Automaker] Error: no vehicle spawned for " .. tostring(player:getUsername()) .. " (" .. tostring(args.VehicleID) .. ")")
