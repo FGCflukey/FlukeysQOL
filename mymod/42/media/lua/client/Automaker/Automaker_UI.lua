@@ -224,7 +224,7 @@ function AutomakerTab:updateDescription(v)
 
     for _, mat in ipairs({ "SheetMetal", "MetalBar", "ElectronicsScrap", "ElectricWire", "EngineParts" }) do
         local total = (materialOnGround[mat] or 0) + playerInv:getCountTypeRecurse(mat)
-        description = description .. line(total, requirements[mat], mat)
+        description = description .. line(total, requirements[mat], Automaker_Util.getMaterialLabel(mat))
     end
 
     description = description .. line(player:getPerkLevel(Perks.Mechanics), mechanicReq, "Mechanics")

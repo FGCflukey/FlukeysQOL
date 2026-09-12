@@ -75,6 +75,25 @@ function Automaker_Util.getVehicleRealName(vehicleID)
 end
 
 -----------------------------------------------------
+-- Display names for the build materials, since the raw type
+-- strings (matching getMaterialReq's keys) aren't what the
+-- player sees on the item itself. Confirmed against the real
+-- translation file (shared/Translate/EN/ItemName.json), not
+-- guessed.
+-----------------------------------------------------
+local MaterialLabels = {
+    SheetMetal = "Steel Sheet",
+    MetalBar = "Steel Rod",
+    ElectronicsScrap = "Scrap Electronics",
+    ElectricWire = "Electrical Wire",
+    EngineParts = "Spare Engine Parts",
+}
+
+function Automaker_Util.getMaterialLabel(materialType)
+    return MaterialLabels[materialType] or materialType
+end
+
+-----------------------------------------------------
 -- Material + skill requirements per mechanic tier.
 -- Script:getMechanicType() -- 1=standard 2=heavy duty 3=sports.
 -- Anything else (our added "Other Models" bucket, for vehicles
