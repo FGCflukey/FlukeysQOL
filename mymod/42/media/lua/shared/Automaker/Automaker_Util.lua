@@ -187,38 +187,73 @@ function Automaker_Util.canBuild(player, mechanictype)
 end
 
 -----------------------------------------------------
--- Consumes materials for a build. Client-side, in response to the
--- server's TakeMaterials confirmation sent after it's already spawned
--- the vehicle -- the same round-trip the original B41 mod used.
---
--- Tried calling buildUtil.consumeMaterial directly server-side instead
--- (its source reads as isServer()-aware, expecting the real player
--- object rather than a player number), but that crashed the server on
--- the very first item: a NullPointerException inside vanilla's own
--- sendRemoveItemFromContainer, because item:getContainer() comes back
--- nil the moment it's re-checked right after Remove() clears it.
--- Reverted to this client round-trip, which is confirmed not to crash.
+-- Consumes materials for a build. Server-side, authoritative --
+-- written from scratch rather than delegating to vanilla's
+-- buildUtil.consumeMaterial, which turned out broken in both
+-- directions that were tried:
+--   * called server-side, it crashed outright: a NullPointerException
+--     inside vanilla's own sendRemoveItemFromContainer, because
+--     item:getContainer() comes back nil the moment it's re-checked
+--     immediately after Remove() has already cleared it.
+--   * called client-side (the original B41 round-trip), it hit the
+--     exact same nil-after-remove case silently instead of crashing:
+--     the local/predicted removal looked fine client-side (no error,
+--     items visually gone), but the resulting sendRemoveItemFromContainer
+--     call never reached the server with a valid container, so the
+--     server's real inventory never actually lost the items -- proven
+--     by them all reappearing intact on reconnect (a classic
+--     client-predicted-but-never-synced desync).
+-- This version captures each item's container BEFORE removing it, so
+-- the sync call always gets a valid, non-nil container, and it runs
+-- authoritatively on the server like everything else in this pack.
 --
 -- All materials use the "Base." module prefix -- ElectricWire is
 -- declared under `module Base` in vanilla's normal.txt like every
 -- other material here; a leftover "Radio." prefix ported from the
 -- B41 original meant it could never be found/consumed.
 -----------------------------------------------------
-function Automaker_Util.takeMaterials(mechanictype)
-    local player = getPlayer()
-    local buildCheat = isAdmin() and player:isBuildCheat()
+function Automaker_Util.takeMaterials(player, mechanictype)
+    local buildCheat = player:isBuildCheat()
     local materials = Automaker_Util.getMaterialReq(mechanictype, buildCheat)
+    local playerInv = player:getInventory()
 
-    local ISItem = {}
-    ISItem.player = player:getPlayerNum()
-    ISItem.sq = player:getSquare()
-    ISItem.modData = {}
+    for m, needCount in pairs(materials) do
+        local itemFullType = "Base." .. m
+        local remaining = needCount
 
-    for m, c in pairs(materials) do
-        ISItem.modData["need:Base." .. m] = c
+        local items = playerInv:getSomeTypeEvalRecurse(itemFullType, buildUtil.predicateMaterial, remaining)
+        for i = 1, items:size() do
+            if remaining <= 0 then break end
+            local item = items:get(i - 1)
+            local container = item:getContainer()
+            player:removeFromHands(item)
+            if container then
+                container:Remove(item)
+                sendRemoveItemFromContainer(container, item)
+            else
+                playerInv:Remove(item)
+                sendRemoveItemFromContainer(playerInv, item)
+            end
+            remaining = remaining - 1
+        end
+
+        if remaining > 0 then
+            local groundItems = buildUtil.getMaterialOnGround(player:getSquare())
+            local onGround = groundItems[itemFullType]
+            if onGround then
+                local count = math.min(remaining, #onGround)
+                for i = 1, count do
+                    local worldObj = onGround[i]:getWorldItem()
+                    worldObj:getSquare():transmitRemoveItemFromSquare(worldObj)
+                end
+                remaining = remaining - count
+            end
+        end
+
+        if remaining > 0 then
+            print("[Automaker] WARNING: could not find all required " .. m .. " for " .. tostring(player:getUsername()))
+        end
     end
-
-    buildUtil.consumeMaterial(ISItem)
 end
 
 -----------------------------------------------------
