@@ -111,6 +111,14 @@ CarPartRepair_Util.Rules = RepairRules
 -- threw "tried to call nil" on the server. getItems()/getID() is
 -- long-established, documented base-game behavior, so we use that
 -- directly instead of trusting a guessed shortcut.
+--
+-- Recurses into nested containers (e.g. a worn backpack or the
+-- dolly) -- same proven pattern already used in
+-- CarPartDismantle_Server.lua. A part item that isn't in top-level
+-- main inventory used to come back "not found" server-side even
+-- though the client's canRepairPart() check passed, since that
+-- check (now recursive itself) doesn't guarantee the part ITEM
+-- being repaired is at the top level too.
 ---------------------------------------------------------
 function CarPartRepair_Util.findItemByID(inv, id)
     if not inv or not id then return nil end
@@ -120,6 +128,11 @@ function CarPartRepair_Util.findItemByID(inv, id)
         local it = items:get(i)
         if it and it:getID() == id then
             return it
+        end
+
+        if instanceof(it, "InventoryContainer") then
+            local nested = CarPartRepair_Util.findItemByID(it:getInventory(), id)
+            if nested then return nested end
         end
     end
 
