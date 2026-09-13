@@ -630,6 +630,7 @@ module Base
             item 1 tags[base:hammer;base:clubhammer] mode:keep flags[MayDegradeVeryLight],
             item 1 [Base.Flour2],
             item 1 [Base.Matches] mode:keep,
+            item 1 [*],
             -fluid 0.2 [Water;TaintedWater],
             item 1 [Base.Glue],
             item 1 [Base.Vinegar2],
@@ -655,6 +656,7 @@ module Base
             item 1 [Base.Charcoal],
             item 1 [Base.Matches] mode:keep,
             item 1 [Base.Flour2],
+            item 1 [*],
             -fluid 0.2 [Water;TaintedWater],
             item 1 [Base.Vinegar2],
         }
