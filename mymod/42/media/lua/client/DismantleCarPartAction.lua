@@ -90,9 +90,29 @@ function DismantleCarPartAction:perform()
 
     dbg("Sending dismantle command to server for partID=" .. tostring(self.part:getID()))
 
+    -- If the part isn't in the character's own inventory (e.g. it's
+    -- sitting in a nearby crate's loot panel), also send the square its
+    -- container sits on -- the server's own inventory search can't reach
+    -- a separate world container at all without this hint. Same fix as
+    -- CarPartRepair_Action.lua; see that file for the full reasoning.
+    local containerX, containerY, containerZ = nil, nil, nil
+    local container = self.part:getContainer()
+    if container and not container:isInCharacterInventory(self.character) then
+        local parent = container:getParent()
+        if parent and parent.getSquare then
+            local sq = parent:getSquare()
+            if sq then
+                containerX, containerY, containerZ = sq:getX(), sq:getY(), sq:getZ()
+            end
+        end
+    end
+
     sendClientCommand(self.character, "CarPartDismantle", "dismantle", {
-        partID   = self.part:getID(),
-        partName = self.partName,
+        partID     = self.part:getID(),
+        partName   = self.partName,
+        containerX = containerX,
+        containerY = containerY,
+        containerZ = containerZ,
     })
 
     -- NOTE: no local inv:AddItem / inv:Remove / setCurrentUses here.

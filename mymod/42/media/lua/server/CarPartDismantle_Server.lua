@@ -42,6 +42,46 @@ local function findItemByID(inv, id)
     return nil
 end
 
+-- Finds an item by ID in the player's own inventory (above), OR in a
+-- nearby world container (a crate, etc.) if containerX/Y/Z point at
+-- one -- same gap CarPartRepair had: this context menu fires for ANY
+-- open inventory-style panel (OnFillInventoryObjectContextMenu), not
+-- just the player's own, so a part sitting in a crate's loot panel
+-- used to silently fail here with "not found in player inventory".
+-- containerX/Y/Z is just a client hint -- re-validated against the
+-- player's actual distance before trusting it (same 2-tile margin
+-- vanilla's own luautils.walkToContainer() uses for containers), never
+-- trusted blindly. See CarPartRepair_Util.findItemNearby() for the
+-- proven original of this exact pattern.
+local function findItemNearby(player, id, containerX, containerY, containerZ)
+    local found = findItemByID(player:getInventory(), id)
+    if found then return found end
+
+    if not containerX or not containerY or not containerZ then return nil end
+
+    local square = getSquare(containerX, containerY, containerZ)
+    if not square then return nil end
+
+    local playerSquare = player:getSquare()
+    if not playerSquare or playerSquare:DistToProper(square) > 2 then
+        return nil
+    end
+
+    local objects = square:getObjects()
+    for i = 0, objects:size() - 1 do
+        local obj = objects:get(i)
+        if obj and obj.getContainer then
+            local ok, container = pcall(obj.getContainer, obj)
+            if ok and container then
+                found = findItemByID(container, id)
+                if found then return found end
+            end
+        end
+    end
+
+    return nil
+end
+
 local function addReward(inv, player, fullType)
     local item = inv:AddItem(fullType)
     if item then
@@ -115,9 +155,9 @@ local function onClientCommand(module, command, player, args)
         return
     end
 
-    local part = findItemByID(inv, args.partID)
+    local part = findItemNearby(player, args.partID, args.containerX, args.containerY, args.containerZ)
     if not part then
-        dbg("REJECT: part with ID " .. tostring(args.partID) .. " not found in player inventory")
+        dbg("REJECT: part with ID " .. tostring(args.partID) .. " not found in player inventory or nearby container")
         return
     end
 
@@ -164,6 +204,16 @@ local function onClientCommand(module, command, player, args)
     end
 
     -- All checks passed - perform the actual, authoritative mutation.
+    -- Reward materials always go to the player's OWN inventory (`inv`,
+    -- never the part's source container), same as if it'd been picked up
+    -- first -- so unlike CarPartRepair's crate case, there's no "part sits
+    -- in a crate showing stale state" problem here: the part is fully
+    -- REMOVED (sendRemoveItemFromContainer, already proven reliable for
+    -- material consumption in CarPartRepair even from a backpack/dolly),
+    -- not condition-mutated in place, so no move-into-inventory step
+    -- should be needed. Not yet tested against a live crate dismantle --
+    -- if the crate keeps showing the removed part until reconnect, that's
+    -- the same class of bug and the fix is the same move-first trick.
     grantRewards(inv, player, name)
 
     dbg("Removing part " .. tostring(name) .. " from server inventory")
