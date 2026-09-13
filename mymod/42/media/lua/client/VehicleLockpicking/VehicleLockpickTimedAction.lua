@@ -1,53 +1,19 @@
 require "TimedActions/ISBaseTimedAction"
 
+-- This used to mutate door/trunk lock state directly on the client
+-- (door:setLocked(false), no server involvement) and, on the rare
+-- failure-to-stick path, sent a fallback command to module "vehicle"
+-- command "setDoorLocked" -- which isn't a real vanilla server command
+-- (grepped the whole vanilla server lua tree, no handler exists). So
+-- the common/successful case never told the server anything: the
+-- client showed "unlocked" as a pure local prediction, but the
+-- server's real vehicle-part lock state (which actually gates trunk/
+-- container access) never changed -- surfaced as "trunk shows unlocked
+-- but the container never shows up until you toggle the real vanilla
+-- lock from the driver's seat." All of that now lives server-side in
+-- VehicleLockpicking_Server.lua -- this file just requests it and
+-- reports the result.
 VehicleLockpickTimedAction = ISBaseTimedAction:derive("VehicleLockpickTimedAction")
-
--- Mechanics-based success chance
-local function getLockpickSuccessChance(player)
-    local mech = player:getPerkLevel(Perks.Mechanics)
-
-    if mech <= 2 then
-        return 15
-    elseif mech <= 4 then
-        return 45
-    elseif mech <= 8 then
-        return 75
-    else
-        return 100
-    end
-end
-
-local function unlockVehicleDoor(player, vehicle, part)
-    if not vehicle or not part then return end
-
-    local door = part:getDoor()
-    if not door then
-        player:Say("Can't find door mechanism.")
-        return
-    end
-
-    door:setLocked(false)
-
-    local trunk = vehicle:getPartById("TrunkDoor")
-    if trunk and trunk:getDoor() then
-        trunk:getDoor():setLocked(false)
-    end
-
-    if door:isLocked() then
-        sendClientCommand(player, "vehicle", "setDoorLocked", {
-            vehicle = vehicle:getId(),
-            part = part:getId(),
-            locked = false
-        })
-
-        if door:isLocked() then
-            player:Say("Still locked... something's off.")
-            return
-        end
-    end
-
-    vehicle:playPartSound(part, player, "Unlock")
-end
 
 function VehicleLockpickTimedAction:isValid()
     return true
@@ -76,37 +42,16 @@ function VehicleLockpickTimedAction:stop()
 end
 
 function VehicleLockpickTimedAction:perform()
-    local emitter = self.character:getEmitter()
-
-    local chance = getLockpickSuccessChance(self.character)
-    local roll = ZombRand(100)
-
-    if roll < chance then
-        if emitter then emitter:playSound("PickLock", self.vehicle) end
-        self.character:Say("Unlocked.")
-        unlockVehicleDoor(self.character, self.vehicle, self.part)
-    else
-        if emitter then emitter:playSound("FailedPickLock", self.vehicle) end
-        self.character:Say("The lock resisted.")
-
-        -- 35% chance to break the paperclip
-        local breakChance = 35
-        local breakRoll = ZombRand(100)
-
-        if breakRoll < breakChance then
-            self.character:Say("The paperclip snapped.")
-            local inv = self.character:getInventory()
-            local pc = inv:getFirstTypeRecurse("Paperclip")
-            if pc then
-                local container = pc:getContainer()
-                if container then
-                    container:Remove(pc)
-                end
-            end
-        else
-            self.character:Say("The paperclip held.")
-        end
-    end
+    -- No local roll, no local setLocked() -- the server is the only
+    -- place that decides success/failure and actually mutates the
+    -- door/trunk lock state now. This is just the request; feedback
+    -- (sound, Say(), paperclip breaking) comes back via lockpickResult
+    -- below, same "request now, react to the server's real answer"
+    -- pattern this pack's other server-authoritative mods use.
+    sendClientCommand(self.character, "VehicleLockpicking", "attemptUnlock", {
+        vehicleId = self.vehicle:getId(),
+        partId    = self.part:getId(),
+    })
 
     ISBaseTimedAction.perform(self)
 end
@@ -125,3 +70,30 @@ function VehicleLockpickTimedAction:new(character, vehicle, part, time)
 
     return o
 end
+
+---------------------------------------------------------
+-- Server's authoritative result comes back here -- feedback only,
+-- the actual lock/trunk state and paperclip removal already happened
+-- server-side by the time this fires.
+---------------------------------------------------------
+local function OnServerCommand(module, command, args)
+    if module ~= "VehicleLockpicking" or command ~= "lockpickResult" then return end
+
+    local player = getSpecificPlayer(0)
+    if not player then return end
+
+    local emitter = player:getEmitter()
+
+    if args.success then
+        if emitter then emitter:playSound("PickLock") end
+        player:Say("Unlocked.")
+    else
+        if emitter then emitter:playSound("FailedPickLock") end
+        if args.broke then
+            player:Say("The paperclip snapped.")
+        else
+            player:Say("The lock resisted.")
+        end
+    end
+end
+Events.OnServerCommand.Add(OnServerCommand)
