@@ -187,6 +187,15 @@ local function onFillWorldObjectContextMenu(playerIndex, context, worldobjects, 
 
     local door = getDoorAtSquare(square)
     if not door then return end
+
+    -- Vanilla itself never offers a lock/unlock option on an open door
+    -- (confirmed: ISWorldObjectContextMenu's own door menu shows only
+    -- "Close Door" for one, no lock-related entries at all) -- a door's
+    -- stored lock flags can stay stale/irrelevant while it's open, so
+    -- "Pick Lock" showing up on an obviously-open, obviously-unlocked
+    -- door was exactly that: match the same real-door:IsOpen() guard.
+    if door.IsOpen and door:IsOpen() then return end
+
     if not clusterLocked(getRelatedDoors(door)) then return end
     if not hasLockpickTools(player) then return end
 

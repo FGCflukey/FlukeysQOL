@@ -151,6 +151,15 @@ local function OnClientCommand(module, command, player, args)
         return
     end
 
+    -- Same guard as the client menu check -- vanilla itself never
+    -- offers lock/unlock on an open door, and a door's stored lock
+    -- flags can stay stale/irrelevant while open. Re-checked here too
+    -- since the client's word is never trusted.
+    if door.IsOpen and door:IsOpen() then
+        dbg("Door is open, rejecting")
+        return
+    end
+
     local doors = getRelatedDoors(door)
 
     if not clusterLocked(doors) then
