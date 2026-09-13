@@ -51,9 +51,19 @@ local function hasTools(player)
 end
 
 -------------------------------------------------
--- Detect locked vehicle door near player
+-- Detect locked vehicle door within reach of player
 -------------------------------------------------
 
+-- player:getNearVehicle() is a coarse "is there a vehicle roughly
+-- nearby" check (same one vanilla's own general vehicle context menu
+-- uses) -- on its own it doesn't confirm the player is actually close
+-- enough to reach a SPECIFIC part, so the option used to show up for
+-- any locked door on any car getNearVehicle() considered "near" (e.g.
+-- another vehicle elsewhere in a garage), even a fair distance away.
+-- vehicle:isInArea(part:getArea(), player) is the same real per-part
+-- reachability check the server now enforces (see
+-- VehicleLockpicking_Server.lua) -- checking it here too keeps the
+-- menu option honest about what will actually be accepted.
 local function getLockedVehicleDoor(player)
     local vehicle = player:getNearVehicle()
     if not vehicle then return nil, nil end
@@ -68,7 +78,10 @@ local function getLockedVehicleDoor(player)
     for _, id in ipairs(parts) do
         local part = vehicle:getPartById(id)
         if part and part:getDoor() and part:getDoor():isLocked() then
-            return vehicle, part
+            local area = part:getArea()
+            if area and vehicle:isInArea(area, player) then
+                return vehicle, part
+            end
         end
     end
 
