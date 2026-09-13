@@ -142,33 +142,13 @@ local function hasLockpickTools(player)
     return tool ~= nil and paperclip ~= nil
 end
 
-local function removeOnePaperclip(player)
-    local inv = player:getInventory()
-    local pc = findItemRecursive(inv, "Paperclip")
-    if pc then
-        local container = pc:getContainer()
-        if container then
-            container:Remove(pc)
-        end
-    end
-end
-
--------------------------------------------------
--- Unlock all lock flags on a door
--------------------------------------------------
-
-local function unlockDoorObject(door)
-    if not door then return end
-
-    if door.setLocked then door:setLocked(false) end
-    if door.setIsLocked then door:setIsLocked(false) end
-    if door.setLockedByKey then door:setLockedByKey(false) end
-    if door.setLockedByPadlock then door:setLockedByPadlock(false) end
-    if door.setKeyId then door:setKeyId(-1) end
-end
-
 -------------------------------------------------
 -- Pick lock action (doors only, timed)
+--
+-- No local door mutation or paperclip removal here anymore -- the
+-- server re-derives the same door cluster from these square coords
+-- and is the only place that decides success/failure and actually
+-- unlocks anything now. See Lockpicking_Server.lua.
 -------------------------------------------------
 
 local function onPickLock(worldobjects, playerIndex)
@@ -202,19 +182,7 @@ local function onPickLock(worldobjects, playerIndex)
     local door = doors[1]
 
     ISTimedActionQueue.add(
-        LockpickTimedAction:new(
-            player,
-            door,
-            ZombRand(6, 11) * 30,
-            function(player, door)
-                for _, d in ipairs(doors) do
-                    unlockDoorObject(d)
-                end
-            end,
-            function(player, door)
-                removeOnePaperclip(player)
-            end
-        )
+        LockpickTimedAction:new(player, door, square, ZombRand(6, 11) * 30)
     )
 end
 
