@@ -3,21 +3,33 @@
 --
 -- Same architectural gap as VehicleLockpicking had: Lockpicking.lua /
 -- LockpickTimedAction.lua decided success/failure and mutated door
--- lock flags (setLocked/setIsLocked/setLockedByKey/setLockedByPadlock/
--- setKeyId) entirely client-side, with no server file at all.
+-- lock flags entirely client-side, with no server file at all.
 --
--- Unlike vehicle parts, a plain building door's lock state appears to
--- sync via the engine's normal object/chunk replication rather than
--- needing an explicit transmit call -- vanilla's own admin debug door
--- lock toggle (AdminContextMenu.OnDoorLock / DebugContextMenu.OnDoorLock)
--- does a bare door:setIsLocked() with no sync call afterward and is
--- known-working live in MP -- so this may not have shown the exact
--- "looks unlocked to me but not to others" visual symptom
--- VehicleLockpicking did. But the security gap is identical either
--- way: with zero server validation, a modified client could report
--- success and unlock any door without ever having the required tools.
--- Fixed to match this pack's "never trust the client" architecture,
--- same shape as VehicleLockpicking_Server.lua.
+-- Two real bugs found and fixed here on top of that:
+--
+-- 1. The original hand-rolled "door cluster" detection scanned a
+--    fixed 3x3 tile neighborhood around the target square. Garage
+--    doors are NOT just "whatever's within 3 tiles" -- they're a
+--    linked CHAIN of separate IsoDoor segments (IsoDoor.getGarageDoorPrev/
+--    Next), which can span more tiles than that, and a 3x3 scan can
+--    also wrongly catch an unrelated nearby door. This is exactly why
+--    a garage door pick could target the wrong thing while standing
+--    "tiles away" from what actually got attempted.
+--
+-- 2. Nothing ever called door:syncIsoObject(false, 0, nil, nil) after
+--    changing lock flags. This is the real, confirmed sync call
+--    vanilla's own lock/unlock action uses (shared/TimedActions/
+--    ISLockDoor.lua:complete()) -- without it, a "successful" unlock
+--    could fail to actually stick/broadcast, which is exactly why the
+--    door kept re-reporting as locked on the very next attempt with
+--    the log still saying "Unlock succeeded" every time.
+--
+-- The fix for both: use vanilla's own real helpers for finding every
+-- object that must be unlocked together (buildUtil.getDoubleDoorObjects
+-- / buildUtil.getGarageDoorObjects -- the exact ones ISLockDoor.lua
+-- itself uses), starting from the single door object actually on the
+-- target square (no neighbor scan needed -- these helpers walk the
+-- real chain themselves), and call syncIsoObject on each one changed.
 
 local DEBUG = true
 local function dbg(msg) if DEBUG then print("[Lockpicking:Server] " .. tostring(msg)) end end
@@ -31,33 +43,39 @@ local function isDoorObject(obj)
     return false
 end
 
--- Mirrors Lockpicking.lua's own getDoorCluster() -- re-derived here
--- from square coords rather than trusting a client-sent object list.
-local function getDoorCluster(square)
-    local doors = {}
-    if not square then return doors end
+-- The door object on THIS exact square only -- multi-tile doors are
+-- resolved below via their real linkage, not by scanning neighbors.
+local function getDoorAtSquare(square)
+    if not square then return nil end
+    local objs = square:getSpecialObjects()
+    for i = 0, objs:size() - 1 do
+        local obj = objs:get(i)
+        if isDoorObject(obj) then
+            return obj
+        end
+    end
+    return nil
+end
 
-    local cell = square:getCell()
-    local sx, sy, sz = square:getX(), square:getY(), square:getZ()
+-- Expands one door object into every object that must be unlocked
+-- together with it, using the same real vanilla helpers
+-- shared/TimedActions/ISLockDoor.lua uses.
+local function getRelatedDoors(door)
+    local seen = {}
+    local list = {}
 
-    local function addFromSquare(sq)
-        if not sq then return end
-        local objs = sq:getSpecialObjects()
-        for i = 0, objs:size() - 1 do
-            local obj = objs:get(i)
-            if isDoorObject(obj) then
-                table.insert(doors, obj)
-            end
+    local function add(d)
+        if d and not seen[d] then
+            seen[d] = true
+            table.insert(list, d)
         end
     end
 
-    for dx = -1, 1 do
-        for dy = -1, 1 do
-            addFromSquare(cell:getGridSquare(sx + dx, sy + dy, sz))
-        end
-    end
+    add(door)
+    for _, d in ipairs(buildUtil.getDoubleDoorObjects(door)) do add(d) end
+    for _, d in ipairs(buildUtil.getGarageDoorObjects(door)) do add(d) end
 
-    return doors
+    return list
 end
 
 local function clusterLocked(doors)
@@ -79,6 +97,7 @@ local function unlockDoorObject(door)
     if door.setLockedByKey then door:setLockedByKey(false) end
     if door.setLockedByPadlock then door:setLockedByPadlock(false) end
     if door.setKeyId then door:setKeyId(-1) end
+    if door.syncIsoObject then door:syncIsoObject(false, 0, nil, nil) end
 end
 
 local function getLockpickSuccessChance(player)
@@ -126,11 +145,13 @@ local function OnClientCommand(module, command, player, args)
         return
     end
 
-    local doors = getDoorCluster(square)
-    if #doors == 0 then
-        dbg("No doors found in cluster at request square")
+    local door = getDoorAtSquare(square)
+    if not door then
+        dbg("No door found at request square")
         return
     end
+
+    local doors = getRelatedDoors(door)
 
     if not clusterLocked(doors) then
         dbg("Door cluster already unlocked, nothing to do")
@@ -153,7 +174,7 @@ local function OnClientCommand(module, command, player, args)
             unlockDoorObject(d)
         end
 
-        dbg("Unlock succeeded for " .. tostring(player:getUsername()))
+        dbg("Unlock succeeded for " .. tostring(player:getUsername()) .. " (" .. #doors .. " linked door object(s))")
         sendServerCommand(player, "Lockpicking", "lockpickResult", { success = true })
     else
         dbg("Unlock failed for " .. tostring(player:getUsername()))

@@ -14,68 +14,46 @@ local function isDoorObject(obj)
 end
 
 -------------------------------------------------
--- Collect all door objects in a 3x3 cluster
+-- Find the linked set of door objects for a target square
+--
+-- The door object on THIS exact square only -- NOT a 3x3 neighbor
+-- scan. A garage door is a linked CHAIN of separate door segments
+-- (IsoDoor.getGarageDoorPrev/Next) that can span more tiles than a
+-- fixed 3x3 area, and a blind neighbor scan can also wrongly catch an
+-- unrelated nearby door. buildUtil.getDoubleDoorObjects/
+-- getGarageDoorObjects -- the same real vanilla helpers
+-- shared/TimedActions/ISLockDoor.lua itself uses -- correctly walk
+-- the real chain from a single starting door instead.
 -------------------------------------------------
 
-local function getDoorCluster(square)
-    local doors = {}
-    if not square then return doors end
-
-    local cell = square:getCell()
-    local sx, sy, sz = square:getX(), square:getY(), square:getZ()
-
-    local function addFromSquare(sq)
-        if not sq then return end
-        local objs = sq:getSpecialObjects()
-        for i = 0, objs:size() - 1 do
-            local obj = objs:get(i)
-            if isDoorObject(obj) then
-                table.insert(doors, obj)
-            end
+local function getDoorAtSquare(square)
+    if not square then return nil end
+    local objs = square:getSpecialObjects()
+    for i = 0, objs:size() - 1 do
+        local obj = objs:get(i)
+        if isDoorObject(obj) then
+            return obj
         end
     end
-
-    for dx = -1, 1 do
-        for dy = -1, 1 do
-            addFromSquare(cell:getGridSquare(sx + dx, sy + dy, sz))
-        end
-    end
-
-    return doors
+    return nil
 end
 
--------------------------------------------------
--- Identify the "master" door tile
--------------------------------------------------
+local function getRelatedDoors(door)
+    local seen = {}
+    local list = {}
 
-local function findMasterDoor(doors)
-    if #doors == 0 then return nil end
-
-    local master = doors[1]
-    local bestScore = 0
-
-    for _, door in ipairs(doors) do
-        local score = 0
-
-        if door.getMaxHealth and door:getMaxHealth() then
-            score = score + door:getMaxHealth()
-        end
-
-        if door.getKeyId and door:getKeyId() and door:getKeyId() ~= -1 then
-            score = score + 5000
-        end
-
-        if door.isLockedByKey and door:isLockedByKey() then
-            score = score + 3000
-        end
-
-        if score > bestScore then
-            bestScore = score
-            master = door
+    local function add(d)
+        if d and not seen[d] then
+            seen[d] = true
+            table.insert(list, d)
         end
     end
 
-    return master
+    add(door)
+    for _, d in ipairs(buildUtil.getDoubleDoorObjects(door)) do add(d) end
+    for _, d in ipairs(buildUtil.getGarageDoorObjects(door)) do add(d) end
+
+    return list
 end
 
 -------------------------------------------------
@@ -168,8 +146,8 @@ local function onPickLock(worldobjects, playerIndex)
     end
     if not square then return end
 
-    local doors = getDoorCluster(square)
-    if #doors == 0 then
+    local door = getDoorAtSquare(square)
+    if not door then
         player:Say("There's nothing to pick here.")
         return
     end
@@ -178,8 +156,6 @@ local function onPickLock(worldobjects, playerIndex)
         player:Say("I need a screwdriver or multitool, and a paperclip.")
         return
     end
-
-    local door = doors[1]
 
     ISTimedActionQueue.add(
         LockpickTimedAction:new(player, door, square, ZombRand(6, 11) * 30)
@@ -209,9 +185,9 @@ local function onFillWorldObjectContextMenu(playerIndex, context, worldobjects, 
     end
     if not square then return end
 
-    local doors = getDoorCluster(square)
-    if #doors == 0 then return end
-    if not clusterLocked(doors) then return end
+    local door = getDoorAtSquare(square)
+    if not door then return end
+    if not clusterLocked(getRelatedDoors(door)) then return end
     if not hasLockpickTools(player) then return end
 
     context:addOption("Pick Lock", worldobjects, onPickLock, playerIndex)
