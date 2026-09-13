@@ -29,10 +29,14 @@ local function OnClientCommand(module, command, player, args)
         return
     end
 
-    -- Re-derive the item from the player's OWN server-side inventory by ID.
-    -- Never trust an item reference sent from the client.
+    -- Re-derive the item from the player's OWN server-side inventory by ID,
+    -- or from a nearby world container (e.g. a crate) if the client's
+    -- containerX/Y/Z hint points at one -- re-validated for distance
+    -- inside findItemNearby, never trusted blindly. Tool/material/kit
+    -- below are deliberately still looked up from `inv` only -- those
+    -- are required to be actually carried, not sitting in a crate too.
     local inv = player:getInventory()
-    local item = CarPartRepair_Util.findItemByID(inv, args.itemID)
+    local item = CarPartRepair_Util.findItemNearby(player, args.itemID, args.containerX, args.containerY, args.containerZ)
 
     if not item then
         dbg("Item not found on server for id " .. tostring(args.itemID))

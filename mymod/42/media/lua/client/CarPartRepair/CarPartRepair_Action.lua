@@ -73,9 +73,32 @@ function ISRepairCarPartAction:perform()
     --
     -- We DO send an optimistic local hint so the UI feels responsive,
     -- but the server's follow-up command is what actually sticks.
+    --
+    -- If the part isn't in the character's own inventory (e.g. it's
+    -- sitting in a nearby crate's loot panel), also send the square
+    -- its container sits on -- the server's own inventory search
+    -- can't reach a separate world container at all, so without this
+    -- hint it always reports "Item not found" for anything not
+    -- carried on the player. Just a hint: the server re-validates
+    -- distance before trusting it.
+    local containerX, containerY, containerZ = nil, nil, nil
+    local container = self.item:getContainer()
+    if container and not container:isInCharacterInventory(self.character) then
+        local parent = container:getParent()
+        if parent and parent.getSquare then
+            local sq = parent:getSquare()
+            if sq then
+                containerX, containerY, containerZ = sq:getX(), sq:getY(), sq:getZ()
+            end
+        end
+    end
+
     sendClientCommand(self.character, "CarPartRepair", "repairPart", {
-        itemID    = self.item:getID(),
-        partName  = self.partName,
+        itemID     = self.item:getID(),
+        partName   = self.partName,
+        containerX = containerX,
+        containerY = containerY,
+        containerZ = containerZ,
     })
 
     ISBaseTimedAction.perform(self)

@@ -140,6 +140,53 @@ function CarPartRepair_Util.findItemByID(inv, id)
 end
 
 ---------------------------------------------------------
+-- Find an item by ID anywhere the player can reach: their own
+-- inventory (worn backpack/dolly included, via findItemByID above),
+-- OR a nearby world container -- a crate, wardrobe, vehicle trunk,
+-- etc. -- that a right-click on an item in its open loot panel can
+-- also reach via OnFillInventoryObjectContextMenu, but which is a
+-- completely separate ItemContainer tree, never nested inside the
+-- player's own inventory.
+--
+-- containerX/Y/Z is the square the client reports the item's
+-- container sitting on (captured client-side from
+-- item:getContainer():getParent():getSquare() at the moment the
+-- repair action was queued). It's just a hint, never trusted blindly
+-- -- re-validated here against the player's actual current distance
+-- to that square before searching it, same reachability margin
+-- vanilla's own luautils.walkToContainer() uses for containers.
+---------------------------------------------------------
+function CarPartRepair_Util.findItemNearby(player, id, containerX, containerY, containerZ)
+    local inv = player:getInventory()
+    local found = CarPartRepair_Util.findItemByID(inv, id)
+    if found then return found end
+
+    if not containerX or not containerY or not containerZ then return nil end
+
+    local square = getSquare(containerX, containerY, containerZ)
+    if not square then return nil end
+
+    local playerSquare = player:getSquare()
+    if not playerSquare or playerSquare:DistToProper(square) > 2 then
+        return nil
+    end
+
+    local objects = square:getObjects()
+    for i = 0, objects:size() - 1 do
+        local obj = objects:get(i)
+        if obj and obj.getContainer then
+            local ok, container = pcall(obj.getContainer, obj)
+            if ok and container then
+                found = CarPartRepair_Util.findItemByID(container, id)
+                if found then return found end
+            end
+        end
+    end
+
+    return nil
+end
+
+---------------------------------------------------------
 -- Keyword boundary check for PascalCase item fullTypes.
 -- PZ item names concatenate words directly with no separator
 -- (e.g. "FrontDoor2", "TailgateWI"), so we can't require a
