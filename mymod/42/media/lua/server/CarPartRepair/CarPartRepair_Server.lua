@@ -198,11 +198,23 @@ local function OnClientCommand(module, command, player, args)
     -- visually update immediately after the action finishes, that's the
     -- signal you need an explicit push here, and at that point paste your
     -- console.txt and I'll help find the right call.
-
+    --
+    -- CONFIRMED (2026-09-13): this IS needed when the part is in a
+    -- nearby world container (crate, etc.) rather than the player's
+    -- own inventory -- syncItemFields() above already gets the real
+    -- data across fine (proven by the new condition surviving a
+    -- reconnect), but the client's already-open crate loot panel is
+    -- never told to redraw, so it keeps showing the old condition
+    -- until something else forces a refresh. Echo the container coords
+    -- back so the client can re-derive the same container and mark it
+    -- dirty -- see CarPartRepair_Action.lua's repairResult handler.
     sendServerCommand(player, "CarPartRepair", "repairResult", {
         success = true,
         itemID = args.itemID,
         newCondition = targetCond,
+        containerX = args.containerX,
+        containerY = args.containerY,
+        containerZ = args.containerZ,
     })
 end
 
