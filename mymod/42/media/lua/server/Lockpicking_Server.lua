@@ -78,13 +78,20 @@ local function getRelatedDoors(door)
     return list
 end
 
+-- getKeyId() ~= -1 was checked here before -- that's WRONG. getKeyId()
+-- just says which key CAN lock/unlock this door (a structural property
+-- from how the door/building was generated); it says nothing about
+-- whether it's actually locked right now. Almost every real door has
+-- some key ID assigned whether it's locked or not, so that check alone
+-- made this treat nearly any door with a real lock mechanism as
+-- "locked," closed-and-unlocked included. Only the three real "is it
+-- actually locked" flags below matter.
 local function clusterLocked(doors)
     for _, door in ipairs(doors) do
         if door then
             if door.isLocked and door:isLocked() then return true end
             if door.isLockedByKey and door:isLockedByKey() then return true end
             if door.isLockedByPadlock and door:isLockedByPadlock() then return true end
-            if door.getKeyId and door:getKeyId() ~= -1 then return true end
         end
     end
     return false
