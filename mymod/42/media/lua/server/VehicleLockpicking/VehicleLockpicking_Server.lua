@@ -67,10 +67,17 @@ local function OnClientCommand(module, command, player, args)
         return
     end
 
-    local playerSquare = player:getSquare()
-    local vehicleSquare = vehicle:getSquare()
-    if not playerSquare or not vehicleSquare or playerSquare:DistToProper(vehicleSquare) > 2 then
-        dbg("Player too far from vehicle, rejecting")
+    -- Distance to the vehicle's single reference square isn't the right
+    -- check for a multi-tile vehicle (a van's rear doors can easily be
+    -- more than 2 tiles from vehicle:getSquare() even when standing
+    -- right at them) -- confirmed exactly this by a real REJECT log
+    -- while standing at a car's trunk. vehicle:isInArea(part:getArea(),
+    -- character) is vanilla's own real per-PART reachability check --
+    -- used server-side throughout server/Vehicles/Vehicles.lua for this
+    -- exact purpose (fuel, engine parts, etc.), so use that instead.
+    local area = part:getArea()
+    if not area or not vehicle:isInArea(area, player) then
+        dbg("Player not in range of part " .. tostring(args.partId) .. ", rejecting")
         return
     end
 
