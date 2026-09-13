@@ -64,6 +64,26 @@ local function OnClientCommand(module, command, player, args)
         return
     end
 
+    -- If the part isn't already in the player's own inventory (e.g. it
+    -- came from a nearby crate via findItemNearby's square fallback),
+    -- move it there BEFORE mutating anything. A world container's
+    -- already-open loot panel was never reliably told to redraw after a
+    -- server-side change -- container:setDrawDirty(true) (vanilla's own
+    -- idiom for THIS, e.g. ISReadABook.lua) turned out to only cover a
+    -- held item's own inventory, not a remote container's panel; it was
+    -- tried and confirmed NOT to fix this. Moving the item into `inv`
+    -- sidesteps the problem entirely -- the player's own inventory sync
+    -- is the one path already proven to update live and survive
+    -- reconnect, so every repair now goes through it uniformly.
+    if not item:getContainer():isInCharacterInventory(player) then
+        local sourceContainer = item:getContainer()
+        sourceContainer:Remove(item)
+        inv:AddItem(item)
+        if sendRemoveItemFromContainer then sendRemoveItemFromContainer(sourceContainer, item) end
+        if sendAddItemToContainer then sendAddItemToContainer(inv, item) end
+        dbg("Moved part into player's own inventory before repairing")
+    end
+
     -- Apply the mutation. This is the ONLY place condition should change now.
     local lvl = player:getPerkLevel(Perks.Mechanics)
     local maxRepair =
@@ -190,31 +210,18 @@ local function OnClientCommand(module, command, player, args)
         end
     end
 
-    -- NOTE: I have NOT verified an explicit "push this one item back to the
-    -- client now" call for B42 — I don't want to hand you a guessed function
-    -- name as if it's confirmed. The engine does periodically sync a
-    -- player's own inventory back to their client automatically, so this
-    -- may just work with no extra call. Test it: if the hood's % doesn't
-    -- visually update immediately after the action finishes, that's the
-    -- signal you need an explicit push here, and at that point paste your
-    -- console.txt and I'll help find the right call.
-    --
-    -- CONFIRMED (2026-09-13): this IS needed when the part is in a
-    -- nearby world container (crate, etc.) rather than the player's
-    -- own inventory -- syncItemFields() above already gets the real
-    -- data across fine (proven by the new condition surviving a
-    -- reconnect), but the client's already-open crate loot panel is
-    -- never told to redraw, so it keeps showing the old condition
-    -- until something else forces a refresh. Echo the container coords
-    -- back so the client can re-derive the same container and mark it
-    -- dirty -- see CarPartRepair_Action.lua's repairResult handler.
+    -- The part is guaranteed to be in the player's own inventory by this
+    -- point (moved there above if it wasn't already), so the engine's
+    -- normal periodic sync of a player's own inventory -- already proven
+    -- to update live and survive reconnect for the backpack/dolly case --
+    -- should cover this too now. Not yet retested against a live crate
+    -- repair with this specific change; if the % still doesn't update
+    -- immediately, that means even a same-tick AddItem into the player's
+    -- own inventory isn't enough and something else is going on.
     sendServerCommand(player, "CarPartRepair", "repairResult", {
         success = true,
         itemID = args.itemID,
         newCondition = targetCond,
-        containerX = args.containerX,
-        containerY = args.containerY,
-        containerZ = args.containerZ,
     })
 end
 

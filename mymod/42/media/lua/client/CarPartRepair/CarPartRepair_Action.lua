@@ -154,21 +154,6 @@ local function OnServerCommand(module, command, args)
 
         if args.success then
             player:Say("That should hold.")
-
-            -- The server already has the real, correct data (proven by
-            -- it surviving a reconnect) -- but if the part was in a
-            -- nearby world container (crate, etc.) rather than our own
-            -- inventory, its already-open loot panel was never told to
-            -- redraw and keeps showing the stale condition. Re-derive
-            -- the same item/container (same lookup the server used) and
-            -- mark it dirty -- setDrawDirty(true) is the same client-side
-            -- redraw hint vanilla's own ISReadABook.lua uses.
-            if args.containerX then
-                local item = CarPartRepair_Util.findItemNearby(player, args.itemID, args.containerX, args.containerY, args.containerZ)
-                if item and item:getContainer() then
-                    item:getContainer():setDrawDirty(true)
-                end
-            end
         else
             player:Say("Couldn't finish the repair.")
             dbg("Server rejected repair: " .. tostring(args.reason))
