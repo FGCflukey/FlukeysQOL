@@ -1,0 +1,274 @@
+module Base
+{
+
+/* ---------------------------------------------------------------
+   Boxed "Set" items for the 9 skill lines in additional_books.txt
+   -- mirrors vanilla's own BookXSet items exactly (see
+   generated/items/normal.txt, e.g. BookAimingSet): ItemType =
+   base:normal (not literature -- you don't read a boxed set, you
+   unpack it first), reuses vanilla's generic BookSlipcase icon +
+   color mask rather than needing a new sprite, tinted per group to
+   roughly match each skill line's own book cover color family from
+   additional_books.txt (DarkCyan / Brown / LightBlue).
+--------------------------------------------------------------- */
+
+    item BookAxeSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 20,
+        ColorGreen       = 120,
+        ColorBlue        = 140,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+    item BookBluntSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 20,
+        ColorGreen       = 120,
+        ColorBlue        = 140,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+    item BookSmallBluntSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 20,
+        ColorGreen       = 120,
+        ColorBlue        = 140,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+    item BookSmallBladeSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 20,
+        ColorGreen       = 120,
+        ColorBlue        = 140,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+    item BookSpearSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 20,
+        ColorGreen       = 120,
+        ColorBlue        = 140,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+    item BookSprintingSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 139,
+        ColorGreen       = 90,
+        ColorBlue        = 43,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+    item BookNimbleSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 139,
+        ColorGreen       = 90,
+        ColorBlue        = 43,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+    item BookSneakingSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 120,
+        ColorGreen       = 190,
+        ColorBlue        = 230,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+    item BookLightfootedSet
+    {
+        DisplayCategory  = SkillBook,
+        ItemType         = base:normal,
+        Weight           = 4.0,
+        Icon             = BookSlipcase,
+        IconColorMask    = BookSlipcase_Mask,
+        WorldStaticModel = BookSlipcase,
+        Tags             = base:ignorezombiedensity,
+        ColorRed         = 120,
+        ColorGreen       = 190,
+        ColorBlue        = 230,
+        DoubleClickRecipe = UnpackAdditionalBookSet,
+    }
+
+/* ---------------------------------------------------------------
+   Pack / Unpack recipes -- structured exactly like vanilla's own
+   PackSetOfBooks / UnpackSetOfBooks (generated/recipes/
+   recipes_packing.txt), just scoped to the 9 skill lines above
+   instead of vanilla's skill books. One shared Pack recipe (5 input
+   slots, one per level, mapped through a single itemMapper) and one
+   shared Unpack recipe (1 input slot accepting any of the 9 Set
+   items, mapped through 5 separate itemMapper blocks, one per
+   output level) -- same shape vanilla uses so all 9 skill lines
+   ride through two recipes instead of eighteen.
+--------------------------------------------------------------- */
+
+    craftRecipe PackAdditionalBookSet
+    {
+        timedAction = PackingBox,
+        time        = 80,
+        Tags        = InHandCraft;Packing,
+        category    = Packing,
+        inputs
+        {
+            item 1 [Base.BookAxe1;Base.BookBlunt1;Base.BookSmallBlunt1;Base.BookSmallBlade1;Base.BookSpear1;Base.BookSprinting1;Base.BookNimble1;Base.BookSneaking1;Base.BookLightfooted1] mappers[bookType] flags[AllowFavorite;InheritFavorite],
+            item 1 [Base.BookAxe2;Base.BookBlunt2;Base.BookSmallBlunt2;Base.BookSmallBlade2;Base.BookSpear2;Base.BookSprinting2;Base.BookNimble2;Base.BookSneaking2;Base.BookLightfooted2] mappers[bookType] flags[AllowFavorite;InheritFavorite],
+            item 1 [Base.BookAxe3;Base.BookBlunt3;Base.BookSmallBlunt3;Base.BookSmallBlade3;Base.BookSpear3;Base.BookSprinting3;Base.BookNimble3;Base.BookSneaking3;Base.BookLightfooted3] mappers[bookType] flags[AllowFavorite;InheritFavorite],
+            item 1 [Base.BookAxe4;Base.BookBlunt4;Base.BookSmallBlunt4;Base.BookSmallBlade4;Base.BookSpear4;Base.BookSprinting4;Base.BookNimble4;Base.BookSneaking4;Base.BookLightfooted4] mappers[bookType] flags[AllowFavorite;InheritFavorite],
+            item 1 [Base.BookAxe5;Base.BookBlunt5;Base.BookSmallBlunt5;Base.BookSmallBlade5;Base.BookSpear5;Base.BookSprinting5;Base.BookNimble5;Base.BookSneaking5;Base.BookLightfooted5] mappers[bookType] flags[AllowFavorite;InheritFavorite],
+        }
+        outputs
+        {
+            item 1 mapper:bookType,
+        }
+        itemMapper bookType
+        {
+            Base.BookAxeSet         = Base.BookAxe1;Base.BookAxe2;Base.BookAxe3;Base.BookAxe4;Base.BookAxe5,
+            Base.BookBluntSet       = Base.BookBlunt1;Base.BookBlunt2;Base.BookBlunt3;Base.BookBlunt4;Base.BookBlunt5,
+            Base.BookSmallBluntSet  = Base.BookSmallBlunt1;Base.BookSmallBlunt2;Base.BookSmallBlunt3;Base.BookSmallBlunt4;Base.BookSmallBlunt5,
+            Base.BookSmallBladeSet  = Base.BookSmallBlade1;Base.BookSmallBlade2;Base.BookSmallBlade3;Base.BookSmallBlade4;Base.BookSmallBlade5,
+            Base.BookSpearSet       = Base.BookSpear1;Base.BookSpear2;Base.BookSpear3;Base.BookSpear4;Base.BookSpear5,
+            Base.BookSprintingSet   = Base.BookSprinting1;Base.BookSprinting2;Base.BookSprinting3;Base.BookSprinting4;Base.BookSprinting5,
+            Base.BookNimbleSet      = Base.BookNimble1;Base.BookNimble2;Base.BookNimble3;Base.BookNimble4;Base.BookNimble5,
+            Base.BookSneakingSet    = Base.BookSneaking1;Base.BookSneaking2;Base.BookSneaking3;Base.BookSneaking4;Base.BookSneaking5,
+            Base.BookLightfootedSet = Base.BookLightfooted1;Base.BookLightfooted2;Base.BookLightfooted3;Base.BookLightfooted4;Base.BookLightfooted5,
+        }
+    }
+
+    craftRecipe UnpackAdditionalBookSet
+    {
+        timedAction = UnPackBox,
+        time        = 80,
+        Tags        = InHandCraft;Packing;CanBeDoneInDark,
+        category    = Packing,
+        inputs
+        {
+            item 1 [Base.BookAxeSet;Base.BookBluntSet;Base.BookSmallBluntSet;Base.BookSmallBladeSet;Base.BookSpearSet;Base.BookSprintingSet;Base.BookNimbleSet;Base.BookSneakingSet;Base.BookLightfootedSet] mappers[book1;book2;book3;book4;book5] flags[AllowFavorite;InheritFavorite],
+        }
+        outputs
+        {
+            item 1 mapper:book1,
+            item 1 mapper:book2,
+            item 1 mapper:book3,
+            item 1 mapper:book4,
+            item 1 mapper:book5,
+        }
+        itemMapper book1
+        {
+            Base.BookAxe1         = Base.BookAxeSet,
+            Base.BookBlunt1       = Base.BookBluntSet,
+            Base.BookSmallBlunt1  = Base.BookSmallBluntSet,
+            Base.BookSmallBlade1  = Base.BookSmallBladeSet,
+            Base.BookSpear1       = Base.BookSpearSet,
+            Base.BookSprinting1   = Base.BookSprintingSet,
+            Base.BookNimble1      = Base.BookNimbleSet,
+            Base.BookSneaking1    = Base.BookSneakingSet,
+            Base.BookLightfooted1 = Base.BookLightfootedSet,
+        }
+        itemMapper book2
+        {
+            Base.BookAxe2         = Base.BookAxeSet,
+            Base.BookBlunt2       = Base.BookBluntSet,
+            Base.BookSmallBlunt2  = Base.BookSmallBluntSet,
+            Base.BookSmallBlade2  = Base.BookSmallBladeSet,
+            Base.BookSpear2       = Base.BookSpearSet,
+            Base.BookSprinting2   = Base.BookSprintingSet,
+            Base.BookNimble2      = Base.BookNimbleSet,
+            Base.BookSneaking2    = Base.BookSneakingSet,
+            Base.BookLightfooted2 = Base.BookLightfootedSet,
+        }
+        itemMapper book3
+        {
+            Base.BookAxe3         = Base.BookAxeSet,
+            Base.BookBlunt3       = Base.BookBluntSet,
+            Base.BookSmallBlunt3  = Base.BookSmallBluntSet,
+            Base.BookSmallBlade3  = Base.BookSmallBladeSet,
+            Base.BookSpear3       = Base.BookSpearSet,
+            Base.BookSprinting3   = Base.BookSprintingSet,
+            Base.BookNimble3      = Base.BookNimbleSet,
+            Base.BookSneaking3    = Base.BookSneakingSet,
+            Base.BookLightfooted3 = Base.BookLightfootedSet,
+        }
+        itemMapper book4
+        {
+            Base.BookAxe4         = Base.BookAxeSet,
+            Base.BookBlunt4       = Base.BookBluntSet,
+            Base.BookSmallBlunt4  = Base.BookSmallBluntSet,
+            Base.BookSmallBlade4  = Base.BookSmallBladeSet,
+            Base.BookSpear4       = Base.BookSpearSet,
+            Base.BookSprinting4   = Base.BookSprintingSet,
+            Base.BookNimble4      = Base.BookNimbleSet,
+            Base.BookSneaking4    = Base.BookSneakingSet,
+            Base.BookLightfooted4 = Base.BookLightfootedSet,
+        }
+        itemMapper book5
+        {
+            Base.BookAxe5         = Base.BookAxeSet,
+            Base.BookBlunt5       = Base.BookBluntSet,
+            Base.BookSmallBlunt5  = Base.BookSmallBluntSet,
+            Base.BookSmallBlade5  = Base.BookSmallBladeSet,
+            Base.BookSpear5       = Base.BookSpearSet,
+            Base.BookSprinting5   = Base.BookSprintingSet,
+            Base.BookNimble5      = Base.BookNimbleSet,
+            Base.BookSneaking5    = Base.BookSneakingSet,
+            Base.BookLightfooted5 = Base.BookLightfootedSet,
+        }
+    }
+
+}

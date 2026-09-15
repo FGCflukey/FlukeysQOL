@@ -121,6 +121,16 @@
     "Base.BookLightfooted2": "Lightfoot - 2 - Intermediate",
     "Base.BookLightfooted3": "Lightfoot - 3 - Advanced",
     "Base.BookLightfooted4": "Lightfoot - 4 - Expert",
-    "Base.BookLightfooted5": "Lightfoot - 5 - Master"
+    "Base.BookLightfooted5": "Lightfoot - 5 - Master",
+
+    "Base.BookAxeSet": "Axe - Book Set",
+    "Base.BookBluntSet": "Blunt - Book Set",
+    "Base.BookSmallBluntSet": "Small Blunt - Book Set",
+    "Base.BookSmallBladeSet": "Small Blade - Book Set",
+    "Base.BookSpearSet": "Spear - Book Set",
+    "Base.BookSprintingSet": "Sprinting - Book Set",
+    "Base.BookNimbleSet": "Nimble - Book Set",
+    "Base.BookSneakingSet": "Sneak - Book Set",
+    "Base.BookLightfootedSet": "Lightfoot - Book Set"
 
 }
