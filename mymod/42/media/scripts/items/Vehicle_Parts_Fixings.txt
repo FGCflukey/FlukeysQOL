@@ -10,6 +10,7 @@ module Base
         DisplayName             = Super Glue,
         ConsolidateOption       = ContextMenu_Merge,
         Icon                    = Superglue,
+        Tooltip                 = Tooltip_Superglue,
         Weight                  = 0.1,
         WorldStaticModel        = Toothpaste,
     }
