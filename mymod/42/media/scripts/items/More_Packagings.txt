@@ -150,7 +150,7 @@ module Base
             }
         }
 
-        craftRecipe OpenBoxofNutsAndBolts
+        craftRecipe OpenBoxofNutsBolts
         {
             timedAction             = UnPackBox,
             Time                    = 15,
@@ -167,7 +167,7 @@ module Base
             }
         }
 
-        craftRecipe MakeaBoxofNutsAndBolts
+        craftRecipe MakeBoxofNutsBolts
         {
             timedAction         = PackingBox,
             Time                = 15,
