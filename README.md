@@ -2,8 +2,10 @@
 
 # About it
 
-Intended for Solo Play Only. Some features may not sync for servers. That is missing and there is no 
-immediate plan for server.
+Built for and run on a private dedicated server for a small friend group. Most features that touch
+persistent or shared state (repairs, crafting from containers, vehicle locks, door locks, the vendor,
+the heater, etc.) are server-authoritative -- the server re-validates and applies the real change
+itself rather than trusting the client, so this holds up correctly in multiplayer, not just solo.
 
 This mod pack is a bunch of QOL tweaks to the base game. This mod aims to fill in many gaps I feel are
 not in the game or implemented well or completely. Everything here is authored by me. I was inspired 
@@ -14,49 +16,52 @@ List of current things this mod does...
 
 - Overrides UseDelta on BlowTorches and Propane Tanks because it just makes more sense!
 - Overrides Canteens to hold more water, from 500ml to 1 Litre
-- Added Zombie butchering to cleanup the dead around your base or other things...
+- Added Zombie butchering to cleanup the dead around your base or other things... (animal corpses excluded)
 - Added new version of PZ Bloodcure which utilizes the Zombie butchering. Multi-stage recipe. Magazine
 - Added Carbon Fibre Combat Axe and Long Reach Axe, includes repairs. Long Reach is weird, but works.
 - Added the old Hydrocraft looking Dolly and Toy Wagon for crazy hoarders like me
 - Allows Climbing all obstacles, fences, windows and tall walls protecting Dolly/Toy Wagon in 2nd hand
 - (Note to above. In some circumstance you can still drop it. 98% of time you wont.)
 - Added Visual Learner trait, allows the player to get XP from books instead of the usual vanilla boost
-- Added Lock picking Doors & Vehicle Doors using screwdriver&paperclip. Success based on Mechanics level
+- Added extra skill books for Axe, Blunt, Small Blunt, Small Blade, Spear, Sprinting, Nimble, Sneaking
+  and Lightfooted, with their own boxed sets you can pack/unpack just like vanilla's skill book sets
+- Added Lock picking for Doors & Vehicle Doors using screwdriver & paperclip. Success based on Mechanics
+  level. Picking any one vehicle door also unlocks the trunk
 - Added more packaging options such as 10 pack of Engine Parts, Syringes and Test Tubes
 - Added some recipes in for re-purposing unusable metal and scrap.
-- <required from workshop> Using JB Max Capacity Override - Dolly and trunk size increase
-- Added Re-fuelling BlowTorch, Propane Tank and barrels at Gas Pumps
+- Dolly and Vehicle trunk capcaity increased
+- Added Re-fuelling BlowTorch and Propane Tank at Gas Pumps -- requires power at the pump
 - Added Security Gate cutting, rewards scrap. Think Gun Store security fence blocking the door. Welding 2 Req.
 - Added Car Painting. Now you have a nice variety of colours to paint your ride with. Vanilla only.
 - Added Vehicle Vinyl Swapping. Want a different look for your vehicle? (only vanilla for now)
-- Added Filling Barrels with Liquid. Gas or Water etc. to 200 Litres. Will tweak/expand more later.
 - Added Bulk Weapon Magazine Reloading/Unloading. Right click your stack!
 - Added ATM usage. Find credit cards and try them to get some money! Watch out, it can attract Zombies!
 - Added Usable Money. Pack it in $500/$1000 money bags. Duffle<->Moneybag conversion. Vendor friendly.
 - Added Emergency Vendor. Right-click on a Vending Machine. Buy/Sell items if you have the cash or need it!
-- Added Clothing Recycling. All items Indie neglected, now you have a Recycle Clothing option for those.
 - Added UnHotwire for Cars. Needs SmallSheetMetal and Screwdriver and right skills. Sit in to perform
 - Added Car Key crafting. Got the skills use some metal and make your own car key.
 - Added Crafting Nail boxes with Sheet Metals and Scrap Metal
 - Added Faster Car Hood/engine access, overrides default annoying slowness
 - Added Crafting Engine Parts, recipes for mechanic, welding and blacksmithing req.
+- Added repair kits (Tire, Suspension, Brake, Muffler, Body, Gas Tank, Battery) to restore a worn car
+  part's condition in place using a Blowtorch, Scrap Metal/Sheet Metal and the matching skill level --
+  works from a backpack, dolly, or even a nearby crate, not just your main inventory
 - Added Dismantling of General Car Parts, serves as a fill-in for missing stuff or as a 2nd option
-- Added Fuelling Generators with a Gas Filled Barrel. It only needs to be beside generator and presto.
 - Added Repairing Broken Car Locks. Success is based on Mechanics level. But chance to fail exists.
 - Added Vehicle Recycling and Parts making, from earlier 42 builds I did.
 - Added Stop The Drop - When you flee & fall down, you won't drop your hat/other items. Idc for mechanic.
+- Added Automaker - build a real, drivable vehicle from scratch. Read the magazines, gather the metal/
+  electrical materials, meet the skill and recipe requirements, and build any installed vehicle mod's
+  cars too, not just vanilla ones
+- Added HomeHeat - a placeable, wall-mounted safehouse radiator with on/off and Cool/Normal/Hot presets,
+  so you can keep a room warm without a constant fire or wood stove going
+- Fixed Nepenthe's "Chocolate Milk From Brown Cows" mod (its own require() path was broken) and folded
+  the fix in directly, so brown (simmental) cows give chocolate milk without needing that mod installed
 
 ## Installation
 
-NOTE: This mod-pack currently requires these 2 excellent mods
+Make sure this is the last thing on your Mods= line. That's all.
 
-They allow the larger capacity Dolly, Toy Wagon and Car trunks. Only works in Single Player.
-
-JB Max Capacity Override [42 SP Only]
-https://steamcommunity.com/sharedfiles/filedetails/?id=3452113500
-
-Starlit Library
-https://steamcommunity.com/sharedfiles/filedetails/?id=3378285185
 
 # Disclaimer
 
