@@ -16,14 +16,24 @@
 -- cold hands/feet and the cold moodle, because the server-side body-
 -- warmth calculation never found a heat source to factor in.
 
--- TEMPORARY debug logging -- added 2026-09-17 to catch a reported
--- "thermometer says warm but player still feels cold after sleeping"
--- case. Logs every state transition (created/removed/why) plus a
--- periodic heartbeat, specifically so a next occurrence tells us
--- whether Events.EveryOneMinute keeps firing correctly through a
--- sleep time-skip, and whether the heat source was ever actually
--- dropped server-side vs. this being a client-display-only issue.
--- Safe to remove once the root cause is confirmed.
+-- CONFIRMED ROOT CAUSE (2026-09-17): this file never actually had the
+-- "if isClient() then return end" guard its own comment above
+-- describes as the pattern to follow -- it was missing entirely, so
+-- this "server-side" file has been running on the CLIENT too the
+-- whole time. That means client and server were each maintaining
+-- their own completely independent knownRadiators registry and each
+-- independently deciding which heat sources were active, with no
+-- coordination between them at all -- confirmed live by server and
+-- client logs reporting different active-heat-source counts at
+-- nearly the same world-age timestamp. This single missing guard
+-- explains the original "warm thermometer, still cold" report and
+-- every inconsistent reading since. Added below now.
+if isClient() then return end
+
+-- TEMPORARY debug logging -- added 2026-09-17 to catch the above
+-- report. Logs every state transition (created/removed/why) plus a
+-- periodic heartbeat. Safe to remove once confirmed stable with the
+-- isClient() guard now in place.
 local DEBUG = true
 local function dbg(msg) if DEBUG then print("[HomeHeat:HeatSourceServer] " .. tostring(msg)) end end
 

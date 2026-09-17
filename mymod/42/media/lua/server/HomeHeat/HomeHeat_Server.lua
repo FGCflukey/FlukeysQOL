@@ -2,6 +2,17 @@
 -- Server-authoritative state for placed HomeHeat radiators. The
 -- client only ever requests a change; this is the only place that
 -- actually writes it, after re-validating everything itself.
+--
+-- Found missing during the 2026-09-17 investigation into
+-- HomeHeat_HeatSourceServer.lua running unguarded on the client too --
+-- this file had the same gap. Lower-impact here (OnObjectAdded's
+-- default-state init is idempotent once presetKey is set), but adding
+-- the same guard every other server-authoritative file in this pack
+-- already has, for consistency and to close off any remaining risk
+-- (e.g. a race on first placement where the client's own OnObjectAdded
+-- fires before the true server-set value has synced down).
+
+if isClient() then return end
 
 local function findRadiatorAt(x, y, z)
     local square = getCell():getGridSquare(x, y, z)
