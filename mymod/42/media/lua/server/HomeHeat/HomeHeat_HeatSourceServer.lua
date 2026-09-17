@@ -16,7 +16,19 @@
 -- cold hands/feet and the cold moodle, because the server-side body-
 -- warmth calculation never found a heat source to factor in.
 
+-- TEMPORARY debug logging -- added 2026-09-17 to catch a reported
+-- "thermometer says warm but player still feels cold after sleeping"
+-- case. Logs every state transition (created/removed/why) plus a
+-- periodic heartbeat, specifically so a next occurrence tells us
+-- whether Events.EveryOneMinute keeps firing correctly through a
+-- sleep time-skip, and whether the heat source was ever actually
+-- dropped server-side vs. this being a client-display-only issue.
+-- Safe to remove once the root cause is confirmed.
+local DEBUG = true
+local function dbg(msg) if DEBUG then print("[HomeHeat:HeatSourceServer] " .. tostring(msg)) end end
+
 local knownRadiators = {} -- key "x,y,z" -> { isoObject = ..., heatsrc = nil }
+local heartbeatCounter = 0
 
 local function makeKey(x, y, z)
     return x .. "," .. y .. "," .. z
@@ -26,7 +38,8 @@ local function register(isoObject)
     if not HomeHeat_Util.isRadiator(isoObject) then return end
     local k = makeKey(isoObject:getX(), isoObject:getY(), isoObject:getZ())
     if knownRadiators[k] then return end
-    knownRadiators[k] = { isoObject = isoObject }
+    knownRadiators[k] = { isoObject = isoObject, key = k }
+    dbg("Registered new radiator at " .. k)
 end
 
 Events.OnObjectAdded.Add(register)
@@ -76,6 +89,7 @@ local function updateOne(entry)
 
     if not isoObject or not square then
         if entry.heatsrc then
+            dbg("DROPPING radiator " .. tostring(entry.key) .. " -- isoObject/square gone, removing heat source")
             getCell():removeHeatSource(entry.heatsrc)
             entry.heatsrc = nil
         end
@@ -85,7 +99,8 @@ local function updateOne(entry)
     local modData = isoObject:getModData()
     local on = modData.on == true
     local power = HomeHeat_Util.hasPower(square)
-    local active = on and power and not square:isOutside()
+    local outside = square:isOutside()
+    local active = on and power and not outside
 
     if active then
         local preset = HomeHeat_Util.presetByKey(modData.presetKey) or HomeHeat_Util.presetByKey(HomeHeat_Util.DEFAULT_PRESET)
@@ -95,11 +110,13 @@ local function updateOne(entry)
         if not entry.heatsrc then
             entry.heatsrc = IsoHeatSource.new(isoObject:getX(), isoObject:getY(), isoObject:getZ(), radius, temp)
             getCell():addHeatSource(entry.heatsrc)
+            dbg("CREATED heat source for " .. tostring(entry.key) .. " temp=" .. tostring(temp) .. " radius=" .. tostring(radius))
         else
             entry.heatsrc:setTemperature(temp)
             entry.heatsrc:setRadius(radius)
         end
     elseif entry.heatsrc then
+        dbg("REMOVED heat source for " .. tostring(entry.key) .. " -- on=" .. tostring(on) .. " power=" .. tostring(power) .. " outside=" .. tostring(outside))
         getCell():removeHeatSource(entry.heatsrc)
         entry.heatsrc = nil
     end
@@ -114,6 +131,25 @@ end
 -- body warmth doesn't need sub-second responsiveness.
 -----------------------------------------------------
 local function EveryOneMinute()
+    -- Heartbeat every 30 calls (~30 in-game minutes) -- confirms this
+    -- event keeps firing through a sleep time-skip at all, which is
+    -- the single biggest unknown in the "warm thermometer, still cold
+    -- after sleeping" report this is instrumenting.
+    heartbeatCounter = heartbeatCounter + 1
+    if heartbeatCounter >= 30 then
+        heartbeatCounter = 0
+        local tracked, active = 0, 0
+        for _, entry in pairs(knownRadiators) do
+            tracked = tracked + 1
+            if entry.heatsrc then active = active + 1 end
+        end
+        -- getGameTime():getWorldAgeHours() is a real, widely-used vanilla
+        -- call (e.g. server/Vehicles/Vehicles.lua) -- used here instead of
+        -- guessing at an unconfirmed timestamp method.
+        dbg("Heartbeat: tracking " .. tracked .. " radiator(s), " .. active
+            .. " with an active heat source, at world age " .. tostring(getGameTime():getWorldAgeHours()) .. "h")
+    end
+
     scanForRadiators()
 
     for k, entry in pairs(knownRadiators) do
