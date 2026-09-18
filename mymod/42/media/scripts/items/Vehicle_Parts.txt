@@ -151,7 +151,7 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:25;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
@@ -385,7 +385,7 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:25;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
@@ -619,7 +619,7 @@ module Base
     {
         timedAction     = Welding,
         Time            = 120,
-        SkillRequired   = MetalWelding:25;Mechanics:4,
+        SkillRequired   = MetalWelding:8;Mechanics:4,
         Tags            = InHandCraft;Welding,
         category        = Metalworking,
         xpAward         = MetalWelding:25,
