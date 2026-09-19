@@ -596,9 +596,28 @@ function ISReadABook:animEvent(event, parameter)
 					local totalPages = self.item:getNumberOfPages()
 					local progress = currentPages / totalPages
 
-					-- Lazy init VL flags (server may not run start())
-					if self.VL_halfGranted == nil then self.VL_halfGranted = false end
-					if self.VL_totalGranted == nil then self.VL_totalGranted = 0 end
+					-- Lazy init VL flags (server may not run start(), where
+					-- this normally gets set based on resuming a book past
+					-- a threshold already earned in a previous session).
+					-- Base it on startPage -- the page count BEFORE this
+					-- session started reading -- not currentPages, which
+					-- can already include this session's own progress by
+					-- the time this tick runs. Without this, resuming past
+					-- 50%/100% defaulted both flags to "not yet granted"
+					-- and immediately re-triggered the bonus block on the
+					-- very first tick: VL_GainLevels() itself is a safe
+					-- no-op for a level already held, but the
+					-- PlayLevelUpSound command right next to it isn't
+					-- guarded the same way, so it played an extra sound.
+					if self.VL_halfGranted == nil or self.VL_totalGranted == nil then
+						local startProgress = (self.startPage or 0) / totalPages
+						if self.VL_halfGranted == nil then
+							self.VL_halfGranted = startProgress >= 0.5
+						end
+						if self.VL_totalGranted == nil then
+							self.VL_totalGranted = (startProgress >= 1.0) and 2 or 0
+						end
+					end
 
 					-- DEBUG
 					-- print(string.format("[VL] ReadAPage server: progress=%.3f pages=%d lastXP=%d half=%s total=%d",
