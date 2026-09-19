@@ -553,6 +553,26 @@ function ISReadABook:animEvent(event, parameter)
 
     if event == "ReadAPage" then
         if isServer() then
+            -- Update this tick's page count FIRST, before the SkillBook/VL
+            -- bonus checks below read it. This used to run AFTER those
+            -- checks, so on the final tick that reaches the last page (and
+            -- triggers forceComplete() further down), the 100% bonus check
+            -- was still seeing the PREVIOUS tick's just-under-100% count --
+            -- missing it by exactly one cycle, with no next tick left to
+            -- catch it on since the action had already ended.
+            if self.item:getNumberOfPages() > 0 and self.startPage then
+                local remainingPages = self.item:getNumberOfPages() - self.startPage
+                local pagesRead = math.floor(remainingPages * self.netAction:getProgress()) + self.startPage
+                self.item:setAlreadyReadPages(pagesRead)
+				-- Force last page to count (fix vanilla rounding)
+				if pagesRead >= self.item:getNumberOfPages() - 1 then
+					pagesRead = self.item:getNumberOfPages()
+					self.item:setAlreadyReadPages(pagesRead)
+				end
+                self.character:setAlreadyReadPages(self.item:getFullType(), self.item:getAlreadyReadPages())
+                syncItemFields(self.character, self.item)
+            end
+
             if SkillBook[self.item:getSkillTrained()] then
                 if self.item:getLvlSkillTrained() > self.character:getPerkLevel(SkillBook[self.item:getSkillTrained()].perk) + 1
                     or self.character:hasTrait(CharacterTrait.ILLITERATE) then
@@ -643,28 +663,13 @@ function ISReadABook:animEvent(event, parameter)
 				end
             end
 
-            if self.item:getNumberOfPages() > 0 and self.startPage then
-                -- Base this on the REMAINING pages (numberOfPages - startPage),
-                -- matching serverStart()'s own numPages -- using the full
-                -- numberOfPages here double-counted startPage, so pagesRead
-                -- climbed toward (numberOfPages + startPage) instead of
-                -- stopping at numberOfPages on any resumed read.
-                local remainingPages = self.item:getNumberOfPages() - self.startPage
-                local pagesRead = math.floor(remainingPages * self.netAction:getProgress()) + self.startPage
-                self.item:setAlreadyReadPages(pagesRead)
-				-- Force last page to count (fix vanilla rounding)
-				if pagesRead >= self.item:getNumberOfPages() - 1 then
-					pagesRead = self.item:getNumberOfPages()
-					self.item:setAlreadyReadPages(pagesRead)
-				end
-
-                if self.item:getAlreadyReadPages() >= self.item:getNumberOfPages() then
-                    self.item:setAlreadyReadPages(self.item:getNumberOfPages())
-                    self.netAction:forceComplete()
-                end
-
-                self.character:setAlreadyReadPages(self.item:getFullType(), self.item:getAlreadyReadPages())
-                syncItemFields(self.character, self.item)
+            -- Page count for this tick was already updated at the top of
+            -- this block, before the bonus checks above ran -- only the
+            -- completion trigger belongs here, using that already-current
+            -- value, so it fires after (not racing) the bonus checks.
+            if self.item:getNumberOfPages() > 0 and self.startPage
+                and self.item:getAlreadyReadPages() >= self.item:getNumberOfPages() then
+                self.netAction:forceComplete()
             end
         end
     end
