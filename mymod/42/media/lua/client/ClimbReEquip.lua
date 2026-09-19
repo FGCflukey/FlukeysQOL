@@ -8,11 +8,20 @@ function ISClimbThroughWindow:perform()
     local primary = player:getPrimaryHandItem()
     local secondary = player:getSecondaryHandItem()
 
+    -- setXHandItem(nil) rather than removeFromHands(item): removeFromHands
+    -- re-evaluates whether the item still fits in normal inventory capacity
+    -- once unequipped and, if not (e.g. a WeightReduction container like the
+    -- Hand Dolly/Toy Wagon, whose true weight only applies while unequipped),
+    -- can leave it needing to be dropped to the world instead of restored --
+    -- confirmed via vanilla's own ISTransferAction.lua, which names that
+    -- return value "addToWorld". setXHandItem(nil) just clears the hand-slot
+    -- reference; the item stays exactly where it already was in the backing
+    -- inventory container the whole time, so there's nothing to drop.
     if primary and primary:IsInventoryContainer() then
-        player:removeFromHands(primary)
+        player:setPrimaryHandItem(nil)
     end
     if secondary and secondary:IsInventoryContainer() then
-        player:removeFromHands(secondary)
+        player:setSecondaryHandItem(nil)
     end
 
     originalWindowPerform(self)
@@ -33,11 +42,13 @@ if ISClimbOverFence then
         local primary = player:getPrimaryHandItem()
         local secondary = player:getSecondaryHandItem()
 
+        -- See the matching comment in ISClimbThroughWindow:perform() above --
+        -- setXHandItem(nil), not removeFromHands(item).
         if primary and primary:IsInventoryContainer() then
-            player:removeFromHands(primary)
+            player:setPrimaryHandItem(nil)
         end
         if secondary and secondary:IsInventoryContainer() then
-            player:removeFromHands(secondary)
+            player:setSecondaryHandItem(nil)
         end
 
         originalFencePerform(self)
