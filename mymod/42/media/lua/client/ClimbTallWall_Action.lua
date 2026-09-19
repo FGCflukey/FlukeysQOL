@@ -215,6 +215,18 @@ local function OnTick()
         end
 
         sendEquip(player)
+
+        -- Re-equipping alone doesn't tell the inventory window's equipped-
+        -- container icon column to rebuild -- same gap vanilla itself works
+        -- around after ISEquipWeaponAction/ISWearClothing/etc, by calling
+        -- this exact function. Without it the dolly is genuinely equipped
+        -- again immediately, it just doesn't visually show up in that
+        -- column until something else (e.g. clicking another item) happens
+        -- to trigger a refresh.
+        local invPage = getPlayerInventory(player:getPlayerNum())
+        if invPage then
+            invPage:refreshBackpacks()
+        end
     else
         -- print("### ERROR: NO INVENTORY AVAILABLE TO RESTORE ITEMS INTO")
     end
