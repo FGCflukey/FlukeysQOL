@@ -109,6 +109,8 @@
     "MakeaBoxofDoorknobs": "Pack 12 Doorknobs in a box",
     "MakeBoxofNutsBolts": "Pack 50 Nuts and Bolts in a box",
     "OpenBoxofNutsBolts": "Open box of Nuts and Bolts",
+    "OpenBoxofFiberglassTape": "Open box of Fiberglass Tape",
+    "MakeaBoxofFiberglassTape": "Pack 12 Fiberglass Tape in a box",
 
     "RecycleMuffler": "Recycle Muffler",
     "RecycleGasTank": "Recycle Gas Tank",
