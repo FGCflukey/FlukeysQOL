@@ -103,9 +103,16 @@ function ISReadABook:update()
 
     if not isClient() then
         if self.item:getNumberOfPages() > 0 then
-            local pagesRead = math.floor(self.item:getNumberOfPages() * self:getJobDelta())
+            -- Same fix as the animEvent ReadAPage handler below: base this on
+            -- the REMAINING pages and add startPage back in, rather than
+            -- applying getJobDelta() (this session's own 0..1 progress)
+            -- straight to the full page count, which ignored startPage
+            -- entirely and dragged alreadyReadPages back toward 0 at the
+            -- start of every resumed read before climbing back up.
+            local remainingPages = self.item:getNumberOfPages() - (self.startPage or 0)
+            local pagesRead = math.floor(remainingPages * self:getJobDelta()) + (self.startPage or 0)
             self.item:setAlreadyReadPages(pagesRead)
-            if self.item:getAlreadyReadPages() > self.item:getNumberOfPages() then
+            if self.item:getAlreadyReadPages() >= self.item:getNumberOfPages() then
                 self.item:setAlreadyReadPages(self.item:getNumberOfPages())
             end
             self.character:setAlreadyReadPages(self.item:getFullType(), self.item:getAlreadyReadPages())
@@ -296,10 +303,15 @@ function ISReadABook:start()
         end
     end
 
-    -- If starting mid‑book
-    if self.startPage then
-        self:setCurrentTime(self.maxTime * (self.startPage / self.item:getNumberOfPages()))
-    end
+    -- NOTE: no elapsed-time skip needed here even when resuming mid-book --
+    -- self.maxTime (from getDuration()) is already sized for only the
+    -- REMAINING pages (numberOfPages - startPage), not the whole book, so
+    -- starting this action's clock at 0 is already correct. A previous
+    -- version of this jumped currentTime forward by
+    -- maxTime * (startPage / numberOfPages), which wrongly assumed maxTime
+    -- covered the full book -- that double-discounted the already-read
+    -- pages, corrupting the action's own progress tracking on every
+    -- resumed read (instant/early bonus sounds, action not ending on time).
 
     self.item:setJobType(getText("ContextMenu_Read") .. ' ' .. self.item:getName())
     self.item:setJobDelta(0.0)
@@ -632,7 +644,13 @@ function ISReadABook:animEvent(event, parameter)
             end
 
             if self.item:getNumberOfPages() > 0 and self.startPage then
-                local pagesRead = math.floor(self.item:getNumberOfPages() * self.netAction:getProgress()) + self.startPage
+                -- Base this on the REMAINING pages (numberOfPages - startPage),
+                -- matching serverStart()'s own numPages -- using the full
+                -- numberOfPages here double-counted startPage, so pagesRead
+                -- climbed toward (numberOfPages + startPage) instead of
+                -- stopping at numberOfPages on any resumed read.
+                local remainingPages = self.item:getNumberOfPages() - self.startPage
+                local pagesRead = math.floor(remainingPages * self.netAction:getProgress()) + self.startPage
                 self.item:setAlreadyReadPages(pagesRead)
 				-- Force last page to count (fix vanilla rounding)
 				if pagesRead >= self.item:getNumberOfPages() - 1 then
@@ -640,7 +658,7 @@ function ISReadABook:animEvent(event, parameter)
 					self.item:setAlreadyReadPages(pagesRead)
 				end
 
-                if self.item:getAlreadyReadPages() > self.item:getNumberOfPages() then
+                if self.item:getAlreadyReadPages() >= self.item:getNumberOfPages() then
                     self.item:setAlreadyReadPages(self.item:getNumberOfPages())
                     self.netAction:forceComplete()
                 end
