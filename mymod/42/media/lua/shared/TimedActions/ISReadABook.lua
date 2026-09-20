@@ -425,7 +425,16 @@ function ISReadABook:startLoadingPrintMediaTextures()
             if params["type"] == "texture" then
                 for key,value in pairs(params) do
                     if key == "texture" then
-                        loadstring("return " .. value)()
+                        -- Matches vanilla exactly: value is a plain texture
+                        -- name/path string, not Lua source. Running it
+                        -- through loadstring("return " .. value) treated it
+                        -- as unquoted code instead of a string argument --
+                        -- for most texture names that fails to even
+                        -- compile, so loadstring returned nil and the
+                        -- trailing () call crashed ("tried to call nil").
+                        -- Only affects items using the print-media system
+                        -- (Fliers/Brochures/etc), never regular books.
+                        return getTexture(value)
                     end
                 end
             end
