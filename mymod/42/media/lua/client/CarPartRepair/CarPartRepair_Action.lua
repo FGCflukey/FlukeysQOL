@@ -11,28 +11,49 @@ function ISRepairCarPartAction:isValid()
     return self.item ~= nil
 end
 
+-- Metalworking parts (everything except Tire) get a real welding
+-- animation -- torch in one hand, the repair material in the other,
+-- BlowTorch sound and sparks -- matching the exact proven pattern
+-- BlowtorchGateRemoval/ISCutGateAction.lua already uses in this pack
+-- (itself matching vanilla's own ISBarricadeAction convention). Tire
+-- repairs use a screwdriver/pump, not a torch, so they keep the
+-- original generic repair animation unchanged.
+local function usesTorch(self)
+    return self.rule and self.rule.required and self.rule.required.tool == "Base.BlowTorch"
+end
+
 function ISRepairCarPartAction:update()
     local emitter = self.character:getEmitter()
+    local soundName = usesTorch(self) and "BlowTorch" or "Sewing"
     if emitter and self.sound and not emitter:isPlaying(self.sound) then
-        self.sound = emitter:playSound("Sewing")
+        self.sound = emitter:playSound(soundName)
     end
 end
 
 function ISRepairCarPartAction:start()
     dbg("start()")
 
-    self.originalPrimary = self.character:getPrimaryHandItem()
+    if usesTorch(self) then
+        -- Visual-only hand override, not a real equip change -- auto
+        -- reverts when the action ends, so there's nothing to manually
+        -- restore afterward (unlike the Tire path below).
+        self:setActionAnim("BlowTorch")
+        self:setOverrideHandModels(self.tool, self.material)
+        self.character:reportEvent("EventBlowTorch")
+    else
+        self.originalPrimary = self.character:getPrimaryHandItem()
 
-    if self.tool then
-        self.character:setPrimaryHandItem(self.tool)
+        if self.tool then
+            self.character:setPrimaryHandItem(self.tool)
+        end
+
+        self:setActionAnim("Loot")
+        self.character:SetVariable("LootPosition", "Mid")
     end
-
-    self:setActionAnim("Loot")
-    self.character:SetVariable("LootPosition", "Mid")
 
     local emitter = self.character:getEmitter()
     if emitter then
-        self.sound = emitter:playSound("Sewing")
+        self.sound = emitter:playSound(usesTorch(self) and "BlowTorch" or "Sewing")
     end
 end
 
@@ -40,8 +61,11 @@ end
 -- always gets swapped back out, whether the repair finishes or gets
 -- interrupted (stopOnWalk/stopOnRun/stopOnAim are all true here, so
 -- interruption is easy) -- otherwise the tool stays stuck equipped.
+-- Only the Tire path does a real equip change in start(), so only it
+-- needs restoring here -- the torch path's hand models are a visual
+-- override that reverts on its own.
 local function restorePrimary(self)
-    if self.tool then
+    if not usesTorch(self) and self.tool then
         self.character:setPrimaryHandItem(self.originalPrimary)
     end
 end
