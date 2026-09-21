@@ -37,7 +37,13 @@ function ISRepairCarPartAction:start()
         -- Visual-only hand override, not a real equip change -- auto
         -- reverts when the action ends, so there's nothing to manually
         -- restore afterward (unlike the Tire path below).
-        self:setActionAnim("BlowTorch")
+        --
+        -- "BlowTorchFloor" (not the standing "BlowTorch") is vanilla's
+        -- own crouched welding pose -- confirmed in ISBuildingObject.lua,
+        -- where building/repairing something at floor level swaps to it
+        -- for exactly this "working down on it" look, still via the same
+        -- plain setActionAnim() call, no new machinery needed.
+        self:setActionAnim("BlowTorchFloor")
         self:setOverrideHandModels(self.tool, self.material)
         self.character:reportEvent("EventBlowTorch")
     else
