@@ -105,6 +105,21 @@ function ReloadAllClips_Core.doReloadAll(playerObj, group)
             dbg("Queueing ISLoadBulletsInMagazine for " ..
                 tostring(missing) .. " rounds on " .. tostring(mag:getFullType()))
 
+            -- ISLoadBulletsInMagazine:isValid() only ever checks the
+            -- player's TOP-LEVEL main inventory (containsID/contains,
+            -- neither recursive) -- so a magazine sitting in an equipped
+            -- bag, or bullets sitting anywhere but main inventory, makes
+            -- the queued action silently invalid with no feedback at all.
+            -- Vanilla's own single-magazine reload handler
+            -- (ISInventoryPaneContextMenu.onLoadBulletsInMagazine) always
+            -- transfers both into main inventory first for exactly this
+            -- reason -- replicating that here, per magazine, since we're
+            -- looping over several instead of vanilla's one-at-a-time UI.
+            ISInventoryPaneContextMenu.transferIfNeeded(playerObj, mag)
+            local itemKey = mag:getAmmoType():getItemKey()
+            local bulletItems = inv:getSomeTypeRecurse(itemKey, missing)
+            ISInventoryPaneContextMenu.transferIfNeeded(playerObj, bulletItems)
+
             ISTimedActionQueue.add(
                 ISLoadBulletsInMagazine:new(playerObj, mag, missing)
             )
@@ -133,6 +148,11 @@ function ReloadAllClips_Core.doUnloadAll(playerObj, group)
         if cur > 0 then
             dbg("Queueing ISUnloadBulletsFromMagazine for mag with " ..
                 tostring(cur) .. " rounds: " .. tostring(mag:getFullType()))
+
+            -- Same fix as doReloadAll above: ISUnloadBulletsFromMagazine's
+            -- own isValid() is top-level-only too, matching vanilla's own
+            -- onUnloadBulletsFromMagazine handler's transferIfNeeded call.
+            ISInventoryPaneContextMenu.transferIfNeeded(playerObj, mag)
 
             ISTimedActionQueue.add(
                 ISUnloadBulletsFromMagazine:new(playerObj, mag)
