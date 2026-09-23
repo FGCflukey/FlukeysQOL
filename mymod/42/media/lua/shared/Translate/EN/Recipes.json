@@ -92,6 +92,10 @@
     "ConvertTo308Box": "Convert Box to .308",
     "ConvertTo556Box": "Convert Box to 5.56mm",
     "ConvertToShotgunShellsBox": "Convert Box to Shotgun Shells",
+    "ConvertTo357s": "Convert Ammo to .357",
+    "ConvertTo357Box": "Convert Box to .357",
+    "ConvertTo3030s": "Convert Ammo to .30-30",
+    "ConvertTo3030Box": "Convert Box to .30-30",
 
     "MakeFiberglassTape": "Make Fibre Glass Tape",
     "MakeWoodGlue": "Make Wood Glue",
