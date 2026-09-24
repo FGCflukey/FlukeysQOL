@@ -140,6 +140,19 @@ module Base
         Researchablerecipes = Forge_Nails;Forge_Heading_Tool,
     }
 
+    item NailsCarton
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 10.0,
+        Icon = Parcel_Large_Hardware,
+        MetalValue = 1200.0,
+        SurvivalGear = true,
+        WorldStaticModel = Parcel_Hardware_Large,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = OpenCarton12,
+    }
+
     item Screws
     {
         DisplayCategory = Material,
@@ -151,6 +164,18 @@ module Base
         MetalValue = 1.0,
         WorldStaticModel = Screws,
         Tags = base:hasmetal,
+    }
+
+    item ScrewsCarton
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 10.0,
+        Icon = Parcel_Large_Hardware,
+        MetalValue = 1200.0,
+        WorldStaticModel = Parcel_Hardware_Large,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = OpenCarton12,
     }
 
     item Hinge

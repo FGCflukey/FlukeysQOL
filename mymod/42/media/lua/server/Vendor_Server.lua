@@ -191,12 +191,12 @@ local function OnClientCommand_Vendor(module, command, player, args)
     if command == "buyItem" then
         local entry = findVendorItem(args and args.itemId)
         if not entry then
-            -- print("[VendorMod] REJECTED buy: unknown item id " .. tostring(args and args.itemId))
+            noise("REJECTED buy: unknown item id " .. tostring(args and args.itemId))
             return
         end
 
         if not isValidItemType(entry.id) then
-            -- print("[VendorMod] REJECTED buy: item type does not exist in this game version: " .. tostring(entry.id))
+            noise("REJECTED buy: item type does not exist in this game version: " .. tostring(entry.id))
             sendServerCommand(player, "VendorMod", "buyFail", { reason = "invalid_item" })
             return
         end
@@ -204,22 +204,40 @@ local function OnClientCommand_Vendor(module, command, player, args)
         local inv = player:getInventory()
         local price = entry.price or 0
         local totalMoney = countMoneyRecursive(inv)
+        noise(username .. " attempting to buy " .. entry.name .. " (price=$" .. price .. ", has $" .. totalMoney .. ")")
 
         if totalMoney < price then
-            -- print("[VendorMod] REJECTED buy: " .. username .. " has $" .. totalMoney .. " needs $" .. price)
+            noise("REJECTED buy: " .. username .. " has $" .. totalMoney .. " needs $" .. price)
             sendServerCommand(player, "VendorMod", "buyFail", { reason = "money" })
             return
         end
 
         local leftover = removeMoneyRecursive(inv, price, inv)
+        noise("removeMoneyRecursive leftover=" .. tostring(leftover) .. " (price was $" .. price .. ")")
+
+        -- Track exactly how much has actually been taken from the player,
+        -- net of any change already given below -- so any later refund is
+        -- always for the real amount removed, never a blind guess of `price`.
+        local amountTaken = price
 
         if leftover < 0 then
-            giveChange(inv, math.abs(leftover))
+            local change = math.abs(leftover)
+            giveChange(inv, change)
+            amountTaken = amountTaken - change
             leftover = 0
         end
 
         if leftover > 0 then
-            -- print("[VendorMod] ERROR: money removal mismatch for " .. username .. " (leftover " .. leftover .. ")")
+            -- removeMoneyRecursive couldn't find the full price -- refund
+            -- whatever it DID manage to remove (price - leftover) instead of
+            -- leaving the player short with nothing to show for it. This was
+            -- a real bug: this branch used to take the player's money with
+            -- zero refund whenever the recursive removal came up short.
+            local actuallyRemoved = price - leftover
+            noise("ERROR: money removal mismatch for " .. username .. " (short by $" .. leftover .. ", refunding $" .. actuallyRemoved .. ")")
+            if actuallyRemoved > 0 then
+                giveChange(inv, actuallyRemoved)
+            end
             sendServerCommand(player, "VendorMod", "buyFail", { reason = "error" })
             return
         end
@@ -229,8 +247,13 @@ local function OnClientCommand_Vendor(module, command, player, args)
         if not newItem then
             -- Shouldn't happen since isValidItemType passed, but refund
             -- defensively rather than leave the player charged with nothing.
-            -- print("[VendorMod] ERROR: AddItem returned nil for " .. entry.id .. ", refunding " .. username)
-            giveChange(inv, price)
+            -- Refund amountTaken (not price): if change was already given
+            -- above for overpayment, refunding the full price again here
+            -- would hand the player back more than they actually lost.
+            noise("ERROR: AddItem returned nil for " .. entry.id .. ", refunding " .. username .. " $" .. amountTaken)
+            if amountTaken > 0 then
+                giveChange(inv, amountTaken)
+            end
             sendServerCommand(player, "VendorMod", "buyFail", { reason = "error" })
             return
         end
