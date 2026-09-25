@@ -38,7 +38,7 @@
 -- Doesn't touch items that already have a FabricType set -- vanilla or
 -- another mod's own deliberate choice is left alone either way.
 
-local DEBUG = false
+local DEBUG = true
 local function dbg(msg)
     if DEBUG then
         print("[AnyClothesRepair] " .. tostring(msg))
