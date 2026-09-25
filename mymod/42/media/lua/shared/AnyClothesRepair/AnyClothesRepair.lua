@@ -56,21 +56,35 @@ local DEFAULT_FABRIC_TYPE = "Leather"
 local function AnyClothesRepair()
     local items = getAllItems()
     if not items then
-        dbg("getAllItems() returned nothing, aborting")
+        print("[AnyClothesRepair] getAllItems() returned nothing, aborting")
         return
     end
 
+    -- pcall per item, not around the whole loop: this scans every item
+    -- across every mod installed, and without this, a single item that
+    -- throws on instanceof/getFabricType/DoParam (a malformed modded
+    -- item, for instance) would silently kill the loop right there --
+    -- everything after that point in the list would never get patched,
+    -- with no error clearly pointing at why.
     local patched = 0
+    local errors = 0
     for i = 0, items:size() - 1 do
         local item = items:get(i)
-        if item and instanceof(item, "Clothing") and not item:getFabricType() then
-            item:DoParam("FabricType = " .. DEFAULT_FABRIC_TYPE)
-            patched = patched + 1
-            dbg("Set FabricType=" .. DEFAULT_FABRIC_TYPE .. " on " .. tostring(item:getFullType()))
+        local ok, err = pcall(function()
+            if item and instanceof(item, "Clothing") and not item:getFabricType() then
+                item:DoParam("FabricType = " .. DEFAULT_FABRIC_TYPE)
+                patched = patched + 1
+                dbg("Set FabricType=" .. DEFAULT_FABRIC_TYPE .. " on " .. tostring(item:getFullType()))
+            end
+        end)
+        if not ok then
+            errors = errors + 1
+            print("[AnyClothesRepair] error on item index " .. tostring(i) .. ": " .. tostring(err))
         end
     end
 
-    dbg("Done -- gave " .. patched .. " clothing item(s) a FabricType so they can be mended")
+    print("[AnyClothesRepair] Done -- gave " .. patched .. " clothing item(s) a FabricType so they can be mended" ..
+        (errors > 0 and (" (" .. errors .. " item(s) threw and were skipped)") or ""))
 end
 
 Events.OnGameBoot.Add(AnyClothesRepair)
