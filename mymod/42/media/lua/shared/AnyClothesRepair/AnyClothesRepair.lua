@@ -90,10 +90,16 @@ local function AnyClothesRepair()
                 return -- already set, leave it alone
             end
 
+            -- getBodyLocation() gets its own inner pcall -- unlike
+            -- getFabricType/DoParam (proven safe by the original mod's
+            -- long track record with no crash protection at all), this
+            -- one isn't proven safe on every item type, and a matching
+            -- symptom already showed up on this exact class of native
+            -- call for a different mod earlier this session (FlashGate).
             local hasBodyLocation = false
             if item.getBodyLocation and type(item.getBodyLocation) == "function" then
-                local loc = item:getBodyLocation()
-                hasBodyLocation = loc ~= nil and loc ~= ""
+                local locOk, loc = pcall(function() return item:getBodyLocation() end)
+                hasBodyLocation = locOk and loc ~= nil and loc ~= ""
             end
             if not hasBodyLocation then
                 return -- not a real wearable item
@@ -101,11 +107,28 @@ local function AnyClothesRepair()
 
             item:DoParam("FabricType = " .. DEFAULT_FABRIC_TYPE)
             patched = patched + 1
-            dbg("Set FabricType=" .. DEFAULT_FABRIC_TYPE .. " on " .. tostring(item:getFullType()))
+
+            -- item:getFullType() turned out to be exactly what was
+            -- throwing "tried to call nil" for a batch of items on the
+            -- last test -- even though the FabricType assignment right
+            -- above it had already succeeded. Its own pcall here means a
+            -- bad getFullType() call only loses that one log line, never
+            -- the count above or the rest of the scan.
+            if DEBUG then
+                local nameOk, name = pcall(function() return item:getFullType() end)
+                dbg("Set FabricType=" .. DEFAULT_FABRIC_TYPE .. " on " .. tostring(nameOk and name or "<unknown item>"))
+            end
         end)
         if not ok then
             errors = errors + 1
-            print("[AnyClothesRepair] error on item index " .. tostring(i) .. ": " .. tostring(err))
+            -- DEBUG-gated, not always-on: with getFabricType/DoParam
+            -- proven safe and getBodyLocation individually pcall'd above,
+            -- anything still reaching here is a genuinely unusual item --
+            -- worth seeing while actively testing, not worth spamming the
+            -- log with by default given how many items this scans.
+            if DEBUG then
+                print("[AnyClothesRepair] error on item index " .. tostring(i) .. ": " .. tostring(err))
+            end
         end
     end
 
