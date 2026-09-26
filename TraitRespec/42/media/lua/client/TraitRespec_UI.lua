@@ -66,7 +66,7 @@ function TraitRespec_Window:onDblClickOwned(trait)
     local cost = TraitRespec_Util.getTraitCost(trait)
     local modal = ISModalDialog:new(0, 0, 300, 150,
         getText("UI_TraitRespec_ConfirmRefund", trait:getLabel(), cost), true,
-        self, TraitRespec_Window.onConfirmRefund, self.player, trait)
+        self, TraitRespec_Window.onConfirmRefund, self.player:getPlayerNum(), trait)
     modal:initialise()
     modal:addToUIManager()
 end
@@ -85,7 +85,7 @@ function TraitRespec_Window:onDblClickAvailable(trait)
     end
     local modal = ISModalDialog:new(0, 0, 300, 150,
         getText("UI_TraitRespec_ConfirmPurchase", trait:getLabel(), cost), true,
-        self, TraitRespec_Window.onConfirmPurchase, self.player, trait)
+        self, TraitRespec_Window.onConfirmPurchase, self.player:getPlayerNum(), trait)
     modal:initialise()
     modal:addToUIManager()
 end
