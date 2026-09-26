@@ -1,11 +1,10 @@
 -- media/lua/client/TraitRespec_UI.lua
 --
 -- Two-list browser (owned traits you can refund / traits you can spend
--- points on), opened via a real rebindable keybind (getCore():addKeyBinding,
--- same API vanilla's own MainOptions.lua uses -- shows up in Options >
--- Keybinding like any other action, not a hardcoded key check). Client
--- only ever requests; TraitRespec_Server.lua re-validates and does the
--- actual mutation, same pattern as every other feature in this pack.
+-- points on), opened via a rebindable keybind registered through
+-- PZAPI.ModOptions (Options > Mod Options > Trait Respec). Client only
+-- ever requests; TraitRespec_Server.lua re-validates and does the actual
+-- mutation, same pattern as every other feature in this pack.
 
 require "TraitRespec_Util"
 require "ISUI/ISCollapsableWindow"
@@ -39,18 +38,34 @@ function TraitRespec_Window:refreshLists()
         ownedTypes[knownTraits:get(i)] = true
     end
 
+    local owned, available = {}, {}
     local allTraits = CharacterTraitDefinition.getTraits()
     for i = 0, allTraits:size() - 1 do
         local trait = allTraits:get(i)
         if TraitRespec_Util.isTraitEligible(trait:getType()) then
-            local cost = TraitRespec_Util.getTraitCost(trait)
-            local label = trait:getLabel() .. " (" .. cost .. ")"
             if ownedTypes[trait:getType()] then
-                self.listOwned:addItem(label, trait)
+                table.insert(owned, trait)
             else
-                self.listAvailable:addItem(label, trait)
+                table.insert(available, trait)
             end
         end
+    end
+
+    -- Lowest point value first in both lists (negative/cheap traits at
+    -- the top, most expensive at the bottom).
+    local function byCostAsc(a, b)
+        return TraitRespec_Util.getTraitCost(a) < TraitRespec_Util.getTraitCost(b)
+    end
+    table.sort(owned, byCostAsc)
+    table.sort(available, byCostAsc)
+
+    for _, trait in ipairs(owned) do
+        local cost = TraitRespec_Util.getTraitCost(trait)
+        self.listOwned:addItem(trait:getLabel() .. " (" .. cost .. ")", trait)
+    end
+    for _, trait in ipairs(available) do
+        local cost = TraitRespec_Util.getTraitCost(trait)
+        self.listAvailable:addItem(trait:getLabel() .. " (" .. cost .. ")", trait)
     end
 
     self.pointsLabel:setName(getText("UI_TraitRespec_Points") .. currentPoints)
@@ -69,6 +84,7 @@ function TraitRespec_Window:onDblClickOwned(trait)
         self, TraitRespec_Window.onConfirmRefund, self.player:getPlayerNum(), trait)
     modal:initialise()
     modal:addToUIManager()
+    modal:bringToTop()
 end
 
 function TraitRespec_Window:onConfirmPurchase(button, trait)
@@ -88,6 +104,7 @@ function TraitRespec_Window:onDblClickAvailable(trait)
         self, TraitRespec_Window.onConfirmPurchase, self.player:getPlayerNum(), trait)
     modal:initialise()
     modal:addToUIManager()
+    modal:bringToTop()
 end
 
 function TraitRespec_Window:createChildren()
@@ -95,7 +112,10 @@ function TraitRespec_Window:createChildren()
 
     local pad = 10
     local listWidth = (self.width - pad * 3) / 2
-    local listHeight = self.height - 70
+    -- Leave a real footer for the points label + the window's own bottom
+    -- resize handle -- 70px put it right at that edge, so it was hidden
+    -- until the window got manually stretched taller.
+    local listHeight = self.height - 90
 
     self.ownedLabel = ISLabel:new(pad, 30, 20, getText("UI_TraitRespec_Owned"), 1, 1, 1, 1, UIFont.Small, true)
     self.ownedLabel:initialise()
@@ -121,8 +141,10 @@ function TraitRespec_Window:createChildren()
     self.listAvailable:setOnMouseDoubleClick(self, self.onDblClickAvailable)
     self:addChild(self.listAvailable)
 
-    self.pointsLabel = ISLabel:new(pad, self.height - 20, 20, getText("UI_TraitRespec_Points") .. currentPoints, 1, 1, 1, 1, UIFont.Small, true)
+    self.pointsLabel = ISLabel:new(pad, self.height - 35, 20, getText("UI_TraitRespec_Points") .. currentPoints, 1, 1, 1, 1, UIFont.Small, true)
     self.pointsLabel:initialise()
+    self.pointsLabel:setAnchorTop(false)
+    self.pointsLabel:setAnchorBottom(true)
     self:addChild(self.pointsLabel)
 
     self:refreshLists()
@@ -155,7 +177,7 @@ function TraitRespec_UI.toggleWindow()
         return
     end
 
-    local width, height = 500, 400
+    local width, height = 500, 450
     local x = (getCore():getScreenWidth() - width) / 2
     local y = (getCore():getScreenHeight() - height) / 2
     TraitRespec_UI.window = TraitRespec_Window:new(x, y, width, height, player)
