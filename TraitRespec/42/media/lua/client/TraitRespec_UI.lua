@@ -191,13 +191,22 @@ Events.OnServerCommand.Add(OnServerCommand_TraitRespec)
 ---------------------------------------------------------
 -- Keybind registration + handling
 ---------------------------------------------------------
+-- Registering via getCore():addKeyBinding() alone is NOT enough for a new,
+-- custom name -- that call only sets the core-side key code for a name
+-- MainOptions already knows about. A genuinely new bind has to go into the
+-- shared `keyBinding` table (from shared/keyBinding.lua) instead -- that's
+-- what MainOptions.loadKeys() reads to build both the Options>Keybinding
+-- rows AND the actual getCore():addKeyBinding() calls that make getKey()/
+-- isKey() resolve at all. Matches vanilla's own ISSearchManager.initBinds
+-- (client/Foraging/ISSearchManager.lua), a real working example of a mod-
+-- shaped feature adding its own keybind this way.
 local function RegisterKeyBind()
-    getCore():addKeyBinding(KEYBIND_NAME, DEFAULT_KEY, 0, false, false, false)
+    table.insert(keyBinding, { value = KEYBIND_NAME, key = DEFAULT_KEY })
 end
 Events.OnGameBoot.Add(RegisterKeyBind)
 
 local function OnKeyStartPressed(key)
-    if key == getCore():getKey(KEYBIND_NAME) then
+    if getCore():isKey(KEYBIND_NAME, key) then
         TraitRespec_UI.toggleWindow()
     end
 end
