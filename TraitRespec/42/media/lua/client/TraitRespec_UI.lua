@@ -19,7 +19,6 @@ local function dbg(msg)
     end
 end
 
-local KEYBIND_NAME = "Toggle Trait Respec"
 local DEFAULT_KEY = Keyboard.KEY_F7
 
 local currentPoints = 0
@@ -191,22 +190,17 @@ Events.OnServerCommand.Add(OnServerCommand_TraitRespec)
 ---------------------------------------------------------
 -- Keybind registration + handling
 ---------------------------------------------------------
--- Registering via getCore():addKeyBinding() alone is NOT enough for a new,
--- custom name -- that call only sets the core-side key code for a name
--- MainOptions already knows about. A genuinely new bind has to go into the
--- shared `keyBinding` table (from shared/keyBinding.lua) instead -- that's
--- what MainOptions.loadKeys() reads to build both the Options>Keybinding
--- rows AND the actual getCore():addKeyBinding() calls that make getKey()/
--- isKey() resolve at all. Matches vanilla's own ISSearchManager.initBinds
--- (client/Foraging/ISSearchManager.lua), a real working example of a mod-
--- shaped feature adding its own keybind this way.
-local function RegisterKeyBind()
-    table.insert(keyBinding, { value = KEYBIND_NAME, key = DEFAULT_KEY })
-end
-Events.OnGameBoot.Add(RegisterKeyBind)
+-- PZAPI.ModOptions is the real, purpose-built B42 API for a mod-owned
+-- keybind -- shows up in its own "Trait Respec" section under Options >
+-- Mod Options (separate from vanilla's Keybinding tab), rebindable, and
+-- persisted to its own ModOptions.ini. The option's key value lives
+-- directly in the table addKeyBind() returns, so it's usable immediately
+-- -- no dependency on when/whether the Options screen has been opened.
+local TraitRespec_ModOptions = PZAPI.ModOptions:create("TraitRespec", "UI_TraitRespec_Title")
+local keybindOption = TraitRespec_ModOptions:addKeyBind("ToggleWindow", "UI_TraitRespec_ToggleKeybind", DEFAULT_KEY)
 
 local function OnKeyStartPressed(key)
-    if getCore():isKey(KEYBIND_NAME, key) then
+    if key == keybindOption:getValue() then
         TraitRespec_UI.toggleWindow()
     end
 end
