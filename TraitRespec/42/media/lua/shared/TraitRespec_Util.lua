@@ -16,14 +16,22 @@ local function dbg(msg)
 end
 
 ---------------------------------------------------------
--- Excluded traits: same category confirmed unsafe by the
--- "TraitsPurchaseSystem" Workshop mod's own "Unpurchasable Traits" list
--- (Weight/Fitness-derived -- their effects are baked into already-drifted
--- derived stats with no clean value to revert to once real play has moved
--- them), plus the profession "tier 2" traits (BLACKSMITH2/COOK2/
--- MECHANICS2/NUTRITIONIST2), which that mod only supports via a
--- prerequisite-checking system we're deliberately not building here --
--- excluded rather than risking an inconsistent state without it.
+-- Excluded traits: Weight/Fitness-derived (FIT/ATHLETIC/STOUT/STRONG/
+-- EMACIATED/VERY_UNDERWEIGHT/UNDERWEIGHT/OVERWEIGHT/OBESE) -- same
+-- category confirmed unsafe by the "TraitsPurchaseSystem" Workshop mod's
+-- own "Unpurchasable Traits" list, since their effects are baked into
+-- already-drifted derived stats with no clean value to revert to once
+-- real play has moved them.
+--
+-- Every profession-granted trait (Ax-pert, Burglar, Desensitized,
+-- Herbalist, Inventive Cook2/Mechanics2/etc.) is excluded separately
+-- below, dynamically, by cost == 0 rather than hardcoded by name --
+-- confirmed against vanilla's own character_traits.txt that every trait
+-- flagged IsProfessionTrait=true (except the Weight ones above, which
+-- carry a real nonzero cost too) prices at exactly 0, since these
+-- normally come bundled free with a profession pick rather than being a
+-- discretionary point-buy. Filtering by cost also means this never needs
+-- updating for a modded 0-cost trait we don't know the name of.
 ---------------------------------------------------------
 local EXCLUDED_TRAITS = {
     [CharacterTrait.EMACIATED]        = true,
@@ -35,21 +43,20 @@ local EXCLUDED_TRAITS = {
     [CharacterTrait.ATHLETIC]         = true,
     [CharacterTrait.STOUT]            = true,
     [CharacterTrait.STRONG]           = true,
-    [CharacterTrait.BLACKSMITH2]      = true,
-    [CharacterTrait.COOK2]            = true,
-    [CharacterTrait.MECHANICS2]       = true,
-    [CharacterTrait.NUTRITIONIST2]    = true,
 }
 
 ---------------------------------------------------------
--- isTraitEligible(traitType)
--- traitType is the raw CharacterTrait enum value (what
--- trait:getType() returns), not the CharacterTraitDefinition object.
+-- isTraitEligible(traitDefinition)
 ---------------------------------------------------------
-function TraitRespec_Util.isTraitEligible(traitType)
-    if not traitType then return false end
+function TraitRespec_Util.isTraitEligible(traitDefinition)
+    if not traitDefinition then return false end
+    local traitType = traitDefinition:getType()
     if EXCLUDED_TRAITS[traitType] then
-        dbg("Excluded: " .. tostring(traitType:toString()))
+        dbg("Excluded (weight/fitness): " .. tostring(traitType:toString()))
+        return false
+    end
+    if TraitRespec_Util.getTraitCost(traitDefinition) == 0 then
+        dbg("Excluded (profession, cost 0): " .. tostring(traitType:toString()))
         return false
     end
     return true

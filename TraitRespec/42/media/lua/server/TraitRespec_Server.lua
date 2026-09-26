@@ -91,7 +91,7 @@ local function handleRefundTrait(player, args)
     end
     local traitType = traitDefinition:getType()
 
-    if not TraitRespec_Util.isTraitEligible(traitType) then
+    if not TraitRespec_Util.isTraitEligible(traitDefinition) then
         dbg("RefundTrait: rejected, excluded trait: " .. tostring(traitTypeString))
         sendServerCommand(player, "TraitRespec", "RefundFail", { reason = "excluded" })
         return
@@ -134,7 +134,7 @@ local function handlePurchaseTrait(player, args)
     end
     local traitType = traitDefinition:getType()
 
-    if not TraitRespec_Util.isTraitEligible(traitType) then
+    if not TraitRespec_Util.isTraitEligible(traitDefinition) then
         dbg("PurchaseTrait: rejected, excluded trait: " .. tostring(traitTypeString))
         sendServerCommand(player, "TraitRespec", "PurchaseFail", { reason = "excluded" })
         return

@@ -42,7 +42,7 @@ function TraitRespec_Window:refreshLists()
     local allTraits = CharacterTraitDefinition.getTraits()
     for i = 0, allTraits:size() - 1 do
         local trait = allTraits:get(i)
-        if TraitRespec_Util.isTraitEligible(trait:getType()) then
+        if TraitRespec_Util.isTraitEligible(trait) then
             if ownedTypes[trait:getType()] then
                 table.insert(owned, trait)
             else
@@ -59,13 +59,17 @@ function TraitRespec_Window:refreshLists()
     table.sort(owned, byCostAsc)
     table.sort(available, byCostAsc)
 
+    local NEGATIVE_TRAIT_COLOR = { r = 0.85, g = 0.25, b = 0.25, a = 1 }
+
     for _, trait in ipairs(owned) do
         local cost = TraitRespec_Util.getTraitCost(trait)
-        self.listOwned:addItem(trait:getLabel() .. " (" .. cost .. ")", trait)
+        local row = self.listOwned:addItem(trait:getLabel() .. " (" .. cost .. ")", trait)
+        if cost < 0 then row.textColor = NEGATIVE_TRAIT_COLOR end
     end
     for _, trait in ipairs(available) do
         local cost = TraitRespec_Util.getTraitCost(trait)
-        self.listAvailable:addItem(trait:getLabel() .. " (" .. cost .. ")", trait)
+        local row = self.listAvailable:addItem(trait:getLabel() .. " (" .. cost .. ")", trait)
+        if cost < 0 then row.textColor = NEGATIVE_TRAIT_COLOR end
     end
 
     self.pointsLabel:setName(getText("UI_TraitRespec_Points") .. currentPoints)
