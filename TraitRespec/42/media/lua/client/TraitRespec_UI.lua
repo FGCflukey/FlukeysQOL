@@ -108,7 +108,7 @@ function TraitRespec_Window:createChildren()
     self.listOwned = ISScrollingListBox:new(pad, 50, listWidth, listHeight)
     self.listOwned:initialise()
     self.listOwned:instantiate()
-    self.listOwned.itemheight = 20
+    self.listOwned:setFont(UIFont.Small, 4)
     self.listOwned.drawBorder = true
     self.listOwned:setOnMouseDoubleClick(self, self.onDblClickOwned)
     self:addChild(self.listOwned)
@@ -116,7 +116,7 @@ function TraitRespec_Window:createChildren()
     self.listAvailable = ISScrollingListBox:new(pad * 2 + listWidth, 50, listWidth, listHeight)
     self.listAvailable:initialise()
     self.listAvailable:instantiate()
-    self.listAvailable.itemheight = 20
+    self.listAvailable:setFont(UIFont.Small, 4)
     self.listAvailable.drawBorder = true
     self.listAvailable:setOnMouseDoubleClick(self, self.onDblClickAvailable)
     self:addChild(self.listAvailable)
