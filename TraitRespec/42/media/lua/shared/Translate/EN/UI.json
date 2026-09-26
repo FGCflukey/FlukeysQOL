@@ -1,0 +1,12 @@
+{
+    "UI_TraitRespec_Title": "Trait Respec",
+    "UI_TraitRespec_Owned": "Owned (double-click to refund)",
+    "UI_TraitRespec_Available": "Available (double-click to purchase)",
+    "UI_TraitRespec_Points": "Points: ",
+    "UI_TraitRespec_ConfirmRefund": "Refund %1 for %2 points?",
+    "UI_TraitRespec_ConfirmPurchase": "Purchase %1 for %2 points?",
+    "UI_TraitRespec_NotEnoughPoints": "I don't have enough points for that.",
+    "UI_TraitRespec_Refunded": "Refunded for %1 points.",
+    "UI_TraitRespec_Purchased": "Trait purchased.",
+    "UI_TraitRespec_ActionFailed": "That didn't work."
+}

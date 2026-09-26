@@ -1,0 +1,7 @@
+name=Trait Respec
+description=Remove a trait you already have and get its real character-creation point value back, so you can spend it on a trait you wish you'd picked instead. No passive grinding -- your point pool is only ever what your current traits are already worth. Standalone, no dependencies.
+id=TraitRespec
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.20
+versionMin=42.19
