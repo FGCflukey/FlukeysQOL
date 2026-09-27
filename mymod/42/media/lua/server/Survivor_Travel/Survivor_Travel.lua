@@ -26,10 +26,6 @@ local function teleportPlayer(player, x, y, z)
     player:setLastX(x)
     player:setLastY(y)
     player:setLastZ(z)
-    local ok, err = pcall(function() player:clearMovement() end)
-    if not ok then
-        dbg("clearMovement failed: " .. tostring(err))
-    end
     dbg(player:getUsername() .. " travelled to (" .. x .. "," .. y .. "," .. z .. ")")
 end
 
