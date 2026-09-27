@@ -3,7 +3,8 @@ module Base
 
     model CopterTicket
     {
-        mesh = WorldItems/TicketToRosewood,
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToRosewood,
         scale = 0.1,
     }
 
