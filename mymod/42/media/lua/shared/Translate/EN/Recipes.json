@@ -205,6 +205,16 @@
     "ConvertDeepCycleToSuperBattery": "Convert 200Ah Battery to 400Ah Deep Cycle Battery",
 
     "PackAdditionalBookSet": "Pack 5 Skill Books into a Set",
-    "UnpackAdditionalBookSet": "Open a Skill Book Set"
+    "UnpackAdditionalBookSet": "Open a Skill Book Set",
+
+    "TraveltoRosewood": "Travel to Rosewood",
+    "TraveltoWestpoint": "Travel to Westpoint",
+    "TraveltoMuldraugh": "Travel to Muldraugh",
+    "TraveltoLouisville": "Travel to Louisville",
+    "TraveltoBrandenburg": "Travel to Brandenburg",
+    "TraveltoMarchridge": "Travel to Marchridge",
+    "TraveltoEkron": "Travel to Ekron",
+    "TraveltoEchocreek": "Travel to Echocreek",
+    "TraveltoRiverside": "Travel to Riverside"
 }
 
