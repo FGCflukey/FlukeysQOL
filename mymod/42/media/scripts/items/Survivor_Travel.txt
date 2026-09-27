@@ -182,44 +182,6 @@ module Base
         }
     }
 
-    craftRecipe ConvertDIYBatteryToDeepCycle
-    {
-        timedAction     = Making,
-        time            = 200,
-        Tags            = InHandCraft,
-        category        = Electrical,
-        NeedToBeLearn   = false,
-        inputs
-        {
-            item 1 [PSR.DIYBattery] mode:destroy,
-            item 2 [Base.ElectronicsScrap] mode:destroy,
-            item 1 tags[base:screwdriver] mode:keep flags[MayDegradeVeryLight],
-        }
-        outputs
-        {
-            item 1 PSR.DeepCycleBattery,
-        }
-    }
-
-    craftRecipe TraveltoRosewood
-    {
-
-        timedAction     = Making,
-        time            = 200,
-        Tags            = InHandCraft,
-        category        = Misc,
-        NeedToBeLearn   = false,
-        OnCreate        = travelToRosewood,
-        Sound           = chopper,
-        inputs
-        {
-            item 1 [Base.TicketToRosewood] mode:destroy,
-        }
-        outputs
-        {
-        }
-    }
-
     craftRecipe TraveltoWestpoint
     {
 
@@ -328,6 +290,25 @@ module Base
         inputs
         {
             item 1 [Base.TicketToEkron] mode:destroy,
+        }
+        outputs
+        {
+        }
+    }
+
+    craftRecipe TraveltoIrvington
+    {
+
+        timedAction     = Making,
+        time            = 200,
+        Tags            = InHandCraft,
+        category        = Misc,
+        NeedToBeLearn   = false,
+        OnCreate        = travelToIrvington,
+        Sound           = chopper,
+        inputs
+        {
+            item 1 [Base.TicketToIrvington] mode:destroy,
         }
         outputs
         {
