@@ -132,6 +132,7 @@
     "Base.BookSprintingSet": "Sprinting - Book Set",
     "Base.BookNimbleSet": "Nimble - Book Set",
     "Base.BookSneakingSet": "Sneak - Book Set",
-    "Base.BookLightfootedSet": "Lightfoot - Book Set"
+    "Base.BookLightfootedSet": "Lightfoot - Book Set",
 
+    "Base.TicketToRosewood": "Ticket to Rosewood"
 }

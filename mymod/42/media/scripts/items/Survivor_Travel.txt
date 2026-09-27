@@ -1,0 +1,19 @@
+module Base
+{
+
+    model CopterTicket
+    {
+        mesh = WorldItems/TicketToRosewood,
+        scale = 0.1,
+    }
+
+    item TicketToRosewood
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToRosewood,
+        WorldStaticModel    = CopterTicket,
+    }
+
+}
