@@ -134,5 +134,15 @@
     "Base.BookSneakingSet": "Sneak - Book Set",
     "Base.BookLightfootedSet": "Lightfoot - Book Set",
 
-    "Base.TicketToRosewood": "Ticket to Rosewood"
+    "Base.TicketToRosewood": "Ticket to Rosewood",
+    "Base.TicketToWestpoint": "Ticket to West Point",
+    "Base.TicketToMuldraugh": "Ticket to Muldraugh",
+    "Base.TicketToLouisville": "Ticket to Louisville",
+    "Base.TicketToBrandenberg": "Ticket to Brandenburg",
+    "Base.TicketToMarchridge": "Ticket to March Ridge",
+    "Base.TicketToEkron": "Ticket to Ekron",
+    "Base.TicketToIrvington": "Ticket to Irvington",
+    "Base.TicketToEchocreek": "Ticket to Echocreek",
+    "Base.TicketToRiverside": "Ticket to Riverside"
+
 }

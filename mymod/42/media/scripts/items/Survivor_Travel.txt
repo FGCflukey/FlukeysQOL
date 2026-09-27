@@ -1,12 +1,77 @@
 module Base
 {
 
-    model CopterTicket
+    model CopterTicketRosewood
     {
         mesh = WorldItems/CopterTicket,
         texture = WorldItems/TicketToRosewood,
         scale = 0.1,
     }
+
+    model CopterTicketWestpoint
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToWestpoint,
+        scale = 0.1,
+    }
+
+    model CopterTicketMuldraugh
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToMuldraugh,
+        scale = 0.1,
+    }
+
+    model CopterTicketLouisville
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToLouisville,
+        scale = 0.1,
+    }
+
+    model CopterTicketBrandenburg
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToBrandenburg,
+        scale = 0.1,
+    }
+
+    model CopterTicketMarchridge
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToMarchridge,
+        scale = 0.1,
+    }
+
+    model CopterTicketEkron
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToEkron,
+        scale = 0.1,
+    }
+
+    model CopterTicketIrvington
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToIrvington,
+        scale = 0.1,
+    }
+
+    model CopterTicketEchocreek
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToEchocreek,
+        scale = 0.1,
+    }
+
+    model CopterTicketRiverside
+    {
+        mesh = WorldItems/CopterTicket,
+        texture = WorldItems/TicketToRiverside,
+        scale = 0.1,
+    }
+
+/*  Tickets are junk items, but they are not meant to be sold. They are used to travel to other locations. */
 
     item TicketToRosewood
     {
@@ -14,7 +79,88 @@ module Base
         Weight              = 0.1,
         ItemType            = base:literature,
         Icon                = TicketToRosewood,
-        WorldStaticModel    = CopterTicket,
+        WorldStaticModel    = CopterTicketRosewood,
+    }
+
+    item TicketToWestpoint
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToWestpoint,
+        WorldStaticModel    = CopterTicketWestpoint,
+    }
+
+    item TicketToMuldraugh
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToMuldraugh,
+        WorldStaticModel    = CopterTicketMuldraugh,
+    }
+
+    item TicketToLouisville
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToLouisville,
+        WorldStaticModel    = CopterTicketLouisville,
+    }
+
+    item TicketToBrandenburg
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToBrandenburg,
+        WorldStaticModel    = CopterTicketBrandenburg,
+    }
+
+    item TicketToMarchridge
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToMarchridge,
+        WorldStaticModel    = CopterTicketMarchridge,
+    }
+
+    item TicketToEkron
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToEkron,
+        WorldStaticModel    = CopterTicketEkron,
+    }
+
+    item TicketToIrvington
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToIrvington,
+        WorldStaticModel    = CopterTicketIrvington,
+    }
+
+    item TicketToEchocreek
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToEchocreek,
+        WorldStaticModel    = CopterTicketEchocreek,
+    }
+
+    item TicketToRiverside
+    {
+        DisplayCategory     = Junk,
+        Weight              = 0.1,
+        ItemType            = base:literature,
+        Icon                = TicketToRiverside,
+        WorldStaticModel    = CopterTicketRiverside,
     }
 
 }
