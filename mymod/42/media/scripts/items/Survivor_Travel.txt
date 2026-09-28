@@ -175,7 +175,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToRosewood,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToRosewood] mode:destroy,
@@ -194,7 +193,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToWestpoint,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToWestpoint] mode:destroy,
@@ -213,7 +211,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToMuldraugh,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToMuldraugh] mode:destroy,
@@ -232,7 +229,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToLouisville,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToLouisville] mode:destroy,
@@ -251,7 +247,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToBrandenburg,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToBrandenburg] mode:destroy,
@@ -270,7 +265,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToMarchridge,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToMarchridge] mode:destroy,
@@ -289,7 +283,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToEkron,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToEkron] mode:destroy,
@@ -308,7 +301,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToIrvington,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToIrvington] mode:destroy,
@@ -327,7 +319,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToEchocreek,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToEchocreek] mode:destroy,
@@ -346,7 +337,6 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToRiverside,
-        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToRiverside] mode:destroy,

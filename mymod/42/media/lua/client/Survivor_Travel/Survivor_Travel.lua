@@ -31,6 +31,18 @@ local function OnServerCommand(module, command, args)
         dbg("teleportTo failed: " .. tostring(err))
         return
     end
+
+    -- The recipe's own `Sound = copter` field never actually plays here --
+    -- timedAction=Making runs through ISHandcraftAction, whose sound comes
+    -- from craftRecipe:getTimedActionScript():getSound() (the "Making"
+    -- action TYPE's own shared sound), not this specific recipe's own
+    -- Sound field. Playing it directly instead, same real API vanilla
+    -- itself uses (character:playSound(name), ISHandcraftAction.lua).
+    local ok2, err2 = pcall(function() player:playSound("copter") end)
+    if not ok2 then
+        dbg("playSound(copter) failed: " .. tostring(err2))
+    end
+
     dbg("Arrived at (" .. x .. "," .. y .. "," .. z .. ")")
 end
 
