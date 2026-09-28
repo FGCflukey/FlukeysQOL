@@ -48,11 +48,16 @@ List of current things this mod does...
 
 ### Crafting & Recipes
 
-- Added extra skill books for Axe, Blunt, Small Blunt, Small Blade, Spear, Sprinting, Nimble, Sneaking
-  and Lightfooted, with their own boxed sets you can pack/unpack just like vanilla's skill book sets
+- Added extra skill books for Sprinting, Nimble, Sneaking  and Lightfooted, with their own boxed sets you
+  can pack/unpack just like vanilla's skill book sets
 - Added more packaging options such as 10 pack of Engine Parts, Syringes and Test Tubes
 - Added some recipes in for re-purposing unusable metal and scrap.
 - Added Crafting Nail boxes with Sheet Metals and Scrap Metal
+
+### Weapons
+
+- Added extra skill books for Axe, Blunt, Small Blunt, Small Blade, Spear,
+- Added Carbon Fibre Combat Axe and Long Reach Axe, includes repairs. Long Reach is weird, but works.
 - Added Bulk Weapon Magazine Reloading/Unloading. Right click your stack!
 - Added Ammo Conversions - break down loose or boxed rounds of one caliber and reload them into another,
   covering all 9 vanilla calibers both ways
@@ -68,7 +73,7 @@ List of current things this mod does...
 ### Survival & Base
 
 - Added Zombie butchering to cleanup the dead around your base or other things... (animal corpses excluded)
-- Added new version of PZ Bloodcure which utilizes the Zombie butchering. Multi-stage recipe. Magazine
+- Added new version of PZ Bloodcure which utilizes the Zombie butchering. Multi-stage recipe. And Magazine.
 - Added Visual Learner trait, allows the player to get XP from books instead of the usual vanilla boost
 - Added universal clothing repair - mends any wearable clothing item, including modded ones, instead of
   needing a per-mod "Repair Any Clothes" patch
@@ -78,7 +83,6 @@ List of current things this mod does...
 
 ### Items & Equipment
 
-- Added Carbon Fibre Combat Axe and Long Reach Axe, includes repairs. Long Reach is weird, but works.
 - Added the old Hydrocraft looking Dolly and Toy Wagon for crazy hoarders like me
 - Allows Climbing all obstacles, fences, windows and tall walls protecting Dolly/Toy Wagon in 2nd hand
 - (Note to above. In some circumstance you can still drop it. 98% of time you wont.)
