@@ -134,5 +134,18 @@ VendorItems = {
     { id = "Base.3030Box",              name = "Box of .30-30 Rounds",          price = 50 },
     { id = "Base.556Box",               name = "Box of 5.56mm Rounds",          price = 50 },
     { id = "Base.Bullets357Box",        name = "Box of .357 Magnum Rounds",     price = 50 },
-    
+
+    { category = "Travel" },
+
+    { id = "Base.TicketToRosewood",     name = "Bus Ticket to Rosewood",       price = 500 },
+    { id = "Base.TicketToWestpoint",    name = "Bus Ticket to West Point",     price = 500 },
+    { id = "Base.TicketToMuldraugh",    name = "Bus Ticket to Muldraugh",      price = 500 },
+    { id = "Base.TicketToLouisville",   name = "Bus Ticket to Louisville",     price = 500 },
+    { id = "Base.TicketToBrandenburg",  name = "Bus Ticket to Brandenburg",    price = 500 },
+    { id = "Base.TicketToMarchridge",   name = "Bus Ticket to March Ridge",    price = 500 },
+    { id = "Base.TicketToEkron",        name = "Bus Ticket to Ekron",          price = 500 },
+    { id = "Base.TicketToIrvington",    name = "Bus Ticket to Irvington",      price = 500 },
+    { id = "Base.TicketToEchocreek",    name = "Bus Ticket to Echo Creek",     price = 500 },
+    { id = "Base.TicketToRiverside",    name = "Bus Ticket to Riverside",      price = 500 },
+
 }
