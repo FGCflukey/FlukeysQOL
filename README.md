@@ -39,6 +39,8 @@ List of current things this mod does...
   electrical materials, meet the skill and recipe requirements, and build any installed vehicle mod's
   cars too, not just vanilla ones
 - Added TowFromVehicle - attach/detach a trailer from inside the towing vehicle
+- Added Vehicle Glass crafting - windshields and windows (front/rear) in Standard, Heavy Duty and Sport
+  tiers, plus a quick-and-dirty glass pane option
 
 ### Locks & Security
 
@@ -50,9 +52,15 @@ List of current things this mod does...
 
 - Added extra skill books for Sprinting, Nimble, Sneaking  and Lightfooted, with their own boxed sets you
   can pack/unpack just like vanilla's skill book sets
-- Added more packaging options such as 10 pack of Engine Parts, Syringes and Test Tubes
-- Added some recipes in for re-purposing unusable metal and scrap.
+- Added 10-pack boxing/unboxing for Engine Parts, Electronics Scrap, Electric Wire, Syringes, Test Tubes,
+  Hinges, Doorknobs, Nuts & Bolts and Fiberglass Tape, plus unpacking pre-boxed Alcohol Wipes
+- Added full metal-recycling chains - turn Unusable Metal, Scrap Metal, or Iron/Steel Scrap into Sheet
+  Metal, Metal Bars, Metal Pipes, Wire, Nails or Screws, whichever you're actually short on
 - Added Crafting Nail boxes with Sheet Metals and Scrap Metal
+- Added a battery upgrade chain - DIY Battery to 200Ah Deep Cycle to 400Ah Super Battery
+- Added a bunch of general survival recipes - rope/twine from rags, a tarp, disinfectant, sewing needles,
+  wooden/log buttons, a fishing hook, welding mask, mortar and pestle, a survivor multitool, cutting a
+  wallet for leather strips, recycling ripped sheets into thread, and more
 
 ### Weapons
 
