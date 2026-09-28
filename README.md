@@ -20,8 +20,7 @@ List of current things this mod does...
 - Overrides Canteens to hold more water, from 500ml to 1 Litre
 - Added Faster Car Hood/engine access, overrides default annoying slowness
 - Added Re-fuelling BlowTorch and Propane Tank at Gas Pumps -- requires power at the pump
-- Fixed Nepenthe's "Chocolate Milk From Brown Cows" mod (its own require() path was broken) and folded
-  the fix in directly, so brown (simmental) cows give chocolate milk without needing that mod installed
+- Added "Chocolate Milk From Brown Cows", so brown (simmental) cows give chocolate milk
 
 ### Vehicles
 
