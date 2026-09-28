@@ -68,4 +68,19 @@ module Base
         }
     }
 
+    sound copter
+    {
+        category = Object,
+        volume = 3.0,
+
+        clip
+        {
+            file = media/sound/copter.ogg,
+            distanceMin = 1,
+            distanceMax = 8,
+            priority = 5,
+            pitch = 1.1,
+        }
+    }
+
 }

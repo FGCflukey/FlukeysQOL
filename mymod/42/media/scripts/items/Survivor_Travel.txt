@@ -163,6 +163,9 @@ module Base
         WorldStaticModel    = CopterTicketRiverside,
     }
 
+/*  Craft recipes for traveling to other locations. 
+    The player must have the corresponding ticket in their inventory to use the recipe. */
+
     craftRecipe TraveltoRosewood
     {
 
@@ -172,7 +175,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToRosewood,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToRosewood] mode:destroy,
@@ -191,7 +194,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToWestpoint,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToWestpoint] mode:destroy,
@@ -210,7 +213,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToMuldraugh,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToMuldraugh] mode:destroy,
@@ -229,7 +232,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToLouisville,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToLouisville] mode:destroy,
@@ -248,7 +251,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToBrandenburg,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToBrandenburg] mode:destroy,
@@ -267,7 +270,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToMarchridge,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToMarchridge] mode:destroy,
@@ -286,7 +289,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToEkron,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToEkron] mode:destroy,
@@ -305,7 +308,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToIrvington,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToIrvington] mode:destroy,
@@ -324,7 +327,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToEchocreek,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToEchocreek] mode:destroy,
@@ -343,7 +346,7 @@ module Base
         category        = Misc,
         NeedToBeLearn   = false,
         OnCreate        = travelToRiverside,
-        Sound           = chopper,
+        Sound           = copter,
         inputs
         {
             item 1 [Base.TicketToRiverside] mode:destroy,
