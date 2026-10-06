@@ -88,15 +88,21 @@ Events.OnTick.Add(function()
             local fraction = WATCHDOG_INTERVAL / 3000
 
             local applied, err = pcall(function()
-                local bodyDamage = player:getBodyDamage()
-                if bodyDamage then
-                    bodyDamage:setBoredomLevel(math.max(0, bodyDamage:getBoredomLevel() - boredomPct * fraction))
-                    bodyDamage:setUnhappynessLevel(math.max(0, bodyDamage:getUnhappynessLevel() - unhappinessPct * fraction))
-                end
+                -- Real vanilla API, confirmed against shared/RadioCom/
+                -- ISRadioInteractions.lua's own boredom/unhappiness
+                -- reduction -- both stats live on Stats (not BodyDamage),
+                -- via the generic CharacterStat add() delta method.
+                -- bodyDamage:setBoredomLevel()/setUnhappynessLevel() and
+                -- stats:setStress() (the original approach, matching both
+                -- the Workshop mod and the old B41 mod) aren't real
+                -- callable methods here -- confirmed by the server crash,
+                -- and by finding another Workshop mod (TrueMusicJukebox)
+                -- with the exact same three calls, all commented out.
                 local stats = player:getStats()
                 if stats then
-                    local currentStress = stats:getStress() - stats:getStressFromCigarettes()
-                    stats:setStress(math.max(0, currentStress - (stressPct / 100) * fraction))
+                    stats:add(CharacterStat.BOREDOM, -(boredomPct * fraction))
+                    stats:add(CharacterStat.UNHAPPINESS, -(unhappinessPct * fraction))
+                    stats:add(CharacterStat.STRESS, -(stressPct / 100 * fraction))
                 end
             end)
             if not applied then
