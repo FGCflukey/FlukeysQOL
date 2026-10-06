@@ -1,0 +1,6 @@
+{
+    "Sandbox_ArcadePlayOptions": "Playable Arcade Machines",
+    "Sandbox_ArcadePlay.BoredomDecrease": "Boredom decrease per full session of arcade play (0-100%).",
+    "Sandbox_ArcadePlay.UnhappinessDecrease": "Unhappiness decrease per full session of arcade play (0-100%).",
+    "Sandbox_ArcadePlay.StressDecrease": "Stress decrease per full session of arcade play (0-100%)."
+}

@@ -1,0 +1,44 @@
+module Base
+{
+    sound ArcadeMachine1
+    {
+        category = Object,
+        volume = 3.0,
+
+        clip
+        {
+            file = media/sound/ArcadeMachine1.wav,
+            distanceMin = 1,
+            distanceMax = 20,
+            priority = 5,
+        }
+    }
+
+    sound ArcadeMachine2
+    {
+        category = Object,
+        volume = 3.0,
+
+        clip
+        {
+            file = media/sound/ArcadeMachine2.wav,
+            distanceMin = 1,
+            distanceMax = 20,
+            priority = 5,
+        }
+    }
+
+    sound PinballMachine
+    {
+        category = Object,
+        volume = 3.0,
+
+        clip
+        {
+            file = media/sound/PinballMachine.wav,
+            distanceMin = 1,
+            distanceMax = 20,
+            priority = 5,
+        }
+    }
+}

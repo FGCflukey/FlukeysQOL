@@ -1,0 +1,5 @@
+{
+    "ContextMenu_PlayArcade": "Play",
+    "ContextMenu_PlayArcade_StepInFront": "I need to step in front of the machine to play.",
+    "ContextMenu_PlayArcade_NoPower": "This machine has no power."
+}

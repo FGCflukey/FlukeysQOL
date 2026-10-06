@@ -1,0 +1,18 @@
+VERSION = 1,
+
+/***** ARCADE PLAY OPTIONS *****/
+
+option ArcadePlay.BoredomDecrease = {
+    type = integer, min = 0, max = 100, default = 33,
+    page = ArcadePlayOptions, translation = ArcadePlay.BoredomDecrease,
+}
+
+option ArcadePlay.UnhappinessDecrease = {
+    type = integer, min = 0, max = 100, default = 33,
+    page = ArcadePlayOptions, translation = ArcadePlay.UnhappinessDecrease,
+}
+
+option ArcadePlay.StressDecrease = {
+    type = integer, min = 0, max = 100, default = 33,
+    page = ArcadePlayOptions, translation = ArcadePlay.StressDecrease,
+}

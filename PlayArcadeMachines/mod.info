@@ -1,0 +1,9 @@
+name=Play Arcade Machines
+description=Play vanilla arcade cabinets and pinball machines -- reduces stress, unhappiness and boredom while you play. Uses a real custom playing animation instead of a generic one, and requires power. Standalone, no dependencies.
+id=PlayArcadeMachines
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.21
+versionMin=42.19
+poster=poster.png
+icon=LogoFGC.png
