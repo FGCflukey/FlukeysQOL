@@ -13,6 +13,11 @@
 -- Animation: uses a real custom "PlayArcadian" player animation (from the
 -- user's own old B41 "Play Modded Arcades" mod) instead of the generic
 -- vanilla "Making" pose the Workshop mod used.
+--
+-- Sound: ArcadeMachine1/ArcadeMachine2 both use the old mod's real
+-- PAMGArcadianplay (loops) / PAMGArcadianend (one-shot, on full completion
+-- only) pair instead of the Workshop mod's 2 generic/disliked .wav files.
+-- PinballMachine keeps the Workshop mod's own sound -- already sounds right.
 
 local DEBUG = false
 local function dbg(msg)
@@ -42,6 +47,17 @@ local function getArcadeMachineType(spriteName)
     end
     return nil
 end
+
+-- Real per-machine sounds from the user's own old B41 mod -- a looping
+-- "playing" sound for the duration, plus a one-shot "end" sound on full
+-- completion. ArcadeMachine1 and ArcadeMachine2 both reuse the same
+-- Arcadian pair (that's what the old mod used for both). Pinball keeps
+-- its own single Workshop-mod sound -- already sounds right, no end sound.
+local MACHINE_SOUNDS = {
+    ArcadeMachine1 = { play = "PAMGArcadianplay", finish = "PAMGArcadianend" },
+    ArcadeMachine2 = { play = "PAMGArcadianplay", finish = "PAMGArcadianend" },
+    PinballMachine = { play = "PinballMachine", finish = nil },
+}
 
 -- Which tile is "in front of" each facing sprite. The original Workshop
 -- mod's version of this had a real bug -- an unreachable elseif branch
@@ -125,9 +141,9 @@ function PlayArcadeTimedAction:update()
     if not self.gameSound then
         local soundRadius = 20
         local volume = 6
-        local machineSound = self.machineType or "ArcadeMachine1"
-        self.gameSound = self.character:getEmitter():playSound(machineSound)
-        dbg("Playing sound: " .. machineSound)
+        local sounds = MACHINE_SOUNDS[self.machineType] or MACHINE_SOUNDS.ArcadeMachine1
+        self.gameSound = self.character:getEmitter():playSound(sounds.play)
+        dbg("Playing sound: " .. sounds.play)
         addSound(self.character, self.character:getX(), self.character:getY(), self.character:getZ(), soundRadius, volume)
     end
 end
@@ -155,6 +171,15 @@ end
 
 function PlayArcadeTimedAction:perform()
     stopSound(self)
+    -- "End" sound only on a real, full completion -- not on stop() (walking
+    -- away mid-session), matching the "game over" feel of the old mod's
+    -- sound pair rather than playing a finishing jingle for a game you
+    -- never actually finished.
+    local sounds = MACHINE_SOUNDS[self.machineType] or MACHINE_SOUNDS.ArcadeMachine1
+    if sounds.finish then
+        self.character:getEmitter():playSound(sounds.finish)
+        dbg("Playing finish sound: " .. sounds.finish)
+    end
     sendClientCommand(self.character, "PlayArcadeMachines", "StopPlaying", {})
     ISBaseTimedAction.perform(self)
 end
