@@ -9,7 +9,7 @@
 	<m_Conditions>
 		<m_Name>PerformingAction</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>PlayArcadian</m_StringValue>
+		<m_Value>PlayArcadian</m_Value>
 	</m_Conditions>
 
 	<m_SubStateBoneWeights>

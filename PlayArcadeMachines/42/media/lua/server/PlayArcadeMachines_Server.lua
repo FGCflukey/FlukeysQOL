@@ -8,7 +8,7 @@
 -- Never trusts a client-reported amount, only a client-reported "I'm at
 -- this machine" claim, which gets re-checked every pass.
 
-local DEBUG = false
+local DEBUG = true
 local function dbg(msg)
     if DEBUG then
         print("[PlayArcadeMachines:Server] " .. tostring(msg))
@@ -100,9 +100,20 @@ Events.OnTick.Add(function()
                 -- with the exact same three calls, all commented out.
                 local stats = player:getStats()
                 if stats then
+                    dbg("before: boredom=" .. tostring(stats:get(CharacterStat.BOREDOM))
+                        .. " unhappiness=" .. tostring(stats:get(CharacterStat.UNHAPPINESS))
+                        .. " stress=" .. tostring(stats:get(CharacterStat.STRESS)))
+
                     stats:add(CharacterStat.BOREDOM, -(boredomPct * fraction))
+                    dbg("boredom add ok")
                     stats:add(CharacterStat.UNHAPPINESS, -(unhappinessPct * fraction))
+                    dbg("unhappiness add ok")
                     stats:add(CharacterStat.STRESS, -(stressPct / 100 * fraction))
+                    dbg("stress add ok")
+
+                    dbg("after: boredom=" .. tostring(stats:get(CharacterStat.BOREDOM))
+                        .. " unhappiness=" .. tostring(stats:get(CharacterStat.UNHAPPINESS))
+                        .. " stress=" .. tostring(stats:get(CharacterStat.STRESS)))
                 end
             end)
             if not applied then
