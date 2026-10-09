@@ -4,5 +4,7 @@
         "IGUI_CraftingCategories_Essentials": "Essentials",
         "IGUI_CraftingCategories_Currency": "Currency",
         "IGUI_ItemCat_Currency": "Currency",
-        "IGUI_EER_RebuildEngine": "Rebuild Engine"
+        "IGUI_EER_RebuildEngine": "Rebuild Engine",
+        "IGUI_RefillBlowTorch_AlreadyFull": "This torch is already full.",
+        "IGUI_RefillBlowTorch_TankEmpty": "This propane tank is empty."
 }

@@ -234,6 +234,32 @@ module Base
         Tags = base:hasmetal;base:smeltablesteellarge,
     }
 
+    /*  Overrides vanilla's own RefillBlowTorch (same name = replaces it).
+        Vanilla's version gates on flags[NotFull;ItemCount] / [NotEmpty;ItemCount],
+        which has a confirmed 42.20 engine bug: a torch at exactly 0 charge isn't
+        recognized as valid input unless a 2nd empty torch is also present. Dropping
+        those flags sidesteps the bug entirely -- RefillBlowTorch_Server.lua decides
+        in Lua whether there's anything to do, instead of trusting the buggy native
+        item-count check. Real transfer amounts (vanilla's own OnCreate is a pure
+        Java function with no documented ratio anywhere) are computed from this
+        pack's own UseDelta overrides above, see RefillBlowTorch_Server.lua. */
+    craftRecipe RefillBlowTorch
+    {
+        timedAction     = Welding,
+        time            = 50,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        OnCreate        = RefillBlowTorch_OnCreate,
+        inputs
+        {
+            item 1 [Base.BlowTorch] mode:keep,
+            item 1 [Base.PropaneTank] mode:keep,
+        }
+        outputs
+        {
+        }
+    }
+
     item CanteenMilitary
     {
         DisplayCategory = WaterContainer,
