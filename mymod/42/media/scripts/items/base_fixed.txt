@@ -235,14 +235,18 @@ module Base
     }
 
     /*  Overrides vanilla's own RefillBlowTorch (same name = replaces it).
-        DIAGNOSTIC STEP (2026-10-09): dropping NotFull/NotEmpty/ItemCount entirely
-        made the option disappear even for a torch that still has some charge --
-        meaning those flags aren't just gating, the engine needs them to recognize
-        a partially-drained item as valid input at all. Restored verbatim from
-        vanilla for now to isolate that from the OTHER change (mode:keep + empty
-        outputs instead of destroy/create) -- still testing whether THAT shape
-        correctly fires OnCreate at all. The known 42.20 bug (an EXACTLY-empty
-        torch needs a 2nd empty one present) is still unresolved pending this. */
+        CONFIRMED (2026-10-09): a recipe with nothing destroyed and nothing
+        created (mode:keep both sides, empty outputs) is never offered as a
+        craftable option at all -- tested with flags both removed AND restored
+        verbatim from vanilla, neither mattered. The engine requires something
+        destroyed/created for the option to appear in the first place. Reverted
+        to vanilla's exact destroy/output structure for the torch -- only
+        OnCreate's actual logic is ours now (RefillBlowTorch_Server.lua), which
+        uses a flat per-refill propane cost rather than trying to read the OLD
+        torch's charge level (impossible once mode:destroy has already consumed
+        it by the time OnCreate runs). The known 42.20 engine bug (an
+        EXACTLY-empty torch needs a 2nd empty one present to be recognized at
+        all) is still open -- this fixes the propane math, not that bug. */
     craftRecipe RefillBlowTorch
     {
         timedAction     = Welding,
@@ -252,11 +256,12 @@ module Base
         OnCreate        = RefillBlowTorch_OnCreate,
         inputs
         {
-            item 1 [Base.BlowTorch] mode:keep flags[NotFull;ItemCount],
+            item 1 [Base.BlowTorch] mode:destroy flags[NotFull;ItemCount],
             item 1 [Base.PropaneTank] mode:keep flags[NotEmpty;ItemCount],
         }
         outputs
         {
+            item 1 Base.BlowTorch,
         }
     }
 
