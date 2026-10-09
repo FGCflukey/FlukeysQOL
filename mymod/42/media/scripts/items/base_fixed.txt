@@ -234,19 +234,20 @@ module Base
         Tags = base:hasmetal;base:smeltablesteellarge,
     }
 
-    /*  DIAGNOSTIC RENAME (2026-10-09): temporarily named RefillBlowTorch_Flukey
-        instead of RefillBlowTorch to test whether reusing vanilla's exact
-        recipe name is what's hiding the option from the context menu entirely
-        -- structure here is byte-for-byte identical to vanilla's own working
-        recipe (recipes_metalWelding.txt) except the OnCreate target, and still
-        didn't appear under the original name even after two separate flag
-        tests ruled flags out. No other craftRecipe in this whole pack has ever
-        reused a vanilla recipe's exact name (checked), only items -- this
-        isolates whether that's actually supported the same way for recipes.
-        Once confirmed, rename back to RefillBlowTorch to actually replace
-        vanilla's version (this rename-only test will show vanilla's broken
-        recipe AND this one side by side if it works). */
-    craftRecipe RefillBlowTorch_Flukey
+    /*  Replaces vanilla's own RefillBlowTorch (OnCreate =
+        RecipeCodeOnCreate.refillBlowTorch, pure Java, no documented transfer
+        ratio, confirmed 42.20 engine bug in its NotFull/NotEmpty;ItemCount
+        flags). CONFIRMED (2026-10-09): reusing vanilla's exact recipe name
+        does NOT override it -- it silently breaks registration of BOTH
+        (neither showed in testing, no parse error logged either). A unique
+        name registers cleanly alongside vanilla's untouched original, so
+        this keeps its own name (RefillBlowTorch_QOL) and vanilla's duplicate
+        "Refill Welding Torch" entry is stripped from the context menu client-
+        side instead (see HideVanillaRefillBlowTorch_Context.lua). Display
+        text intentionally reused from vanilla's own Recipes.json entry --
+        with the duplicate hidden there's no ambiguity, and it's the name
+        players already know. OnCreate logic: RefillBlowTorch_Server.lua. */
+    craftRecipe RefillBlowTorch_QOL
     {
         timedAction     = Welding,
         time            = 50,
