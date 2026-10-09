@@ -235,14 +235,14 @@ module Base
     }
 
     /*  Overrides vanilla's own RefillBlowTorch (same name = replaces it).
-        Vanilla's version gates on flags[NotFull;ItemCount] / [NotEmpty;ItemCount],
-        which has a confirmed 42.20 engine bug: a torch at exactly 0 charge isn't
-        recognized as valid input unless a 2nd empty torch is also present. Dropping
-        those flags sidesteps the bug entirely -- RefillBlowTorch_Server.lua decides
-        in Lua whether there's anything to do, instead of trusting the buggy native
-        item-count check. Real transfer amounts (vanilla's own OnCreate is a pure
-        Java function with no documented ratio anywhere) are computed from this
-        pack's own UseDelta overrides above, see RefillBlowTorch_Server.lua. */
+        DIAGNOSTIC STEP (2026-10-09): dropping NotFull/NotEmpty/ItemCount entirely
+        made the option disappear even for a torch that still has some charge --
+        meaning those flags aren't just gating, the engine needs them to recognize
+        a partially-drained item as valid input at all. Restored verbatim from
+        vanilla for now to isolate that from the OTHER change (mode:keep + empty
+        outputs instead of destroy/create) -- still testing whether THAT shape
+        correctly fires OnCreate at all. The known 42.20 bug (an EXACTLY-empty
+        torch needs a 2nd empty one present) is still unresolved pending this. */
     craftRecipe RefillBlowTorch
     {
         timedAction     = Welding,
@@ -252,8 +252,8 @@ module Base
         OnCreate        = RefillBlowTorch_OnCreate,
         inputs
         {
-            item 1 [Base.BlowTorch] mode:keep,
-            item 1 [Base.PropaneTank] mode:keep,
+            item 1 [Base.BlowTorch] mode:keep flags[NotFull;ItemCount],
+            item 1 [Base.PropaneTank] mode:keep flags[NotEmpty;ItemCount],
         }
         outputs
         {
