@@ -7,11 +7,16 @@
 -- all, regardless of flags -- that ruled out the mode:keep/empty-outputs version tried
 -- first).
 --
+-- CONFIRMED (2026-10-09): a craftRecipe's OnCreate first argument is craftRecipeData,
+-- NOT the produced item -- same as every other OnCreate already proven working in this
+-- pack (GiveBack_CarSeatStuff etc. in VehiclePart_Recycle.lua all ignore it and just
+-- use `character`). The earlier (item, player) version called item:getMaxUses() on that
+-- craftRecipeData object, which silently failed and skipped the rest of the function --
+-- the torch still came out full because the recipe's own output item is full by default
+-- regardless of OnCreate, which is why only the propane deduction looked broken.
+--
 -- Math: a FULL tank fully refills TORCHES_PER_FULL_TANK completely-empty torches, flat
--- cost per refill (not proportional to the old torch's charge) -- the recipe's own
--- NotFull flag already means "offered" implies "meaningfully not full", and the OLD
--- torch's exact charge is gone by the time OnCreate runs anyway (mode:destroy already
--- consumed it). Cost is read live off both items' real getMaxUses(), not a hardcoded
+-- cost per refill. Cost is read live off the tank's real getMaxUses(), not a hardcoded
 -- number, so this stays correct if UseDelta is ever changed again.
 
 if isClient() then return end
@@ -25,32 +30,10 @@ end
 
 local TORCHES_PER_FULL_TANK = 10
 
-local function findFirstOfType(inv, fullType)
-    local items = inv:getItems()
-    for i = 0, items:size() - 1 do
-        local it = items:get(i)
-        if it:getFullType() == fullType then
-            return it
-        end
-    end
-    return nil
-end
+function RefillBlowTorch_OnCreate(_craftRecipeData, character)
+    if not character then return end
 
-function RefillBlowTorch_OnCreate(item, player)
-    if not player or not item then return end
-
-    -- `item` is the freshly-created output torch (vanilla's own recipe shape:
-    -- the depleted one is destroyed, a new one takes its place). Make sure it's
-    -- actually full -- a freshly crafted drainable's default charge isn't
-    -- something we've independently verified, so set it explicitly rather than
-    -- assume.
-    local torchMax = item:getMaxUses()
-    if torchMax and torchMax > 0 then
-        item:setCurrentUses(torchMax)
-        item:syncItemFields()
-    end
-
-    local tank = findFirstOfType(player:getInventory(), "Base.PropaneTank")
+    local tank = character:getInventory():getFirstTypeRecurse("Base.PropaneTank")
     if not tank then
         dbg("no propane tank found to charge")
         return
@@ -65,7 +48,7 @@ function RefillBlowTorch_OnCreate(item, player)
     if tankCur <= 0 then
         -- Shouldn't normally happen (NotEmpty already gates this), kept as a
         -- defensive backstop.
-        player:Say(getText("IGUI_RefillBlowTorch_TankEmpty"))
+        character:Say(getText("IGUI_RefillBlowTorch_TankEmpty"))
         return
     end
 
