@@ -234,20 +234,19 @@ module Base
         Tags = base:hasmetal;base:smeltablesteellarge,
     }
 
-    /*  Overrides vanilla's own RefillBlowTorch (same name = replaces it).
-        CONFIRMED (2026-10-09): a recipe with nothing destroyed and nothing
-        created (mode:keep both sides, empty outputs) is never offered as a
-        craftable option at all -- tested with flags both removed AND restored
-        verbatim from vanilla, neither mattered. The engine requires something
-        destroyed/created for the option to appear in the first place. Reverted
-        to vanilla's exact destroy/output structure for the torch -- only
-        OnCreate's actual logic is ours now (RefillBlowTorch_Server.lua), which
-        uses a flat per-refill propane cost rather than trying to read the OLD
-        torch's charge level (impossible once mode:destroy has already consumed
-        it by the time OnCreate runs). The known 42.20 engine bug (an
-        EXACTLY-empty torch needs a 2nd empty one present to be recognized at
-        all) is still open -- this fixes the propane math, not that bug. */
-    craftRecipe RefillBlowTorch
+    /*  DIAGNOSTIC RENAME (2026-10-09): temporarily named RefillBlowTorch_Flukey
+        instead of RefillBlowTorch to test whether reusing vanilla's exact
+        recipe name is what's hiding the option from the context menu entirely
+        -- structure here is byte-for-byte identical to vanilla's own working
+        recipe (recipes_metalWelding.txt) except the OnCreate target, and still
+        didn't appear under the original name even after two separate flag
+        tests ruled flags out. No other craftRecipe in this whole pack has ever
+        reused a vanilla recipe's exact name (checked), only items -- this
+        isolates whether that's actually supported the same way for recipes.
+        Once confirmed, rename back to RefillBlowTorch to actually replace
+        vanilla's version (this rename-only test will show vanilla's broken
+        recipe AND this one side by side if it works). */
+    craftRecipe RefillBlowTorch_Flukey
     {
         timedAction     = Welding,
         time            = 50,
