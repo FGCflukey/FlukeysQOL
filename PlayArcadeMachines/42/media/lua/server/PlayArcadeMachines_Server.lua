@@ -8,7 +8,7 @@
 -- Never trusts a client-reported amount, only a client-reported "I'm at
 -- this machine" claim, which gets re-checked every pass.
 
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg)
     if DEBUG then
         print("[PlayArcadeMachines:Server] " .. tostring(msg))

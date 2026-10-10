@@ -34,7 +34,7 @@ if isClient() then return end
 -- report. Logs every state transition (created/removed/why) plus a
 -- periodic heartbeat. Safe to remove once confirmed stable with the
 -- isClient() guard now in place.
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg) if DEBUG then print("[HomeHeat:HeatSourceServer] " .. tostring(msg)) end end
 
 local knownRadiators = {} -- key "x,y,z" -> { isoObject = ..., heatsrc = nil }
