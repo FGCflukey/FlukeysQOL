@@ -10,7 +10,7 @@ module MPBS
         DisplayName     = Personal Bank Safe,
         ItemType        = base:normal,
         Weight          = 20,
-        Icon            = Item_PersonalBankSafe,
+        Icon            = PersonalBankSafe,
         Tags            = base:hasmetal,
     }
 }
