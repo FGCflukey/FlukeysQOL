@@ -12,8 +12,16 @@
 local VANILLA_RECIPE_NAME = "RefillBlowTorch"
 
 local function isVanillaRefillOption(opt)
-    local ok, name = pcall(function() return opt.param1:getName() end)
-    return ok and name == VANILLA_RECIPE_NAME
+    -- Most context menu options (Equip, Drop, anything from a container like
+    -- a cooler, etc.) have param1 == nil -- indexing nil for a method call
+    -- throws in Kahlua, and PZ logs a full error dump for every pcall catch
+    -- even though it doesn't crash. CONFIRMED (2026-10-10): this was spamming
+    -- another player's client log on every single right-click in the game,
+    -- not just the torch's. Checking the type first avoids the error
+    -- entirely instead of catching it after the fact.
+    local recipe = opt.param1
+    if type(recipe) ~= "table" or not recipe.getName then return false end
+    return recipe:getName() == VANILLA_RECIPE_NAME
 end
 
 local function stripVanillaOption(ctx)
