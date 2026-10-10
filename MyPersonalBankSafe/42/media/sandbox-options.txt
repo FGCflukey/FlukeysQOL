@@ -2,7 +2,7 @@ VERSION = 1,
 
 option MPBS.CapacityKg
 {
-    type = choice, numValues = 6, default = 2,
+    type = enum, numValues = 6, default = 2,
     page = MPBS, translation = MPBS_CapacityKg,
 }
 
