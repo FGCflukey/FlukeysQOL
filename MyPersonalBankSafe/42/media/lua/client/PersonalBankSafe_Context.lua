@@ -43,7 +43,7 @@ local function onDetach(obj, player)
         local sq = liftedObj:getSquare()
         if not sq then return end
         sendClientCommand(character, MODULE, "Detach", { x = sq:getX(), y = sq:getY(), z = sq:getZ() })
-    end))
+    end, true)) -- withCrowbar
 end
 
 ---------------------------------------------------------
@@ -110,7 +110,7 @@ local function onPickUp(obj, player)
             x = sq:getX(), y = sq:getY(), z = sq:getZ(),
             safeId = safeId,
         })
-    end))
+    end, false)) -- no crowbar needed, it's just your own box
 end
 
 local function onReset(obj, player)
