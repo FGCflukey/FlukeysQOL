@@ -17,11 +17,19 @@ local function isVanillaRefillOption(opt)
     -- throws in Kahlua, and PZ logs a full error dump for every pcall catch
     -- even though it doesn't crash. CONFIRMED (2026-10-10): this was spamming
     -- another player's client log on every single right-click in the game,
-    -- not just the torch's. Checking the type first avoids the error
-    -- entirely instead of catching it after the fact.
+    -- not just the torch's -- the nil check below fixes that.
+    --
+    -- CONFIRMED (2026-10-10), 2nd pass: a real CraftRecipe proxy is NOT Lua
+    -- type "table" in this engine -- gating on `type(recipe) == "table"`
+    -- rejected the genuine recipe match too, so vanilla's duplicate stopped
+    -- being removed (both showed). Only guard against nil (the actual,
+    -- overwhelming source of the spam); pcall stays as a backstop for any
+    -- other non-nil param1 shape elsewhere in the game that still lacks
+    -- :getName(), which should be rare rather than "every option".
     local recipe = opt.param1
-    if type(recipe) ~= "table" or not recipe.getName then return false end
-    return recipe:getName() == VANILLA_RECIPE_NAME
+    if recipe == nil then return false end
+    local ok, name = pcall(recipe.getName, recipe)
+    return ok and name == VANILLA_RECIPE_NAME
 end
 
 local function stripVanillaOption(ctx)
