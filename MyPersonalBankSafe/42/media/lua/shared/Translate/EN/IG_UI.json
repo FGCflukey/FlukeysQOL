@@ -1,0 +1,16 @@
+{
+    "IGUI_MPBS_DetachOption": "Detach Safe from Floor",
+    "IGUI_MPBS_PlaceOption": "Place Personal Bank Safe",
+    "IGUI_MPBS_FaceNorth": "Face North",
+    "IGUI_MPBS_FaceEast": "Face East",
+    "IGUI_MPBS_FaceSouth": "Face South",
+    "IGUI_MPBS_FaceWest": "Face West",
+    "IGUI_MPBS_PickUpOption": "Pick Up Safe",
+    "IGUI_MPBS_ResetOption": "Reset to Vanilla",
+    "IGUI_MPBS_NotOwner": "This safe belongs to another player.",
+    "IGUI_MPBS_NotEmpty": "Empty the safe first.",
+    "IGUI_MPBS_NeedCrowbar": "You need a crowbar to do this.",
+    "IGUI_MPBS_Limit": "You've reached your personal safe limit.",
+    "IGUI_MPBS_Occupied": "There's no room to place a safe here.",
+    "IGUI_MPBS_SafeName": "Personal Safe #%1"
+}

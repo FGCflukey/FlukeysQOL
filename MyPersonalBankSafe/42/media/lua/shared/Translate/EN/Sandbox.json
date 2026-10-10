@@ -1,0 +1,11 @@
+{
+    "Sandbox_MPBS": "My Personal Bank Safe",
+    "Sandbox_MPBS_CapacityKg": "Storage capacity of a placed personal bank safe.",
+    "Sandbox_MPBS_CapacityKg_option1": "50 kg",
+    "Sandbox_MPBS_CapacityKg_option2": "100 kg",
+    "Sandbox_MPBS_CapacityKg_option3": "200 kg",
+    "Sandbox_MPBS_CapacityKg_option4": "300 kg",
+    "Sandbox_MPBS_CapacityKg_option5": "400 kg",
+    "Sandbox_MPBS_CapacityKg_option6": "500 kg",
+    "Sandbox_MPBS_MaxSafesPerPlayer": "Maximum number of personal bank safes one player may have placed at once."
+}

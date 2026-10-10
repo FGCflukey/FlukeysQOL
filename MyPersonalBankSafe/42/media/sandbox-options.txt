@@ -1,0 +1,13 @@
+VERSION = 1,
+
+option MPBS.CapacityKg
+{
+    type = choice, numValues = 6, default = 2,
+    page = MPBS, translation = MPBS_CapacityKg,
+}
+
+option MPBS.MaxSafesPerPlayer
+{
+    type = integer, min = 1, max = 10, default = 3,
+    page = MPBS, translation = MPBS_MaxSafesPerPlayer,
+}

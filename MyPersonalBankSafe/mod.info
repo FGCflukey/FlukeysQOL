@@ -1,0 +1,9 @@
+name=My Personal Bank Safe
+description=Pry a decorative bank vault off the floor with a crowbar, carry it home, and place it as your own lockable personal safe. Only you can open it -- everyone else sees it exactly like vanilla's inert bank safe. Standalone, no dependencies.
+id=MyPersonalBankSafe
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.21
+versionMin=42.19
+poster=poster.png
+icon=LogoFGC.png

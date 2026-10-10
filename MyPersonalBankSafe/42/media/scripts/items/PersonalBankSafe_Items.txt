@@ -1,0 +1,16 @@
+module MPBS
+{
+    /*  The carried, detached safe. Plain base:normal rather than base:moveable --
+        the real placed object is built from scratch server-side (IsoThumpable +
+        ItemContainer, same technique proven by the PersonalSafe Workshop mod), so
+        this item never goes through vanilla's native moveable placement pipeline. */
+    item PersonalBankSafe
+    {
+        DisplayCategory = Container,
+        DisplayName     = Personal Bank Safe,
+        ItemType        = base:normal,
+        Weight          = 20,
+        Icon            = Item_PersonalBankSafe,
+        Tags            = base:hasmetal,
+    }
+}
