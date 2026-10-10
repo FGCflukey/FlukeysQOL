@@ -39,9 +39,11 @@ end
 -- 1. Detach: vanilla decorative safe -> carried item
 ---------------------------------------------------------
 local function onDetach(obj, player)
-    local sq = obj:getSquare()
-    if not sq then return end
-    sendClientCommand(player, MODULE, "Detach", { x = sq:getX(), y = sq:getY(), z = sq:getZ() })
+    ISTimedActionQueue.add(ISMPBSHeavyLiftAction:new(player, obj, function(character, liftedObj)
+        local sq = liftedObj:getSquare()
+        if not sq then return end
+        sendClientCommand(character, MODULE, "Detach", { x = sq:getX(), y = sq:getY(), z = sq:getZ() })
+    end))
 end
 
 ---------------------------------------------------------
@@ -100,12 +102,15 @@ local function addDisabled(context, text)
 end
 
 local function onPickUp(obj, player)
-    local sq = obj:getSquare()
-    if not sq then return end
-    sendClientCommand(player, MODULE, "PickUp", {
-        x = sq:getX(), y = sq:getY(), z = sq:getZ(),
-        safeId = obj:getModData().MPBS_safeId,
-    })
+    local safeId = obj:getModData().MPBS_safeId
+    ISTimedActionQueue.add(ISMPBSHeavyLiftAction:new(player, obj, function(character, liftedObj)
+        local sq = liftedObj:getSquare()
+        if not sq then return end
+        sendClientCommand(character, MODULE, "PickUp", {
+            x = sq:getX(), y = sq:getY(), z = sq:getZ(),
+            safeId = safeId,
+        })
+    end))
 end
 
 local function onReset(obj, player)

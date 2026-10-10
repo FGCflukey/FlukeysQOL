@@ -12,5 +12,6 @@
     "IGUI_MPBS_NeedCrowbar": "You need a crowbar to do this.",
     "IGUI_MPBS_Limit": "You've reached your personal safe limit.",
     "IGUI_MPBS_Occupied": "There's no room to place a safe here.",
-    "IGUI_MPBS_SafeName": "Personal Safe #%1"
+    "IGUI_MPBS_SafeName": "Personal Safe #%1",
+    "IGUI_MPBS_DetachHeavy": "Umph... this is heavy!"
 }

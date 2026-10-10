@@ -106,6 +106,10 @@ local function removeOneItem(player, fullType)
         local it = items:get(i)
         if it:getFullType() == fullType then
             inv:Remove(it)
+            -- Removing server-side alone never tells the owning client -- the item
+            -- just sits there visually even though the server already consumed it
+            -- (same bug class already fixed throughout this pack, e.g. ATM_Server.lua).
+            sendRemoveItemFromContainer(inv, it)
             return true
         end
     end
