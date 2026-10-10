@@ -218,6 +218,9 @@
     "TraveltoEchocreek": "Travel to Echocreek",
     "TraveltoRiverside": "Travel to Riverside",
 
-    "RefillBlowTorch_QOL": "Refill Welding Torch"
+    "RefillBlowTorch_QOL": "Refill Welding Torch",
+
+    "PlaceOtherBulbsInBox": "Pack 6 Light Bulbs in a box",
+    "UnpackBox6Others": "Open box of Light Bulbs"
 }
 

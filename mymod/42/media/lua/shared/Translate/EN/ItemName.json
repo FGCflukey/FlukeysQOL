@@ -59,6 +59,16 @@
     "Base.HingesBox": "Box of Hinges",
     "Base.FiberglassTapeBox": "Box of Fiberglass Tape",
 
+    "Base.LightBulbBlueBox": "Box of Light Bulbs - Blue",
+    "Base.LightBulbCyanBox": "Box of Light Bulbs - Cyan",
+    "Base.LightBulbGreenBox": "Box of Light Bulbs - Green",
+    "Base.LightBulbMagentaBox": "Box of Light Bulbs - Magenta",
+    "Base.LightBulbOrangeBox": "Box of Light Bulbs - Orange",
+    "Base.LightBulbPinkBox": "Box of Light Bulbs - Pink",
+    "Base.LightBulbPurpleBox": "Box of Light Bulbs - Purple",
+    "Base.LightBulbRedBox": "Box of Light Bulbs - Red",
+    "Base.LightBulbYellowBox": "Box of Light Bulbs - Yellow",
+
     "Base.TireRepairKit": "FLuKeez - Tire Repair Kit",
     "Base.SuspensionKit": "FLuKeez - Suspension Repair Kit",
     "Base.BrakeKit": "FLuKeez - Brake Repair Kit",

@@ -372,4 +372,162 @@ module Base
             }
         }
 
+    item LightBulbBlueBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    item LightBulbCyanBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    item LightBulbGreenBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    item LightBulbMagentaBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    item LightBulbOrangeBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    item LightBulbPinkBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    item LightBulbPurpleBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    item LightBulbRedBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    item LightBulbYellowBox
+    {
+        DisplayCategory = Electronics,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = Parcel_ExtraSmall_Food,
+        WorldStaticModel = Parcel_Food_ExtraSmall,
+        Tags = base:hasmetal;base:ignorezombiedensity,
+        DoubleClickRecipe = UnpackBox6Others,
+    }
+
+    craftRecipe PlaceOtherBulbsInBox
+    {
+        timedAction = PackingBox_Small,
+        time        = 25,
+        OnTest      = RecipeCodeOnTest.genericPacking,
+        OnCreate    = RecipeCodeOnCreate.placeInBox,
+        Tags        = InHandCraft;Packing,
+        category    = Packing,
+        inputs
+        {
+            item 6 [Base.LightBulbBlue;Base.LightBulbCyan;Base.LightBulbGreen;Base.LightBulbMagenta;Base.LightBulbOrange;Base.LightBulbPink;Base.LightBulbPurple;Base.LightBulbRed;Base.LightBulbYellow] mappers[itemType] flags[AllowFavorite;InheritFavorite;IsExclusive;ItemCount],
+        }
+        outputs
+        {
+            item 1 mapper:itemType,
+        }
+        itemMapper itemType
+        {
+            Base.LightBulbBlueBox = Base.LightBulbBlue,
+            Base.LightBulbCyanBox = Base.LightBulbCyan,
+            Base.LightBulbGreenBox = Base.LightBulbGreen,
+            Base.LightBulbMagentaBox = Base.LightBulbMagenta,
+            Base.LightBulbOrangeBox = Base.LightBulbOrange,
+            Base.LightBulbPinkBox = Base.LightBulbPink,
+            Base.LightBulbPurpleBox = Base.LightBulbPurple,
+            Base.LightBulbRedBox = Base.LightBulbRed,
+            Base.LightBulbYellowBox = Base.LightBulbYellow,
+        }
+    }
+
+    craftRecipe UnpackBox6Others
+    {
+        timedAction = UnPackBox,
+        time        = 5,
+        OnCreate    = RecipeCodeOnCreate.unpackBox,
+        Tags        = InHandCraft;Packing;CanBeDoneInDark,
+        category    = Packing,
+        inputs
+        {
+            item 1 [Base.LightBulbBlueBox;Base.LightBulbCyanBox;Base.LightBulbGreenBox;Base.LightBulbMagentaBox;Base.LightBulbOrangeBox;Base.LightBulbPinkBox;Base.LightBulbPurpleBox;Base.LightBulbRedBox;Base.LightBulbYellowBox] mappers[itemType] flags[AllowFavorite;InheritFavorite],
+        }
+        outputs
+        {
+            item 6 mapper:itemType,
+        }
+        itemMapper itemType
+        {
+            Base.LightBulbBlue = Base.LightBulbBlueBox,
+            Base.LightBulbCyan = Base.LightBulbCyanBox,
+            Base.LightBulbGreen = Base.LightBulbGreenBox,
+            Base.LightBulbMagenta = Base.LightBulbMagentaBox,
+            Base.LightBulbOrange = Base.LightBulbOrangeBox,
+            Base.LightBulbPink = Base.LightBulbPinkBox,
+            Base.LightBulbPurple = Base.LightBulbPurpleBox,
+            Base.LightBulbRed = Base.LightBulbRedBox,
+            Base.LightBulbYellow = Base.LightBulbYellowBox,
+        }
+    }
+
 }
