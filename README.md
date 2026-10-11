@@ -17,6 +17,9 @@ List of current things this mod does...
 ### Overrides & Tweaks
 
 - Overrides UseDelta on BlowTorches and Propane Tanks because it just makes more sense!
+- Replaces vanilla's own Welding Torch refill recipe with a proper one -- a full Propane
+  Tank now refills exactly 10 completely empty torches, instead of vanilla's own
+  undocumented (and buggy) ratio
 - Overrides Canteens to hold more water, from 500ml to 1 Litre
 - Added Faster Car Hood/engine access, overrides default annoying slowness
 - Added Re-fuelling BlowTorch and Propane Tank at Gas Pumps -- requires power at the pump
@@ -37,7 +40,7 @@ List of current things this mod does...
 - Added Vehicle Recycling and Parts making, from earlier 42 builds I did.
 - Added Automaker - build a real, drivable vehicle from scratch. Read the magazines, gather the metal/
   electrical materials, meet the skill and recipe requirements, and build any installed vehicle mod's
-  cars too, not just vanilla ones
+  cars too, not just vanilla ones. (Currently disabled while trialing a Workshop alternative.)
 - Added TowFromVehicle - attach/detach a trailer from inside the towing vehicle
 - Added Vehicle Glass crafting - windshields and windows (front/rear) in Standard, Heavy Duty and Sport
   tiers, plus a quick-and-dirty glass pane option
@@ -54,6 +57,8 @@ List of current things this mod does...
   can pack/unpack just like vanilla's skill book sets
 - Added 10-pack boxing/unboxing for Engine Parts, Electronics Scrap, Electric Wire, Syringes, Test Tubes,
   Hinges, Doorknobs, Nuts & Bolts and Fiberglass Tape, plus unpacking pre-boxed Alcohol Wipes
+- Added 6-pack boxing/unboxing for all 9 colours of Light Bulb, matching vanilla's own box for the
+  plain white ones
 - Added full metal-recycling chains - turn Unusable Metal, Scrap Metal, or Iron/Steel Scrap into Sheet
   Metal, Metal Bars, Metal Pipes, Wire, Nails or Screws, whichever you're actually short on
 - Added Crafting Nail boxes with Sheet Metals and Scrap Metal
