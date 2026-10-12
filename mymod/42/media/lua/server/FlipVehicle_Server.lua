@@ -109,8 +109,21 @@ local function OnClientCommand_FlipVehicle(module, command, player, args)
 
     vehicle:setAngles(0, 0, 0)
     vehicle:setPhysicsActive(true)
-    if vehicle.transmitPosition then vehicle:transmitPosition() end
-    if vehicle.transmitDirection then vehicle:transmitDirection() end
+
+    -- CONFIRMED (2026-10-12 live test): `if vehicle.transmitPosition then ...`
+    -- always evaluated false for a real, already-existing vehicle obtained via
+    -- getVehicleById -- the server-side angle change genuinely happened
+    -- (confirmed via logged before/after angles) but was never synced to any
+    -- client, including the triggering player's own. Likely the same Kahlua
+    -- Java-method-binding quirk already hit elsewhere in this pack (a plain
+    -- existence check doesn't reliably detect a real Java-bound method).
+    -- Calling directly through pcall instead -- fires if the method is real
+    -- regardless of what the existence check claimed, and fails safe if it
+    -- genuinely isn't there.
+    local okPos, errPos = pcall(function() vehicle:transmitPosition() end)
+    local okDir, errDir = pcall(function() vehicle:transmitDirection() end)
+    dbg("transmitPosition ok=" .. tostring(okPos) .. (okPos and "" or (" err=" .. tostring(errPos))))
+    dbg("transmitDirection ok=" .. tostring(okDir) .. (okDir and "" or (" err=" .. tostring(errDir))))
 
     dbg(player:getUsername() .. " flipped vehicle " .. tostring(args.vehicleID) .. " upright"
         .. " anglesAfter=" .. tostring(vehicle:getAngleX()) .. "," .. tostring(vehicle:getAngleY()) .. "," .. tostring(vehicle:getAngleZ()))
