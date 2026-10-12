@@ -16,7 +16,10 @@
 local MAX_INTERACT_DISTANCE = 3 -- tiles
 local FLIP_COOLDOWN_SECONDS = 3
 
-local DEBUG = false
+-- DEBUG left on (2026-10-12) to diagnose "nothing happens, no errors either
+-- side" -- flip back to false once confirmed working, per this pack's
+-- standing debug-flag convention.
+local DEBUG = true
 local function dbg(msg)
     if DEBUG then
         print("[FlipVehicle:Server] " .. tostring(msg))
