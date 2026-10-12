@@ -110,3 +110,73 @@ local function installContainerGuards()
 end
 
 Events.OnGameStart.Add(installContainerGuards)
+
+-- ---------------------------------------------------------------------------
+-- 5th fix (2026-10-11): all three guards above only ever address VIEWING the
+-- safe through one more UI path at a time -- a losing, open-ended chase (the
+-- user found a 3rd live leak, drag-and-drop on an already-open panel, right
+-- after the 4th fix). Re-read the subscribed PersonalSafe Workshop mod's own
+-- PersonalSafe_Transfer.lua in full this time, and its own header comment
+-- states the real lesson directly: "even if a foreign safe's contents become
+-- visible through some path we did not intercept, the items still cannot be
+-- moved out (or in)". That's the actual correct security boundary -- block
+-- the TRANSFER ACTION itself, not every possible way of triggering one.
+--
+-- ISInventoryTransferAction is the one real vanilla class every item move
+-- funnels through (drag-and-drop, hotkey quick-move, "take" context option --
+-- all of them), independent of whatever UI initiated it. Blocking it here
+-- means viewing exposure we haven't found yet (and may never fully close --
+-- vanilla has many container-display paths) stops mattering: contents can be
+-- SEEN through a gap, but never actually TAKEN or PLANTED.
+--
+-- ISEquipHeavyItem is the separate action vanilla uses for grabbing heavy
+-- items (generators etc.) straight into hands, which does NOT go through
+-- ISInventoryTransferAction -- blocked separately for completeness, matching
+-- PersonalSafe's own reasoning, even though money/small items are the
+-- primary concern here.
+-- ---------------------------------------------------------------------------
+local function isForeignSafeContainer(cont, character)
+    if not cont or not cont.getType then return false end
+    local ok, res = pcall(function()
+        if cont:getType() ~= "personalbanksafe" then return false end
+        local obj = cont.getParent and cont:getParent() or nil
+        if not obj or not Util.isSafe(obj) then return false end
+        return not Util.isOwner(obj, character)
+    end)
+    return ok and res == true
+end
+
+local function installTransferGuard()
+    if MPBS.transferGuardInstalled then return end
+
+    if ISInventoryTransferAction and not ISInventoryTransferAction._mpbsTransferGuard then
+        ISInventoryTransferAction._mpbsTransferGuard = true
+        local origIsValid = ISInventoryTransferAction.isValid
+        function ISInventoryTransferAction:isValid()
+            if isForeignSafeContainer(self.srcContainer, self.character)
+                or isForeignSafeContainer(self.destContainer, self.character) then
+                return false
+            end
+            return origIsValid(self)
+        end
+    end
+
+    if ISEquipHeavyItem and not ISEquipHeavyItem._mpbsHeavyGuard then
+        ISEquipHeavyItem._mpbsHeavyGuard = true
+        local origHeavy = ISEquipHeavyItem.isValid
+        if origHeavy then
+            function ISEquipHeavyItem:isValid()
+                local item = self.item
+                local cont = item and item.getContainer and item:getContainer() or nil
+                if isForeignSafeContainer(cont, self.character) then
+                    return false
+                end
+                return origHeavy(self)
+            end
+        end
+    end
+
+    MPBS.transferGuardInstalled = true
+end
+
+Events.OnGameStart.Add(installTransferGuard)
