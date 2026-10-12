@@ -13,5 +13,6 @@
     "IGUI_MPBS_Limit": "You've reached your personal safe limit.",
     "IGUI_MPBS_Occupied": "There's no room to place a safe here.",
     "IGUI_MPBS_SafeName": "Personal Safe #%1",
-    "IGUI_MPBS_DetachHeavy": "Umph... this is heavy!"
+    "IGUI_MPBS_DetachHeavy": "Umph... this is heavy!",
+    "IGUI_MPBS_ClickNotOwner": "This safe belongs to another player."
 }
