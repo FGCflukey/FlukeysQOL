@@ -37,6 +37,14 @@ local function isVehicleFlipped(vehicle)
         dbg("isVehicleFlipped: no script")
         return false
     end
+    -- Burnt/destroyed wrecks are decorative, not physics-active vehicles --
+    -- forcing setPhysicsActive(true)/setAngles on one produces a broken,
+    -- floating result (confirmed live 2026-10-12). Same real check vanilla
+    -- itself uses to detect a burnt wreck (ISVehicleMenu.lua:867).
+    if string.match(script:getName() or "", "Burnt") then
+        dbg("isVehicleFlipped: vehicle is a burnt wreck, excluded")
+        return false
+    end
     local shape = script:getPhysicsChassisShape()
     if not shape then
         dbg("isVehicleFlipped: no physics chassis shape")

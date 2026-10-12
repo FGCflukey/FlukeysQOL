@@ -52,6 +52,11 @@ local function isVehicleFlipped(vehicle)
     if not vehicle or not vehicle:isStopped() then return false end
     local script = vehicle:getScript()
     if not script then return false end
+    -- Burnt/destroyed wrecks are decorative, not physics-active vehicles --
+    -- forcing setPhysicsActive(true)/setAngles on one produces a broken,
+    -- floating result (confirmed live 2026-10-12). Same real check vanilla
+    -- itself uses to detect a burnt wreck (ISVehicleMenu.lua:867).
+    if string.match(script:getName() or "", "Burnt") then return false end
     local shape = script:getPhysicsChassisShape()
     if not shape then return false end
     local shapeY = shape:y()
@@ -80,6 +85,16 @@ local function OnClientCommand_FlipVehicle(module, command, player, args)
         return
     end
 
+    -- Diagnostic (2026-10-12): server reported success but nothing visibly
+    -- changed for a prior test vehicle -- dump everything that could explain
+    -- a "ran fine, synced nothing" outcome before guessing further.
+    local script = vehicle:getScript()
+    dbg("vehicle " .. tostring(args.vehicleID) .. " script=" .. tostring(script and script:getName())
+        .. " removedFromWorld=" .. tostring(vehicle:isRemovedFromWorld())
+        .. " hasTransmitPosition=" .. tostring(vehicle.transmitPosition ~= nil)
+        .. " hasTransmitDirection=" .. tostring(vehicle.transmitDirection ~= nil)
+        .. " anglesBefore=" .. tostring(vehicle:getAngleX()) .. "," .. tostring(vehicle:getAngleY()) .. "," .. tostring(vehicle:getAngleZ()))
+
     if GetDistanceToVehicle(player, vehicle) > MAX_INTERACT_DISTANCE then
         dbg(player:getUsername() .. " rejected: too far from vehicle " .. tostring(args.vehicleID))
         return
@@ -97,7 +112,8 @@ local function OnClientCommand_FlipVehicle(module, command, player, args)
     if vehicle.transmitPosition then vehicle:transmitPosition() end
     if vehicle.transmitDirection then vehicle:transmitDirection() end
 
-    dbg(player:getUsername() .. " flipped vehicle " .. tostring(args.vehicleID) .. " upright")
+    dbg(player:getUsername() .. " flipped vehicle " .. tostring(args.vehicleID) .. " upright"
+        .. " anglesAfter=" .. tostring(vehicle:getAngleX()) .. "," .. tostring(vehicle:getAngleY()) .. "," .. tostring(vehicle:getAngleZ()))
 end
 
 Events.OnClientCommand.Add(OnClientCommand_FlipVehicle)
