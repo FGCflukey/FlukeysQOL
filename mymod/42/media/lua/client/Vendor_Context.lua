@@ -39,7 +39,7 @@ local function OnFillWorldObjectContextMenu_Vendor(playerNum, context, worldobje
     if not vendor then return end
 
     context:addOption("Emergency Vendor", worldobjects, function()
-        VendorUI.open(player)
+        VendorUI.open(player, vendor)
     end)
 end
 

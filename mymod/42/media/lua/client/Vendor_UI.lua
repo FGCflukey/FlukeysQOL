@@ -504,9 +504,10 @@ function VendorWindow:close()
     self:removeFromUIManager()
 end
 
-function VendorWindow:new(x, y, width, height, player)
+function VendorWindow:new(x, y, width, height, player, vendor)
     local o = ISCollapsableWindow.new(self, x, y, width, height)
     o.player = player
+    o.vendorSquare = vendor and vendor:getSquare() or nil
     o.title = "Emergency Vendor"
     o.resizable = true
     o.resizeWidget = true
@@ -516,7 +517,39 @@ function VendorWindow:new(x, y, width, height, player)
     return o
 end
 
-function VendorUI.open(player)
+-----------------------------------------------------
+-- PROXIMITY CHECK
+-- Closes the window if the player wanders away from the
+-- vendor machine (e.g. backing off from a zombie), so it
+-- doesn't keep blocking the screen while they fight.
+-----------------------------------------------------
+VendorWindow.MAX_DISTANCE = 2
+
+function VendorWindow:update()
+    ISCollapsableWindow.update(self)
+
+    if not self.vendorSquare or not self.player then return end
+    if self.player:isDead() then
+        self:close()
+        return
+    end
+
+    local sq = self.player:getSquare()
+    if not sq or sq:getZ() ~= self.vendorSquare:getZ() then
+        self:close()
+        return
+    end
+
+    local dist = IsoUtils.DistanceTo(
+        self.player:getX(), self.player:getY(),
+        self.vendorSquare:getX() + 0.5, self.vendorSquare:getY() + 0.5
+    )
+    if dist > VendorWindow.MAX_DISTANCE then
+        self:close()
+    end
+end
+
+function VendorUI.open(player, vendor)
     if VendorUI.instance then
         VendorUI.instance:close()
         VendorUI.instance = nil
@@ -528,7 +561,7 @@ function VendorUI.open(player)
     local x = (sw - w) / 2
     local y = (sh - h) / 2
 
-    local window = VendorWindow:new(x, y, w, h, player)
+    local window = VendorWindow:new(x, y, w, h, player, vendor)
     window:initialise()
     window:addToUIManager()
     VendorUI.instance = window
