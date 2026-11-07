@@ -1,6 +1,6 @@
 {
     "Sandbox_WorkingBandsaw": "Working Bandsaw",
-    "Sandbox_WorkingBandsaw_TicksPerLog": "How long it takes to saw one log, in ticks (40 is about 1.5 seconds).",
+    "Sandbox_WorkingBandsaw_SecondsPerLog": "How long it takes to saw one log, in seconds. Each log in a batch is cut one at a time.",
     "Sandbox_WorkingBandsaw_PlanksPerLog": "Planks produced per log sawed.",
     "Sandbox_WorkingBandsaw_SearchRange": "How many tiles out from the bandsaw to search for logs on the ground and in containers."
 }

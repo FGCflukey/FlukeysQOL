@@ -4,6 +4,14 @@
 -- SEND a request -- every number that actually matters (plank ratio, search
 -- range, and whether the request is even legitimate) is re-decided
 -- server-side in WorkingBandsaw_Server.lua.
+--
+-- Whatever quantity the player picks (1/5/10/All) is cut one log at a
+-- time, not as a single lump timer: WorkingBandsaw.SawAction only ever
+-- processes ONE log, and on completion re-checks availability/power and
+-- queues the next one itself if more remain -- a self-chaining action,
+-- the same idea the "Table Saw" Workshop mod (id 3540297822) uses for its
+-- own log-by-log cutting loop, adapted to our existing quantity-picker
+-- menu instead of its separate persistent panel.
 
 require "WorkingBandsaw_Shared"
 require "ISUI/ISWorldObjectContextMenu"
@@ -11,15 +19,17 @@ require "TimedActions/ISBaseTimedAction"
 
 WorkingBandsaw.SawAction = ISBaseTimedAction:derive("WorkingBandsaw.SawAction")
 
-function WorkingBandsaw.SawAction:new(player, bandsaw, square, logCount)
+--- @param remainingLogs integer how many more logs this chain should cut,
+---        including the one this action itself is about to cut
+function WorkingBandsaw.SawAction:new(player, bandsaw, square, remainingLogs)
     local o = ISBaseTimedAction.new(self, player)
 
     o.bandsaw = bandsaw
     o.square = square
-    o.logCount = logCount
+    o.remainingLogs = remainingLogs
 
-    local ticksPerLog = WorkingBandsaw.GetOption("TicksPerLog", 40)
-    o.maxTime = ticksPerLog * logCount
+    local secondsPerLog = WorkingBandsaw.GetOption("SecondsPerLog", 5)
+    o.maxTime = secondsPerLog * 30 -- 30 ticks/sec, confirmed via MPBS's own tested heavy-lift action
     o.stopOnWalk = true
     o.stopOnRun = true
     o.stopOnAim = false
@@ -44,14 +54,22 @@ function WorkingBandsaw.SawAction:stop()
 end
 
 function WorkingBandsaw.SawAction:perform()
-    -- Only ever a *request*: how many logs, and where. The server decides
-    -- the plank ratio and re-validates everything before honoring it.
+    -- Only ever a *request* for ONE log, and where. The server decides the
+    -- plank ratio and re-validates everything before honoring it.
     sendClientCommand(self.character, "WorkingBandsaw", "SawLogs", {
-        logCount = self.logCount,
+        logCount = 1,
         squareX = self.square:getX(),
         squareY = self.square:getY(),
         squareZ = self.square:getZ(),
     })
+
+    local remaining = self.remainingLogs - 1
+    if remaining > 0 then
+        local _, _, _, totalCount = WorkingBandsaw.CountLogs(self.character, self.square)
+        if totalCount >= 1 and WorkingBandsaw.HasElectricity(self.square) then
+            ISTimedActionQueue.add(WorkingBandsaw.SawAction:new(self.character, self.bandsaw, self.square, remaining))
+        end
+    end
 
     ISBaseTimedAction.perform(self)
 end

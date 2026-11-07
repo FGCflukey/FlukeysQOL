@@ -134,7 +134,8 @@ local function handleSawLogs(player, args)
         return
     end
 
-    if not findBandsawAt(square) then
+    local bandsawObj = findBandsawAt(square)
+    if not bandsawObj then
         dbg(player:getUsername() .. " claimed a bandsaw that isn't there")
         return
     end
@@ -266,10 +267,11 @@ local function handleSawLogs(player, args)
     end
 
     local totalPlanks = logsRemoved * planksPerLog
+    local dropSquare = WorkingBandsaw.GetDropSquare(bandsawObj, square)
     for _i = 1, totalPlanks do
         local posX = ZombRandFloat(0.2, 0.8)
         local posY = ZombRandFloat(0.2, 0.8)
-        square:AddWorldInventoryItem("Base.Plank", posX, posY, 0)
+        dropSquare:AddWorldInventoryItem("Base.Plank", posX, posY, 0)
     end
 
     local xpAmount = logsRemoved * 3

@@ -1,9 +1,9 @@
 VERSION = 1,
 
-option WorkingBandsaw.TicksPerLog
+option WorkingBandsaw.SecondsPerLog
 {
-    type = integer, min = 10, max = 200, default = 40,
-    page = WorkingBandsaw, translation = WorkingBandsaw_TicksPerLog,
+    type = integer, min = 1, max = 10, default = 5,
+    page = WorkingBandsaw, translation = WorkingBandsaw_SecondsPerLog,
 }
 
 option WorkingBandsaw.PlanksPerLog

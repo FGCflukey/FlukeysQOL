@@ -22,8 +22,23 @@ WorkingBandsaw.SPRITES = {
 WorkingBandsaw.DIRECTIONS = { "N", "E", "S", "W" }
 
 local BANDSAW_SPRITES = {}
-for _, name in pairs(WorkingBandsaw.SPRITES) do
+local SPRITE_TO_DIRECTION = {}
+for dir, name in pairs(WorkingBandsaw.SPRITES) do
     BANDSAW_SPRITES[name] = true
+    SPRITE_TO_DIRECTION[name] = dir
+end
+
+local DIRECTION_OFFSET = {
+    N = { dx = 0, dy = -1 },
+    S = { dx = 0, dy = 1 },
+    E = { dx = 1, dy = 0 },
+    W = { dx = -1, dy = 0 },
+}
+
+local function spriteName(obj)
+    if not obj or not obj.getSprite then return nil end
+    local spr = obj:getSprite()
+    return spr and spr:getName() or nil
 end
 
 --- Read a WorkingBandsaw sandbox option, falling back to a default if unset.
@@ -60,6 +75,32 @@ function WorkingBandsaw.IsBandSaw(object)
     end
 
     return false
+end
+
+--- The square planks should land on: the tile the bandsaw is facing
+--- (computed from which of the 4 known sprites it's currently showing),
+--- falling back to the bandsaw's own square if that tile doesn't exist or
+--- is blocked. Informed by reading the "Table Saw" Workshop mod (id
+--- 3540297822), whose own version drops planks on an offset tile rather
+--- than under the machine itself -- our version derives the direction
+--- from the sprite we already track instead of a separate per-sprite
+--- offset table.
+---@param bandsawObj IsoObject
+---@param square IsoGridSquare
+---@return IsoGridSquare
+function WorkingBandsaw.GetDropSquare(bandsawObj, square)
+    if not square then return square end
+
+    local name = spriteName(bandsawObj)
+    local dir = name and SPRITE_TO_DIRECTION[name]
+    local offset = dir and DIRECTION_OFFSET[dir]
+    if not offset then return square end
+
+    local front = getCell():getGridSquare(square:getX() + offset.dx, square:getY() + offset.dy, square:getZ())
+    if front and not (front:isSolid() or front:isSolidTrans()) then
+        return front
+    end
+    return square
 end
 
 --- Check if a square has electricity. Deliberately matches
