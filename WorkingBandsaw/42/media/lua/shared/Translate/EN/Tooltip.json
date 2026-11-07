@@ -1,0 +1,5 @@
+{
+    "Tooltip_WorkingBandsaw_NoElectricity": "This bandsaw needs electricity to run.",
+    "Tooltip_WorkingBandsaw_NoLogs": "No logs available nearby.",
+    "Tooltip_WorkingBandsaw_NotEnoughLogs": "Need %1 logs, only %2 available."
+}

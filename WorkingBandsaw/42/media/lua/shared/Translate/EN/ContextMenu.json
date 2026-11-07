@@ -1,0 +1,7 @@
+{
+    "ContextMenu_WorkingBandsaw_SawPlanks": "Saw Planks",
+    "ContextMenu_WorkingBandsaw_Saw1": "Saw 1 Log (%1 Planks)",
+    "ContextMenu_WorkingBandsaw_Saw5": "Saw 5 Logs (%1 Planks)",
+    "ContextMenu_WorkingBandsaw_Saw10": "Saw 10 Logs (%1 Planks)",
+    "ContextMenu_WorkingBandsaw_SawAll": "Saw All %1 Logs (%2 Planks)"
+}

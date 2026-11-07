@@ -1,0 +1,8 @@
+name=Working Bandsaw
+description=Use the vanilla Metal Bandsaw to cut logs into planks in bulk, no handheld saw needed -- requires electricity. Rebuilt from scratch after the Workshop mod it replaces turned out to trust the client for both the plank-per-log ratio and the saw location itself. Standalone, no dependencies.
+id=WorkingBandsaw
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.21
+versionMin=42.19
+icon=LogoFGC.png

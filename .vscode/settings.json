@@ -28,5 +28,6 @@
     "getWorld",
     "getCore",
     "getPlayer"
-  ]
+  ],
+  "robotcode.disableExtension": true
 }
