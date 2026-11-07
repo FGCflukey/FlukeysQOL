@@ -1,0 +1,14 @@
+module Base
+{
+    sound WorkingBandsaw_Cut
+    {
+        category = WorkingBandsaw:effects,
+        maxInstancesPerEmitter = 10,
+        is3D = true,
+        clip
+        {
+            file = media/sound/WorkingBandsaw_Cut.ogg,
+            distanceMax = 5,
+        }
+    }
+}

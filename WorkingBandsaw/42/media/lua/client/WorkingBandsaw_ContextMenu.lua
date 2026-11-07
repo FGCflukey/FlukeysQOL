@@ -47,13 +47,22 @@ end
 function WorkingBandsaw.SawAction:start()
     self.character:faceThisObject(self.bandsaw)
     self:setActionAnim("Loot")
+    -- Fires once per log, same lifecycle as this pack's other machinery
+    -- sounds (e.g. MPBS's heavy-lift action): start here, stopOrTrigger in
+    -- both stop() and perform(), so an interrupted cut doesn't leave the
+    -- sound running. The clip itself is ~4s against a 5s (default) action,
+    -- so it naturally finishes a beat before the cut completes.
+    self.sound = self.character:playSound("WorkingBandsaw_Cut")
 end
 
 function WorkingBandsaw.SawAction:stop()
+    self.character:stopOrTriggerSound(self.sound)
     ISBaseTimedAction.stop(self)
 end
 
 function WorkingBandsaw.SawAction:perform()
+    self.character:stopOrTriggerSound(self.sound)
+
     -- Only ever a *request* for ONE log, and where. The server decides the
     -- plank ratio and re-validates everything before honoring it.
     sendClientCommand(self.character, "WorkingBandsaw", "SawLogs", {
