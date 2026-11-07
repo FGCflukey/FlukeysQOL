@@ -150,3 +150,98 @@ function WorkingBandsaw.OnSawPlanks(player, bandsaw, square, logCount)
 end
 
 Events.OnFillWorldObjectContextMenu.Add(OnFillWorldObjectContextMenu)
+
+-- ============================================
+-- PICK UP: any Metal Bandsaw (map-found or player-placed) -> carried item
+-- ============================================
+
+local function hasCrowbar(player)
+    local inv = player:getInventory()
+    if inv:getFirstTypeRecurse("Base.Crowbar") then return true end
+
+    local primary = player:getPrimaryHandItem()
+    if primary and primary:getFullType() == "Base.Crowbar" then return true end
+
+    local secondary = player:getSecondaryHandItem()
+    if secondary and secondary:getFullType() == "Base.Crowbar" then return true end
+
+    return false
+end
+
+local function onPickUp(obj, player)
+    ISTimedActionQueue.add(ISWorkingBandsawHeavyLiftAction:new(player, obj, function(character, liftedObj)
+        local sq = liftedObj:getSquare()
+        if not sq then return end
+        sendClientCommand(character, "WorkingBandsaw", "PickUp", { x = sq:getX(), y = sq:getY(), z = sq:getZ() })
+    end))
+end
+
+Events.OnFillWorldObjectContextMenu.Add(function(playerNum, context, worldObjects, test)
+    if test then return end
+
+    local player = getSpecificPlayer(playerNum)
+    if not player then return end
+
+    for _, obj in ipairs(worldObjects) do
+        if WorkingBandsaw.IsBandSaw(obj) then
+            if hasCrowbar(player) then
+                context:addOption(getText("ContextMenu_WorkingBandsaw_PickUp"), obj, onPickUp, player)
+            else
+                local opt = context:addOption(getText("ContextMenu_WorkingBandsaw_PickUp"), nil, nil)
+                opt.notAvailable = true
+                local tooltip = ISWorldObjectContextMenu.addToolTip()
+                tooltip:setName(getText("ContextMenu_WorkingBandsaw_PickUp"))
+                tooltip.description = getText("Tooltip_WorkingBandsaw_NeedCrowbar")
+                opt.toolTip = tooltip
+            end
+            return
+        end
+    end
+end)
+
+-- ============================================
+-- PLACE: carried item -> real Metal Bandsaw, 4-direction submenu
+-- ============================================
+
+local DIRECTION_LABELS = {
+    N = "ContextMenu_WorkingBandsaw_FaceNorth",
+    E = "ContextMenu_WorkingBandsaw_FaceEast",
+    S = "ContextMenu_WorkingBandsaw_FaceSouth",
+    W = "ContextMenu_WorkingBandsaw_FaceWest",
+}
+
+local function onPlace(item, player, direction)
+    local sq = player:getSquare()
+    if not sq then return end
+    local target = sq:getAdjacentSquare(player:getDir())
+    if not target then return end
+    sendClientCommand(player, "WorkingBandsaw", "Place", {
+        x = target:getX(), y = target:getY(), z = target:getZ(),
+        direction = direction,
+    })
+end
+
+local function addPlaceOption(context, item, player)
+    local mainOption = context:addOption(getText("ContextMenu_WorkingBandsaw_Place"), item, nil)
+    local submenu = ISContextMenu:getNew(context)
+    context:addSubMenu(mainOption, submenu)
+
+    for _, dir in ipairs(WorkingBandsaw.DIRECTIONS) do
+        submenu:addOption(getText(DIRECTION_LABELS[dir]), item, function()
+            onPlace(item, player, dir)
+        end)
+    end
+end
+
+Events.OnFillInventoryObjectContextMenu.Add(function(playerNum, context, items)
+    local player = getSpecificPlayer(playerNum)
+    if not player then return end
+
+    for _, item in ipairs(items) do
+        local actual = item.items and item.items[1] or item
+        if actual and actual.getFullType and actual:getFullType() == "WorkingBandsaw.BandsawItem" then
+            addPlaceOption(context, actual, player)
+            return
+        end
+    end
+end)

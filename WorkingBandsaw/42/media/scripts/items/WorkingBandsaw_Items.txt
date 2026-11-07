@@ -1,0 +1,18 @@
+module WorkingBandsaw
+{
+    /*  The carried, detached bandsaw. Plain base:normal -- the real placed
+        object is a genuine Metal Bandsaw entity built from scratch
+        server-side (IsoThumpable + GameEntityFactory.CreateIsoObjectEntity,
+        same technique vanilla's own ISBuildIsoEntity/MORainCollectorBarrel
+        use), so this item never goes through vanilla's moveable placement
+        pipeline. */
+    item BandsawItem
+    {
+        DisplayCategory = Tool,
+        DisplayName     = Metal Bandsaw,
+        ItemType        = base:normal,
+        Weight          = 20,
+        Icon            = WorkingBandsaw,
+        Tags            = base:hasmetal,
+    }
+}

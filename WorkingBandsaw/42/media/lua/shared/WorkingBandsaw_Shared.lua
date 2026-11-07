@@ -9,14 +9,22 @@
 
 WorkingBandsaw = WorkingBandsaw or {}
 
--- The Metal Bandsaw entity's 4 real rotation sprites (confirmed against
--- entity_metalbandsaw.txt -- industry_02_264/265/266/267, one per facing).
-local BANDSAW_SPRITES = {
-    ["industry_02_264"] = true,
-    ["industry_02_265"] = true,
-    ["industry_02_266"] = true,
-    ["industry_02_267"] = true,
+-- The Metal Bandsaw entity's 4 real rotation sprites, confirmed against
+-- entity_metalbandsaw.txt. Keyed by direction so placement can pick the
+-- right one, same convention as MyPersonalBankSafe's Util.SPRITES.
+WorkingBandsaw.SPRITES = {
+    N = "industry_02_267",
+    E = "industry_02_264",
+    S = "industry_02_265",
+    W = "industry_02_266",
 }
+
+WorkingBandsaw.DIRECTIONS = { "N", "E", "S", "W" }
+
+local BANDSAW_SPRITES = {}
+for _, name in pairs(WorkingBandsaw.SPRITES) do
+    BANDSAW_SPRITES[name] = true
+end
 
 --- Read a WorkingBandsaw sandbox option, falling back to a default if unset.
 ---@param name string
@@ -54,28 +62,18 @@ function WorkingBandsaw.IsBandSaw(object)
     return false
 end
 
---- Check if a square has electricity, the same pcall-guarded way this pack's
---- PlayArcadeMachines feature does (haveElectricity can be unreliable across
---- square/building contexts, and the ambient-grid-day fallback matches
---- vanilla's own ISWeatherChannel/ElecShutModifier behavior).
+--- Check if a square has electricity. Deliberately matches
+--- HomeHeat_Util.hasPower exactly -- that function is confirmed working
+--- with generators AND the user's solar power mod, whereas an earlier
+--- version of this function added its own ambient-grid-shutoff-day
+--- fallback that only ever reflects the vanilla city grid, not a
+--- player's own generator/solar circuit, and could wrongly report "no
+--- power" on a tile a non-grid source was genuinely powering.
 ---@param square IsoGridSquare
 ---@return boolean
 function WorkingBandsaw.HasElectricity(square)
     if not square then return false end
-
-    local ok, real = pcall(function() return square:haveElectricity() end)
-    if ok and real then return true end
-
-    local ok2, gridOn = pcall(function() return square:hasGridPower() end)
-    if not (ok2 and gridOn) then return false end
-
-    local ok3, stillOn = pcall(function()
-        local shutoffDay = SandboxVars.ElecShutModifier or 14
-        if shutoffDay <= -1 then return true end
-        local elapsedDays = GameTime:getInstance():getWorldAgeHours() / 24
-        return elapsedDays < shutoffDay
-    end)
-    return ok3 and stillOn
+    return square:haveElectricity() or (square:hasGridPower() and not square:isOutside())
 end
 
 --- Count logs in a player's inventory only.
