@@ -1,5 +1,11 @@
 {
     "Sandbox_Automaker": "Automaker",
     "Sandbox_Automaker_fullbuild": "Spawn fully repaired vehicles",
-    "Sandbox_Automaker_fullbuild_tooltip": "If off, built vehicles spawn stripped of parts and needing repair instead of fully finished."
+    "Sandbox_Automaker_fullbuild_tooltip": "If off, built vehicles spawn stripped of parts and needing repair instead of fully finished.",
+    "Sandbox_StopThePlantRot": "Stop The Plant Rot",
+    "Sandbox_StopThePlantRot_tooltip": "Controls over-mature rotting of mature crops",
+    "Sandbox_ResetGrowthOnRot": "Reset Growth on Rot",
+    "Sandbox_ResetGrowthOnRot_tooltip": "How the crop is handled each time its rot is postponed.<br>On = Reset to seed-bearing stage and regrow (default); Off = Keep as-is",
+    "Sandbox_RotDelay": "Rot Delay",
+    "Sandbox_RotDelay_tooltip": "How many rot checks a mature crop survives before finally rotting.<br>0 = Never rot (default); N = rots after N postponed checks"
 }

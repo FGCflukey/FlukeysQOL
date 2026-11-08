@@ -5,3 +5,23 @@ option Automaker.fullbuild
 	type = boolean, default = true,
 	page = Automaker, translation = Sandbox_Automaker_fullbuild,
 }
+
+/* StopThePlantRot: what happens each time a mature crop's rot is postponed. On = reset to seed-bearing stage and regrow; Off = leave as-is */
+option StopThePlantRot.ResetGrowthOnRot
+{
+    type = boolean,
+    default = true,
+    page = StopThePlantRot,
+    translation = ResetGrowthOnRot,
+}
+
+/* StopThePlantRot: how many rot checks a mature crop survives. 0 = never rot (default); N = rots after N postponed checks */
+option StopThePlantRot.RotDelay
+{
+    type = integer,
+    default = 0,
+    min = 0,
+    max = 100,
+    page = StopThePlantRot,
+    translation = RotDelay,
+}
