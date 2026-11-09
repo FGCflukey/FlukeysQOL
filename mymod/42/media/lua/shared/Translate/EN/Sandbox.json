@@ -3,14 +3,12 @@
     "Sandbox_Automaker_fullbuild": "Spawn fully repaired vehicles",
     "Sandbox_Automaker_fullbuild_tooltip": "If off, built vehicles spawn stripped of parts and needing repair instead of fully finished.",
     "Sandbox_StopThePlantRot": "Stop The Plant Rot",
-    "Sandbox_StopThePlantRot_tooltip": "Controls over-mature rotting of mature crops",
-    "Sandbox_ResetGrowthOnRot": "Reset Growth on Rot",
-    "Sandbox_ResetGrowthOnRot_tooltip": "How the crop is handled each time its rot is postponed.<br>On = Reset to seed-bearing stage and regrow (default); Off = Keep as-is",
-    "Sandbox_RotDelay": "Rot Delay",
-    "Sandbox_RotDelay_tooltip": "How many rot checks a mature crop survives before finally rotting.<br>0 = Never rot (default); N = rots after N postponed checks",
+    "Sandbox_StopThePlantRot_tooltip": "Stops fully grown crops from rotting of old age",
     "Sandbox_UnhotwireVehicle": "Remove Hotwire",
     "Sandbox_UnhotwireVehicle_ElectricalLevel": "Electrical level required",
     "Sandbox_UnhotwireVehicle_ElectricalLevel_tooltip": "Minimum Electrical level needed to remove a working hotwire from a car.",
     "Sandbox_UnhotwireVehicle_MechanicsLevel": "Mechanics level required",
-    "Sandbox_UnhotwireVehicle_MechanicsLevel_tooltip": "Minimum Mechanics level needed to remove a working hotwire from a car."
+    "Sandbox_UnhotwireVehicle_MechanicsLevel_tooltip": "Minimum Mechanics level needed to remove a working hotwire from a car.",
+    "Sandbox_StopThePlantRot_DaysBeforeRot": "Days before ripe crops rot",
+    "Sandbox_StopThePlantRot_DaysBeforeRot_tooltip": "How many extra in-game days a fully grown crop stays harvestable after the point it would normally rot.<br>0 = Never rots (default). Watering and disease still matter: a neglected crop can still die."
 }

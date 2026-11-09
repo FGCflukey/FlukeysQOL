@@ -26,8 +26,8 @@ List of current things this mod does...
 - Added "Chocolate Milk From Brown Cows", so brown (simmental) cows give chocolate milk
 - Lighter weights for everyday hauling stuff -- Logs, Planks, Firewood, Twigs, Nails, Screws, Hinges,
   Doorknobs, Wallpaper rolls, Wrench, Pipe Wrench, Ratchet, Bolt Cutters and Animal Bones
-- Added Stop The Plant Rot - fully grown crops no longer rot, or only rot after a set number of checks.
-  Sandbox options for both. (Based on NoPlantRot, used with the original author's permission.)
+- Added Stop The Plant Rot - fully grown crops stay harvestable instead of rotting, forever or for a set
+  number of in-game days (sandbox option). Watering and disease still matter. (Inspired by NoPlantRot.)
 
 ### Vehicles
 

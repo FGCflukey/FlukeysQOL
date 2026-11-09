@@ -6,24 +6,15 @@ option Automaker.fullbuild
 	page = Automaker, translation = Sandbox_Automaker_fullbuild,
 }
 
-/* StopThePlantRot: what happens each time a mature crop's rot is postponed. On = reset to seed-bearing stage and regrow; Off = leave as-is */
-option StopThePlantRot.ResetGrowthOnRot
-{
-    type = boolean,
-    default = true,
-    page = StopThePlantRot,
-    translation = ResetGrowthOnRot,
-}
-
-/* StopThePlantRot: how many rot checks a mature crop survives. 0 = never rot (default); N = rots after N postponed checks */
-option StopThePlantRot.RotDelay
+/* StopThePlantRot: in-game days a fully grown crop stays harvestable past its normal rot point. 0 = never rots */
+option StopThePlantRot.DaysBeforeRot
 {
     type = integer,
     default = 0,
     min = 0,
-    max = 100,
+    max = 365,
     page = StopThePlantRot,
-    translation = RotDelay,
+    translation = StopThePlantRot_DaysBeforeRot,
 }
 
 /* UnhotwireVehicle: minimum skill levels needed to remove a working hotwire from a car */
