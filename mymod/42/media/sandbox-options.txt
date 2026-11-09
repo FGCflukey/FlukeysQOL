@@ -25,3 +25,24 @@ option StopThePlantRot.RotDelay
     page = StopThePlantRot,
     translation = RotDelay,
 }
+
+/* UnhotwireVehicle: minimum skill levels needed to remove a working hotwire from a car */
+option UnhotwireVehicle.ElectricalLevel
+{
+    type = integer,
+    default = 2,
+    min = 0,
+    max = 10,
+    page = UnhotwireVehicle,
+    translation = UnhotwireVehicle_ElectricalLevel,
+}
+
+option UnhotwireVehicle.MechanicsLevel
+{
+    type = integer,
+    default = 3,
+    min = 0,
+    max = 10,
+    page = UnhotwireVehicle,
+    translation = UnhotwireVehicle_MechanicsLevel,
+}
