@@ -10,7 +10,7 @@
 -- Now the client only *requests* a repair; this file is what actually
 -- performs it, after checking everything again itself.
 
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg) if DEBUG then print("[CarPartRepair:Server] " .. tostring(msg)) end end
 
 local function OnClientCommand(module, command, player, args)

@@ -31,7 +31,7 @@
 -- target square (no neighbor scan needed -- these helpers walk the
 -- real chain themselves), and call syncIsoObject on each one changed.
 
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg) if DEBUG then print("[Lockpicking:Server] " .. tostring(msg)) end end
 
 local function isDoorObject(obj)

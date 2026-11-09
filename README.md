@@ -24,20 +24,29 @@ List of current things this mod does...
 - Added Faster Car Hood/engine access, overrides default annoying slowness
 - Added Re-fuelling BlowTorch and Propane Tank at Gas Pumps -- requires power at the pump
 - Added "Chocolate Milk From Brown Cows", so brown (simmental) cows give chocolate milk
+- Lighter weights for everyday hauling stuff -- Logs, Planks, Firewood, Twigs, Nails, Screws, Hinges,
+  Doorknobs, Wallpaper rolls, Wrench, Pipe Wrench, Ratchet, Bolt Cutters and Animal Bones
+- Added Stop The Plant Rot - fully grown crops no longer rot, or only rot after a set number of checks.
+  Sandbox options for both. (Based on NoPlantRot, used with the original author's permission.)
 
 ### Vehicles
 
 - Added Car Painting. Now you have a nice variety of colours to paint your ride with. Vanilla only.
-- Added Vehicle Vinyl Swapping. Want a different look for your vehicle? (only vanilla for now)
-- Added UnHotwire for Cars. Needs SmallSheetMetal and Screwdriver and right skills. Sit in to perform
+- Added Vehicle Vinyl Swapping. Want a different look for your vehicle? (vanilla, plus a few KI5 vehicles)
+- Added Remove Hotwire for Cars. Sit in the driver's seat of a hotwired car, engine off, and use the
+  radial menu. Needs Electrical 2 and Mechanics 3 by default (both adjustable in sandbox options)
 - Added Car Key crafting. Got the skills use some metal and make your own car key.
 - Added Crafting Engine Parts, recipes for mechanic, welding and blacksmithing req.
+- Added Engine Rebuilding - bring an engine's quality back up to 100 using Spare Engine Parts (5x the
+  car's engine repair level) and a Wrench. Engine must be over 90% condition and you need the Mechanics
+  level that car requires
 - Added repair kits (Tire, Suspension, Brake, Muffler, Body, Gas Tank, Battery) to restore a worn car
   part's condition in place using a Blowtorch, Scrap Metal/Sheet Metal and the matching skill level --
   works from a backpack, dolly, or even a nearby crate, not just your main inventory
 - Added Dismantling of General Car Parts, serves as a fill-in for missing stuff or as a 2nd option
 - Added Repairing Broken Car Locks. Success is based on Mechanics level. But chance to fail exists.
-- Added Vehicle Recycling and Parts making, from earlier 42 builds I did.
+- Added Vehicle Recycling, from earlier 42 builds I did. (Vehicle Parts making currently disabled.)
+- Added welding repairs for KI5's M998 Humvee trunk, doors and armor parts
 - Added Automaker - build a real, drivable vehicle from scratch. Read the magazines, gather the metal/
   electrical materials, meet the skill and recipe requirements, and build any installed vehicle mod's
   cars too, not just vanilla ones. (Currently disabled while trialing a Workshop alternative.)
@@ -71,13 +80,14 @@ List of current things this mod does...
 
 - Added extra skill books for Axe, Blunt, Small Blunt, Small Blade, Spear,
 - Added Carbon Fibre Combat Axe and Long Reach Axe, includes repairs. Long Reach is weird, but works.
+- Added a Bastard Sword, includes repairs
 - Added Bulk Weapon Magazine Reloading/Unloading. Right click your stack!
 - Added Ammo Conversions - break down loose or boxed rounds of one caliber and reload them into another,
   covering all 9 vanilla calibers both ways
 
 ### Economy & Trading
 
-- Added ATM usage. Find credit cards and try them to get some money! Watch out, it can attract Zombies!
+- Added ATM usage. Find credit cards and try them to get some money! Watch out, it's noisy!
 - Added Usable Money. Pack it in $500/$1000 money bags. Duffle<->Moneybag conversion. Vendor friendly.
 - Added Emergency Vendor. Right-click on a Vending Machine. Buy/Sell items if you have the cash or need it!
 - Added Survivor Chopper Travel - buy a one-way chopper ticket at the Emergency Vendor and use it to
@@ -99,8 +109,23 @@ List of current things this mod does...
 - Added the old Hydrocraft looking Dolly and Toy Wagon for crazy hoarders like me
 - Allows Climbing all obstacles, fences, windows and tall walls protecting Dolly/Toy Wagon in 2nd hand
 - (Note to above. In some circumstance you can still drop it. 98% of time you wont.)
-- Dolly and Vehicle trunk capcaity increased
+- Dolly holds 150 and Toy Wagon holds 100. (Vehicle trunk capacity increase currently disabled.)
 - Added FLuKeez's Canteen - a wearable 3 Litre canteen (satchel slot), my own personal signature item
+
+### Vanilla Fixes
+
+- Fixed resuming a partly-read skill book -- no more getting stuck reading forever, missing the 100%
+  bonus, or a doubled page sound
+- Fixed a vanilla crash when reloading magazines
+
+## Standalone Mods (same repo, separate mods)
+
+- **My Personal Bank Safe** - pry a decorative bank vault off the floor with a crowbar, carry it home and
+  place it as your own lockable personal safe. Only you can open it
+- **Play Arcade Machines** - play vanilla arcade cabinets and pinball machines to reduce stress,
+  unhappiness and boredom, with a real custom playing animation. Needs power
+- **Trait Respec** - remove a trait you have and get its real point value back to spend on another
+- **Working Bandsaw** - use the vanilla Metal Bandsaw to cut logs into planks in bulk. Needs power
 
 ## Installation
 

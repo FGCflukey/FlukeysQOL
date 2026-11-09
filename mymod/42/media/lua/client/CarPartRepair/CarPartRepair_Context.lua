@@ -6,7 +6,7 @@
 local Util = CarPartRepair_Util
 local Action = CarPartRepair_Action
 
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg) if DEBUG then print("[CarPartRepair:Context] " .. tostring(msg)) end end
 
 local function OnFillInventoryObjectContextMenu(playerIndex, context, items)

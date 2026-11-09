@@ -16,7 +16,7 @@
 -- vanilla's own ISLockDoors.lua (shared/Vehicles/TimedActions/) uses
 -- it after every part:getDoor():setLocked() change.
 
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg) if DEBUG then print("[VehicleLockpicking:Server] " .. tostring(msg)) end end
 
 local function getLockpickSuccessChance(player)
