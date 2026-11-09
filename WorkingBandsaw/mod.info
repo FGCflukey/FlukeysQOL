@@ -3,6 +3,6 @@ description=Use the vanilla Metal Bandsaw to cut logs into planks in bulk, no ha
 id=WorkingBandsaw
 author=justanothersteamclient
 modversion=1.0
-versionMax=42.21
+versionMax=42.22
 versionMin=42.19
 icon=LogoFGC.png
