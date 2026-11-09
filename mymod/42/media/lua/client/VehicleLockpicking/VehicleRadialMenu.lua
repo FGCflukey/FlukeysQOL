@@ -71,6 +71,14 @@ function ISVehicleMenu.showRadialMenu(playerObj)
     old_showRadial(playerObj)
 
     local player = playerObj
+
+    -- Vanilla's showRadialMenu builds BOTH menus: the outside one (via showRadialMenuOutside)
+    -- and the in-car one. Lockpicking is an outside-the-car action only, so skip the in-car menu.
+    if player:getVehicle() then
+        lpdbg("Player is inside a vehicle → abort.")
+        return
+    end
+
     local vehicle, part = getLockedVehicleDoor(player)
 
     lpdbg("Vehicle:", vehicle, "Part:", part)
