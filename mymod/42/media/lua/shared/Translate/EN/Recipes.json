@@ -1,14 +1,14 @@
 {
-    "MakeaBoxofSyringes": "Box 50x Empty Syringes",
+    "MakeaBoxofSyringes": "Box 50 Empty Syringes",
     "OpenBoxofSyringes": "Open box of Syringes",
-    "FillSyringesWithBlood": "Grind Meat and Extract Zombie Blood",
+    "FillSyringesWithBlood": "Mince ZombieMeat & Extract Blood Sample",
     "FillTestTubeWithBaseSerum": "Filter Blood Samples & Fill Test Tube",
     "CraftZomCureSyringe": "Finalize Cure Serum and Fill Syringe",
-    "MakeaBoxofTestTubes": "Box 10x Empty Test Tubes",
+    "MakeaBoxofTestTubes": "Box 10 Empty Test Tubes",
     "OpenBoxofTestTubes": "Open box of Test Tubes",
-    "PlaceAlcoholWipesInBox": "Box 10x Alcohol Wipes",
+    "PlaceAlcoholWipesInBox": "Box 10 Alcohol Wipes",
     "UnpackBoxOfAlcoholWipes": "Open box of Alcohol Wipes",
-    "MakeaBoxofEngineParts": "Box 10x Engine Parts",
+    "MakeaBoxofEngineParts": "Box 10 Engine Parts",
     "OpenBoxofEngineParts": "Open box of Engine Parts",
     "MakeSomeBandages": "Make Bandages",
     "DismantleReceiver": "Dismantle Receiver",
@@ -19,9 +19,9 @@
     "RecycleSheetsToThread": "Rip Rags for Thread",
 
     "OpenBoxofElectronicsScrap": "Open box of Electronics Scrap",
-    "MakeaBoxofElectronicsScrap": "Box 50x Electronics Scrap",
+    "MakeaBoxofElectronicsScrap": "Box 50 Electronics Scrap",
     "OpenBoxofElectricWire": "Open box of Electric Wire",
-    "MakeaBoxofElectricWire": "Box 50x Electric Wire",
+    "MakeaBoxofElectricWire": "Box 50 Electric Wire",
     "MakeBoxOfPaperclips": "Box Paper Clips",
 
     "ScrapMetalFromUnusableMetal": "Make Scrap Metal from Sheet Metal Scrap",
@@ -75,7 +75,7 @@
     "FixBastardSwordMetal": "Repair Bastard Sword",
     
     "MakeANeedle": "Make Sewing Needle",
-    "MakeASheet": "Make cloth sheet",
+    "MakeASheet": "Make Cloth Sheet",
     "MakeAPickAxeHead": "Make a Pick Axe head",
 
     "ConvertTo9mms": "Convert Ammo to 9mm",
