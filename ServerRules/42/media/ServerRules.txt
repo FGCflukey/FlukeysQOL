@@ -10,8 +10,8 @@
 #  asked to accept again on their next join.
 # ===================================================================
 
-version = 1
-title = Welcome to the Server!
+version = 1.0
+title = Welcome to Starman's Server!
 
 # Seconds a new player has to accept before being disconnected. 0 = no limit.
 timeLimitSeconds = 300
