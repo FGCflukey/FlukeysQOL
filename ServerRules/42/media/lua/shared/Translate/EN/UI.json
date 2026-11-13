@@ -1,0 +1,12 @@
+{
+    "UI_ServerRules_DefaultTitle": "Welcome!",
+    "UI_ServerRules_RulesHeader": "Server Rules - tick each rule to agree to it:",
+    "UI_ServerRules_Accept": "Accept",
+    "UI_ServerRules_Decline": "Decline",
+    "UI_ServerRules_Warning": "You must accept the rules to play here. Click Decline again to leave the server.",
+    "UI_ServerRules_TimeLeft": "Time left to accept: %1",
+    "UI_ServerRules_Saving": "Saving...",
+    "UI_ServerRules_NoResponse": "No response from the server, please try Accept again.",
+    "UI_ServerRules_Leaving": "Leaving the server...",
+    "UI_ServerRules_TimeUp": "Time's up. Leaving the server..."
+}

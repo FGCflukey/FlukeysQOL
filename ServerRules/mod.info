@@ -1,0 +1,9 @@
+name=Server Rules
+description=New players see a welcome message and the server rules on join, must tick every rule and accept to play, and are disconnected if they decline or run out of time. Acceptance is recorded per player and re-asked when the rules version changes. Standalone, no dependencies.
+id=ServerRules
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.22
+versionMin=42.19
+poster=poster.png
+icon=LogoFGC.png

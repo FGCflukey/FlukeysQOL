@@ -1,0 +1,33 @@
+# ===================================================================
+#  Server Rules config
+# ===================================================================
+#  Lines starting with # are comments and are ignored.
+#
+#  To edit the rules WITHOUT touching the mod, copy this file to the
+#  server's  Zomboid/Lua/ServerRules.txt  -- that copy wins if it exists.
+#
+#  Bump "version" whenever you change the rules: every player is
+#  asked to accept again on their next join.
+# ===================================================================
+
+version = 1
+title = Welcome to the Server!
+
+# Seconds a new player has to accept before being disconnected. 0 = no limit.
+timeLimitSeconds = 300
+
+# true = the player can't be hurt and zombies ignore them while reading.
+protectWhileReading = true
+
+[welcome]
+Thanks for joining! This is a small private server for friends, so please take a minute to read the rules below.
+
+Tick every rule to show you agree, then click Accept.
+
+[rules]
+# One rule per line. A leading "-" is optional.
+- Be respectful to other players. No harassment, hate speech or slurs.
+- No cheating, exploiting bugs or using hacked clients.
+- Don't grief, steal from or destroy other players' bases.
+- No killing other players unless both sides agree to it.
+- Have fun, and ask an admin if you're unsure about anything.

@@ -124,6 +124,9 @@ List of current things this mod does...
   place it as your own lockable personal safe. Only you can open it
 - **Play Arcade Machines** - play vanilla arcade cabinets and pinball machines to reduce stress,
   unhappiness and boredom, with a real custom playing animation. Needs power
+- **Server Rules** - new players get a welcome message and the server rules on join, must tick every rule
+  and accept to play (decline or run out of time and they're disconnected). Recorded per player, and
+  re-asked whenever the rules version changes. Rules live in a simple text file
 - **Trait Respec** - remove a trait you have and get its real point value back to spend on another
 - **Working Bandsaw** - use the vanilla Metal Bandsaw to cut logs into planks in bulk. Needs power
 
