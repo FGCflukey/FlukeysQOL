@@ -38,6 +38,71 @@ local function quitToMenu()
 end
 
 ---------------------------------------------------------
+-- Protection while the must-accept window is open
+---------------------------------------------------------
+-- Approach taken from the Workshop mod "Minidoracat Safe Spawn" (3653490664), whose notes trace
+-- each step through the game's Java source:
+--   * Zombie AI runs on the game of whichever player "owns" that zombie, normally the nearest
+--     player. So a LOCAL-only invisible flag is enough: the zombies around this player don't
+--     spot them, and any zombie already targeting them is cleared every tick.
+--   * setInvisible(true, true) is the forced version: it skips the role-permission check (the
+--     plain setInvisible / setGodMod do nothing for regular players) and only sets the flag on
+--     this machine. During normal play the flag isn't sent to the server.
+--   * The connection handshake DOES upload it, though, and the server would then broadcast it, so
+--     other players would never see this player again. So nothing is written until the player
+--     is fully in the world (getSpecificPlayer(n) == the player).
+--   * Ending it: the plain, permission-gated setInvisible(false). An admin who was already
+--     invisible on purpose is skipped entirely, so their own invisibility is never touched.
+local protecting = false
+
+local function hasInvisibleCapability(player)
+    local role = player:getRole()
+    return role ~= nil and role:hasCapability(Capability.ToggleInvisibleHimself)
+end
+
+local function protectTick()
+    local player = getPlayer()
+    if not player then return end
+    if getSpecificPlayer(player:getPlayerNum()) ~= player then return end   -- still connecting
+
+    pcall(function() player:setInvisible(true, true) end)
+    pcall(function()
+        local cell = player:getCell()
+        local zombies = cell and cell:getZombieList()
+        if not zombies then return end
+        for i = 0, zombies:size() - 1 do
+            local zombie = zombies:get(i)
+            if zombie and zombie:getTarget() == player then zombie:setTarget(nil) end
+        end
+    end)
+end
+
+local function startProtection()
+    if protecting then return end
+    local player = getPlayer()
+    if not player then return end
+    local ok, already = pcall(function() return player:isInvisible() and hasInvisibleCapability(player) end)
+    if ok and already then
+        dbg("protection: already invisible on purpose (admin), skipping")
+        return
+    end
+    protecting = true
+    Events.OnTick.Add(protectTick)
+    dbg("protection: on")
+end
+
+local function stopProtection()
+    if not protecting then return end
+    protecting = false
+    Events.OnTick.Remove(protectTick)
+    local player = getPlayer()
+    if player then pcall(function() player:setInvisible(false) end) end
+    dbg("protection: off")
+end
+
+Events.OnPlayerDeath.Add(function() stopProtection() end)
+
+---------------------------------------------------------
 -- Window
 ---------------------------------------------------------
 ServerRules_Window = ISPanel:derive("ServerRules_Window")
@@ -276,6 +341,7 @@ function ServerRules_Window:update()
 end
 
 function ServerRules_Window:close()
+    if not self.readOnly then stopProtection() end
     self:setVisible(false)
     self:removeFromUIManager()
     if ServerRules.window == self then ServerRules.window = nil end
@@ -309,6 +375,7 @@ local function showWindow(data)
     w:setAlwaysOnTop(true)
     w:bringToTop()
     ServerRules.window = w
+    if not w.readOnly and data.protect then startProtection() end
 end
 
 ---------------------------------------------------------
@@ -327,6 +394,9 @@ local function onTickAsk()
     end
     local player = getPlayer()
     if not player or nowMs() < asking.nextAt then return end
+    -- Wait until fully in the world: messages sent before then never reach a dedicated server
+    -- (same handshake check as the protection above)
+    if getSpecificPlayer(player:getPlayerNum()) ~= player then return end
     if asking.count >= MAX_ASKS then
         dbg("no answer from server after " .. MAX_ASKS .. " tries (is ServerRules installed on the server?)")
         asking = nil

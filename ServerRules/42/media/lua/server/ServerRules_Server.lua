@@ -4,7 +4,8 @@
 --     fresh on every check so edits apply to the next joining player without a restart
 --   * keeps who accepted which rules version in global ModData (saved with the world)
 --   * appends every accept / decline / timeout to Zomboid/Lua/ServerRules_log.txt
---   * optionally protects a player (god mode + invisible) while the rules window is open
+--   * tells the client whether to protect the player while the rules window is open
+--     (the protection itself runs on the client, see ServerRules_UI.lua)
 --
 -- The player identity always comes from the server's own player object, never from the
 -- client's args. The client-reported Steam ID string is only written to the log for display.
@@ -142,25 +143,20 @@ end
 ---------------------------------------------------------
 -- Protection while reading
 ---------------------------------------------------------
-local function protect(player, key, data)
-    if not data.protected[key] and (player:isGodMod() or player:isInvisible()) then
-        -- Already has admin powers on that we didn't set: leave them alone, and don't
-        -- record them as ours, so accepting never switches off an admin's own god mode.
-        dbg("protect: " .. key .. " already has god mode/invisible, not touching")
-        return
-    end
-    data.protected[key] = true
-    player:setGodMod(true)
-    player:setInvisible(true)
-    dbg("protect: on for " .. key)
-end
-
+-- Protection is entirely client-side now (see ServerRules_UI.lua); the server only tells the
+-- client whether it's switched on. An earlier version set god mode + invisible on the server's
+-- player object, which was wrong in both directions: the plain setters are permission-gated
+-- (a no-op for regular players), and for admins, server-side invisibility stops their movement
+-- reaching other players and is saved into the character file.
+--
+-- This only undoes flags that earlier version set (tracked in data.protected), so nobody is left
+-- stuck invisible from it. An admin's own god mode / invisibility is never touched.
 local function unprotect(player, key, data)
     if not data.protected[key] then return end
     data.protected[key] = nil
     player:setGodMod(false)
     player:setInvisible(false)
-    dbg("protect: off for " .. key)
+    dbg("cleared old server-side protection for " .. key)
 end
 
 ---------------------------------------------------------
@@ -177,6 +173,7 @@ local function sendShow(player, cfg, previousVersion)
         welcome   = cfg.welcome,
         rules     = cfg.rules,
         timeLimit = cfg.timeLimit,
+        protect   = cfg.protect,
     })
 end
 
@@ -201,7 +198,7 @@ Commands[ServerRules.CMD_CHECK] = function(player, args)
         return
     end
 
-    if cfg.protect then protect(player, key, data) end
+    unprotect(player, key, data)
     dbg("check: " .. key .. " must accept v" .. cfg.version)
     sendShow(player, cfg, rec and rec.version or nil)
 end

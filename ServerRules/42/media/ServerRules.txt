@@ -10,7 +10,7 @@
 #  asked to accept again on their next join.
 # ===================================================================
 
-version = 1.2
+version = 1.3
 title = Welcome to Starman's Server!
 
 # Picture shown at the top of the rules window. Leave blank for none.
@@ -20,7 +20,8 @@ banner = media/textures/ServerRules_Banner.png
 # Seconds a new player has to accept before being disconnected. 0 = no limit.
 timeLimitSeconds = 300
 
-# true = the player can't be hurt and zombies ignore them while reading.
+# true = zombies can't see the player and drop them as a target while the rules window is open.
+# Other players can still see them.
 protectWhileReading = true
 
 [welcome]
