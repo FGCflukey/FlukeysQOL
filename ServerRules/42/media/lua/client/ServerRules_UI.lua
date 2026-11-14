@@ -107,6 +107,13 @@ Events.OnPlayerDeath.Add(function() stopProtection() end)
 ---------------------------------------------------------
 ServerRules_Window = ISPanel:derive("ServerRules_Window")
 
+-- A scrolling ISRichTextPanel's right margin defaults to 10px (left is 20px) and the scrollbar
+-- sits inside that, so text runs right up against it. Match the left margin, plus the bar's width.
+local function scrolledRightMargin(panel)
+    local barW = (panel.vscroll and panel.vscroll:getWidth()) or 16
+    return (panel.marginLeft or 20) + barW
+end
+
 function ServerRules_Window:createChildren()
     ISPanel.createChildren(self)
 
@@ -160,6 +167,7 @@ function ServerRules_Window:createChildren()
         welcome:initialise()
         self:addChild(welcome)
         welcome:addScrollBars()
+        welcome.marginRight = scrolledRightMargin(welcome)
         welcome.background = false
         welcome.clip = true
         welcome.autosetheight = false
@@ -324,6 +332,7 @@ function ServerRules_Window:createInfoChildren(y)
     panel:initialise()
     self:addChild(panel)
     panel:addScrollBars()
+    panel.marginRight = scrolledRightMargin(panel)
     panel.background = false
     panel.clip = true
     panel.autosetheight = false

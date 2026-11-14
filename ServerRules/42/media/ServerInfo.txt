@@ -33,13 +33,13 @@ The server restarts every day every 6 hours starting at 6:00 AM (ET) server time
 > Find somewhere safe a few minutes before the restart.
 
 [Welcome to Starman's PvE Server]
-As stated, this is a small private server for friends. Player damage is turned off, so it's just you, your friends and the zombies.
-We have a few rules to keep the server fun and fair for everyone, so please read them carefully.
-We will listen to feedback and suggestions, but the admins have the final say on all matters.
-We will investigate any reports of rule-breaking, and if you are found to be in violation of the rules you may be kicked or banned from the server.
-You may claim places as long as they aren't major POIs (e.g. stores, gas stations, medical places). Claims may not interfere with other players' bases or block roads. If you are unsure, ask an admin first.
-You are free to suggest new features on Discord, but we can't guarantee they will be added. We will consider them, but the admins have the final say on what is added to the server.
-We also have a few features to make your life easier, so please read about them below.
+- As stated, this is a small private server for friends. Player damage is turned off, so it's just you, your friends and the zombies.
+- We have a few rules to keep the server fun and fair for everyone, so please read them carefully.
+- We will listen to feedback and suggestions, but the admins have the final say on all matters.
+- We will investigate any reports of rule-breaking, and if you are found to be in violation of the rules you may be kicked or banned from the server.
+- You may claim places as long as they aren't major POIs (e.g. stores, gas stations, medical places). Claims may not interfere with other players' bases or block roads. If you are unsure, ask an admin first.
+- You are free to suggest new features on Discord, but we can't guarantee they will be added. We will consider them, but the admins have the final say on what is added to the server.
+- We also have a few features to make your life easier, so please read about them below.
 
 Press F9 at any time to see the rules and this page again.
 
@@ -48,71 +48,71 @@ Press F9 at any time to see the rules and this page again.
 Right-click a vending machine to buy and sell items for cash.
 
 > Lockpicking & Hotwiring & Key Crafting
-You can pick locks and hotwire and unhotwire vehicles with the right tools.
-Sit in the driver's seat of a hotwired car with the engine off and use the radial menu.
-To cut a key, sit in the driver's seat with a key blank and the right tool, engine off, and pick "Cut Key Blank" in the radial menu.
-A jammed car door lock can be fixed with a paperclip: right-click the car and pick "Repair Car Door Lock".
+- You can pick locks and hotwire and unhotwire vehicles with the right tools.
+- Sit in the driver's seat of a hotwired car with the engine off and use the radial menu.
+- To cut a key, sit in the driver's seat with a key blank and the right tool, engine off, and pick "Cut Key Blank" in the radial menu.
+- A jammed car door lock can be fixed with a paperclip: right-click the car and pick "Repair Car Door Lock".
 
 > Vanilla Vehicle Painting and Vinyls
-You can paint vehicles and apply vinyls with the right tools.
+- You can paint vehicles and apply vinyls with the right tools.
 
 > Chopper Travel
-Buy a one-way chopper ticket at the Emergency Vendor to fast-travel to another town.
+- Buy a one-way chopper ticket at the Emergency Vendor to fast-travel to another town.
 
 > ATMs & Money
-Found a credit card? Right-click an ATM and pick "Cash out Credit Card". It's noisy, so watch your back.
-Cash can be packed into $500 and $1000 money bags by crafting, and the vendor accepts them.
+- Found a credit card? Right-click an ATM and pick "Cash out Credit Card". It's noisy, so watch your back.
+- Cash can be packed into $500 and $1000 money bags by crafting, and the vendor accepts them.
 
 > Car Part Repair Kits
-Worn tires, brakes, suspension, mufflers, gas tanks, batteries and body parts can be restored. Remove the part, then right-click it in your inventory and pick "Repair".
-You need the matching repair kit, a blowtorch, metal and the right skill. Parts and materials can be in a backpack, dolly or nearby crate.
+- Worn tires, brakes, suspension, mufflers, gas tanks, batteries and body parts can be restored. Remove the part, then right-click it in your inventory and pick "Repair".
+- You need the matching repair kit, a blowtorch, metal and the right skill. Parts and materials can be in a backpack, dolly or nearby crate.
 
 > Engine Rebuilding & Dismantling
-In the mechanics window, right-click the engine and pick "Rebuild Engine" to bring its quality back up to 100 using Spare Engine Parts and a wrench.
-Spare car parts can be broken down for materials with "Dismantle Car Part".
+- In the mechanics window, right-click the engine and pick "Rebuild Engine" to bring its quality back up to 100 using Spare Engine Parts and a wrench.
+- Spare car parts can be broken down for materials with "Dismantle Car Part".
 
 > Refuel at Gas Pumps
-Right-click a gas pump to refill blowtorches and propane tanks. The pump needs power.
+- Right-click a gas pump to refill blowtorches and propane tanks. The pump needs power.
 
 > Cutting Security Gates
-Right-click a metal security gate (like the ones blocking gun stores) and pick "Cut Down Gate". Needs a blowtorch, a welding mask and Metalworking 2. You get scrap metal back.
+- Right-click a metal security gate (like the ones blocking gun stores) and pick "Cut Down Gate". Needs a blowtorch, a welding mask and Metalworking 2. You get scrap metal back.
 
 > Corpse Cleanup
-Right-click a zombie corpse and pick "Butcher Corpse" to clear bodies around your base. Needs some Butchering skill.
+- Right-click a zombie corpse and pick "Butcher Corpse" to clear bodies around your base. Needs some Butchering skill.
 
 > Zombie Infection Cure
-A cure exists! It's a multi-stage crafting chain that uses butchered zombie parts. Find the magazine to learn it, then right-click the finished cure and pick "Inject Cure".
+- A cure exists! It's a multi-stage crafting chain that uses butchered zombie parts. Find the magazine to learn it, then right-click the finished cure and pick "Inject Cure".
 
 > Home Heat Radiator
-Place a wall-mounted radiator in your base and right-click it for "Home Heat Settings" to switch it on and choose Cool, Normal or Hot.
+- Place a wall-mounted radiator in your base and right-click it for "Home Heat Settings" to switch it on and choose Cool, Normal or Hot.
 
 > Weapons & Ammo
-Right-click a stack of magazines to load or unload them all at once.
-Rounds of one caliber can be broken down and turned into another through crafting.
+- Right-click a stack of magazines to load or unload them all at once.
+- Rounds of one caliber can be broken down and turned into another through crafting.
 
 > Dolly & Toy Wagon
-Carry a dolly or toy wagon in your second hand to haul loads, and you can still climb fences, windows and walls with it.
+- Carry a dolly or toy wagon in your second hand to haul loads, and you can still climb fences, windows and walls with it.
 
 > Farming
-Fully grown crops don't rot, so you can harvest when it suits you. You still need to keep them watered and healthy.
+- Fully grown crops don't rot, so you can harvest when it suits you. You still need to keep them watered and healthy.
 
 > Skills & Traits
-Extra skill books exist for Sprinting, Nimble, Sneaking, Lightfooted and the weapon skills.
-The Visual Learner trait lets you gain XP straight from skill books.
+- Extra skill books exist for Sprinting, Nimble, Sneaking, Lightfooted and the weapon skills.
+- The Visual Learner trait lets you gain XP straight from skill books.
 
 > Trait Respec (F7)
-Press F7 to remove a trait you already have and get its point value back, then spend those points on a trait you wish you'd picked. The key can be changed under Options > Mod Options.
+- Press F7 to remove a trait you already have and get its point value back, then spend those points on a trait you wish you'd picked. The key can be changed under Options > Mod Options.
 
 > Personal Bank Safe
-Right-click a decorative bank vault with a crowbar and pick "Detach Safe from Floor". Carry it home, then pick "Place Personal Bank Safe" to set it down as your own lockable safe.
-Only you can open your safe. It must be empty before you can pick it up again.
+- Right-click a decorative bank vault with a crowbar and pick "Detach Safe from Floor". Carry it home, then pick "Place Personal Bank Safe" to set it down as your own lockable safe.
+- Only you can open your safe. It must be empty before you can pick it up again.
 
 > Arcade Machines
-Stand in front of an arcade cabinet or pinball machine and right-click it to "Play". It lowers stress, unhappiness and boredom. The machine needs power.
+- Stand in front of an arcade cabinet or pinball machine and right-click it to "Play". It lowers stress, unhappiness and boredom. The machine needs power.
 
 > Working Bandsaw
-Right-click a Metal Bandsaw and pick "Saw Planks" to cut nearby logs into planks in bulk, no handsaw needed. Logs can be on the ground or in containers close to the saw. Needs power.
-A bandsaw can be moved with a crowbar: "Pick Up Bandsaw", then "Place Bandsaw" where you want it.
+- Right-click a Metal Bandsaw and pick "Saw Planks" to cut nearby logs into planks in bulk, no handsaw needed. Logs can be on the ground or in containers close to the saw. Needs power.
+- A bandsaw can be moved with a crowbar: "Pick Up Bandsaw", then "Place Bandsaw" where you want it.
 
 
 [News]
