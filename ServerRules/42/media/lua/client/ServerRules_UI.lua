@@ -100,22 +100,27 @@ function ServerRules_Window:createChildren()
 
     -- Rules header
     local header = ISLabel:new(PAD, y, getTextManager():getFontHeight(UIFont.Medium),
-        getText("UI_ServerRules_RulesHeader"), 1, 0.85, 0.4, 1, UIFont.Medium, true)
+        getText(self.readOnly and "UI_ServerRules_RulesHeaderView" or "UI_ServerRules_RulesHeader"),
+        1, 0.85, 0.4, 1, UIFont.Medium, true)
     header:initialise()
     self:addChild(header)
     y = y + header:getHeight() + 8
 
-    -- One checkbox + word-wrapped text per rule (ISTickBox rows can't wrap long text themselves)
+    -- One checkbox + word-wrapped text per rule (ISTickBox rows can't wrap long text themselves).
+    -- Read-only view: just the numbered rules, no checkboxes.
     self.ticks = {}
     self.ticked = {}
-    local textX = PAD + 30
+    local textX = self.readOnly and PAD or (PAD + 30)
     for i, ruleText in ipairs(self.data.rules or {}) do
-        local tick = ISTickBox:new(PAD, y, 24, 20, "", self, ServerRules_Window.onTick, i)
-        tick:initialise()
-        tick:addOption("")
-        self:addChild(tick)
-        self.ticks[i] = tick
-        self.ticked[i] = false
+        local tick = nil
+        if not self.readOnly then
+            tick = ISTickBox:new(PAD, y, 24, 20, "", self, ServerRules_Window.onTick, i)
+            tick:initialise()
+            tick:addOption("")
+            self:addChild(tick)
+            self.ticks[i] = tick
+            self.ticked[i] = false
+        end
 
         local text = ISRichTextPanel:new(textX, y - 2, self.width - textX - PAD, 20)
         text:initialise()
@@ -126,7 +131,21 @@ function ServerRules_Window:createChildren()
         self:addChild(text)
         text:paginate()
 
-        y = y + math.max(text:getHeight(), tick:getHeight()) + 6
+        y = y + math.max(text:getHeight(), tick and tick:getHeight() or 0) + 6
+    end
+
+    -- Read-only view: a single Close button and done
+    if self.readOnly then
+        y = y + PAD
+        self.closeButton = ISButton:new((self.width - BUTTON_W) / 2, y, BUTTON_W, BUTTON_H,
+            getText("UI_ServerRules_Close"), self, ServerRules_Window.close)
+        self.closeButton:initialise()
+        self:addChild(self.closeButton)
+        y = y + BUTTON_H + PAD
+        self:setHeight(y)
+        self:setX((getCore():getScreenWidth() - self.width) / 2)
+        self:setY(math.max(10, (getCore():getScreenHeight() - self.height) / 2))
+        return
     end
 
     -- Warning (after the first Decline) and status / timer lines
@@ -271,8 +290,9 @@ function ServerRules_Window:new(player, data)
     o.data = data
     o.backgroundColor = { r = 0, g = 0, b = 0, a = 0.92 }
     o.borderColor = { r = 1, g = 0.85, b = 0.4, a = 0.8 }
-    o.moveWithMouse = false
-    if (tonumber(data.timeLimit) or 0) > 0 then
+    o.readOnly = data.readOnly == true      -- opened with the keybind after already accepting
+    o.moveWithMouse = o.readOnly
+    if not o.readOnly and (tonumber(data.timeLimit) or 0) > 0 then
         o.deadline = nowMs() + tonumber(data.timeLimit) * 1000
     end
     return o
@@ -324,17 +344,47 @@ local function onGameStart()
     Events.OnTick.Add(onTickAsk)
 end
 
+local viewRequested = false   -- the player pressed the keybind and is waiting for the rules
+
 local function onServerCommand(module, command, args)
     if module ~= ServerRules.MODULE then return end
     asking = nil   -- any answer means the server heard us
     dbg("server said: " .. tostring(command))
 
     if command == ServerRules.CMD_SHOW then
+        viewRequested = false
         showWindow(args or {})
     elseif command == ServerRules.CMD_RECORDED or command == ServerRules.CMD_ACCEPTED or command == ServerRules.CMD_NONE then
+        if command == ServerRules.CMD_NONE and viewRequested and getPlayer() then
+            getPlayer():Say(getText("UI_ServerRules_NoRules"))
+        end
+        viewRequested = false
         if ServerRules.window then ServerRules.window:close() end
     end
 end
 
 Events.OnGameStart.Add(onGameStart)
 Events.OnServerCommand.Add(onServerCommand)
+
+---------------------------------------------------------
+-- Keybind: show the rules again (Options > Mod Options > Server Rules, default F9)
+-- Same PZAPI.ModOptions approach as TraitRespec. Vanilla doesn't bind F9; TraitRespec uses F7
+-- and the Workshop "PZ B42 GPS Navigation" mod uses F8, so F9 is the first free one.
+---------------------------------------------------------
+local modOptions = PZAPI.ModOptions:create("ServerRules", "UI_ServerRules_ModOptionsTitle")
+local viewKey = modOptions:addKeyBind("ViewRules", "UI_ServerRules_ViewKeybind", Keyboard.KEY_F9)
+
+local function onKeyStartPressed(key)
+    if key ~= viewKey:getValue() then return end
+    if not isClient() or not getPlayer() then return end
+
+    local w = ServerRules.window
+    if w then
+        -- The read-only copy toggles closed; the must-accept window can't be closed this way
+        if w.readOnly then w:close() end
+        return
+    end
+    viewRequested = true
+    sendClientCommand(getPlayer(), ServerRules.MODULE, ServerRules.CMD_VIEW, {})
+end
+Events.OnKeyStartPressed.Add(onKeyStartPressed)

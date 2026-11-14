@@ -9,5 +9,10 @@
     "UI_ServerRules_Saving": "Saving...",
     "UI_ServerRules_NoResponse": "No response from the server, please try Accept again.",
     "UI_ServerRules_Leaving": "Leaving the server...",
-    "UI_ServerRules_TimeUp": "Time's up. Leaving the server..."
+    "UI_ServerRules_TimeUp": "Time's up. Leaving the server...",
+    "UI_ServerRules_RulesHeaderView": "Server Rules:",
+    "UI_ServerRules_Close": "Close",
+    "UI_ServerRules_NoRules": "This server has no rules set up.",
+    "UI_ServerRules_ModOptionsTitle": "Server Rules",
+    "UI_ServerRules_ViewKeybind": "Show the server rules"
 }

@@ -206,6 +206,27 @@ Commands[ServerRules.CMD_CHECK] = function(player, args)
     sendShow(player, cfg, rec and rec.version or nil)
 end
 
+-- Keybind: show the rules again. Already accepted the current version -> a read-only copy (no
+-- checkboxes, timer or protection). Not accepted yet -> exactly the same as joining (Check).
+Commands[ServerRules.CMD_VIEW] = function(player, args)
+    local data = getData()
+    local key = getPlayerKey(player)
+    local cfg = loadConfig()
+    local rec = data.players[key]
+    if cfg and #cfg.rules > 0 and rec and tonumber(rec.version) == cfg.version then
+        sendServerCommand(player, ServerRules.MODULE, ServerRules.CMD_SHOW, {
+            version  = cfg.version,
+            title    = cfg.title,
+            banner   = cfg.banner,
+            welcome  = cfg.welcome,
+            rules    = cfg.rules,
+            readOnly = true,
+        })
+        return
+    end
+    Commands[ServerRules.CMD_CHECK](player, args)
+end
+
 Commands[ServerRules.CMD_ACCEPT] = function(player, args)
     local data = getData()
     local key = getPlayerKey(player)
