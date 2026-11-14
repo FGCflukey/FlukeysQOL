@@ -137,6 +137,12 @@ function ServerRules_Window:createChildren()
     self.titleY = y
     y = y + getTextManager():getFontHeight(titleFont) + PAD
 
+    -- Info-News view: swap the welcome text + rules for the info sections
+    if self.mode == "info" then
+        self:createInfoChildren(y)
+        return
+    end
+
     -- Asked again because the rules changed since they last accepted
     if self.data.previousVersion ~= nil then
         local updated = ISLabel:new(PAD, y, getTextManager():getFontHeight(UIFont.Small),
@@ -199,17 +205,16 @@ function ServerRules_Window:createChildren()
         y = y + math.max(text:getHeight(), tick and tick:getHeight() or 0) + 6
     end
 
-    -- Read-only view: a single Close button and done
+    -- Read-only view: Info-News (if the server has an info file) + Close, and done
     if self.readOnly then
         y = y + PAD
-        self.closeButton = ISButton:new((self.width - BUTTON_W) / 2, y, BUTTON_W, BUTTON_H,
-            getText("UI_ServerRules_Close"), self, ServerRules_Window.close)
-        self.closeButton:initialise()
-        self:addChild(self.closeButton)
-        y = y + BUTTON_H + PAD
-        self:setHeight(y)
-        self:setX((getCore():getScreenWidth() - self.width) / 2)
-        self:setY(math.max(10, (getCore():getScreenHeight() - self.height) / 2))
+        local buttons = {}
+        if self.data.hasInfo then
+            table.insert(buttons, { "UI_ServerRules_InfoNews", ServerRules_Window.onInfoNews, "infoButton" })
+        end
+        table.insert(buttons, { "UI_ServerRules_Close", ServerRules_Window.close, "closeButton" })
+        y = self:addButtonRow(y, buttons)
+        self:finishLayout(y)
         return
     end
 
@@ -245,6 +250,102 @@ function ServerRules_Window:createChildren()
     self:setY(math.max(10, (getCore():getScreenHeight() - self.height) / 2))
 
     self:updateAcceptButton()
+end
+
+-- A centred row of buttons. buttons = { { textKey, onClick, fieldName }, ... }; returns the new y.
+function ServerRules_Window:addButtonRow(y, buttons)
+    local gap = 20
+    local total = #buttons * BUTTON_W + (#buttons - 1) * gap
+    local x = (self.width - total) / 2
+    for _, b in ipairs(buttons) do
+        local button = ISButton:new(x, y, BUTTON_W, BUTTON_H, getText(b[1]), self, b[2])
+        button:initialise()
+        self:addChild(button)
+        self[b[3]] = button
+        x = x + BUTTON_W + gap
+    end
+    return y + BUTTON_H + PAD
+end
+
+-- Size the window to its content and centre it on screen
+function ServerRules_Window:finishLayout(y)
+    self:setHeight(y)
+    self:setX((getCore():getScreenWidth() - self.width) / 2)
+    self:setY(math.max(10, (getCore():getScreenHeight() - self.height) / 2))
+end
+
+---------------------------------------------------------
+-- Info-News view
+---------------------------------------------------------
+-- Colours: section headings yellow (same as the rules header), [!alert] headings red,
+-- body text white, and body lines starting with ">" highlighted in yellow.
+local INFO_HEADING   = " <SIZE:medium> <RGB:1,0.85,0.4> "
+local INFO_ALERT     = " <SIZE:medium> <RGB:1,0.35,0.3> "
+local INFO_BODY      = " <SIZE:small> <RGB:1,1,1> "
+local INFO_HIGHLIGHT = " <RGB:1,0.85,0.4> "
+
+-- Turn the server's sections into one rich-text string. Each colour change comes right AFTER
+-- a <LINE>, because ISRichTextPanel keeps one colour per line: changing it mid-line would
+-- recolour the whole line.
+local function buildInfoText(sections)
+    local parts = {}
+    for i, s in ipairs(sections or {}) do
+        if i > 1 then table.insert(parts, " <BR> ") end
+        if s.title and s.title ~= "" then
+            table.insert(parts, (s.alert and INFO_ALERT or INFO_HEADING) .. s.title .. " <LINE> ")
+        end
+        table.insert(parts, INFO_BODY)
+        for _, line in ipairs(s.lines or {}) do
+            if line == "" then
+                table.insert(parts, " <LINE> ")
+            elseif line:sub(1, 1) == ">" then
+                local text = line:sub(2):gsub("^%s+", "")
+                table.insert(parts, INFO_HIGHLIGHT .. text .. " <LINE> " .. INFO_BODY)
+            else
+                table.insert(parts, line .. " <LINE> ")
+            end
+        end
+    end
+    return table.concat(parts)
+end
+
+function ServerRules_Window:createInfoChildren(y)
+    local innerW = self.width - PAD * 2
+
+    local header = ISLabel:new(PAD, y, getTextManager():getFontHeight(UIFont.Medium),
+        getText("UI_ServerRules_InfoHeader"), 1, 0.85, 0.4, 1, UIFont.Medium, true)
+    header:initialise()
+    self:addChild(header)
+    y = y + header:getHeight() + 8
+
+    -- Scrolls if long. Leave room for the buttons below so the window still fits the screen.
+    local maxH = math.max(150, getCore():getScreenHeight() - y - BUTTON_H - PAD * 4 - 20)
+    local panel = ISRichTextPanel:new(PAD, y, innerW, maxH)
+    panel:initialise()
+    self:addChild(panel)
+    panel:addScrollBars()
+    panel.background = false
+    panel.clip = true
+    panel.autosetheight = false
+    panel.text = buildInfoText(self.info)
+    panel:paginate()
+    panel:setHeight(math.min(panel:getScrollHeight(), maxH))
+    y = y + panel:getHeight() + PAD * 2
+
+    y = self:addButtonRow(y, {
+        { "UI_ServerRules_BackToRules", ServerRules_Window.onBackToRules, "backButton" },
+        { "UI_ServerRules_Close", ServerRules_Window.close, "closeButton" },
+    })
+    self:finishLayout(y)
+end
+
+function ServerRules_Window:onInfoNews()
+    if self.infoButton then self.infoButton:setEnable(false) end   -- until the server answers
+    sendClientCommand(self.player, ServerRules.MODULE, ServerRules.CMD_INFO, {})
+end
+
+function ServerRules_Window:onBackToRules()
+    ServerRules.showWindow(self.data)
 end
 
 function ServerRules_Window:prerender()
@@ -347,13 +448,16 @@ function ServerRules_Window:close()
     if ServerRules.window == self then ServerRules.window = nil end
 end
 
-function ServerRules_Window:new(player, data)
+-- mode: "rules" (default) or "info" (Info-News view, read-only window only; info = its sections)
+function ServerRules_Window:new(player, data, mode, info)
     local width = math.min(MAX_WIDTH, getCore():getScreenWidth() - 40)
     local o = ISPanel:new(0, 0, width, 200)
     setmetatable(o, self)
     self.__index = self
     o.player = player
     o.data = data
+    o.mode = mode or "rules"
+    o.info = info
     o.backgroundColor = { r = 0, g = 0, b = 0, a = 0.92 }
     o.borderColor = { r = 1, g = 0.85, b = 0.4, a = 0.8 }
     o.readOnly = data.readOnly == true      -- opened with the keybind after already accepting
@@ -367,9 +471,9 @@ end
 ---------------------------------------------------------
 -- Showing / closing
 ---------------------------------------------------------
-local function showWindow(data)
+local function showWindow(data, mode, info)
     if ServerRules.window then ServerRules.window:close() end   -- e.g. rules changed while reading
-    local w = ServerRules_Window:new(getPlayer(), data)
+    local w = ServerRules_Window:new(getPlayer(), data, mode, info)
     w:initialise()
     w:addToUIManager()
     w:setAlwaysOnTop(true)
@@ -377,6 +481,7 @@ local function showWindow(data)
     ServerRules.window = w
     if not w.readOnly and data.protect then startProtection() end
 end
+ServerRules.showWindow = showWindow   -- used by the window's "Back to Rules" button
 
 ---------------------------------------------------------
 -- Asking the server on join (retried a few times in case the first message is too early)
@@ -421,7 +526,13 @@ local function onServerCommand(module, command, args)
     asking = nil   -- any answer means the server heard us
     dbg("server said: " .. tostring(command))
 
-    if command == ServerRules.CMD_SHOW then
+    if command == ServerRules.CMD_INFOSHOW then
+        -- Only swap if the read-only rules window is still open (they may have closed it meanwhile)
+        local w = ServerRules.window
+        if w and w.readOnly then
+            showWindow(w.data, "info", (args and args.sections) or {})
+        end
+    elseif command == ServerRules.CMD_SHOW then
         viewRequested = false
         showWindow(args or {})
     elseif command == ServerRules.CMD_RECORDED or command == ServerRules.CMD_ACCEPTED or command == ServerRules.CMD_NONE then

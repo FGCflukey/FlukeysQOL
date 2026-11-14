@@ -14,5 +14,8 @@
     "UI_ServerRules_Close": "Close",
     "UI_ServerRules_NoRules": "This server has no rules set up.",
     "UI_ServerRules_ModOptionsTitle": "Server Rules",
-    "UI_ServerRules_ViewKeybind": "Show the server rules"
+    "UI_ServerRules_ViewKeybind": "Show the server rules",
+    "UI_ServerRules_InfoNews": "Info-News",
+    "UI_ServerRules_BackToRules": "Back to Rules",
+    "UI_ServerRules_InfoHeader": "Server Info & News:"
 }

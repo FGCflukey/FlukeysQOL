@@ -1,0 +1,45 @@
+# ===================================================================
+#  Server Info & News  (shown by the Info-News button in the F9 rules window)
+# ===================================================================
+#  Lines starting with # are comments and are ignored.
+#
+#  To edit WITHOUT touching the mod, copy this file to the server's
+#  Zomboid/Lua/ServerInfo.txt  -- that copy wins if it exists.
+#  It's re-read every time someone opens it, so no restart is needed.
+#
+#  HOW TO WRITE IT
+#    [Heading]          starts a new section with a YELLOW heading
+#    [!Heading]         starts an ALERT section with a RED heading
+#    > some text        a highlighted line (yellow) inside a section
+#    any other line     normal white text
+#    (blank line)       a gap between paragraphs
+#
+#  Each line in this file is its own line on screen, and long lines wrap
+#  automatically -- so keep a whole sentence/paragraph on ONE line.
+#
+#  Add, remove or reorder sections freely, as many as you like.
+#  If this file is empty (or only comments), the Info-News button is hidden.
+# ===================================================================
+
+[!Server Restart Schedule]
+The server restarts every day at 6:00 AM server time.
+> Find somewhere safe a few minutes before the restart.
+
+[Welcome to Starman's PvE Server]
+This is a small private server for friends. Player damage is turned off, so it's just you, your friends and the zombies.
+
+Press F9 at any time to see the rules and this page again.
+
+[Server Features]
+> Emergency Vendor
+Right-click a vending machine to buy and sell items for cash.
+
+> Chopper Travel
+Buy a one-way chopper ticket at the Emergency Vendor to fast-travel to another town.
+
+> Remove Hotwire
+Sit in the driver's seat of a hotwired car with the engine off and use the radial menu.
+
+[News]
+> 2026-11-14
+Info & News page added to the rules window!

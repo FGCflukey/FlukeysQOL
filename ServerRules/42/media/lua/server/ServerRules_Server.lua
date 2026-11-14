@@ -31,13 +31,16 @@ local function trim(s)
     return s
 end
 
-local function openConfigReader()
+local INFO_NAME = "ServerInfo.txt"
+
+local function openConfigReader(fileName)
+    fileName = fileName or CONFIG_NAME
     -- Server owner's override copy in Zomboid/Lua/ wins
-    local ok, reader = pcall(getFileReader, CONFIG_NAME, false)
-    if ok and reader then return reader, "Zomboid/Lua/" .. CONFIG_NAME end
+    local ok, reader = pcall(getFileReader, fileName, false)
+    if ok and reader then return reader, "Zomboid/Lua/" .. fileName end
     -- Otherwise the copy shipped in the mod. The path is resolved against the mod folder,
     -- which differs between layouts, so try each.
-    for _, path in ipairs({ "media/" .. CONFIG_NAME, "42/media/" .. CONFIG_NAME, "common/media/" .. CONFIG_NAME }) do
+    for _, path in ipairs({ "media/" .. fileName, "42/media/" .. fileName, "common/media/" .. fileName }) do
         ok, reader = pcall(getModFileReader, MOD_ID, path, false)
         if ok and reader then return reader, path end
     end
@@ -97,6 +100,50 @@ local function loadConfig()
     }
     dbg("config from " .. tostring(source) .. ": version=" .. cfg.version .. " rules=" .. #rules)
     return cfg
+end
+
+-- ServerInfo.txt -> list of sections for the Info-News view:
+--   [Title]      starts a section with a yellow heading
+--   [!Title]     starts an alert section with a red heading
+--   anything else is that section's text (blank lines kept as paragraph breaks);
+--   text before the first [heading] becomes an untitled intro section
+-- Re-read on every request, so edits show up the next time someone opens it.
+local function loadInfo()
+    local reader, source = openConfigReader(INFO_NAME)
+    if not reader then return {} end
+
+    local sections, current = {}, nil
+    local line = reader:readLine()
+    while line ~= nil do
+        local t = trim(line)
+        if t:sub(1, 1) == "#" then
+            -- comment
+        elseif t:match("^%[.+%]$") then
+            local title = trim(t:sub(2, -2))
+            local alert = title:sub(1, 1) == "!"
+            if alert then title = trim(title:sub(2)) end
+            current = { title = title, alert = alert, lines = {} }
+            table.insert(sections, current)
+        else
+            if not current then
+                current = { title = "", alert = false, lines = {} }
+                table.insert(sections, current)
+            end
+            table.insert(current.lines, t)
+        end
+        line = reader:readLine()
+    end
+    reader:close()
+
+    -- Trim blank lines off both ends of each section; drop sections left completely empty
+    local result = {}
+    for _, s in ipairs(sections) do
+        while #s.lines > 0 and s.lines[1] == "" do table.remove(s.lines, 1) end
+        while #s.lines > 0 and s.lines[#s.lines] == "" do table.remove(s.lines) end
+        if s.title ~= "" or #s.lines > 0 then table.insert(result, s) end
+    end
+    dbg("info from " .. tostring(source) .. ": " .. #result .. " sections")
+    return result
 end
 
 ---------------------------------------------------------
@@ -218,10 +265,16 @@ Commands[ServerRules.CMD_VIEW] = function(player, args)
             welcome  = cfg.welcome,
             rules    = cfg.rules,
             readOnly = true,
+            hasInfo  = #loadInfo() > 0,   -- only offer the Info-News button when there's something to show
         })
         return
     end
     Commands[ServerRules.CMD_CHECK](player, args)
+end
+
+-- Info-News button (only shown in the read-only view)
+Commands[ServerRules.CMD_INFO] = function(player, args)
+    sendServerCommand(player, ServerRules.MODULE, ServerRules.CMD_INFOSHOW, { sections = loadInfo() })
 end
 
 Commands[ServerRules.CMD_ACCEPT] = function(player, args)
