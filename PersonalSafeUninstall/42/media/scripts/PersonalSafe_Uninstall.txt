@@ -1,0 +1,49 @@
+/*
+ * Personal Safe Uninstall
+ *
+ * The Workshop mod Personal Safe (3745891081) registered one build-menu entity,
+ * PersonalSafe.Safe. The world's dictionary remembers that name, so removing the mod
+ * leaves it pointing at a script that no longer exists.
+ *
+ * This declares the same entity again (same module, same name, same sprites) with ONLY
+ * its SpriteConfig: no CraftRecipe, so it never shows in the Build menu, and no UiConfig
+ * or OnIsValid, since those referenced the original mod's UI style and Lua function. Same
+ * approach as SIMBAproduz's "SMB steps Uninstall" (3819922421).
+ */
+module PersonalSafe
+{
+    entity Safe
+    {
+        component SpriteConfig
+        {
+            face N
+            {
+                layer
+                {
+                    row = location_military_generic_01_0,
+                }
+            }
+            face E
+            {
+                layer
+                {
+                    row = location_military_generic_01_1,
+                }
+            }
+            face S
+            {
+                layer
+                {
+                    row = location_military_generic_01_2,
+                }
+            }
+            face W
+            {
+                layer
+                {
+                    row = location_military_generic_01_3,
+                }
+            }
+        }
+    }
+}

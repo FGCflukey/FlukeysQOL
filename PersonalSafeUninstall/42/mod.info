@@ -1,0 +1,10 @@
+name=Personal Safe Uninstall
+id=PersonalSafeUninstall
+description=Safe removal of the Workshop mod Personal Safe (3745891081) from a world. Use it instead of Personal Safe, never together: it keeps the PersonalSafe.Safe entity name registered so the world dictionary stays happy, but nothing can be built. Same approach as SIMBAproduz's "SMB steps Uninstall".
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.22
+versionMin=42.19
+poster=poster.png
+icon=LogoFGC.png
+incompatible=\PersonalSafe
