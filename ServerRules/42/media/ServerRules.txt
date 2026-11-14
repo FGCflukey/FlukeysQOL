@@ -10,7 +10,7 @@
 #  asked to accept again on their next join.
 # ===================================================================
 
-version = 1.1
+version = 1.2
 title = Welcome to Starman's Server!
 
 # Picture shown at the top of the rules window. Leave blank for none.
