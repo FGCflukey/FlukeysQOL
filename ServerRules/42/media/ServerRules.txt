@@ -26,8 +26,6 @@ protectWhileReading = true
 [welcome]
 Thanks for joining! This is a small private server for friends, so please take a minute to read the rules below.
 
-You must check every rule to show you agree, then click Accept.
-
 [rules]
 # One rule per line. A leading "-" is optional.
 - Be respectful to other players. No harassment, hate speech or slurs.
