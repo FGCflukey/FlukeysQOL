@@ -1,5 +1,6 @@
 {
     "UI_ServerRules_DefaultTitle": "Welcome!",
+    "UI_ServerRules_Updated": "The rules have been updated (v%1 to v%2). Please review them and accept again.",
     "UI_ServerRules_RulesHeader": "Server Rules - tick each rule to agree to it:",
     "UI_ServerRules_Accept": "Accept",
     "UI_ServerRules_Decline": "Decline",

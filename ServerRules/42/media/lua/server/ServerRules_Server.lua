@@ -88,6 +88,7 @@ local function loadConfig()
     local cfg = {
         version   = tonumber(keys.version) or 1,
         title     = keys.title,
+        banner    = keys.banner,
         timeLimit = math.max(0, math.floor(tonumber(keys.timelimitseconds) or 300)),
         protect   = toBool(keys.protectwhilereading, true),
         welcome   = table.concat(welcome, " <LINE> "),   -- ISRichTextPanel line-break tag
@@ -165,10 +166,14 @@ end
 ---------------------------------------------------------
 -- Commands
 ---------------------------------------------------------
-local function sendShow(player, cfg)
+-- previousVersion: the version this player accepted before, when they're being asked again
+-- because the rules changed (nil for a brand new player)
+local function sendShow(player, cfg, previousVersion)
     sendServerCommand(player, ServerRules.MODULE, ServerRules.CMD_SHOW, {
         version   = cfg.version,
+        previousVersion = previousVersion,
         title     = cfg.title,
+        banner    = cfg.banner,
         welcome   = cfg.welcome,
         rules     = cfg.rules,
         timeLimit = cfg.timeLimit,
@@ -198,7 +203,7 @@ Commands[ServerRules.CMD_CHECK] = function(player, args)
 
     if cfg.protect then protect(player, key, data) end
     dbg("check: " .. key .. " must accept v" .. cfg.version)
-    sendShow(player, cfg)
+    sendShow(player, cfg, rec and rec.version or nil)
 end
 
 Commands[ServerRules.CMD_ACCEPT] = function(player, args)
@@ -214,7 +219,8 @@ Commands[ServerRules.CMD_ACCEPT] = function(player, args)
     -- Rules were edited while they were reading: show them the new ones instead
     if tonumber(args and args.version) ~= cfg.version then
         dbg("accept: " .. key .. " accepted old version " .. tostring(args and args.version) .. ", resending")
-        sendShow(player, cfg)
+        local rec = data.players[key]
+        sendShow(player, cfg, rec and rec.version or nil)
         return
     end
 

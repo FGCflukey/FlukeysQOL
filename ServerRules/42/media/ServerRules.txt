@@ -10,8 +10,12 @@
 #  asked to accept again on their next join.
 # ===================================================================
 
-version = 1.0
+version = 1.1
 title = Welcome to Starman's Server!
+
+# Picture shown at the top of the rules window. Leave blank for none.
+# Put the image in the mod's 42/media/textures/ folder (every player's copy of the mod needs it).
+banner = media/textures/ServerRules_Banner.png
 
 # Seconds a new player has to accept before being disconnected. 0 = no limit.
 timeLimitSeconds = 300
@@ -22,12 +26,20 @@ protectWhileReading = true
 [welcome]
 Thanks for joining! This is a small private server for friends, so please take a minute to read the rules below.
 
-Tick every rule to show you agree, then click Accept.
+You must check every rule to show you agree, then click Accept.
 
 [rules]
 # One rule per line. A leading "-" is optional.
 - Be respectful to other players. No harassment, hate speech or slurs.
+- Cursing is fine in moderation, just don't overdo it in chat.
 - No cheating, exploiting bugs or using hacked clients.
-- Don't grief, steal from or destroy other players' bases.
-- No killing other players unless both sides agree to it.
-- Have fun, and ask an admin if you're unsure about anything.
+- If you find a bug or exploit, report it to an admin instead of using it.
+- No alt accounts, and don't share your account with anyone.
+- Don't grief, steal from or disturb other players' bases.
+- Don't lockpick, hotwire or take other players' vehicles, or pick the locks on their bases.
+- Don't spam chat or advertise other servers.
+- Don't claim POIs or build or block roads in a way that prevents other players from using them.
+- Don't destroy loot crates as they don't spawn back and are a valuable resource for other players.
+- Don't leave vehicles, junk or trash blocking shared areas.
+- If you have a problem, take it to Discord or an admin, not in-game chat.
+- Have fun, don't be afraid to ask an admin or others if you're unsure about anything.

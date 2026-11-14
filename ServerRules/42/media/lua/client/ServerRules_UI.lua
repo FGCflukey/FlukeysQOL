@@ -18,6 +18,7 @@ local function dbg(msg) if DEBUG then print("[ServerRules:UI] " .. tostring(msg)
 local PAD = 15
 local MAX_WIDTH = 640
 local MAX_WELCOME_HEIGHT = 220
+local MAX_BANNER_HEIGHT = 300
 local BUTTON_W, BUTTON_H = 120, 28
 local LEAVE_DELAY_MS = 1500        -- give the Decline log message time to reach the server
 local ACCEPT_TIMEOUT_MS = 10000    -- server should answer Accept well within this
@@ -47,10 +48,40 @@ function ServerRules_Window:createChildren()
     local innerW = self.width - PAD * 2
     local y = PAD
 
+    -- Banner picture, scaled to the window width keeping its shape (drawn in prerender)
+    if self.data.banner and self.data.banner ~= "" then
+        local tex = getTexture(self.data.banner)
+        if tex and tex:getWidth() > 0 then
+            local w = innerW
+            local h = w * tex:getHeight() / tex:getWidth()
+            -- At most a quarter of the screen height, so the rules still fit on smaller screens
+            local maxH = math.min(MAX_BANNER_HEIGHT, getCore():getScreenHeight() * 0.25)
+            if h > maxH then
+                h = maxH
+                w = h * tex:getWidth() / tex:getHeight()
+            end
+            self.banner = { tex = tex, x = (self.width - w) / 2, y = y, w = w, h = h }
+            y = y + h + PAD
+        else
+            dbg("banner not found: " .. tostring(self.data.banner))
+        end
+    end
+
     -- Title
     local titleFont = UIFont.Large
     self.titleY = y
     y = y + getTextManager():getFontHeight(titleFont) + PAD
+
+    -- Asked again because the rules changed since they last accepted
+    if self.data.previousVersion ~= nil then
+        local updated = ISLabel:new(PAD, y, getTextManager():getFontHeight(UIFont.Small),
+            getText("UI_ServerRules_Updated", tostring(self.data.previousVersion), tostring(self.data.version)),
+            1, 0.9, 0.2, 1, UIFont.Small, true)
+        updated:initialise()
+        self:addChild(updated)
+        updated:setX((self.width - updated:getWidth()) / 2)
+        y = y + updated:getHeight() + PAD
+    end
 
     -- Welcome text (scrolls if it's long)
     if self.data.welcome and self.data.welcome ~= "" then
@@ -134,6 +165,10 @@ end
 
 function ServerRules_Window:prerender()
     ISPanel.prerender(self)
+    if self.banner then
+        local b = self.banner
+        self:drawTextureScaled(b.tex, b.x, b.y, b.w, b.h, 1, 1, 1, 1)
+    end
     local title = (self.data.title and self.data.title ~= "") and self.data.title or getText("UI_ServerRules_DefaultTitle")
     self:drawTextCentre(title, self.width / 2, self.titleY, 1, 1, 1, 1, UIFont.Large)
 end
