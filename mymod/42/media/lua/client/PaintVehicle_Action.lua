@@ -1,143 +1,45 @@
 -- PaintVehicle_Action.lua
--- Timed action for spraycan-based vehicle repainting
+-- Timed action for spraycan-based vehicle repainting.
+-- The color + spraycan use are applied by the server (PaintVehicle_Server.lua).
 
 require "TimedActions/ISBaseTimedAction"
+require "PaintVehicle_Shared"
 
------------------------------------------------------
--- WEATHER CHECK
------------------------------------------------------
-local function PV_isBadWeather()
-    local climate = getClimateManager()
+local DEBUG = false
+local function dbg(msg) if DEBUG then print("[PaintVehicle:Action] " .. tostring(msg)) end end
 
-    if climate:getRainIntensity() > 0 then return true end
-    if climate:getSnowIntensity() > 0 then return true end
-    if climate:getFogIntensity() > 0 then return true end
-
-    -- Thunderstorm detection (compatible with your build)
-    local storm = climate:getThunderStorm()
-    if storm and storm.active then return true end
-
-    return false
-end
-
------------------------------------------------------
--- LIGHTING CHECK
------------------------------------------------------
-local function PV_hasEnoughLight(character)
-    local square = character:getSquare()
-    if not square then return false end
-
-    local playerIndex = character:getPlayerNum()
-
-    -- Indoors: must have some light
-    if not square:isOutside() then
-        return square:getLightLevel(playerIndex) > 0.3
-    end
-
-    -- Outdoors
-    local climate = getClimateManager()
-    local isNight = climate:getNightStrength() > 0.5
-
-    -- Daytime outdoors always OK
-    if not isNight then
-        return true
-    end
-
-    -- Night outdoors: must have strong artificial light
-    return square:getLightLevel(playerIndex) > 0.6
-end
-
------------------------------------------------------
--- CLIMATE DEBUG
------------------------------------------------------
-local function PV_debugClimate()
-    local c = getClimateManager()
-    print("---- Climate Debug ----")
-    print("Rain:", c:getRainIntensity())
-    print("Snow:", c:getSnowIntensity())
-    print("Fog:", c:getFogIntensity())
-    print("Storm:", c:getThunderStorm())
-    print("NightStrength:", c:getNightStrength())
-    print("------------------------")
-end
-
------------------------------------------------------
--- BLOOD CLEANLINESS CHECK
------------------------------------------------------
-local function PV_vehicleIsBloody(vehicle)
-    if not vehicle or not vehicle.getBloodIntensity then
-        return false
-    end
-
-    if vehicle:getBloodIntensity("Front") > 0 then return true end
-    if vehicle:getBloodIntensity("Rear") > 0 then return true end
-    if vehicle:getBloodIntensity("Left") > 0 then return true end
-    if vehicle:getBloodIntensity("Right") > 0 then return true end
-
-    return false
-end
-
------------------------------------------------------
--- OWNERSHIP CHECK (same rule as the vinyl swap system)
------------------------------------------------------
-local function PV_hasVehicleKey(character, vehicle)
-    local keyId = vehicle:getKeyId()
-    if not keyId or keyId == -1 then return true end
-
-    -- Same check vanilla uses (VehicleUtils.RequiredKeyNotFound) --
-    -- a manual getFirstTypeEvalRecurse("Key", ...) search is fragile
-    -- since it depends on the key item's exact getType() string.
-    return character:getInventory():haveThisKeyId(keyId)
-end
-
------------------------------------------------------
--- TIMED ACTION CLASS
------------------------------------------------------
 ISPaintVehicleAction = ISBaseTimedAction:derive("ISPaintVehicleAction")
 
+-- The menu moves the spraycan + sanding block out of any bag before queueing this
+-- (ISInventoryPaneContextMenu.transferIfNeeded), so a top-level contains() is correct here.
 function ISPaintVehicleAction:isValid()
     if not self.vehicle or self.vehicle:isRemovedFromWorld() then return false end
     if not self.character or self.character:isDead() then return false end
 
-    -----------------------------------------------------
-    -- REQUIRED ITEMS FIRST
-    -----------------------------------------------------
-    if self.spraycan then
-        if not self.character:getInventory():contains(self.spraycan) then return false end
-    end
+    local inv = self.character:getInventory()
+    if not self.spraycan or not inv:contains(self.spraycan) then return false end
+    if not inv:containsTypeRecurse(PaintVehicle.SANDING_BLOCK) then return false end
 
-    if not self.character:getInventory():contains("SandingBlock") then
-        return false
-    end
-
-    -----------------------------------------------------
-    -- OWNERSHIP BLOCK
-    -----------------------------------------------------
-    if not PV_hasVehicleKey(self.character, self.vehicle) then
+    if not PaintVehicle.hasVehicleKey(self.character, self.vehicle) then
         self.character:Say("I don't have the key to this car.")
         return false
     end
-
-    -----------------------------------------------------
-    -- WEATHER BLOCK
-    -----------------------------------------------------
-
-    -- PV_debugClimate()  -- DEBUG PRINT
-
-    if PV_isBadWeather() then
+    if PaintVehicle.isBadWeather() then
         self.character:Say("The weather is too bad to paint.")
         return false
     end
-
-    -----------------------------------------------------
-    -- LIGHT BLOCK
-    -----------------------------------------------------
-    if not PV_hasEnoughLight(self.character) then
+    if not PaintVehicle.hasEnoughLight(self.character) then
         self.character:Say("I need more light to paint.")
         return false
     end
-
     return true
+end
+
+-- Attracts zombies, like any loud work
+function ISPaintVehicleAction:makeNoise()
+    local c = self.character
+    addSound(c, c:getX(), c:getY(), c:getZ(), PaintVehicle.NOISE_RADIUS, PaintVehicle.NOISE_VOLUME)
+    self.lastNoise = getTimestampMs()
 end
 
 function ISPaintVehicleAction:start()
@@ -145,18 +47,22 @@ function ISPaintVehicleAction:start()
 
     self:setActionAnim("Craft")
     self.character:SetVariable("CraftingType", "Spraycan")
+    self:setOverrideHandModels(self.spraycan, nil)   -- show the can in hand while spraying
 
     local emitter = self.character:getEmitter()
     if emitter then
         emitter:playSound("WaterPour")
         self.loopSound = emitter:playSound("PaintVehicleSpray")
     end
+
+    self:makeNoise()
+    dbg("start: " .. tostring(self.spraycan:getFullType()) .. " maxTime=" .. tostring(self.maxTime))
 end
 
 function ISPaintVehicleAction:update()
     self.character:faceThisObject(self.vehicle)
 
-    if PV_vehicleIsBloody(self.vehicle) then
+    if PaintVehicle.isBloody(self.vehicle) then
         self.character:Say("I think I should wash it first.")
         self:forceStop()
         return
@@ -166,49 +72,45 @@ function ISPaintVehicleAction:update()
     if emitter and self.loopSound and not emitter:isPlaying(self.loopSound) then
         self.loopSound = emitter:playSound("PaintVehicleSpray")
     end
+
+    if getTimestampMs() - (self.lastNoise or 0) >= PaintVehicle.NOISE_EVERY_MS then
+        self:makeNoise()
+    end
 end
 
-function ISPaintVehicleAction:stop()
+function ISPaintVehicleAction:stopSound()
     local emitter = self.character:getEmitter()
     if emitter and self.loopSound then
         emitter:stopSound(self.loopSound)
     end
+end
 
+function ISPaintVehicleAction:stop()
+    self:stopSound()
     ISBaseTimedAction.stop(self)
 end
 
 function ISPaintVehicleAction:perform()
-    local emitter = self.character:getEmitter()
-    if emitter and self.loopSound then
-        emitter:stopSound(self.loopSound)
-    end
+    self:stopSound()
 
     if isClient() then
-        -- MP: ask the server to apply the color (and consume the spraycan) on
-        -- its own authoritative copies so both actually persist. Doing this
-        -- locally would only ever affect our own screen/inventory until the
-        -- next server sync silently reverts it.
-        local spraycanID = self.spraycan and self.spraycan:getID() or nil
-
+        -- MP: the server applies the color and uses up the spraycan on its own
+        -- authoritative copies so both actually persist. The server works out the
+        -- color from the spraycan itself; the client only says which can.
         sendClientCommand(self.character, "PaintVehicle", "paint", {
-            vehicleID  = self.vehicle and self.vehicle:getId() or nil,
-            h          = self.hsv and self.hsv[1] or nil,
-            s          = self.hsv and self.hsv[2] or nil,
-            v          = self.hsv and self.hsv[3] or nil,
-            spraycanID = spraycanID,
+            vehicleID  = self.vehicle:getId(),
+            spraycanID = self.spraycan:getID(),
         })
     else
-        -- Solo / hosting as the server: safe to mutate directly.
-        if self.hsv and self.vehicle then
-            self.vehicle:setColorHSV(self.hsv[1], self.hsv[2], self.hsv[3])
+        -- Solo / hosting as the server: safe to change directly.
+        local color = PaintVehicle.COLORS[PaintVehicle.BY_ITEM[self.spraycan:getFullType()] or ""]
+        if color then
+            self.vehicle:setColorHSV(color.hsv[1], color.hsv[2], color.hsv[3])
             self.vehicle:transmitColorHSV()
         end
-
-        -- One can per repaint, regardless of vehicle size -- same rule
-        -- as the vinyl swap system.
-        if self.spraycan then
-            self.character:getInventory():Remove(self.spraycan)
-        end
+        -- One can per repaint, regardless of vehicle size (same rule as the vinyl swap system)
+        local container = self.spraycan:getContainer() or self.character:getInventory()
+        container:Remove(self.spraycan)
     end
 
     if ISContextMenu.instance then
@@ -218,16 +120,14 @@ function ISPaintVehicleAction:perform()
     ISBaseTimedAction.perform(self)
 end
 
-function ISPaintVehicleAction:new(character, vehicle, hsv, spraycan)
+function ISPaintVehicleAction:new(character, vehicle, spraycan)
     local o = ISBaseTimedAction.new(self, character)
-    o.character   = character
-    o.vehicle     = vehicle
-    o.hsv         = hsv
-    o.spraycan    = spraycan
-
-    o.maxTime     = 600
-    o.stopOnWalk  = true
-    o.stopOnRun   = true
+    o.character      = character
+    o.vehicle        = vehicle
+    o.spraycan       = spraycan
+    o.maxTime        = PaintVehicle.getPaintTime(vehicle)
+    o.stopOnWalk     = true
+    o.stopOnRun      = true
     o.useProgressBar = true
     return o
 end

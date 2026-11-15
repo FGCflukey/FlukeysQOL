@@ -1,178 +1,37 @@
 -- PaintVehicle_Context.lua
--- Context menu + spraycan-based repaint integration
+-- Right-click "Repaint Vehicle" menu: one option per spraycan color the player carries.
 
+require "PaintVehicle_Shared"
 require "PaintVehicle_Action"
 
------------------------------------------------------
--- WEATHER CHECK
------------------------------------------------------
-local function PV_isBadWeather()
-    local climate = getClimateManager()
-
-    if climate:getRainIntensity() > 0 then return true end
-    if climate:getSnowIntensity() > 0 then return true end
-    if climate:getFogIntensity() > 0 then return true end
-
-    -- Thunderstorm detection (compatible with your build)
-    local storm = climate:getThunderStorm()
-    if storm and storm.active then return true end
-
-    return false
-end
-
------------------------------------------------------
--- LIGHTING CHECK
------------------------------------------------------
-local function PV_hasEnoughLight(character)
-    local square = character:getSquare()
-    if not square then return false end
-
-    local playerIndex = character:getPlayerNum()
-
-    -- Indoors: must have some light
-    if not square:isOutside() then
-        return square:getLightLevel(playerIndex) > 0.3
-    end
-
-    -- Outdoors
-    local climate = getClimateManager()
-    local isNight = climate:getNightStrength() > 0.5
-
-    -- Daytime outdoors always OK
-    if not isNight then
-        return true
-    end
-
-    -- Night outdoors: must have strong artificial light
-    return square:getLightLevel(playerIndex) > 0.6
-end
-
------------------------------------------------------
--- CLIMATE DEBUG
------------------------------------------------------
-local function PV_debugClimate()
-    local c = getClimateManager()
-    print("---- Climate Debug ----")
-    print("Rain:", c:getRainIntensity())
-    print("Snow:", c:getSnowIntensity())
-    print("Fog:", c:getFogIntensity())
-    print("Storm:", c:getThunderStorm())
-    print("NightStrength:", c:getNightStrength())
-    print("------------------------")
-end
-
------------------------------------------------------
--- CLEANLINESS CHECK (correct blood-area system)
------------------------------------------------------
-local function PV_needsCleaning(vehicle)
-    if not vehicle or not vehicle.getBloodIntensity then
-        return false
-    end
-
-    if vehicle:getBloodIntensity("Front") > 0 then return true end
-    if vehicle:getBloodIntensity("Rear") > 0 then return true end
-    if vehicle:getBloodIntensity("Left") > 0 then return true end
-    if vehicle:getBloodIntensity("Right") > 0 then return true end
-
-    return false
-end
-
------------------------------------------------------
--- DEBUG PRINT (updated to show blood areas)
------------------------------------------------------
-local function PV_debugVehicleState(vehicle)
-    print("---- Vehicle Debug ----")
-
-    if not vehicle then
-        print("No vehicle object.")
-        return
-    end
-
-    print("Rust:", vehicle.getRust and vehicle:getRust() or "[missing]")
-    print("SkinIndex:", vehicle.getSkinIndex and vehicle:getSkinIndex() or "[missing]")
-
-    print("Blood Front:", vehicle:getBloodIntensity("Front"))
-    print("Blood Rear:",  vehicle:getBloodIntensity("Rear"))
-    print("Blood Left:",  vehicle:getBloodIntensity("Left"))
-    print("Blood Right:", vehicle:getBloodIntensity("Right"))
-
-    print("------------------------")
-end
-
-
------------------------------------------------------
--- OWNERSHIP CHECK (same rule as the vinyl swap system)
------------------------------------------------------
-local function PV_hasVehicleKey(player, vehicle)
-    local keyId = vehicle:getKeyId()
-    if not keyId or keyId == -1 then return true end
-
-    -- Same check vanilla uses (VehicleUtils.RequiredKeyNotFound) --
-    -- a manual getFirstTypeEvalRecurse("Key", ...) search is fragile
-    -- since it depends on the key item's exact getType() string.
-    return player:getInventory():haveThisKeyId(keyId)
-end
+local DEBUG = false
+local function dbg(msg) if DEBUG then print("[PaintVehicle:Context] " .. tostring(msg)) end end
 
 -----------------------------------------------------
 -- PROXIMITY CHECK
 -----------------------------------------------------
--- getVehicleToInteractWith() can return a vehicle even when the player
--- isn't actually near it (e.g. last-targeted vehicle), which was causing
--- the weather/light messages to fire on any right-click. Gate on real
--- distance before doing anything else.
+-- getVehicleToInteractWith() can return a vehicle even when the player isn't actually
+-- near it (e.g. last-targeted vehicle). Gate on real distance before doing anything else.
 local PV_INTERACT_RANGE = 3 -- tiles
 
-local function PV_isPlayerNearVehicle(playerObj, vehicle)
-    if not playerObj or not vehicle then return false end
+local function isPlayerNearVehicle(playerObj, vehicle)
     local dx = playerObj:getX() - vehicle:getX()
     local dy = playerObj:getY() - vehicle:getY()
     return (dx * dx + dy * dy) <= (PV_INTERACT_RANGE * PV_INTERACT_RANGE)
 end
 
-local SpraycanItems = {
-    White = "Base.SpraycanWhite",
-    Black = "Base.SpraycanBlack",
-    Gray = "Base.SpraycanGray",
-    DarkGray = "Base.SpraycanDarkGray",
-    Red = "Base.SpraycanRed",
-    Blue = "Base.SpraycanBlue",
-    Green = "Base.SpraycanGreen",
-    Yellow = "Base.SpraycanYellow",
-    Orange = "Base.SpraycanOrange",
-    Purple = "Base.SpraycanPurple",
-    PastelBlue = "Base.SpraycanPastelBlue",
-    PastelPink = "Base.SpraycanPastelPink",
-    PastelGreen = "Base.SpraycanPastelGreen",
-    PastelYellow = "Base.SpraycanPastelYellow",
-    Mauve = "Base.SpraycanMauve",
-    Brown = "Base.SpraycanBrown",
-    Tan = "Base.SpraycanTan",
-    Olive = "Base.SpraycanOlive",
-    ForestGreen = "Base.SpraycanForestGreen",
-    Pink = "Base.SpraycanPink",
-    Cyan = "Base.SpraycanCyan",
-}
+-----------------------------------------------------
+-- QUEUE THE PAINT JOB
+-----------------------------------------------------
+-- Items in a backpack/bag are moved to the main inventory first (the vanilla pattern),
+-- otherwise the action's top-level checks would fail and it would cancel silently.
+local function onChooseColor(_, playerObj, vehicle, spraycan)
+    local inv = playerObj:getInventory()
+    local sanding = inv:getFirstTypeRecurse(PaintVehicle.SANDING_BLOCK)
+    if sanding then ISInventoryPaneContextMenu.transferIfNeeded(playerObj, sanding) end
+    ISInventoryPaneContextMenu.transferIfNeeded(playerObj, spraycan)
 
--- Blocklist
-local blockedKeywords = {
-    "Ambulance","Blacksmith","Burnt","Butchers","Cereal","CraftSupplies",
-    "Fire","Florist","Fossoil","_Glass","Genuine_Beer","Gigamart","Greenes",
-    "Heralds","Jorgensen","JoyToy","Knox","Landscaping","Laundry","LectroMax",
-    "LightsKST","Locksmith","LouisvilleCounty","LouisvillePD","LouisvilleSWAT",
-    "Lumber","Mail","Masonry","MassGen","MassGenFac","McCoy","Mccoy",
-    "MeltingPoint","News","OvoFarm","Plonkies","Police","Postal","Prison",
-    "Radio","Ranger","Scarlet","SouthEasternHosp","SouthEasternPaint",
-    "Spiffo","Taxi","Trailer","Transit","Trippy","Uncloggers","Utility",
-    "YingsWood","Zippee",
-}
-
-local function isBlockedCommercial(name)
-    for _, keyword in ipairs(blockedKeywords) do
-        if string.find(name, keyword) then
-            return true
-        end
-    end
-    return false
+    ISTimedActionQueue.add(ISPaintVehicleAction:new(playerObj, vehicle, spraycan))
 end
 
 local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, worldobjects, test)
@@ -181,19 +40,15 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
 
     local vehicle = ISVehicleMenu.getVehicleToInteractWith(playerObj)
     if not vehicle then return end
-
-    if not PV_isPlayerNearVehicle(playerObj, vehicle) then return end
+    if not isPlayerNearVehicle(playerObj, vehicle) then return end
 
     -----------------------------------------------------
-    -- ELIGIBILITY GATING (silent) -- vehicles that simply
-    -- can't be repainted at all shouldn't show this option
-    -- no matter the weather/key/materials state.
+    -- ELIGIBILITY GATING (silent) -- vehicles that simply can't be repainted
+    -- at all shouldn't show this option, whatever the weather/key/materials.
     -----------------------------------------------------
-    local script = vehicle:getScript()
-    local scriptName = script and script:getName() or ""
-
-    if isBlockedCommercial(scriptName) then
-        print("[VehiclePaint] Blocked repaint for commercial vehicle:", scriptName)
+    local blocked, scriptName = PaintVehicle.isBlockedCommercial(vehicle)
+    if blocked then
+        dbg("blocked repaint for commercial vehicle: " .. tostring(scriptName))
         return
     end
 
@@ -214,48 +69,38 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
 
     -- Fallback HSV repaint
     local allowRepaint = hasVehicleSubmenu
-
-    if not allowRepaint then
-        if type(vehicle.setColorHSV) == "function" then
-            local mask = vehicle.getTextureMask and vehicle:getTextureMask()
-            if mask == nil or mask == "" then
-                allowRepaint = true
-            end
+    if not allowRepaint and type(vehicle.setColorHSV) == "function" then
+        local mask = vehicle.getTextureMask and vehicle:getTextureMask()
+        if mask == nil or mask == "" then
+            allowRepaint = true
         end
     end
-
     if not allowRepaint then return end
 
     if test then return true end
 
     -----------------------------------------------------
-    -- Evaluate every requirement up front so the option can
-    -- always be shown, greyed out with a tooltip explaining
-    -- what's missing, instead of blocking with a chat message
-    -- on every right-click.
+    -- Evaluate every requirement up front so the option can always be shown,
+    -- greyed out with a tooltip explaining what's missing.
+    -- Items count wherever they are, including bags (moved out when chosen).
     -----------------------------------------------------
     local inv = playerObj:getInventory()
 
-    local hasKey      = PV_hasVehicleKey(playerObj, vehicle)
-    local weatherOk   = not PV_isBadWeather()
-    local lightOk     = PV_hasEnoughLight(playerObj)
-    local cleanOk     = not PV_needsCleaning(vehicle)
-    local hasSanding  = inv:contains("SandingBlock")
-
-    local hasAnySpraycan = false
-    for _, itemName in pairs(SpraycanItems) do
-        if inv:containsTypeRecurse(itemName) then
-            hasAnySpraycan = true
-            break
-        end
+    local cans = {}   -- color name -> first spraycan of that color
+    for _, name in ipairs(PaintVehicle.NAMES) do
+        local can = inv:getFirstTypeRecurse(PaintVehicle.COLORS[name].item)
+        if can then cans[name] = can end
     end
 
-    local allOk = hasKey and weatherOk and lightOk and cleanOk and hasSanding and hasAnySpraycan
+    local hasKey     = PaintVehicle.hasVehicleKey(playerObj, vehicle)
+    local weatherOk  = not PaintVehicle.isBadWeather()
+    local lightOk    = PaintVehicle.hasEnoughLight(playerObj)
+    local cleanOk    = not PaintVehicle.isBloody(vehicle)
+    local hasSanding = inv:containsTypeRecurse(PaintVehicle.SANDING_BLOCK)
+    local hasAnyCan  = next(cans) ~= nil
 
-    -----------------------------------------------------
-    -- Main option (always shown; disabled + tooltip when a
-    -- requirement isn't met, mirroring the vinyl swap menu).
-    -----------------------------------------------------
+    local allOk = hasKey and weatherOk and lightOk and cleanOk and hasSanding and hasAnyCan
+
     local mainOption = context:addOption("Repaint Vehicle", worldobjects, nil)
 
     if not allOk then
@@ -278,7 +123,7 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
         tip.description = tip.description .. reqLine(lightOk, "Enough light")
         tip.description = tip.description .. reqLine(cleanOk, "Vehicle is clean")
         tip.description = tip.description .. reqLine(hasSanding, "Sanding Block")
-        tip.description = tip.description .. reqLine(hasAnySpraycan, "Spray Paint (any color)")
+        tip.description = tip.description .. reqLine(hasAnyCan, "Spray Paint (any color)")
 
         mainOption.toolTip = tip
         return
@@ -287,61 +132,12 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
     local repaintMenu = ISContextMenu:getNew(context)
     context:addSubMenu(mainOption, repaintMenu)
 
-    -- Color definitions
-    local ColorValues = {
-        White={0.00,0.00,1.00}, Black={0.00,0.00,0.10},
-        Gray={0.00,0.00,0.50}, DarkGray={0.00,0.00,0.32},
-
-        Red={0.00,1.00,0.76}, Blue={0.60,1.00,0.71},
-        Green={0.33,0.88,0.45}, Yellow={0.15,1.00,0.84},
-        Orange={0.05,1.00,1.00}, Purple={0.76,1.00,0.90},
-
-        PastelBlue={0.58,0.64,0.55}, PastelPink={0.95,0.50,0.88},
-        PastelGreen={0.39,0.88,0.67}, PastelYellow={0.15,0.84,0.78},
-        Mauve={0.00,0.59,0.52},
-
-        Brown={0.07,0.75,0.45}, Tan={0.12,0.67,0.86},
-        Olive={0.20,0.62,0.48}, ForestGreen={0.33,1.00,0.57},
-
-        Pink={0.92,0.88,1.00}, Cyan={0.50,0.94,0.86},
-    }
-
-    local function onChooseColor(_, playerObj, vehicle, hsv, spraycanItem)
-        ISTimedActionQueue.add(
-            ISPaintVehicleAction:new(playerObj, vehicle, hsv, spraycanItem)
-        )
-    end
-
-    local function onChooseRandom(_, playerObj, vehicle)
-        local hsv = {
-            ZombRandFloat(0.0,1.0),
-            ZombRandFloat(0.5,1.0),
-            ZombRandFloat(0.5,1.0)
-        }
-        ISTimedActionQueue.add(
-            ISPaintVehicleAction:new(playerObj, vehicle, hsv, nil)
-        )
-    end
-
-    for colorName, hsv in pairs(ColorValues) do
-        local sprayItemType = SpraycanItems[colorName]
-        if sprayItemType then
-            local spraycanItem = inv:getFirstTypeRecurse(sprayItemType)
-            if spraycanItem then
-                repaintMenu:addOption(
-                    colorName,
-                    nil,
-                    onChooseColor,
-                    playerObj,
-                    vehicle,
-                    hsv,
-                    spraycanItem
-                )
-            end
+    -- Alphabetical, one entry per color the player actually has
+    for _, name in ipairs(PaintVehicle.NAMES) do
+        if cans[name] then
+            repaintMenu:addOption(name, nil, onChooseColor, playerObj, vehicle, cans[name])
         end
     end
-
-    repaintMenu:addOption("Random Color", nil, onChooseRandom, playerObj, vehicle)
 end
 
 Events.OnFillWorldObjectContextMenu.Add(OnFillWorldObjectContextMenu_PaintVehicle)
