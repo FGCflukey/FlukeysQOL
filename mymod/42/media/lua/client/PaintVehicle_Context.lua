@@ -87,9 +87,13 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
     local inv = playerObj:getInventory()
 
     local cans = {}   -- color name -> first spraycan of that color
+    local hasAnyCan = false
     for _, name in ipairs(PaintVehicle.NAMES) do
         local can = inv:getFirstTypeRecurse(PaintVehicle.COLORS[name].item)
-        if can then cans[name] = can end
+        if can then
+            cans[name] = can
+            hasAnyCan = true
+        end
     end
 
     local hasKey     = PaintVehicle.hasVehicleKey(playerObj, vehicle)
@@ -97,7 +101,6 @@ local function OnFillWorldObjectContextMenu_PaintVehicle(playerNum, context, wor
     local lightOk    = PaintVehicle.hasEnoughLight(playerObj)
     local cleanOk    = not PaintVehicle.isBloody(vehicle)
     local hasSanding = inv:containsTypeRecurse(PaintVehicle.SANDING_BLOCK)
-    local hasAnyCan  = next(cans) ~= nil
 
     local allOk = hasKey and weatherOk and lightOk and cleanOk and hasSanding and hasAnyCan
 
