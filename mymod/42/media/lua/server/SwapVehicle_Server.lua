@@ -1,44 +1,26 @@
 ------------------------------------------------------------
--- SwapVehicle Server Logic (FINAL + LUA TABLE REFERENCE)
+-- SwapVehicle Server Logic
+-- A vinyl swap replaces the vehicle with a different script of the same model:
+-- the old vehicle is removed and a new one spawned in its place, then everything
+-- the player cares about (loot, parts, engine, fuel, battery, key) is carried over.
 ------------------------------------------------------------
 
+require "PaintVehicle_Shared"   -- shared key check (PaintVehicle.hasVehicleKey)
+
+local DEBUG = false
+local function dbg(msg) if DEBUG then print("[SwapVehicle:Server] " .. tostring(msg)) end end
+
 if not SwapVehicleRegistry then
-    print("ERROR: SwapVehicleRegistry missing!")
+    print("[SwapVehicle] ERROR: SwapVehicleRegistry missing!")
     return
 end
 
-------------------------------------------------------------
--- Multi-tick fuel restore
-------------------------------------------------------------
-local function QueueFuelRestoreStabilized(newVehicleId, targetFuel)
-    if not targetFuel then return end
-
-    local ticks = 0
-    local maxTicks = 300
-
-    local function tickFunc()
-        ticks = ticks + 1
-        local v = getVehicleById(newVehicleId)
-        if not v then Events.OnTick.Remove(tickFunc) return end
-
-        local tank = v:getPartById("GasTank")
-        if tank then
-            local current = tank:getContainerContentAmount()
-            if math.abs(current - targetFuel) < 0.01 then
-                Events.OnTick.Remove(tickFunc)
-                return
-            end
-            tank:setContainerContentAmount(targetFuel)
-        end
-
-        if ticks >= maxTicks then Events.OnTick.Remove(tickFunc) end
-    end
-
-    Events.OnTick.Add(tickFunc)
-end
+local SPRAY   = "Base.SpraycanVinylCoat"
+local SANDING = "Base.SandingBlock"
 
 ------------------------------------------------------------
--- Multi-tick lightbar restore
+-- Multi-tick lightbar restore (the lightbar condition can get
+-- reset by the new vehicle's own init for a few ticks)
 ------------------------------------------------------------
 local function QueueLightbarRestore(newVehicleId, targetCondition)
     if not targetCondition then return end
@@ -58,6 +40,7 @@ local function QueueLightbarRestore(newVehicleId, targetCondition)
                 return
             end
             lb:setCondition(targetCondition)
+            v:transmitPartCondition(lb)
         end
 
         if ticks >= maxTicks then Events.OnTick.Remove(tickFunc) end
@@ -67,63 +50,52 @@ local function QueueLightbarRestore(newVehicleId, targetCondition)
 end
 
 ------------------------------------------------------------
--- Loot Preservation (Lua Table Reference Method)
+-- Loot preservation
 ------------------------------------------------------------
-
-local VANILLA_CONTAINERS = {
-    "SeatFrontLeft",
-    "SeatFrontRight",
-    "SeatRearLeft",
-    "SeatRearRight",
-    "GloveBox",
-    "Trunk",
-    "TruckBed",
-}
-
-local function CaptureLootReferences(vehicle)
+-- Every part with storage is carried over, whatever its ID (seats, glove box, trunk,
+-- truck bed, open truck bed, middle van seats, trailer trunk, animal food/eggs...).
+-- Earlier versions only handled a fixed list of 7 IDs, so items anywhere else were
+-- deleted with the old vehicle.
+local function CaptureLoot(vehicle)
     local loot = {}
-
-    for _, id in ipairs(VANILLA_CONTAINERS) do
-        local part = vehicle:getPartById(id)
-        if part then
-            local cont = part:getItemContainer()
-            if cont then
-                local items = {}
-                for i = 0, cont:getItems():size() - 1 do
-                    table.insert(items, cont:getItems():get(i))
-                end
-
-                loot[id] = {
-                    container = cont,
-                    items = items
-                }
+    for i = 0, vehicle:getPartCount() - 1 do
+        local part = vehicle:getPartByIndex(i)
+        local cont = part and part:getItemContainer()
+        if cont then
+            local items = {}
+            local list = cont:getItems()
+            for j = 0, list:size() - 1 do
+                table.insert(items, list:get(j))
             end
+            loot[part:getId()] = { container = cont, items = items }
         end
     end
-
     return loot
 end
 
 local function ClearNewVehicleContainers(newVehicle)
-    for _, id in ipairs(VANILLA_CONTAINERS) do
-        local part = newVehicle:getPartById(id)
-        if part and part:getItemContainer() then
-            part:getItemContainer():clear()
-        end
+    for i = 0, newVehicle:getPartCount() - 1 do
+        local part = newVehicle:getPartByIndex(i)
+        local cont = part and part:getItemContainer()
+        if cont then cont:clear() end
     end
 end
 
-local function RestoreLootFromReferences(newVehicle, loot)
+-- Items whose storage spot doesn't exist on the new vehicle are dropped on the
+-- ground next to it rather than lost.
+local function RestoreLoot(newVehicle, loot, dropSquare)
     for id, data in pairs(loot) do
         local newPart = newVehicle:getPartById(id)
-        if newPart and newPart:getItemContainer() then
-            local newCont = newPart:getItemContainer()
-
-            for _, item in ipairs(data.items) do
-                if data.container:contains(item) then
-                    data.container:Remove(item)
-                end
+        local newCont = newPart and newPart:getItemContainer()
+        for _, item in ipairs(data.items) do
+            if data.container:contains(item) then
+                data.container:Remove(item)
+            end
+            if newCont then
                 newCont:AddItem(item)
+            elseif dropSquare then
+                dropSquare:AddWorldInventoryItem(item, ZombRandFloat(0.1, 0.9), ZombRandFloat(0.1, 0.9), 0)
+                dbg("no '" .. tostring(id) .. "' on new vehicle, dropped " .. tostring(item:getFullType()))
             end
         end
     end
@@ -143,26 +115,7 @@ local function GetDistanceToVehicle(player, vehicle)
     return math.sqrt(dx * dx + dy * dy)
 end
 
-------------------------------------------------------------
--- Ownership gate: require the vehicle's actual key so a
--- player can't walk a parking lot re-skinning cars that
--- aren't theirs. A vehicle with no key system (keyId -1)
--- can't be gated this way, so it's allowed through.
-------------------------------------------------------------
-local function PlayerHasVehicleKey(player, vehicle)
-    local keyId = vehicle:getKeyId()
-    if not keyId or keyId == -1 then return true end
-
-    -- Same check vanilla uses (VehicleUtils.RequiredKeyNotFound) --
-    -- a manual getFirstTypeEvalRecurse("Key", ...) search is fragile
-    -- since it depends on the key item's exact getType() string.
-    return player:getInventory():haveThisKeyId(keyId)
-end
-
-------------------------------------------------------------
--- Occupant check: refuse to swap out from under a driver or
--- passenger (own player included).
-------------------------------------------------------------
+-- Refuse to swap out from under a driver or passenger (own player included)
 local function VehicleHasOccupants(vehicle)
     local players = getOnlinePlayers()
     for i = 0, players:size() - 1 do
@@ -174,21 +127,43 @@ local function VehicleHasOccupants(vehicle)
     return false
 end
 
+-- Animals in a livestock/horse trailer can't be carried over to the new vehicle,
+-- so a swap would delete them. Refuse instead.
+local function VehicleHasAnimals(vehicle)
+    if not vehicle.getAnimals then return false end
+    local ok, animals = pcall(function() return vehicle:getAnimals() end)
+    return ok and animals ~= nil and animals:size() > 0
+end
+
+-- The target script must really be loaded (e.g. a mod vehicle whose mod was removed
+-- isn't), otherwise the spawn fails after the old vehicle is already gone.
+local function VehicleScriptExists(fullName)
+    local scripts = getScriptManager():getAllVehicleScripts()
+    for i = 0, scripts:size() - 1 do
+        if scripts:get(i):getFullName() == fullName then return true end
+    end
+    return false
+end
+
 ------------------------------------------------------------
 -- Per-player cooldown to prevent command spam / rapid re-swap
--- abuse on the same or different vehicles.
 ------------------------------------------------------------
 local lastSwapTime = {}
 
 local function IsOnCooldown(player)
-    local id = player:getUsername()
-    local now = getTimestamp()
-    local last = lastSwapTime[id]
-    return last ~= nil and (now - last) < SWAP_COOLDOWN_SECONDS
+    local last = lastSwapTime[player:getUsername()]
+    return last ~= nil and (getTimestamp() - last) < SWAP_COOLDOWN_SECONDS
 end
 
 local function MarkSwapTime(player)
     lastSwapTime[player:getUsername()] = getTimestamp()
+end
+
+-- Remove an item from whatever container it's really in (it may be inside a bag)
+local function removeItem(item, fallbackInv)
+    local container = item:getContainer() or fallbackInv
+    container:Remove(item)
+    sendRemoveItemFromContainer(container, item)
 end
 
 ------------------------------------------------------------
@@ -196,65 +171,55 @@ end
 ------------------------------------------------------------
 function SwapVehicle_Server_Handle(player, args)
     if not player or not args then return end
+    local who = tostring(player:getUsername())
 
     local newScript = args.newScript
     if type(newScript) ~= "string" or newScript == "" then
-        print("[SwapVehicle] Rejected: invalid newScript from " .. tostring(player and player:getUsername()))
+        dbg("rejected: invalid newScript from " .. who)
         return
     end
 
     if IsOnCooldown(player) then
-        print("[SwapVehicle] Rejected: " .. tostring(player:getUsername()) .. " is on cooldown")
+        dbg("rejected: " .. who .. " is on cooldown")
         return
     end
 
     local vehicle = getVehicleById(args.vehicleId)
     if not vehicle then
-        print("[SwapVehicle] Rejected: vehicle not found for id " .. tostring(args.vehicleId))
+        dbg("rejected: vehicle not found for id " .. tostring(args.vehicleId))
         return
     end
 
-    --------------------------------------------------------
-    -- Proximity check: player must actually be near the
-    -- vehicle they're claiming to swap.
-    --------------------------------------------------------
     if GetDistanceToVehicle(player, vehicle) > MAX_INTERACT_DISTANCE then
-        print("[SwapVehicle] Rejected: " .. tostring(player:getUsername()) .. " too far from vehicle " .. tostring(args.vehicleId))
+        dbg("rejected: " .. who .. " too far from vehicle " .. tostring(args.vehicleId))
         return
     end
 
-    --------------------------------------------------------
-    -- Nobody may be sitting in the vehicle during a swap.
-    --------------------------------------------------------
     if VehicleHasOccupants(vehicle) then
-        print("[SwapVehicle] Rejected: vehicle " .. tostring(args.vehicleId) .. " has an occupant")
+        dbg("rejected: vehicle " .. tostring(args.vehicleId) .. " has an occupant")
         return
     end
 
-    --------------------------------------------------------
-    -- Player must hold this vehicle's key -- prevents mass
-    -- re-skinning of cars the player doesn't own.
-    --------------------------------------------------------
-    if not PlayerHasVehicleKey(player, vehicle) then
-        print("[SwapVehicle] Rejected: " .. tostring(player:getUsername()) .. " does not have the key for vehicle " .. tostring(args.vehicleId))
+    if VehicleHasAnimals(vehicle) then
+        dbg("rejected: vehicle " .. tostring(args.vehicleId) .. " has animals inside")
+        return
+    end
+
+    -- Player must hold this vehicle's key -- prevents re-skinning cars they don't own
+    if not PaintVehicle.hasVehicleKey(player, vehicle) then
+        dbg("rejected: " .. who .. " does not have the key for vehicle " .. tostring(args.vehicleId))
         return
     end
 
     local oldScript = vehicle:getScript():getFullName()
 
-    --------------------------------------------------------
-    -- Determine part set
-    --------------------------------------------------------
     local group = SwapVehicleRegistry.Groups[oldScript]
     if not group then
-        print("[SwapVehicle] Rejected: no registry group for script " .. tostring(oldScript))
+        dbg("rejected: no registry group for script " .. tostring(oldScript))
         return
     end
 
-    --------------------------------------------------------
-    -- newScript must be a registered swap variant of the
-    -- vehicle's own group, not an arbitrary script.
-    --------------------------------------------------------
+    -- newScript must be a registered swap variant of the vehicle's own group
     local variants = SwapVehicleRegistry.SwapPairs[group]
     local validVariant = false
     if variants then
@@ -266,49 +231,51 @@ function SwapVehicle_Server_Handle(player, args)
         end
     end
     if not validVariant then
-        print("[SwapVehicle] Rejected: " .. tostring(newScript) .. " is not a valid swap variant for group " .. tostring(group))
+        dbg("rejected: " .. tostring(newScript) .. " is not a valid swap variant for group " .. tostring(group))
+        return
+    end
+
+    if not VehicleScriptExists(newScript) then
+        dbg("rejected: vehicle script " .. tostring(newScript) .. " is not loaded")
+        return
+    end
+
+    -- Materials can be anywhere in the inventory, including bags
+    local inv = player:getInventory()
+    local sanding = inv:getFirstTypeRecurse(SANDING)
+    local spray   = inv:getFirstTypeRecurse(SPRAY)
+    if not sanding or not spray then
+        dbg("rejected: " .. who .. " missing required items")
+        return
+    end
+
+    -- Where the new vehicle goes: checked BEFORE anything is removed or used up
+    local x, y, z = vehicle:getX(), vehicle:getY(), vehicle:getZ()
+    local spawnSquare = getCell():getGridSquare(math.floor(x), math.floor(y), math.floor(z))
+    if not spawnSquare then
+        dbg("rejected: no grid square at " .. tostring(x) .. "," .. tostring(y) .. "," .. tostring(z))
         return
     end
 
     --------------------------------------------------------
-    -- Player must actually have the required materials.
-    --------------------------------------------------------
-    local invCheck = player:getInventory()
-    if not invCheck:contains("SandingBlock") or not invCheck:contains("SpraycanVinylCoat") then
-        print("[SwapVehicle] Rejected: " .. tostring(player:getUsername()) .. " missing required items")
-        return
-    end
-
-    --------------------------------------------------------
-    -- All checks passed: lock in the cooldown and consume
-    -- materials here (server-authoritative), so a spoofed
-    -- client command can't skip the cost the way the client-
-    -- side ISSwapVinylAction used to enforce on its own.
+    -- All checks passed: lock in the cooldown and use up the
+    -- materials here (server-authoritative).
     --------------------------------------------------------
     MarkSwapTime(player)
 
-    local sanding = invCheck:getFirstType("SandingBlock")
-    if sanding then
-        local condition = sanding:getCondition()
-        if condition > 1 then
-            sanding:setCondition(condition - 1)
-            if sanding.syncItemFields then sanding:syncItemFields() end
-        else
-            invCheck:Remove(sanding)
-            sendRemoveItemFromContainer(invCheck, sanding)
-        end
+    local condition = sanding:getCondition()
+    if condition > 1 then
+        sanding:setCondition(condition - 1)
+        if sanding.syncItemFields then sanding:syncItemFields() end
+    else
+        removeItem(sanding, inv)
     end
-
-    local spray = invCheck:getFirstType("SpraycanVinylCoat")
-    if spray then
-        invCheck:Remove(spray)
-        sendRemoveItemFromContainer(invCheck, spray)
-    end
+    removeItem(spray, inv)
 
     local partSet = SwapVehicleRegistry.PartSets[group] or SwapVehicleRegistry.PartSets.Default
 
     --------------------------------------------------------
-    -- Capture lightbar condition
+    -- Capture everything from the old vehicle
     --------------------------------------------------------
     local oldLightbarCondition = nil
     do
@@ -316,216 +283,158 @@ function SwapVehicle_Server_Handle(player, args)
         if lb then oldLightbarCondition = lb:getCondition() end
     end
 
-    --------------------------------------------------------
-    -- Capture loot references
-    --------------------------------------------------------
-    local lootData = CaptureLootReferences(vehicle)
+    local lootData = CaptureLoot(vehicle)
 
-    --------------------------------------------------------
-    -- Capture part conditions
-    --------------------------------------------------------
     local saved = {}
     for _, id in ipairs(partSet) do
         local part = vehicle:getPartById(id)
         if part then saved[id] = part:getCondition() end
     end
 
-    --------------------------------------------------------
-    -- CAPTURE TANK DATA
-    --------------------------------------------------------
+    -- Engine quality/loudness/power are rolled randomly for every new vehicle,
+    -- so they must be carried over or a swap changes the engine
+    local engineQuality  = vehicle:getEngineQuality()
+    local engineLoudness = vehicle:getEngineLoudness()
+    local enginePower    = vehicle:getEnginePower()
+
     local oldTankPart = vehicle:getPartById("GasTank")
     local oldTankItem = oldTankPart and oldTankPart:getInventoryItem()
-
     local oldTankType = oldTankItem and oldTankItem:getFullType()
     local oldTankCondition = oldTankItem and oldTankItem:getCondition()
     local oldTankFuel = oldTankPart and oldTankPart:getContainerContentAmount()
 
-    -- print("[SwapVehicle] Old tank item: " .. tostring(oldTankType))
-    -- print("[SwapVehicle] Old tank condition: " .. tostring(oldTankCondition))
-    -- print("[SwapVehicle] Old tank fuel: " .. tostring(oldTankFuel))
-
-    --------------------------------------------------------
-    -- Capture battery
-    --------------------------------------------------------
     local oldBatteryPart = vehicle:getPartById("Battery")
     local oldBatteryItem = oldBatteryPart and oldBatteryPart:getInventoryItem()
     if oldBatteryItem then oldBatteryPart:setInventoryItem(nil) end
 
-    --------------------------------------------------------
-    -- Capture key
-    --------------------------------------------------------
+    -- The new vehicle gets the same key ID, so the player's existing car key keeps working
     local oldKeyId = vehicle:getKeyId()
-    local keyItem = nil
-    local keyName = nil
 
-    if oldKeyId and oldKeyId ~= -1 then
-        local inv = player:getInventory()
-        keyItem = inv:getFirstTypeEvalRecurse("Key", function(item)
-            return item:getKeyId() == oldKeyId
-        end)
-        if keyItem then keyName = keyItem:getName() end
-    end
-
-    --------------------------------------------------------
-    -- Save position + rotation (SAFE) -- must all happen BEFORE removal
-    --------------------------------------------------------
-    local x, y, z = vehicle:getX(), vehicle:getY(), vehicle:getZ()
-
-    local angle = 0
-    if vehicle.getAngle then
-        angle = vehicle:getAngle() or 0
-    end
-
-    local dir = 0
-    if vehicle.getDir then
-        dir = vehicle:getDir() or 0
-    end
-
-    local forward = nil
-    if vehicle.getForwardDirection then
-        forward = vehicle:getForwardDirection()
-    end
-
-    -- Capture quaternion rotation from OLD vehicle (must happen before permanentlyRemove)
+    -- Rotation must be captured before the old vehicle is removed
     local rot = nil
     if vehicle.getWorldRotation then
         rot = vehicle:getWorldRotation()
     end
 
     --------------------------------------------------------
-    -- Remove old vehicle
+    -- Replace the vehicle
     --------------------------------------------------------
     vehicle:permanentlyRemove()
 
-    --------------------------------------------------------
-    -- Spawn new vehicle
-    --------------------------------------------------------
-    local spawnSquare = getCell():getGridSquare(math.floor(x), math.floor(y), math.floor(z))
-    if not spawnSquare then
-        -- print("[SwapVehicle] ERROR: No valid grid square at " .. tostring(x) .. "," .. tostring(y) .. "," .. tostring(z))
+    local newVehicle = addVehicleDebug(newScript, IsoDirections.N, nil, spawnSquare)
+    if not newVehicle then
+        -- Shouldn't happen now the script + square are checked up front, but never lose
+        -- the battery or the loot: put them on the ground where the vehicle was.
+        print("[SwapVehicle] ERROR: failed to spawn " .. tostring(newScript) .. " for " .. who .. ", dropping contents")
+        if oldBatteryItem then spawnSquare:AddWorldInventoryItem(oldBatteryItem, 0.5, 0.5, 0) end
+        for _, data in pairs(lootData) do
+            for _, item in ipairs(data.items) do
+                spawnSquare:AddWorldInventoryItem(item, ZombRandFloat(0.1, 0.9), ZombRandFloat(0.1, 0.9), 0)
+            end
+        end
         return
     end
-
-    -- print("[SwapVehicle] Attempting addVehicleDebug with script: '" .. tostring(newScript) .. "'")
-    local newVehicle = addVehicleDebug(newScript, IsoDirections.N, nil, spawnSquare)
-    -- print("[SwapVehicle] addVehicleDebug returned: " .. tostring(newVehicle))
-    if not newVehicle then return end
 
     local newVehicleId = newVehicle:getId()
 
     --------------------------------------------------------
-    -- Force new vehicle to old transform (Quaternion-Based)
+    -- Position + rotation
     --------------------------------------------------------
-
-    -- Apply position
     if newVehicle.setX then newVehicle:setX(x) end
     if newVehicle.setY then newVehicle:setY(y) end
     if newVehicle.setZ then newVehicle:setZ(z) end
+    if newVehicle.setWorldPos then newVehicle:setWorldPos(x, y, z) end
+    if rot and newVehicle.setWorldRotation then newVehicle:setWorldRotation(rot) end
 
-    if newVehicle.setWorldPos then
-        newVehicle:setWorldPos(x, y, z)
-    end
-
-    -- Apply rotation using quaternion captured from the old vehicle
-    if rot and newVehicle.setWorldRotation then
-        newVehicle:setWorldRotation(rot)
-    end
-
-    -- Reset movement
     if newVehicle.setCurrentSpeed then newVehicle:setCurrentSpeed(0) end
     if newVehicle.setEngineSpeed then newVehicle:setEngineSpeed(0) end
     if newVehicle.setEngineStarted then newVehicle:setEngineStarted(false) end
 
-    -- Transmit corrected state
-    if newVehicle.transmitPosition then newVehicle:transmitPosition() end
-    if newVehicle.transmitDirection then newVehicle:transmitDirection() end
-    if newVehicle.transmitEngine then newVehicle:transmitEngine() end
-
     --------------------------------------------------------
-    -- Restore key
+    -- Key
     --------------------------------------------------------
     if oldKeyId and oldKeyId ~= -1 then
         newVehicle:setKeyId(oldKeyId)
-
-        if keyItem then
-            keyItem:setKeyId(oldKeyId)
-            keyItem:setVehicle(newVehicle)
-            if keyName then keyItem:setName(keyName) end
-        else
-            local inv = player:getInventory()
-            local newKey = inv:AddItem("Base.Key")
-            if newKey then
-                newKey:setKeyId(oldKeyId)
-                newKey:setVehicle(newVehicle)
-                if keyName then newKey:setName(keyName) end
-            end
-        end
     end
 
     --------------------------------------------------------
-    -- Clean new vehicle
+    -- Fresh paint job: no rust or dirt
     --------------------------------------------------------
     if newVehicle.setRust then newVehicle:setRust(0) end
     if newVehicle.setDirt then newVehicle:setDirt(0) end
 
     --------------------------------------------------------
-    -- Restore part conditions
+    -- Engine quality / loudness / power
+    --------------------------------------------------------
+    newVehicle:setEngineFeature(engineQuality, engineLoudness, enginePower)
+
+    --------------------------------------------------------
+    -- Part conditions
     --------------------------------------------------------
     for id, cond in pairs(saved) do
         local part = newVehicle:getPartById(id)
-        if part then part:setCondition(cond) end
+        if part then
+            part:setCondition(cond)
+            newVehicle:transmitPartCondition(part)
+        end
     end
 
-    --------------------------------------------------------
-    -- Restore lightbar
-    --------------------------------------------------------
     if oldLightbarCondition then
         local lb = newVehicle:getPartById("lightbar")
-        if lb then lb:setCondition(oldLightbarCondition) end
+        if lb then
+            lb:setCondition(oldLightbarCondition)
+            newVehicle:transmitPartCondition(lb)
+        end
         QueueLightbarRestore(newVehicleId, oldLightbarCondition)
     end
 
     --------------------------------------------------------
-    -- Restore battery
+    -- Battery (the old battery item itself, so its charge is kept)
     --------------------------------------------------------
     if oldBatteryItem then
         local newBatteryPart = newVehicle:getPartById("Battery")
-        if newBatteryPart then newBatteryPart:setInventoryItem(oldBatteryItem) end
-    end
-
-    --------------------------------------------------------
-    -- RESTORE TANK
-    --------------------------------------------------------
-    if oldTankType then
-        local newTankPart = newVehicle:getPartById("GasTank")
-
-        if newTankPart then
-            -- print("[SwapVehicle] Removing new car's default tank item")
-            newTankPart:setInventoryItem(nil)
-
-            -- print("[SwapVehicle] Installing tank item: " .. tostring(oldTankType))
-            local newTankItem = instanceItem(oldTankType)
-
-            if newTankItem then
-                newTankItem:setCondition(oldTankCondition or 100)
-                newTankPart:setInventoryItem(newTankItem)
-                newTankPart:setContainerContentAmount(oldTankFuel or 0)
-
-                -- print("[SwapVehicle] Tank condition restored: " .. tostring(oldTankCondition))
-                -- print("[SwapVehicle] Tank fuel restored: " .. tostring(oldTankFuel))
-            else
-                -- print("[SwapVehicle] ERROR: Failed to create tank item " .. tostring(oldTankType))
-            end
+        if newBatteryPart then
+            newBatteryPart:setInventoryItem(oldBatteryItem)
+            newVehicle:transmitPartItem(newBatteryPart)
         else
-            print("[SwapVehicle] ERROR: New vehicle has no GasTank part")
+            spawnSquare:AddWorldInventoryItem(oldBatteryItem, 0.5, 0.5, 0)
         end
     end
 
     --------------------------------------------------------
-    -- Clear new vehicle containers, then restore loot
+    -- Gas tank: same tank type, condition and fuel
+    --------------------------------------------------------
+    if oldTankType then
+        local newTankPart = newVehicle:getPartById("GasTank")
+        if newTankPart then
+            newTankPart:setInventoryItem(nil)
+            local newTankItem = instanceItem(oldTankType)
+            if newTankItem then
+                newTankItem:setCondition(oldTankCondition or 100)
+                newTankPart:setInventoryItem(newTankItem)
+                newTankPart:setContainerContentAmount(oldTankFuel or 0)
+                newVehicle:transmitPartItem(newTankPart)
+                newVehicle:transmitPartModData(newTankPart)
+            else
+                dbg("failed to create tank item " .. tostring(oldTankType))
+            end
+        else
+            dbg("new vehicle has no GasTank part")
+        end
+    end
+
+    --------------------------------------------------------
+    -- Loot: clear the new vehicle's random loot, then move the old items in
     --------------------------------------------------------
     ClearNewVehicleContainers(newVehicle)
-    RestoreLootFromReferences(newVehicle, lootData)
+    RestoreLoot(newVehicle, lootData, spawnSquare)
+
+    -- Send the final position/direction/engine state last, after everything is set
+    if newVehicle.transmitPosition then newVehicle:transmitPosition() end
+    if newVehicle.transmitDirection then newVehicle:transmitDirection() end
+    if newVehicle.transmitEngine then newVehicle:transmitEngine() end
+
+    dbg(who .. " swapped " .. oldScript .. " -> " .. newScript .. " (id " .. tostring(newVehicleId) .. ")")
 end
 
 ------------------------------------------------------------

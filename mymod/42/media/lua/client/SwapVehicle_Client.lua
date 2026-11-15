@@ -10,7 +10,7 @@ SwapVehicle_Client = {}
 ------------------------------------------------------------
 function SwapVehicle_Client.SendSwapRequest(player, vehicle, newScript)
     if not player or not vehicle or not newScript then
-        print("SwapVehicle_Client: Missing data for swap request")
+        print("[SwapVehicle] ERROR: missing data for swap request")
         return
     end
 

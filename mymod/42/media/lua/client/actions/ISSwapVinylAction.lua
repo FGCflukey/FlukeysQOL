@@ -1,68 +1,10 @@
+require "TimedActions/ISBaseTimedAction"
+require "PaintVehicle_Shared"   -- shared weather/light/blood/key checks
+
+local DEBUG = false
+local function dbg(msg) if DEBUG then print("[SwapVehicle:Action] " .. tostring(msg)) end end
+
 ISSwapVinylAction = ISBaseTimedAction:derive("ISSwapVinylAction")
-
-------------------------------------------------------------
--- Shared realism helpers (same as paint system)
-------------------------------------------------------------
-
-local function PV_isBadWeather()
-    local climate = getClimateManager()
-
-    if climate:getRainIntensity() > 0 then return true end
-    if climate:getSnowIntensity() > 0 then return true end
-    if climate:getFogIntensity() > 0 then return true end
-
-    local storm = climate:getThunderStorm()
-    if storm and storm.active then return true end
-
-    return false
-end
-
-local function PV_hasEnoughLight(character)
-    local square = character:getSquare()
-    if not square then return false end
-
-    local playerIndex = character:getPlayerNum()
-
-    -- Indoors: must have some light
-    if not square:isOutside() then
-        return square:getLightLevel(playerIndex) > 0.3
-    end
-
-    -- Outdoors
-    local climate = getClimateManager()
-    local isNight = climate:getNightStrength() > 0.5
-
-    -- Daytime outdoors always OK
-    if not isNight then
-        return true
-    end
-
-    -- Night outdoors: must have strong artificial light
-    return square:getLightLevel(playerIndex) > 0.6
-end
-
-local function PV_vehicleIsBloody(vehicle)
-    if not vehicle or not vehicle.getBloodIntensity then
-        return false
-    end
-
-    if vehicle:getBloodIntensity("Front") > 0 then return true end
-    if vehicle:getBloodIntensity("Rear") > 0 then return true end
-    if vehicle:getBloodIntensity("Left") > 0 then return true end
-    if vehicle:getBloodIntensity("Right") > 0 then return true end
-
-    return false
-end
-
-local function PV_hasVehicleKey(character, vehicle)
-    local keyId = vehicle:getKeyId()
-    if not keyId or keyId == -1 then return true end
-
-    -- Same check vanilla uses (VehicleUtils.RequiredKeyNotFound) --
-    -- a manual getFirstTypeEvalRecurse("Key", ...) search is fragile
-    -- since it depends on the key item's exact getType() string.
-    return character:getInventory():haveThisKeyId(keyId)
-end
 
 ------------------------------------------------------------
 -- isValid(): runs BEFORE the action starts
@@ -73,19 +15,20 @@ function ISSwapVinylAction:isValid()
     if not sq then return false end
 
     -- Weather / Light / Cleanliness / ownership gating
-    if PV_isBadWeather() then return false end
-    if not PV_hasEnoughLight(self.character) then return false end
-    if PV_vehicleIsBloody(self.vehicle) then return false end
-    if not PV_hasVehicleKey(self.character, self.vehicle) then return false end
+    if PaintVehicle.isBadWeather() then return false end
+    if not PaintVehicle.hasEnoughLight(self.character) then return false end
+    if PaintVehicle.isBloody(self.vehicle) then return false end
+    if not PaintVehicle.hasVehicleKey(self.character, self.vehicle) then return false end
 
-    -- Require SpraycanVinylCoat AND SandingBlock (main inventory only)
+    -- Require SpraycanVinylCoat AND SandingBlock, anywhere in the inventory incl. bags
+    -- (the server finds and uses them wherever they are)
     local inv = self.character:getInventory()
-    local hasSpray = inv:contains("SpraycanVinylCoat")
-    local hasSanding = inv:contains("SandingBlock")
+    local hasSpray = inv:containsTypeRecurse("Base.SpraycanVinylCoat")
+    local hasSanding = inv:containsTypeRecurse("Base.SandingBlock")
 
     -- Also require a valid target script
     if not self.newScript or type(self.newScript) ~= "string" or self.newScript == "" then
-        print("[ISSwapVinylAction] Invalid newScript, aborting timed action")
+        dbg("invalid newScript, aborting timed action")
         return false
     end
 
@@ -99,19 +42,19 @@ function ISSwapVinylAction:update()
     self.character:faceThisObject(self.vehicle)
 
     -- Mid‑action realism checks
-    if PV_isBadWeather() then
+    if PaintVehicle.isBadWeather() then
         self.character:Say("The weather changed!")
         self:forceStop()
         return
     end
 
-    if not PV_hasEnoughLight(self.character) then
+    if not PaintVehicle.hasEnoughLight(self.character) then
         self.character:Say("It's too dark now!")
         self:forceStop()
         return
     end
 
-    if PV_vehicleIsBloody(self.vehicle) then
+    if PaintVehicle.isBloody(self.vehicle) then
         self.character:Say("I need to wash it first.")
         self:forceStop()
         return
@@ -161,7 +104,7 @@ function ISSwapVinylAction:perform()
 
     -- Safety: do not attempt swap if newScript is invalid
     if not self.newScript or type(self.newScript) ~= "string" or self.newScript == "" then
-        print("[ISSwapVinylAction] perform() called with invalid newScript, aborting swap")
+        dbg("perform() called with invalid newScript, aborting swap")
         ISBaseTimedAction.perform(self)
         return
     end

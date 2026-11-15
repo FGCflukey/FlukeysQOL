@@ -54,7 +54,7 @@ Right-click a vending machine to buy and sell items for cash.
 - A jammed car door lock can be fixed with a paperclip: right-click the car and pick "Repair Car Door Lock".
 
 > Vanilla Vehicle Painting and Vinyls
-- You can paint vehicles and apply vinyls with the right tools.
+- You can paint vehicles and apply vinyls with the right spray can or vinyl spray can. Right-click the vehicle and pick "Paint Vehicle" or "Apply Vinyl". You also need the car key to paint the vehicle.
 
 > Chopper Travel
 - Buy a one-way chopper ticket at the Emergency Vendor to fast-travel to another town.
