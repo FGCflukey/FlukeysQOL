@@ -17,17 +17,14 @@ end
 
 -----------------------------------------------------
 -- MONEY CONSTANTS
+-- Only real cash counts. A Money Bag is just a container: whatever
+-- bundles/bills are inside it are found by the recursive search below.
+-- (The old fixed-value "full" money bags were removed -- they were
+-- empty containers worth $500/$1000 by type alone.)
 -----------------------------------------------------
 local MONEY_VALUES = {
     ["Money"] = 1,
     ["MoneyBundle"] = 100,
-    ["Bag_FullMoneyBag"] = 500,
-    ["Bag_FullBigMoneyBag"] = 1000,
-}
-
-local MONEY_BAG_TYPES = {
-    ["Bag_FullMoneyBag"] = true,
-    ["Bag_FullBigMoneyBag"] = true,
 }
 
 -----------------------------------------------------
@@ -60,75 +57,62 @@ end
 
 -----------------------------------------------------
 -- RECURSIVE MONEY REMOVAL (server-authoritative, synced)
+-- Collects every bundle/bill anywhere in the inventory (bags inside
+-- bags included), then pays greedily: bundles first, then bills, then
+-- breaks one more bundle if bills alone can't cover the remainder.
+-- Breaking used to only look at the top-level inventory, so paying $50
+-- with all your bundles inside a bag failed with "something went wrong".
+--
+-- Returns the leftover amount: 0 = exact, negative = change owed,
+-- positive = couldn't cover (caller refunds).
 -----------------------------------------------------
-local function removeMoneyRecursive(container, amount, playerInv, allowBreak)
-    if amount <= 0 or not container then return amount end
-    allowBreak = allowBreak ~= false
-
-    local function removeType(typeName, value)
-        local items = container:getAllType(typeName)
-        while amount >= value and items and not items:isEmpty() do
-            local itm = items:get(0)
-            container:Remove(itm)
-            sendRemoveItemFromContainer(container, itm)
-            amount = amount - value
-
-            if MONEY_BAG_TYPES[typeName] then
-                local newBag = playerInv:AddItem("Base.Bag_MoneyBag")
-                sendAddItemToContainer(playerInv, newBag)
-            end
-
-            items = container:getAllType(typeName)
-        end
-    end
-
-    removeType("Bag_FullBigMoneyBag", 1000)
-    removeType("Bag_FullMoneyBag", 500)
-    removeType("MoneyBundle", 100)
-    removeType("Money", 1)
-
+local function collectMoney(container, bundles, bills)
+    if not container then return end
     local items = container:getItems()
-    if items then
-        for i = 0, items:size() - 1 do
-            if amount <= 0 then break end
-            local item = items:get(i)
-            if item and item:IsInventoryContainer() then
-                amount = removeMoneyRecursive(item:getItemContainer(), amount, playerInv, false)
+    if not items then return end
+    for i = 0, items:size() - 1 do
+        local item = items:get(i)
+        if item then
+            local t = item:getType()
+            if t == "MoneyBundle" then
+                table.insert(bundles, { item = item, container = container })
+            elseif t == "Money" then
+                table.insert(bills, { item = item, container = container })
+            elseif item:IsInventoryContainer() then
+                collectMoney(item:getItemContainer(), bundles, bills)
             end
         end
     end
+end
 
-    if allowBreak and amount > 0 then
-        local big = container:getAllType("Bag_FullBigMoneyBag")
-        if big and not big:isEmpty() then
-            local itm = big:get(0)
-            container:Remove(itm)
-            sendRemoveItemFromContainer(container, itm)
-            local newBag = playerInv:AddItem("Base.Bag_MoneyBag")
-            sendAddItemToContainer(playerInv, newBag)
-            amount = amount - 1000
-            return amount
-        end
+local function takeMoneyItem(entry)
+    entry.container:Remove(entry.item)
+    sendRemoveItemFromContainer(entry.container, entry.item)
+end
 
-        local small = container:getAllType("Bag_FullMoneyBag")
-        if small and not small:isEmpty() then
-            local itm = small:get(0)
-            container:Remove(itm)
-            sendRemoveItemFromContainer(container, itm)
-            local newBag = playerInv:AddItem("Base.Bag_MoneyBag")
-            sendAddItemToContainer(playerInv, newBag)
-            amount = amount - 500
-            return amount
-        end
+local function removeMoneyRecursive(inv, amount)
+    if amount <= 0 or not inv then return amount end
 
-        local bundle = container:getAllType("MoneyBundle")
-        if bundle and not bundle:isEmpty() then
-            local itm = bundle:get(0)
-            container:Remove(itm)
-            sendRemoveItemFromContainer(container, itm)
-            amount = amount - 100
-            return amount
-        end
+    -- Collect first, remove after: never mutate a container mid-iteration
+    local bundles, bills = {}, {}
+    collectMoney(inv, bundles, bills)
+
+    local b = 1
+    while amount >= 100 and b <= #bundles do
+        takeMoneyItem(bundles[b]); b = b + 1
+        amount = amount - 100
+    end
+
+    local s = 1
+    while amount >= 1 and s <= #bills do
+        takeMoneyItem(bills[s]); s = s + 1
+        amount = amount - 1
+    end
+
+    -- Bills ran out: break one more bundle, the difference becomes change
+    if amount > 0 and b <= #bundles then
+        takeMoneyItem(bundles[b])
+        amount = amount - 100
     end
 
     return amount
@@ -212,7 +196,7 @@ local function OnClientCommand_Vendor(module, command, player, args)
             return
         end
 
-        local leftover = removeMoneyRecursive(inv, price, inv)
+        local leftover = removeMoneyRecursive(inv, price)
         noise("removeMoneyRecursive leftover=" .. tostring(leftover) .. " (price was $" .. price .. ")")
 
         -- Track exactly how much has actually been taken from the player,

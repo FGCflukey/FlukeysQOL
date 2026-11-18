@@ -47,10 +47,8 @@
     "MakeWireandLimestoneIntoWeldingRods": "Make Welding Rods from Wire and Limestone",
     "MakeWireandElectronicsScrapIntoElectricWire": "Make Electric Wire from Wire and Elec Scrap",
 
-    "FillTheMoneyBag": "Put 5 Money Bundles in Money Bag",
-    "EmptyTheMoneyBag": "Empty your Money Bag",
-    "FillTheBigMoneyBag": "Put 10 Money Bundles in Money Bag",
-    "EmptyTheBigMoneyBag": "Empty your Money Bag",
+    "EmptyTheMoneyBag": "Cash Out Old $500 Money Bag",
+    "EmptyTheBigMoneyBag": "Cash Out Old $1000 Money Bag",
     "ConvertDuffleMoney": "Convert Duffle Bag to Money Bag",
     "ConvertMoneyDuffle": "Convert Money Bag to Duffle Bag",
 

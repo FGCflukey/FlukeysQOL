@@ -215,39 +215,12 @@ module Base
 
     /***    Money Management Recipes    ***/
 
-    craftRecipe FillTheMoneyBag
-    {
-        timedAction     = UnPackSack,
-        time            = 30,
-        Tags            = InHandCraft,
-        category        = Currency,
-        inputs
-        {
-            item 5 [Base.MoneyBundle] mode:destroy,
-            item 1 [Base.Bag_MoneyBag] mode:destroy,
-        }
-        outputs
-        {
-            item 1 Base.Bag_FullMoneyBag,
-        }
-    }
-
-    craftRecipe FillTheBigMoneyBag
-    {
-        timedAction     = UnPackSack,
-        time            = 30,
-        Tags            = InHandCraft,
-        category        = Currency,
-        inputs
-        {
-            item 10 [Base.MoneyBundle] mode:destroy,
-            item 1 [Base.Bag_MoneyBag] mode:destroy,
-        }
-        outputs
-        {
-            item 1 Base.Bag_FullBigMoneyBag,
-        }
-    }
+    /*  The old "Fill the Money Bag" recipes are gone: a Money Bag is now just
+        a plain vanilla container you put bundles into, and the Emergency
+        Vendor counts whatever cash is inside it. Bag_FullMoneyBag /
+        Bag_FullBigMoneyBag above stay defined ONLY so existing ones in saves
+        don't break -- these two Empty recipes cash them out into real
+        bundles. Nothing can create new ones. */
 
     craftRecipe EmptyTheMoneyBag
     {

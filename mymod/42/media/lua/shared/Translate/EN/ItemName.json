@@ -49,8 +49,8 @@
 
     "Base.Superglue": "Super Glue",
 
-    "Base.Bag_FullMoneyBag": "Money Bag ($500)",
-    "Base.Bag_FullBigMoneyBag": "Money Bag ($1000)",
+    "Base.Bag_FullMoneyBag": "Old Money Bag ($500) - Cash Out",
+    "Base.Bag_FullBigMoneyBag": "Old Money Bag ($1000) - Cash Out",
 
     "Base.SurvivorMultitool": "Survivor Edition MultiTool",
     "Base.SurvivorMortarPestle": "Mortar & Pestle",

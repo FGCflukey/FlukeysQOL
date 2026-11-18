@@ -11,18 +11,12 @@ VendorUI = {}
 VendorUI.instance = nil
 
 -----------------------------------------------------
--- MONEY CONSTANTS
+-- MONEY CONSTANTS (must match Vendor_Server.lua)
+-- Only real cash counts; a Money Bag is just a container.
 -----------------------------------------------------
 local MONEY_VALUES = {
     ["Money"] = 1,
     ["MoneyBundle"] = 100,
-    ["Bag_FullMoneyBag"] = 500,
-    ["Bag_FullBigMoneyBag"] = 1000,
-}
-
-local MONEY_BAG_TYPES = {
-    ["Bag_FullMoneyBag"] = true,
-    ["Bag_FullBigMoneyBag"] = true,
 }
 
 -----------------------------------------------------
