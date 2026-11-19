@@ -505,4 +505,22 @@ craftRecipe MakeScrewsFromScrapMetal
         }
     }
 
+    craftRecipe MakeKeyBlanks
+    {
+        timedAction     = Making,
+        time            = 150,
+        Tags            = InHandCraft,
+        category        = Metalworking,
+        inputs
+        {
+            item 1 [Base.SheetMetalSnips] mode:keep flags[MayDegradeVeryLight],
+            item 1 [Base.Saw] mode:keep flags[MayDegradeVeryLight],
+            item 1 [Base.SmallSheetMetal],
+        }
+        outputs
+        {
+            item 4 Base.Key_Blank,
+        }
+    }
+
 }

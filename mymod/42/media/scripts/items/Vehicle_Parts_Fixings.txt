@@ -215,7 +215,7 @@ module Base
 
     fixing Fix Car seat 2
     {
-        Require = Base.NormalCarSeat1;Base.BigCarSeat1;Base.SportCarSeat1;Base.NormalCarSeat2;Base.BigCarSeat2;Base.SportCarSeat2;Base.NormalCarSeat3;Base.BigCarSeat3;Base.SportCarSeat3;Base.NormalCarSeat8;Base.BigCarSeat8;Base.SportCarSeat8,
+        Require = Base.NormalCarSeat1;Base.BigCarSeat1;Base.SportCarSeat1;Base.NormalCarSeat2;Base.BigCarSeat2;Base.SportCarSeat2;Base.NormalCarSeat3;Base.BigCarSeat3;Base.SportCarSeat3;Base.NormalCarSeat8;Base.BigCarSeat8;Base.SportCarSeat8;Base.PibeH3Seat2;Base.PibeH3RearSeat2,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=2;MetalWelding=3;Mechanics=1,
