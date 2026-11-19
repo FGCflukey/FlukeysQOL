@@ -23,10 +23,13 @@ module Base
     }
 
     /*  Windows and Windshields  */
+    /*  PibeH3* = HUMMER H3 (Workshop 3832058760) glass. The Toyota Tacoma
+        (3827381192) uses vanilla's window templates/items, so it's already
+        covered by the vanilla entries. */
 
     fixing Fix Windshield 3
     {
-        Require = Base.Windshield1;Base.Windshield2;Base.Windshield3;Base.RearWindshield1;Base.RearWindshield2;Base.RearWindshield3,
+        Require = Base.Windshield1;Base.Windshield2;Base.Windshield3;Base.RearWindshield1;Base.RearWindshield2;Base.RearWindshield3;Base.PibeH3Windshield2;Base.PibeH3RearWindshield2,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=1;Mechanics=3,
@@ -34,7 +37,7 @@ module Base
 
     fixing Fix FrontWindows 3
     {
-        Require = Base.FrontWindow1;Base.FrontWindow2;Base.FrontWindow3;Base.FrontWindow8,
+        Require = Base.FrontWindow1;Base.FrontWindow2;Base.FrontWindow3;Base.FrontWindow8;Base.PibeH3WindowFront2,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=1;Mechanics=3,
@@ -42,7 +45,7 @@ module Base
 
     fixing Fix RearWindows 3
     {
-        Require = Base.RearWindow1;Base.RearWindow2;Base.RearWindow3;Base.RearWindow8,
+        Require = Base.RearWindow1;Base.RearWindow2;Base.RearWindow3;Base.RearWindow8;Base.PibeH3WindowRear2,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=1;Mechanics=3,
