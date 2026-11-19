@@ -52,10 +52,12 @@ module Base
     }
 
     /*  Tire Fixing  */
+    /*  PibeH3* = HUMMER H3 tires (regular, run-flat, chain). The Tacoma uses
+        vanilla's Tire template, so its tires are the vanilla items. */
 
     fixing Fix Tire 2
     {
-        Require = Base.OldTire1;Base.OldTire2;Base.OldTire3;Base.NormalTire1;Base.NormalTire2;Base.NormalTire3;Base.ModernTire1;Base.ModernTire2;Base.ModernTire3;Base.OldTire8;Base.NormalTire8;Base.ModernTire8,
+        Require = Base.OldTire1;Base.OldTire2;Base.OldTire3;Base.NormalTire1;Base.NormalTire2;Base.NormalTire3;Base.ModernTire1;Base.ModernTire2;Base.ModernTire3;Base.OldTire8;Base.NormalTire8;Base.ModernTire8;Base.PibeH3Tire2;Base.PibeH3RunFlatTire2;Base.PibeH3ChainTire2,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=1;Mechanics=2,
