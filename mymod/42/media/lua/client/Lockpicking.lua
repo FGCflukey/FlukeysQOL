@@ -128,6 +128,31 @@ local function hasLockpickTools(player)
 end
 
 -------------------------------------------------
+-- Proximity: "Pick Lock" is only offered when standing right at the door.
+-- For a garage door (a chain of segments) or a double door, being next to
+-- ANY segment counts, and that segment's square is the one sent to the
+-- server -- so the server's own 2-tile check always passes for a valid pick.
+-------------------------------------------------
+
+local PICK_RANGE = 1.5 -- tiles: adjacent, diagonals included
+
+local function getDoorInReach(player, doors)
+    local psq = player:getSquare()
+    if not psq then return nil end
+    local best, bestDist = nil, nil
+    for _, d in ipairs(doors) do
+        local dsq = d and d:getSquare()
+        if dsq and dsq:getZ() == psq:getZ() then
+            local dist = psq:DistToProper(dsq)
+            if dist <= PICK_RANGE and (not bestDist or dist < bestDist) then
+                best, bestDist = d, dist
+            end
+        end
+    end
+    return best
+end
+
+-------------------------------------------------
 -- Pick lock action (doors only, timed)
 --
 -- No local door mutation or paperclip removal here anymore -- the
@@ -158,6 +183,14 @@ local function onPickLock(worldobjects, playerIndex)
         player:Say("There's nothing to pick here.")
         return
     end
+
+    -- Re-check reach at click time and target the segment we're actually at
+    door = getDoorInReach(player, getRelatedDoors(door))
+    if not door then
+        player:Say("I need to be right at the door.")
+        return
+    end
+    square = door:getSquare()
 
     if not hasLockpickTools(player) then
         player:Say("I need a screwdriver or multitool, and a paperclip.")
@@ -203,7 +236,9 @@ local function onFillWorldObjectContextMenu(playerIndex, context, worldobjects, 
     -- door was exactly that: match the same real-door:IsOpen() guard.
     if door.IsOpen and door:IsOpen() then return end
 
-    if not clusterLocked(getRelatedDoors(door)) then return end
+    local doors = getRelatedDoors(door)
+    if not clusterLocked(doors) then return end
+    if not getDoorInReach(player, doors) then return end
     if not hasLockpickTools(player) then return end
 
     context:addOption("Pick Lock", worldobjects, onPickLock, playerIndex)

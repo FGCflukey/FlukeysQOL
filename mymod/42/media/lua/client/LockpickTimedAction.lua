@@ -9,8 +9,15 @@ require "TimedActions/ISBaseTimedAction"
 -- reports the result.
 LockpickTimedAction = ISBaseTimedAction:derive("LockpickTimedAction")
 
+-- Cancel if the player ends up away from the door (pushed back, knocked
+-- down, etc.) instead of finishing a pick the server would reject anyway.
+local MAX_PICK_DISTANCE = 2 -- matches Lockpicking_Server.lua
+
 function LockpickTimedAction:isValid()
-    return true
+    local psq = self.character:getSquare()
+    return psq ~= nil and self.square ~= nil
+        and psq:getZ() == self.square:getZ()
+        and psq:DistToProper(self.square) <= MAX_PICK_DISTANCE
 end
 
 function LockpickTimedAction:update()

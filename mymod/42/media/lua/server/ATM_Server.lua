@@ -14,7 +14,65 @@
 -- sendItemListNet() is for the player-trading system and is NOT
 -- safe to use here (it corrupted the packet stream in testing).
 
--- print("[ATM_Server] File loaded successfully")
+local DEBUG = false
+local function dbg(msg) if DEBUG then print("[ATM_Server] " .. tostring(msg)) end end
+
+-----------------------------------------------------
+-- PAYOUT TUNING
+-- Success chance and payout are built from a base value plus
+-- modifiers, so each factor is easy to adjust on its own.
+-----------------------------------------------------
+local BASE_SUCCESS     = 70   -- % chance a card pays out at all
+local MIN_PAYOUT       = 25   -- a success always pays something
+local MAX_PAYOUT       = 500
+local MAX_FAILS_IN_ROW = 2    -- after this many declines in a row, the next card always pays
+
+-- More Traits (Lucky/Unlucky) -- optional mod, so look it up safely
+local LUCKY_SUCCESS    = 15   -- +% success
+local LUCKY_PAY_MULT   = 1.25
+local UNLUCKY_SUCCESS  = -15
+local UNLUCKY_PAY_MULT = 0.8
+
+-- Lucky/Unlucky come from the optional More Traits mod; never error if it isn't loaded
+local function hasModTrait(player, key)
+    local reg = ToadTraitsRegistries and ToadTraitsRegistries[key]
+    if not reg then return false end
+    local ok, result = pcall(function() return player:hasTrait(reg) end)
+    return ok and result == true
+end
+
+-- Declines in a row per player (in memory; resets on server restart)
+local failStreak = {}
+
+local function rollPayout(player)
+    local who = player:getUsername()
+    local chance = BASE_SUCCESS
+    local mult = 1.0
+
+    if hasModTrait(player, "lucky") then
+        chance = chance + LUCKY_SUCCESS
+        mult = mult * LUCKY_PAY_MULT
+    elseif hasModTrait(player, "unlucky") then
+        chance = chance + UNLUCKY_SUCCESS
+        mult = mult * UNLUCKY_PAY_MULT
+    end
+
+    local streak = failStreak[who] or 0
+    local success = streak >= MAX_FAILS_IN_ROW or ZombRand(100) < chance
+
+    if not success then
+        failStreak[who] = streak + 1
+        dbg(who .. " declined (chance " .. chance .. "%, streak " .. failStreak[who] .. ")")
+        return 0
+    end
+    failStreak[who] = 0
+
+    -- Average of two rolls leans toward the middle, so fewer tiny payouts
+    local roll = (ZombRand(MIN_PAYOUT, MAX_PAYOUT + 1) + ZombRand(MIN_PAYOUT, MAX_PAYOUT + 1)) / 2
+    local payout = math.floor(roll * mult)
+    dbg(who .. " paid $" .. payout .. " (chance " .. chance .. "%, mult " .. mult .. ")")
+    return payout
+end
 
 -----------------------------------------------------
 -- RECURSIVE CREDIT CARD SEARCH (server-side copy)
@@ -76,10 +134,7 @@ local function OnClientCommand(module, command, player, args)
     -----------------------------------------------------
     -- DETERMINE PAYOUT
     -----------------------------------------------------
-    local payout = 0
-    if ZombRand(100) >= 45 then
-        payout = ZombRand(0, 501) -- 0-500
-    end
+    local payout = rollPayout(player)
 
     -----------------------------------------------------
     -- GIVE MONEY -- create via instanceItem, add, then

@@ -1,7 +1,7 @@
 CarKeyCraft = CarKeyCraft or {}
 
 CarKeyCraft.BlankType = "Base.Key_Blank"
-CarKeyCraft.CutToolTypes = { "Base.Multitool", "Base.SmallFileSet" }
+CarKeyCraft.CutToolTypes = { "Base.Multitool", "Base.SurvivorMultitool", "Base.SmallFileSet" }
 
 CarKeyCraft.CutSkill = { MetalWelding = 4, Mechanics = 2 }
 
