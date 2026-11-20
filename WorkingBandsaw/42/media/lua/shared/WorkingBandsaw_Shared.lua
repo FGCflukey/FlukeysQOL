@@ -124,8 +124,8 @@ function WorkingBandsaw.CountLogsInventory(player)
     if not player then return 0 end
     local inv = player:getInventory()
     if not inv then return 0 end
-    local logs = inv:getItemsFromFullType("Base.Log")
-    return logs and logs:size() or 0
+    -- Recursive: logs in an equipped dolly/wagon, backpack, etc. count too
+    return inv:getCountTypeRecurse("Base.Log")
 end
 
 --- Count logs on the ground within range of a square.

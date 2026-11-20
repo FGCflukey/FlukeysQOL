@@ -157,12 +157,16 @@ local function handleSawLogs(player, args)
     local logsRemoved = 0
     local logsNeeded = requestedLogs
 
-    -- Step 1: player's own inventory.
+    -- Step 1: player's own inventory, including anything carried inside it
+    -- (equipped dolly/wagon, backpack). Remove each log from the container
+    -- it's actually in -- removing from the top-level inventory instead is
+    -- a silent no-op for a nested item.
     while logsNeeded > 0 do
-        local log = inv:FindAndReturn("Base.Log")
+        local log = inv:getFirstTypeRecurse("Base.Log")
         if not log then break end
-        inv:Remove(log)
-        sendRemoveItemFromContainer(inv, log)
+        local logContainer = log:getContainer() or inv
+        logContainer:Remove(log)
+        sendRemoveItemFromContainer(logContainer, log)
         logsRemoved = logsRemoved + 1
         logsNeeded = logsNeeded - 1
     end
