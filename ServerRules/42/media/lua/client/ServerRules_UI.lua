@@ -20,6 +20,16 @@ local MAX_WIDTH = 640
 local MAX_WELCOME_HEIGHT = 220
 local MAX_BANNER_HEIGHT = 300
 local BUTTON_W, BUTTON_H = 120, 28
+local SCREEN_MARGIN = 10       -- gap kept between the window and the screen edges
+local MIN_RULES_HEIGHT = 90    -- the rules box never shrinks below this, even on tiny screens
+
+-- Buttons grow with the player's font size (Options > Display > font size)
+local function buttonH()
+    return math.max(BUTTON_H, getTextManager():getFontHeight(UIFont.Small) + 10)
+end
+local function buttonW(text)
+    return math.max(BUTTON_W, getTextManager():MeasureStringX(UIFont.Small, text) + 24)
+end
 local LEAVE_DELAY_MS = 1500        -- give the Decline log message time to reach the server
 local ACCEPT_TIMEOUT_MS = 10000    -- server should answer Accept well within this
 
@@ -161,9 +171,11 @@ function ServerRules_Window:createChildren()
         y = y + updated:getHeight() + PAD
     end
 
-    -- Welcome text (scrolls if it's long)
+    -- Welcome text (scrolls if it's long). Capped to a fifth of the screen too, so with a large
+    -- font it doesn't push the rules and buttons off the bottom.
     if self.data.welcome and self.data.welcome ~= "" then
-        local welcome = ISRichTextPanel:new(PAD, y, innerW, MAX_WELCOME_HEIGHT)
+        local maxWelcome = math.max(60, math.min(MAX_WELCOME_HEIGHT, getCore():getScreenHeight() * 0.2))
+        local welcome = ISRichTextPanel:new(PAD, y, innerW, maxWelcome)
         welcome:initialise()
         self:addChild(welcome)
         welcome:addScrollBars()
@@ -173,7 +185,7 @@ function ServerRules_Window:createChildren()
         welcome.autosetheight = false
         welcome.text = self.data.welcome
         welcome:paginate()
-        welcome:setHeight(math.min(welcome:getScrollHeight(), MAX_WELCOME_HEIGHT))
+        welcome:setHeight(math.min(welcome:getScrollHeight(), maxWelcome))
         y = y + welcome:getHeight() + PAD
     end
 
@@ -185,32 +197,90 @@ function ServerRules_Window:createChildren()
     self:addChild(header)
     y = y + header:getHeight() + 8
 
+    -- Height of everything below the rules (status lines + buttons), worked out up front so the
+    -- rules box can be sized to leave room for it on screen.
+    local smallH = getTextManager():getFontHeight(UIFont.Small)
+    local footerH
+    if self.readOnly then
+        footerH = PAD + buttonH() + PAD
+    else
+        footerH = 4 + smallH + 4 + smallH + PAD + buttonH() + PAD
+    end
+
+    -- Hint line shown above the box only when the rules don't all fit
+    local hintH = smallH + 4
+
+    -- The rules go in their own scrolling box, so the window never runs off the bottom of the
+    -- screen and the buttons stay reachable whatever the font size (same scroll-children +
+    -- stencil-clip setup vanilla's ISComponentsListPanel uses).
+    local available = getCore():getScreenHeight() - SCREEN_MARGIN * 2 - y - footerH - hintH
+    local box = ISPanel:new(PAD, y, innerW, math.max(MIN_RULES_HEIGHT, available))
+    box.background = false
+    box:initialise()
+    box:instantiate()
+    box:addScrollBars()
+    box:setScrollChildren(true)
+    box.prerender = function(p)
+        p:setStencilRect(0, 0, p:getWidth(), p:getHeight())
+        ISPanel.prerender(p)
+    end
+    box.render = function(p)
+        ISPanel.render(p)
+        p:clearStencilRect()
+    end
+    box.onMouseWheel = function(p, del)
+        p:setYScroll(p:getYScroll() - del * 40)
+        return true
+    end
+    self:addChild(box)
+    self.rulesBox = box
+
     -- One checkbox + word-wrapped text per rule (ISTickBox rows can't wrap long text themselves).
     -- Read-only view: just the numbered rules, no checkboxes.
     self.ticks = {}
     self.ticked = {}
-    local textX = self.readOnly and PAD or (PAD + 30)
+    local barW = (box.vscroll and box.vscroll:getWidth()) or 16
+    local textX = self.readOnly and 0 or 30
+    local textW = innerW - textX - barW - 4
+    local tickH = math.max(20, smallH)
+    local ry = 0
     for i, ruleText in ipairs(self.data.rules or {}) do
         local tick = nil
         if not self.readOnly then
-            tick = ISTickBox:new(PAD, y, 24, 20, "", self, ServerRules_Window.onTick, i)
+            tick = ISTickBox:new(0, ry, 24, tickH, "", self, ServerRules_Window.onTick, i)
             tick:initialise()
             tick:addOption("")
-            self:addChild(tick)
+            box:addChild(tick)
             self.ticks[i] = tick
             self.ticked[i] = false
         end
 
-        local text = ISRichTextPanel:new(textX, y - 2, self.width - textX - PAD, 20)
+        local text = ISRichTextPanel:new(textX, ry - 2, textW, 20)
         text:initialise()
         text.background = false
         text.autosetheight = true
         text.marginTop = 2
+        text.blockMouseWheel = true   -- let the wheel scroll the rules box, not this one line
         text.text = tostring(i) .. ". " .. ruleText
-        self:addChild(text)
+        box:addChild(text)
         text:paginate()
 
-        y = y + math.max(text:getHeight(), tick and tick:getHeight() or 0) + 6
+        ry = ry + math.max(text:getHeight(), tick and tick:getHeight() or 0) + 6
+    end
+
+    -- Shrink the box to fit when everything fits; otherwise keep it capped and scrollable
+    local overflow = ry > box:getHeight()
+    if not overflow then box:setHeight(ry) end
+    box:setScrollHeight(ry)
+    box:updateScrollbars()
+    y = y + box:getHeight()
+
+    if overflow then
+        local hint = ISLabel:new(PAD, y + 2, smallH, getText("UI_ServerRules_ScrollHint"),
+            0.7, 0.7, 0.7, 1, UIFont.Small, true)
+        hint:initialise()
+        self:addChild(hint)
+        y = y + hintH
     end
 
     -- Read-only view: Info-News (if the server has an info file) + Close, and done
@@ -241,45 +311,40 @@ function ServerRules_Window:createChildren()
     y = y + self.statusLabel:getHeight() + PAD
 
     -- Buttons
-    local gap = 20
-    local bx = (self.width - (BUTTON_W * 2 + gap)) / 2
-    self.acceptButton = ISButton:new(bx, y, BUTTON_W, BUTTON_H, getText("UI_ServerRules_Accept"), self, ServerRules_Window.onAccept)
-    self.acceptButton:initialise()
-    self:addChild(self.acceptButton)
+    y = self:addButtonRow(y, {
+        { "UI_ServerRules_Accept", ServerRules_Window.onAccept, "acceptButton" },
+        { "UI_ServerRules_Decline", ServerRules_Window.onDecline, "declineButton" },
+    })
 
-    self.declineButton = ISButton:new(bx + BUTTON_W + gap, y, BUTTON_W, BUTTON_H, getText("UI_ServerRules_Decline"), self, ServerRules_Window.onDecline)
-    self.declineButton:initialise()
-    self:addChild(self.declineButton)
-    y = y + BUTTON_H + PAD
-
-    -- Size to content and centre on screen
-    self:setHeight(y)
-    self:setX((getCore():getScreenWidth() - self.width) / 2)
-    self:setY(math.max(10, (getCore():getScreenHeight() - self.height) / 2))
-
+    self:finishLayout(y)
     self:updateAcceptButton()
 end
 
 -- A centred row of buttons. buttons = { { textKey, onClick, fieldName }, ... }; returns the new y.
 function ServerRules_Window:addButtonRow(y, buttons)
     local gap = 20
-    local total = #buttons * BUTTON_W + (#buttons - 1) * gap
+    local h = buttonH()
+    local widths, total = {}, -gap
+    for i, b in ipairs(buttons) do
+        widths[i] = buttonW(getText(b[1]))
+        total = total + widths[i] + gap
+    end
     local x = (self.width - total) / 2
-    for _, b in ipairs(buttons) do
-        local button = ISButton:new(x, y, BUTTON_W, BUTTON_H, getText(b[1]), self, b[2])
+    for i, b in ipairs(buttons) do
+        local button = ISButton:new(x, y, widths[i], h, getText(b[1]), self, b[2])
         button:initialise()
         self:addChild(button)
         self[b[3]] = button
-        x = x + BUTTON_W + gap
+        x = x + widths[i] + gap
     end
-    return y + BUTTON_H + PAD
+    return y + h + PAD
 end
 
 -- Size the window to its content and centre it on screen
 function ServerRules_Window:finishLayout(y)
     self:setHeight(y)
     self:setX((getCore():getScreenWidth() - self.width) / 2)
-    self:setY(math.max(10, (getCore():getScreenHeight() - self.height) / 2))
+    self:setY(math.max(SCREEN_MARGIN, (getCore():getScreenHeight() - self.height) / 2))
 end
 
 ---------------------------------------------------------
@@ -327,7 +392,7 @@ function ServerRules_Window:createInfoChildren(y)
     y = y + header:getHeight() + 8
 
     -- Scrolls if long. Leave room for the buttons below so the window still fits the screen.
-    local maxH = math.max(150, getCore():getScreenHeight() - y - BUTTON_H - PAD * 4 - 20)
+    local maxH = math.max(150, getCore():getScreenHeight() - y - buttonH() - PAD * 4 - 20)
     local panel = ISRichTextPanel:new(PAD, y, innerW, maxH)
     panel:initialise()
     self:addChild(panel)

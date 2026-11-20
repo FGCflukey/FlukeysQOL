@@ -24,6 +24,12 @@ timeLimitSeconds = 300
 # Other players can still see them.
 protectWhileReading = true
 
+[exempt]
+# Players who skip the rules window entirely (e.g. someone who can't use it because of a
+# large font / eyesight). One per line: their Steam ID (the long number) or their username.
+# Steam ID is safer: a username can be re-used by someone else on a fresh character.
+# Edits apply the next time that player joins, no restart needed.
+
 [welcome]
 Thanks for joining! This is a small private server for friends, so please take a minute to read the rules below.
 

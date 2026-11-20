@@ -62,7 +62,7 @@ local function loadConfig()
         return nil
     end
 
-    local keys, welcome, rules = {}, {}, {}
+    local keys, welcome, rules, exempt = {}, {}, {}, {}
     local section = nil
     local line = reader:readLine()
     while line ~= nil do
@@ -77,6 +77,10 @@ local function loadConfig()
             if t ~= "" then
                 table.insert(rules, trim((t:gsub("^[-*]%s*", ""))))
             end
+        elseif section == "exempt" then
+            -- Steam ID or username, matched case-insensitively
+            local entry = trim((t:gsub("^[-*]%s*", "")))
+            if entry ~= "" then exempt[string.lower(entry)] = true end
         elseif t ~= "" then
             local k, v = t:match("^([%w_]+)%s*=%s*(.-)$")
             if k then keys[string.lower(k)] = v end
@@ -97,6 +101,7 @@ local function loadConfig()
         protect   = toBool(keys.protectwhilereading, true),
         welcome   = table.concat(welcome, " <LINE> "),   -- ISRichTextPanel line-break tag
         rules     = rules,
+        exempt    = exempt,
     }
     dbg("config from " .. tostring(source) .. ": version=" .. cfg.version .. " rules=" .. #rules)
     return cfg
@@ -164,6 +169,17 @@ local function getPlayerKey(player)
         return "steam:" .. s
     end
     return "user:" .. tostring(player:getUsername())
+end
+
+-- On the [exempt] list? Checked against the server's own Steam ID and username for this
+-- player, never anything the client sends.
+local function isExempt(player, cfg)
+    if not cfg or not cfg.exempt then return false end
+    local ok, id = pcall(function() return player:getSteamID() end)
+    local steam = ok and id ~= nil and tostring(id) or ""
+    if steam ~= "" and steam ~= "0" and cfg.exempt[steam] then return true end
+    local name = string.lower(tostring(player:getUsername() or ""))
+    return name ~= "" and cfg.exempt[name] == true
 end
 
 local function nowString()
@@ -237,6 +253,14 @@ Commands[ServerRules.CMD_CHECK] = function(player, args)
         return
     end
 
+    if isExempt(player, cfg) then
+        unprotect(player, key, data)
+        dbg("check: " .. key .. " is on the exempt list")
+        writeLog("EXEMPT    v" .. cfg.version .. "  " .. describe(player, args) .. "  key=" .. key)
+        sendServerCommand(player, ServerRules.MODULE, ServerRules.CMD_ACCEPTED, {})
+        return
+    end
+
     local rec = data.players[key]
     if rec and tonumber(rec.version) == cfg.version then
         unprotect(player, key, data)   -- clears a leftover from a crash mid-read
@@ -257,7 +281,8 @@ Commands[ServerRules.CMD_VIEW] = function(player, args)
     local key = getPlayerKey(player)
     local cfg = loadConfig()
     local rec = data.players[key]
-    if cfg and #cfg.rules > 0 and rec and tonumber(rec.version) == cfg.version then
+    local accepted = cfg ~= nil and rec ~= nil and tonumber(rec.version) == cfg.version
+    if cfg and #cfg.rules > 0 and (accepted or isExempt(player, cfg)) then
         sendServerCommand(player, ServerRules.MODULE, ServerRules.CMD_SHOW, {
             version  = cfg.version,
             title    = cfg.title,

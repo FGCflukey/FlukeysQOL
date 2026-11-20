@@ -17,5 +17,6 @@
     "UI_ServerRules_ViewKeybind": "Show the server rules",
     "UI_ServerRules_InfoNews": "Info-News",
     "UI_ServerRules_BackToRules": "Back to Rules",
-    "UI_ServerRules_InfoHeader": "Server Info & News:"
+    "UI_ServerRules_InfoHeader": "Server Info & News:",
+    "UI_ServerRules_ScrollHint": "Scroll the list (mouse wheel or scrollbar) to see every rule."
 }
