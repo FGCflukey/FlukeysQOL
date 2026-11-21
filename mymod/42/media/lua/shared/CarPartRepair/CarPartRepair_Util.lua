@@ -100,7 +100,49 @@ local RepairRules = {
         skillCaps = {40, 75, 100},
         alsoInflatesTire = true,
     },
+
+    -- HUMMER H3 (Workshop 3832058760) add-on parts. Matched by EXACT
+    -- fullType only (never keywords -- "Armor"/"Bumper" would catch other
+    -- mods' clothing etc.). Vanilla can't repair these once broken (no
+    -- repairMechanic on the H3 parts, and the inventory Repair menu hides
+    -- broken items), so this is their only repair path. If the H3 mod is
+    -- removed these types just never exist, so nothing to disable here.
+    H3Armor = {
+        label = "H3 Armor",
+        exactTypes = {
+            "Base.PibeH3ArmorBullbar2",
+            "Base.PibeH3ArmorPlow2",
+            "Base.PibeH3ArmorRamFront2",
+            "Base.PibeH3RamRearBumper2",
+            "Base.PibeH3RearBumper2",
+            "Base.PibeH3ArmorWindshield2",
+            "Base.PibeH3ArmorWindowFront2",
+            "Base.PibeH3ArmorWindowRear2",
+            "Base.PibeH3ArmorRearWindow2",
+            "Base.PibeH3RollBar2",
+            "Base.PibeH3RoofRack2",
+            "Base.PibeH3Snorkel2",
+            "Base.PibeH3GloveBox2",
+        },
+        required = {
+            tool = "Base.BlowTorch",
+            material = "Base.SheetMetal",
+            kit = "Base.BodyRepairKit",
+        },
+        repairAmount = 20,
+        skillCaps = {30, 65, 100},
+        toolConsumesUses = true,
+        toolUsesPerRepair = 2,
+    },
 }
+
+-- Build exact-type lookup sets once.
+for _, rule in pairs(RepairRules) do
+    if rule.exactTypes then
+        rule.exactSet = {}
+        for _, ft in ipairs(rule.exactTypes) do rule.exactSet[ft] = true end
+    end
+end
 
 CarPartRepair_Util.Rules = RepairRules
 
@@ -215,9 +257,17 @@ function CarPartRepair_Util.identifyPart(item)
     local ft = item:getFullType()
     dbg("identifyPart: " .. ft)
 
+    -- Exact-type rules win over keyword rules.
+    for partName, rule in pairs(RepairRules) do
+        if rule.exactSet and rule.exactSet[ft] then
+            dbg("Exact match: " .. partName)
+            return partName, rule
+        end
+    end
+
     for partName, rule in pairs(RepairRules) do
         local matched = false
-        for _, keyword in ipairs(rule.matches) do
+        for _, keyword in ipairs(rule.matches or {}) do
             if keywordMatches(ft, keyword) then
                 matched = true
                 break

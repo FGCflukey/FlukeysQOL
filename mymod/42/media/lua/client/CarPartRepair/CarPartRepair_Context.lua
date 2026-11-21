@@ -49,7 +49,7 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
         end
 
         -- Create disabled option
-        local opt = context:addOption("Repair " .. partName .. " (Unavailable)", nil, nil)
+        local opt = context:addOption("Repair " .. (rule.label or partName) .. " (Unavailable)", nil, nil)
         opt.notAvailable = true
 
         -- Tooltip
@@ -105,7 +105,7 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
     ---------------------------------------------------------
     -- If everything is OK, add the real repair option
     ---------------------------------------------------------
-    context:addOption("Repair " .. partName, player, CarPartRepair_Action.startRepair, item, rule, partName)
+    context:addOption("Repair " .. (rule.label or partName), player, CarPartRepair_Action.startRepair, item, rule, partName)
 end
 
 Events.OnFillInventoryObjectContextMenu.Add(OnFillInventoryObjectContextMenu)
