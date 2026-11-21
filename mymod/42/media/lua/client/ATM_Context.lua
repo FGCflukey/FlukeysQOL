@@ -13,7 +13,7 @@ local ATM_SPRITES = {
     ["location_business_bank_01_67"] = true,
 }
 
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg) if DEBUG then print("[ATM] " .. tostring(msg)) end end
 
 local MAX_ATM_DIST = 2
