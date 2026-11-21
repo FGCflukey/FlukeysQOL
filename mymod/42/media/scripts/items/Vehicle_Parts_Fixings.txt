@@ -23,13 +23,9 @@ module Base
     }
 
     /*  Windows and Windshields  */
-    /*  PibeH3* = HUMMER H3 (Workshop 3832058760) glass. The Toyota Tacoma
-        (3827381192) uses vanilla's window templates/items, so it's already
-        covered by the vanilla entries. */
-
     fixing Fix Windshield 3
     {
-        Require = Base.Windshield1;Base.Windshield2;Base.Windshield3;Base.RearWindshield1;Base.RearWindshield2;Base.RearWindshield3;Base.PibeH3Windshield2;Base.PibeH3RearWindshield2,
+        Require = Base.Windshield1;Base.Windshield2;Base.Windshield3;Base.RearWindshield1;Base.RearWindshield2;Base.RearWindshield3,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=1;Mechanics=3,
@@ -37,7 +33,7 @@ module Base
 
     fixing Fix FrontWindows 3
     {
-        Require = Base.FrontWindow1;Base.FrontWindow2;Base.FrontWindow3;Base.FrontWindow8;Base.PibeH3WindowFront2,
+        Require = Base.FrontWindow1;Base.FrontWindow2;Base.FrontWindow3;Base.FrontWindow8,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=1;Mechanics=3,
@@ -45,19 +41,16 @@ module Base
 
     fixing Fix RearWindows 3
     {
-        Require = Base.RearWindow1;Base.RearWindow2;Base.RearWindow3;Base.RearWindow8;Base.PibeH3WindowRear2,
+        Require = Base.RearWindow1;Base.RearWindow2;Base.RearWindow3;Base.RearWindow8,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=1;Mechanics=3,
     }
 
     /*  Tire Fixing  */
-    /*  PibeH3* = HUMMER H3 tires (regular, run-flat, chain). The Tacoma uses
-        vanilla's Tire template, so its tires are the vanilla items. */
-
     fixing Fix Tire 2
     {
-        Require = Base.OldTire1;Base.OldTire2;Base.OldTire3;Base.NormalTire1;Base.NormalTire2;Base.NormalTire3;Base.ModernTire1;Base.ModernTire2;Base.ModernTire3;Base.OldTire8;Base.NormalTire8;Base.ModernTire8;Base.PibeH3Tire2;Base.PibeH3RunFlatTire2;Base.PibeH3ChainTire2,
+        Require = Base.OldTire1;Base.OldTire2;Base.OldTire3;Base.NormalTire1;Base.NormalTire2;Base.NormalTire3;Base.ModernTire1;Base.ModernTire2;Base.ModernTire3;Base.OldTire8;Base.NormalTire8;Base.ModernTire8,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=1;Mechanics=2,
@@ -215,7 +208,7 @@ module Base
 
     fixing Fix Car seat 2
     {
-        Require = Base.NormalCarSeat1;Base.BigCarSeat1;Base.SportCarSeat1;Base.NormalCarSeat2;Base.BigCarSeat2;Base.SportCarSeat2;Base.NormalCarSeat3;Base.BigCarSeat3;Base.SportCarSeat3;Base.NormalCarSeat8;Base.BigCarSeat8;Base.SportCarSeat8;Base.PibeH3Seat2;Base.PibeH3RearSeat2,
+        Require = Base.NormalCarSeat1;Base.BigCarSeat1;Base.SportCarSeat1;Base.NormalCarSeat2;Base.BigCarSeat2;Base.SportCarSeat2;Base.NormalCarSeat3;Base.BigCarSeat3;Base.SportCarSeat3;Base.NormalCarSeat8;Base.BigCarSeat8;Base.SportCarSeat8,
         ConditionModifier = 1.2,
 
         Fixer = Base.Superglue=2;MetalWelding=3;Mechanics=1,

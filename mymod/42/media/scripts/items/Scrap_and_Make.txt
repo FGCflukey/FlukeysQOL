@@ -523,43 +523,4 @@ craftRecipe MakeScrewsFromScrapMetal
         }
     }
 
-    craftRecipe CutHeavyChainIntoLinks
-    {
-        timedAction     = Making,
-        time            = 200,
-        SkillRequired   = MetalWelding:1,
-        Tags            = InHandCraft,
-        category        = Metalworking,
-        xpAward         = MetalWelding:5,
-        inputs
-        {
-            item 1 tags[base:metalsaw] mode:keep flags[Prop1;MayDegradeLight],
-            item 1 [Base.HeavyChain],
-        }
-        outputs
-        {
-            item 6 Base.HeavyChainLink,
-        }
-    }
-
-    craftRecipe WeldHeavyChainLinks
-    {
-        timedAction     = Welding,
-        time            = 200,
-        SkillRequired   = MetalWelding:2,
-        Tags            = InHandCraft;Welding,
-        category        = Metalworking,
-        xpAward         = MetalWelding:10,
-        inputs
-        {
-            item 3 [Base.ScrapMetal],
-            item 1 [Base.BlowTorch],
-            item 1 tags[base:weldingmask] mode:keep,
-        }
-        outputs
-        {
-            item 3 Base.HeavyChainLink,
-        }
-    }
-
 }

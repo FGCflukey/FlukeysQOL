@@ -1,0 +1,160 @@
+/*  HUMMER H3 (Workshop 3832058760) repairs and recipes.
+    Everything H3-specific lives here, so disabling the H3 mod only
+    means disabling/removing this one file. */
+
+module Base
+{
+    /*  Windows and Windshields  */
+
+    fixing Fix H3 Windshield
+    {
+        Require = Base.PibeH3Windshield2;Base.PibeH3RearWindshield2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+    fixing Fix H3 FrontWindows
+    {
+        Require = Base.PibeH3WindowFront2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+    fixing Fix H3 RearWindows
+    {
+        Require = Base.PibeH3WindowRear2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=3,
+    }
+
+    /*  Tires (regular, run-flat, chain)  */
+
+    fixing Fix H3 Tire
+    {
+        Require = Base.PibeH3Tire2;Base.PibeH3RunFlatTire2;Base.PibeH3ChainTire2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=1;Mechanics=2,
+    }
+
+    /*  Seats  */
+
+    fixing Fix H3 Car seat
+    {
+        Require = Base.PibeH3Seat2;Base.PibeH3RearSeat2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.Superglue=2;MetalWelding=3;Mechanics=1,
+    }
+
+    /*  Heavy armor: bullbar, plow, rams, rear bumper  */
+
+    fixing Fix H3 Heavy Armor Welding
+    {
+        Require = Base.PibeH3ArmorBullbar2;Base.PibeH3ArmorPlow2;Base.PibeH3ArmorRamFront2;Base.PibeH3RamRearBumper2;Base.PibeH3RearBumper2,
+        GlobalItem = Base.BlowTorch=5,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal;MetalWelding=4;Mechanics=3,
+        Fixer = Base.SmallSheetMetal=2;MetalWelding=4;Mechanics=3,
+    }
+
+    /*  Window/windshield armor grilles  */
+
+    fixing Fix H3 Window Grille Welding
+    {
+        Require = Base.PibeH3ArmorWindshield2;Base.PibeH3ArmorWindowFront2;Base.PibeH3ArmorWindowRear2;Base.PibeH3ArmorRearWindow2,
+        GlobalItem = Base.BlowTorch=3,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=2,
+        Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=2,
+    }
+
+    /*  Roof metalwork: roll bar, roof rack  */
+
+    fixing Fix H3 Roof Welding
+    {
+        Require = Base.PibeH3RollBar2;Base.PibeH3RoofRack2,
+        GlobalItem = Base.BlowTorch=3,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SheetMetal;MetalWelding=3;Mechanics=2,
+        Fixer = Base.SmallSheetMetal=2;MetalWelding=3;Mechanics=2,
+    }
+
+    /*  Snorkel: weld, or patch with duct tape (weaker)  */
+
+    fixing Fix H3 Snorkel Welding
+    {
+        Require = Base.PibeH3Snorkel2,
+        GlobalItem = Base.BlowTorch=2,
+        ConditionModifier = 1.2,
+
+        Fixer = Base.SmallSheetMetal;MetalWelding=2;Mechanics=2,
+    }
+
+    fixing Fix H3 Snorkel
+    {
+        Require = Base.PibeH3Snorkel2,
+        ConditionModifier = 0.5,
+
+        Fixer = Base.DuctTape=2;Mechanics=1,
+    }
+
+    /*  Glove box  */
+
+    fixing Fix H3 Glove Box
+    {
+        Require = Base.PibeH3GloveBox2,
+        GlobalItem = Base.Screws=2,
+        ConditionModifier = 1.0,
+
+        Fixer = Base.SmallSheetMetal;Mechanics=1,
+        Fixer = Base.Woodglue=2;Mechanics=1,
+    }
+
+    /*  Heavy Chain Links (needed for "Put Chains on H3 Tire")  */
+
+    craftRecipe CutHeavyChainIntoLinks
+    {
+        timedAction     = Making,
+        time            = 200,
+        SkillRequired   = MetalWelding:1,
+        Tags            = InHandCraft,
+        category        = Metalworking,
+        xpAward         = MetalWelding:5,
+        inputs
+        {
+            item 1 tags[base:metalsaw] mode:keep flags[Prop1;MayDegradeLight],
+            item 1 [Base.HeavyChain],
+        }
+        outputs
+        {
+            item 6 Base.HeavyChainLink,
+        }
+    }
+
+    craftRecipe WeldHeavyChainLinks
+    {
+        timedAction     = Welding,
+        time            = 200,
+        SkillRequired   = MetalWelding:2,
+        Tags            = InHandCraft;Welding,
+        category        = Metalworking,
+        xpAward         = MetalWelding:10,
+        inputs
+        {
+            item 3 [Base.ScrapMetal],
+            item 1 [Base.BlowTorch],
+            item 1 tags[base:weldingmask] mode:keep,
+        }
+        outputs
+        {
+            item 3 Base.HeavyChainLink,
+        }
+    }
+}
