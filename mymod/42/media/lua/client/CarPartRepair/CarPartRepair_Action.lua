@@ -185,7 +185,11 @@ local function OnServerCommand(module, command, args)
         if args.success then
             player:Say("That should hold.")
         else
-            player:Say("Couldn't finish the repair.")
+            if args.reason then
+                player:Say("Couldn't finish the repair: " .. tostring(args.reason))
+            else
+                player:Say("Couldn't finish the repair.")
+            end
             dbg("Server rejected repair: " .. tostring(args.reason))
         end
     end

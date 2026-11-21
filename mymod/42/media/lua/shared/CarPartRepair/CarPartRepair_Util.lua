@@ -247,6 +247,26 @@ end
 -- Can repair this part? Used on BOTH client (for menu/tooltip)
 -- and server (for real validation — never trust the client's word).
 ---------------------------------------------------------
+---------------------------------------------------------
+-- Highest condition one repair can reach. skillCaps are PERCENTAGES
+-- of the part's own ConditionMax (not absolute numbers), so parts with
+-- a max above 100 -- e.g. the H3 chained tire (ConditionMax 140) --
+-- can still be repaired to full at high skill. For normal 100-max
+-- parts this gives exactly the same numbers as before.
+---------------------------------------------------------
+function CarPartRepair_Util.getMaxRepair(player, item, rule)
+    local lvl = player:getPerkLevel(Perks.Mechanics)
+    local capPct =
+        (lvl <= 4) and rule.skillCaps[1] or
+        (lvl <= 8) and rule.skillCaps[2] or
+        rule.skillCaps[3]
+
+    local condMax = (item.getConditionMax and item:getConditionMax()) or 100
+    if not condMax or condMax <= 0 then condMax = 100 end
+
+    return math.floor(condMax * capPct / 100)
+end
+
 function CarPartRepair_Util.canRepairPart(player, item, rule)
     dbg("canRepairPart: checking " .. item:getFullType())
 
@@ -290,11 +310,7 @@ function CarPartRepair_Util.canRepairPart(player, item, rule)
         return false, "Repair kit empty"
     end
 
-    local lvl = player:getPerkLevel(Perks.Mechanics)
-    local maxRepair =
-        (lvl <= 4) and rule.skillCaps[1] or
-        (lvl <= 8) and rule.skillCaps[2] or
-        rule.skillCaps[3]
+    local maxRepair = CarPartRepair_Util.getMaxRepair(player, item, rule)
 
     if item:getCondition() >= maxRepair then
         return false, "Part condition cannot be improved further"

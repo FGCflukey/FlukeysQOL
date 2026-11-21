@@ -85,11 +85,7 @@ local function OnClientCommand(module, command, player, args)
     end
 
     -- Apply the mutation. This is the ONLY place condition should change now.
-    local lvl = player:getPerkLevel(Perks.Mechanics)
-    local maxRepair =
-        (lvl <= 4) and rule.skillCaps[1] or
-        (lvl <= 8) and rule.skillCaps[2] or
-        rule.skillCaps[3]
+    local maxRepair = CarPartRepair_Util.getMaxRepair(player, item, rule)
 
     local oldCond = item:getCondition()
     -- One repair application takes the part straight to your skill-level
