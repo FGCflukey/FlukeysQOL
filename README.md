@@ -153,6 +153,9 @@ List of current things this mod does...
   re-asked whenever the rules version changes. Rules live in a simple text file. The rules box scrolls,
   so it works with large fonts. Players can re-open the rules with F9, and there's an Info & News page
   for server info. Admins can exempt chosen players from accepting
+- **Paint My W900** - repaint the W900 Semi-Truck and its trailers with vanilla paint cans and a paint brush,
+  picking from every colour the W900 mod ships with. Truck uses 1 can, trailers 2, mixed colours need 1 can
+  of each. Also removes rust. Needs the W900 Semi-Truck mod
 - **Personal Safe Uninstall** - lets you safely remove the Workshop "Personal Safe" mod from an existing
   world without breaking it. Use it instead of Personal Safe, never together
 - **Trait Respec** - remove a trait you have and get its real point value back to spend on another

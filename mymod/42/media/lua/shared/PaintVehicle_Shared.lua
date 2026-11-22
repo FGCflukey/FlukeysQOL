@@ -54,7 +54,7 @@ local blockedKeywords = {
     "Lumber","Mail","Masonry","MassGen","MassGenFac","McCoy","Mccoy",
     "MeltingPoint","News","OvoFarm","Plonkies","Police","Postal","Prison",
     "Radio","Ranger","Scarlet","SouthEasternHosp","SouthEasternPaint",
-    "Spiffo","Taxi","Trailer","Transit","Trippy","Uncloggers","Utility",
+    "SemiTruck","Spiffo","Taxi","Trailer","Transit","Trippy","Uncloggers","Utility","W900",
     "YingsWood","Zippee",
 }
 

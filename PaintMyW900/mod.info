@@ -1,0 +1,9 @@
+name=Paint My W900
+description=Repaint the W900 Semi-Truck and its trailers with vanilla paint cans and a paint brush. Switches between the colours the W900 mod already ships with, done server-side so everyone sees it. Truck: 1 can (two-tone = half a can of each). Trailer: 2 cans (two-tone = 1 can of each). Colours with no matching can are mixed, 1 can of each colour. Also removes rust. Requires W900 Semi-Truck (3409472393).
+id=PaintMyW900
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.22
+versionMin=42.20
+icon=LogoFGC.png
+require=\rSemiTruck
