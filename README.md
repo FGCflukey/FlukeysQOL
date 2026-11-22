@@ -28,25 +28,36 @@ List of current things this mod does...
   Doorknobs, Wallpaper rolls, Wrench, Pipe Wrench, Ratchet, Bolt Cutters and Animal Bones
 - Added Stop The Plant Rot - fully grown crops stay harvestable instead of rotting, forever or for a set
   number of in-game days (sandbox option). Watering and disease still matter. (Inspired by NoPlantRot.)
+- Faster Tire Inflating - pumping up a tire is 3x faster, and your character crouches down and faces the
+  tire itself instead of the middle of the car
 
 ### Vehicles
 
 - Added Car Painting. Now you have a nice variety of colours to paint your ride with. Vanilla only.
+  Hold a spray can of the colour you want -- the bigger the vehicle, the longer it takes, and the noise
+  will attract zombies
 - Added Vehicle Vinyl Swapping. Want a different look for your vehicle? (vanilla, plus a few KI5 vehicles)
+  Everything inside comes along -- trunk, glovebox, seats and bags -- and engine quality carries over
 - Added Remove Hotwire for Cars. Sit in the driver's seat of a hotwired car, engine off, and use the
   radial menu. Needs Electrical 2 and Mechanics 3 by default (both adjustable in sandbox options)
-- Added Car Key crafting. Got the skills use some metal and make your own car key.
+- Added Car Key crafting. Got the skills use some metal and make your own car key. You can also cut
+  Small Sheet Metal into Key Blanks (snips + saw)
 - Added Crafting Engine Parts, recipes for mechanic, welding and blacksmithing req.
 - Added Engine Rebuilding - bring an engine's quality back up to 100 using Spare Engine Parts (5x the
   car's engine repair level) and a Wrench. Engine must be over 90% condition and you need the Mechanics
   level that car requires
 - Added repair kits (Tire, Suspension, Brake, Muffler, Body, Gas Tank, Battery) to restore a worn car
   part's condition in place using a Blowtorch, Scrap Metal/Sheet Metal and the matching skill level --
-  works from a backpack, dolly, or even a nearby crate, not just your main inventory
+  works from a backpack, dolly, or even a nearby crate, not just your main inventory. Works on fully
+  broken (0%) parts too, and how far you can repair depends on your skill level
 - Added Dismantling of General Car Parts, serves as a fill-in for missing stuff or as a 2nd option
 - Added Repairing Broken Car Locks. Success is based on Mechanics level. But chance to fail exists.
 - Added Vehicle Recycling, from earlier 42 builds I did. (Vehicle Parts making currently disabled.)
 - Added welding repairs for KI5's M998 Humvee trunk, doors and armor parts
+- Added repairs for the HUMMER H3 mod - windshields, windows, tires (incl. run-flat and chained), seats
+  and snorkel, plus welding its armor parts (bull bars, plows, rams, roll bar, roof rack, etc.) back up
+  even when fully broken. Also Heavy Chain Link recipes for chaining the H3's tires. Each car mod's
+  repairs live in their own file, so they're easy to disable along with that mod
 - Added Automaker - build a real, drivable vehicle from scratch. Read the magazines, gather the metal/
   electrical materials, meet the skill and recipe requirements, and build any installed vehicle mod's
   cars too, not just vanilla ones. (Currently disabled while trialing a Workshop alternative.)
@@ -57,7 +68,7 @@ List of current things this mod does...
 ### Locks & Security
 
 - Added Lock picking for Doors & Vehicle Doors using screwdriver & paperclip. Success based on Mechanics
-  level. Picking any one vehicle door also unlocks the trunk
+  level. Picking any one vehicle door also unlocks the trunk. You have to be standing at the door
 - Added Security Gate cutting, rewards scrap. Think Gun Store security fence blocking the door. Welding 2 Req.
 
 ### Crafting & Recipes
@@ -87,9 +98,13 @@ List of current things this mod does...
 
 ### Economy & Trading
 
-- Added ATM usage. Find credit cards and try them to get some money! Watch out, it's noisy!
-- Added Usable Money. Pack it in $500/$1000 money bags. Duffle<->Moneybag conversion. Vendor friendly.
+- Added ATM usage. Find credit cards and try them to get some money! Watch out, it's noisy! Most cards
+  pay out, the Lucky/Unlucky traits shift your odds, and you'll never get stuck on a long run of declines.
+  Works on wall-mounted ATMs too
+- Added Usable Money. Money Bags are a plain container for your cash. Duffle<->Moneybag conversion.
+  Vendor friendly -- it'll make change from bundles, even ones inside a bag.
 - Added Emergency Vendor. Right-click on a Vending Machine. Buy/Sell items if you have the cash or need it!
+  The window closes on its own if you walk away from the machine
 - Added Survivor Chopper Travel - buy a one-way chopper ticket at the Emergency Vendor and use it to
   instantly fast-travel to that town
 
@@ -103,6 +118,9 @@ List of current things this mod does...
 - Added HomeHeat - a placeable, wall-mounted safehouse radiator with on/off and Cool/Normal/Hot presets,
   so you can keep a room warm without a constant fire or wood stove going
 - Added Stop The Drop - When you flee & fall down, you won't drop your hat/other items. Idc for mechanic.
+- Added Boulder Breaking - smash the big boulders you couldn't touch before with a pickaxe or sledgehammer.
+  The whole boulder comes down (even the big 2x2 ones) and drops Stones, Large Stones and Flint Nodules.
+  Bigger boulders take longer and give more. Gives Masonry and Strength XP
 
 ### Items & Equipment
 
@@ -111,6 +129,11 @@ List of current things this mod does...
 - (Note to above. In some circumstance you can still drop it. 98% of time you wont.)
 - Dolly holds 150 and Toy Wagon holds 100. (Vehicle trunk capacity increase currently disabled.)
 - Added FLuKeez's Canteen - a wearable 3 Litre canteen (satchel slot), my own personal signature item
+
+### Mod Compatibility Fixes
+
+- Customizable Containers - upgraded storage keeps its upgraded capacity when you drive away and come
+  back, instead of resetting to the default size
 
 ### Vanilla Fixes
 
@@ -126,7 +149,11 @@ List of current things this mod does...
   unhappiness and boredom, with a real custom playing animation. Needs power
 - **Server Rules** - new players get a welcome message and the server rules on join, must tick every rule
   and accept to play (decline or run out of time and they're disconnected). Recorded per player, and
-  re-asked whenever the rules version changes. Rules live in a simple text file
+  re-asked whenever the rules version changes. Rules live in a simple text file. The rules box scrolls,
+  so it works with large fonts. Players can re-open the rules with F9, and there's an Info & News page
+  for server info. Admins can exempt chosen players from accepting
+- **Personal Safe Uninstall** - lets you safely remove the Workshop "Personal Safe" mod from an existing
+  world without breaking it. Use it instead of Personal Safe, never together
 - **Trait Respec** - remove a trait you have and get its real point value back to spend on another
 - **Working Bandsaw** - use the vanilla Metal Bandsaw to cut logs into planks in bulk. Needs power
 
