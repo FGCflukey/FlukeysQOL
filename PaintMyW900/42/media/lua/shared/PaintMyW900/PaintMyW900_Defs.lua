@@ -247,7 +247,17 @@ end
 ---------------------------------------------------------
 -- Conditions (same spirit as FlukeysQOL's PaintVehicle)
 ---------------------------------------------------------
+-- Trailers have no ignition and no key in the W900 mod, but the engine
+-- still gives every vehicle a keyId, so they'd always fail this check.
+function PaintMyW900.needsKey(vehicle)
+    local def = PaintMyW900.getVehicleDef(vehicle)
+    if def and def.trailer then return false end
+    local keyId = vehicle:getKeyId()
+    return keyId ~= nil and keyId ~= -1
+end
+
 function PaintMyW900.hasVehicleKey(character, vehicle)
+    if not PaintMyW900.needsKey(vehicle) then return true end
     local keyId = vehicle:getKeyId()
     if not keyId or keyId == -1 then return true end
     return character:getInventory():haveThisKeyId(keyId)

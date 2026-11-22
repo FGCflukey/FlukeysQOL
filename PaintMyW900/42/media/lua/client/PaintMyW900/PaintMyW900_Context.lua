@@ -54,7 +54,7 @@ local function onFillWorldObjectContextMenu(playerNum, context, worldobjects, te
     if not (hasKey and weather and light and clean and brush) then
         main.notAvailable = true
         local d = "Requirements: <LINE> "
-        if vehicle:getKeyId() and vehicle:getKeyId() ~= -1 then d = d .. line(hasKey, "Vehicle key") end
+        if PaintMyW900.needsKey(vehicle) then d = d .. line(hasKey, "Vehicle key") end
         d = d .. line(weather, "Clear weather")
         d = d .. line(light, "Enough light")
         d = d .. line(clean, "Vehicle is clean (no blood)")
