@@ -58,6 +58,7 @@ List of current things this mod does...
   and snorkel, plus welding its armor parts (bull bars, plows, rams, roll bar, roof rack, etc.) back up
   even when fully broken. Also Heavy Chain Link recipes for chaining the H3's tires. Each car mod's
   repairs live in their own file, so they're easy to disable along with that mod
+- Added glass repairs for KI5's Campers - every camper windshield and window (Superglue, Mechanics 3)
 - Added Automaker - build a real, drivable vehicle from scratch. Read the magazines, gather the metal/
   electrical materials, meet the skill and recipe requirements, and build any installed vehicle mod's
   cars too, not just vanilla ones. (Currently disabled while trialing a Workshop alternative.)
