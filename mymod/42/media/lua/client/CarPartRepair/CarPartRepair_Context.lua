@@ -6,7 +6,7 @@
 local Util = CarPartRepair_Util
 local Action = CarPartRepair_Action
 
-local DEBUG = false
+local DEBUG = true
 local function dbg(msg) if DEBUG then print("[CarPartRepair:Context] " .. tostring(msg)) end end
 
 local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
@@ -37,6 +37,21 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
     -- Check repair eligibility
     local ok, reason = CarPartRepair_Util.canRepairPart(player, item, rule)
     dbg("canRepairPart ok=" .. tostring(ok) .. " reason=" .. tostring(reason))
+    if DEBUG then
+        local inv = player:getInventory()
+        for _, key in ipairs({ "tool", "material", "kit" }) do
+            local ft = rule.required[key]
+            local found = ft and inv:getFirstTypeRecurse(ft)
+            if found then
+                local c = found:getContainer()
+                dbg(key .. " " .. ft .. " FOUND id=" .. tostring(found:getID())
+                    .. " in " .. tostring(c and c:getType())
+                    .. " uses=" .. tostring(found.getCurrentUses and found:getCurrentUses()))
+            else
+                dbg(key .. " " .. tostring(ft) .. " not found")
+            end
+        end
+    end
 
     ---------------------------------------------------------
     -- OPTION A: Disabled repair option + tooltip

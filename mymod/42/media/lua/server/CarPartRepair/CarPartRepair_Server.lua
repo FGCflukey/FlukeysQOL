@@ -143,10 +143,22 @@ local function OnClientCommand(module, command, player, args)
     -- sendItemStats() is the same pairing vanilla uses after Use()
     -- (see ISApplyMakeUp.lua) -- it covers both the "still has uses
     -- left" and "just got removed" cases.
+    --
+    -- If this Use() emptied the kit, the server removes it -- but
+    -- sendItemStats() alone never told the CLIENT it was gone, leaving a
+    -- "ghost" kit in the player's inventory that passed the client-side
+    -- menu check while the server (correctly) said "Missing repair kit".
+    -- So capture the container first and send an explicit removal.
     local kit = inv:getFirstTypeRecurse(rule.required.kit)
     if kit then
+        local kitContainer = kit:getContainer()
         kit:Use()
-        sendItemStats(kit)
+        if kit:getContainer() == nil and kitContainer then
+            sendRemoveItemFromContainer(kitContainer, kit)
+            dbg("Kit used up, removal sent to client")
+        else
+            sendItemStats(kit)
+        end
     end
 
     -- Drain the tool's uses if this rule opts into it (BlowTorch fuel,
@@ -165,12 +177,16 @@ local function OnClientCommand(module, command, player, args)
             -- it), which is correct regardless of which container it
             -- started in.
             local drainAmount = rule.toolUsesPerRepair or 1
+            local toolContainer = tool:getContainer()
             for i = 1, drainAmount do
                 if not tool:getContainer() then break end
                 tool:Use()
             end
             if tool:getContainer() then
                 sendItemStats(tool)
+            elseif toolContainer then
+                -- Same ghost-item fix as the kit above.
+                sendRemoveItemFromContainer(toolContainer, tool)
             end
             dbg("Tool drained: " .. rule.required.tool)
         else
