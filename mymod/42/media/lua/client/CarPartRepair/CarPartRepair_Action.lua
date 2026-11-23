@@ -139,7 +139,7 @@ function CarPartRepair_Action.startRepair(player, item, rule, partName)
 
     local inv = player:getInventory()
 
-    local tool     = inv:getFirstTypeRecurse(rule.required.tool)
+    local tool     = CarPartRepair_Util.findTool(inv, rule)
     local material = inv:getFirstTypeRecurse(rule.required.material)
     local kit      = inv:getFirstTypeRecurse(rule.required.kit)
 

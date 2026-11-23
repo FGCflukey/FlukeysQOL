@@ -317,6 +317,33 @@ function CarPartRepair_Util.getMaxRepair(player, item, rule)
     return math.floor(condMax * capPct / 100)
 end
 
+-- Finds the tool to use for this rule (recursive: backpack/dolly count).
+-- For a fuel-consuming tool (BlowTorch) it must have at least
+-- toolUsesPerRepair uses left -- picking "the first torch found" used to
+-- grab an empty one, and the server then drained it 2 uses past zero
+-- (torches are KeepOnDeplete, so they never disappear to stop the loop),
+-- leaving a torch at a negative charge that the refill recipe rejects.
+-- Returns: tool (or nil), anyPresent (true if one exists but lacks fuel).
+function CarPartRepair_Util.findTool(inv, rule)
+    local toolType = rule.required.tool
+    if not rule.toolConsumesUses then
+        local t = inv:getFirstTypeRecurse(toolType)
+        return t, t ~= nil
+    end
+    local need = rule.toolUsesPerRepair or 1
+    local all = inv:getAllTypeRecurse(toolType)
+    local best = nil
+    for i = 0, all:size() - 1 do
+        local t = all:get(i)
+        local uses = t.getCurrentUses and t:getCurrentUses() or 0
+        -- use the emptiest torch that still has enough, so fuller ones are saved
+        if uses >= need and (not best or uses < best:getCurrentUses()) then
+            best = t
+        end
+    end
+    return best, all:size() > 0
+end
+
 function CarPartRepair_Util.canRepairPart(player, item, rule)
     dbg("canRepairPart: checking " .. item:getFullType())
 
@@ -328,9 +355,9 @@ function CarPartRepair_Util.canRepairPart(player, item, rule)
     -- main inventory. containsFullType() only ever walked getItems() at
     -- the top level, which is why these used to report "Missing" for
     -- anything not dragged into main inventory first.
-    local tool = inv:getFirstTypeRecurse(rule.required.tool)
+    local tool, anyTool = CarPartRepair_Util.findTool(inv, rule)
     if not tool then
-        return false, "Missing tool"
+        return false, anyTool and "Not enough fuel in tool" or "Missing tool"
     end
 
     -- Optional second required tool. Only Tire uses this right now

@@ -167,7 +167,11 @@ local function OnClientCommand(module, command, player, args)
     -- lacks KeepOnDeplete still gets removed/replaced correctly instead
     -- of jumping straight past zero.
     if rule.toolConsumesUses then
-        local tool = inv:getFirstTypeRecurse(rule.required.tool)
+        -- Same fuel-aware pick as canRepairPart (a torch with enough uses),
+        -- and never drain below zero: KeepOnDeplete torches stay in the
+        -- container at 0, so the getContainer() check alone never stopped
+        -- the loop and Use() pushed them negative (-0.02 seen in-game).
+        local tool = CarPartRepair_Util.findTool(inv, rule)
         if tool then
             -- Checking tool:getContainer() instead of inv:contains(tool) --
             -- the tool can now be recursively found inside a worn backpack
@@ -180,6 +184,7 @@ local function OnClientCommand(module, command, player, args)
             local toolContainer = tool:getContainer()
             for i = 1, drainAmount do
                 if not tool:getContainer() then break end
+                if tool.getCurrentUses and tool:getCurrentUses() <= 0 then break end
                 tool:Use()
             end
             if tool:getContainer() then

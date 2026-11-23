@@ -58,3 +58,33 @@ function RefillBlowTorch_OnCreate(_craftRecipeData, character)
     tank:syncItemFields()
     dbg("refilled torch, tank " .. tostring(tankCur) .. " -> " .. tostring(newTankUses))
 end
+
+-- Cleanup for torches CarPartRepair drained BELOW zero before that was fixed
+-- (2026-11-23): a negative charge (e.g. Used Delta -0.02) makes the refill
+-- recipe reject the torch. Every 10 in-game minutes, any BlowTorch with
+-- negative uses on an online player is reset to a real 0 and synced. The
+-- debug Item Editor can't fix it in MP (its edits are client-only).
+local function fixNegativeTorches(player)
+    local torches = player:getInventory():getAllTypeRecurse("Base.BlowTorch")
+    for i = 0, torches:size() - 1 do
+        local t = torches:get(i)
+        if t.getCurrentUsesFloat and (t:getCurrentUsesFloat() < 0 or t:getCurrentUses() < 0) then
+            t:setUsedDelta(0)
+            if isServer() then sendItemStats(t) end
+            dbg("reset negative torch to 0 for " .. tostring(player:getUsername()))
+        end
+    end
+end
+
+Events.EveryTenMinutes.Add(function()
+    if isServer() then
+        local players = getOnlinePlayers()
+        if not players then return end
+        for i = 0, players:size() - 1 do
+            fixNegativeTorches(players:get(i))
+        end
+    else
+        local p = getPlayer()
+        if p then fixNegativeTorches(p) end
+    end
+end)

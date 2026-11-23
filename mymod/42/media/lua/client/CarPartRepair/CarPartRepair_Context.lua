@@ -80,8 +80,11 @@ local function OnFillInventoryObjectContextMenu(playerIndex, context, items)
         local inv = player:getInventory()
 
         -- Tool
-        local haveTool = inv:getFirstTypeRecurse(rule.required.tool)
-        if not haveTool then
+        local haveTool, anyTool = CarPartRepair_Util.findTool(inv, rule)
+        if not haveTool and anyTool then
+            tip.description = tip.description .. " - " .. rule.required.tool .. " (Not enough fuel, needs "
+                .. tostring(rule.toolUsesPerRepair or 1) .. " uses)\n"
+        elseif not haveTool then
             tip.description = tip.description .. " - " .. rule.required.tool .. " (Missing)\n"
         else
             tip.description = tip.description .. " - " .. rule.required.tool .. "\n"
