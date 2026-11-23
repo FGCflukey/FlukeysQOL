@@ -130,6 +130,7 @@ List of current things this mod does...
 - (Note to above. In some circumstance you can still drop it. 98% of time you wont.)
 - Dolly holds 150 and Toy Wagon holds 100. (Vehicle trunk capacity increase currently disabled.)
 - Added FLuKeez's Canteen - a wearable 3 Litre canteen (satchel slot), my own personal signature item
+- Transfer Amount - right-click a stack for "Grab amount...", "Put amount..." or "Drop amount..." and type how many to move (skips favourited and equipped items)
 
 ### Mod Compatibility Fixes
 
