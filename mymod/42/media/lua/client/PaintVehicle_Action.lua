@@ -45,9 +45,9 @@ end
 function ISPaintVehicleAction:start()
     self.character:faceThisObject(self.vehicle)
 
-    self:setActionAnim("Craft")
-    self.character:SetVariable("CraftingType", "Spraycan")
-    self:setOverrideHandModels(self.spraycan, nil)   -- show the can in hand while spraying
+    -- Vanilla's wall-painting animation (same as PaintMyW900), but with the can in hand
+    self:setActionAnim(CharacterActionAnims.Paint)
+    self:setOverrideHandModels(self.spraycan, nil)
 
     local emitter = self.character:getEmitter()
     if emitter then

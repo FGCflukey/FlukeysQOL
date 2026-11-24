@@ -71,8 +71,12 @@ end
 -- start(): animation + sound
 ------------------------------------------------------------
 function ISSwapVinylAction:start()
-    self:setActionAnim("Loot")
-    self.character:SetVariable("LootPosition", "Mid")
+    self.character:faceThisObject(self.vehicle)
+
+    -- Vanilla's wall-painting animation (same as PaintMyW900), with the vinyl can in hand
+    self:setActionAnim(CharacterActionAnims.Paint)
+    local can = self.character:getInventory():getFirstTypeRecurse("Base.SpraycanVinylCoat")
+    self:setOverrideHandModels(can, nil)
 
     -- Start sound
     local emitter = self.character:getEmitter()
