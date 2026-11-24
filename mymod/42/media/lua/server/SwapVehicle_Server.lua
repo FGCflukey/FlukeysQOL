@@ -24,12 +24,13 @@ local SANDING = "Base.SandingBlock"
 -- Vanilla's ProfessionVehicles.CheckSwap (OnSpawnVehicleStart) turns generic
 -- "profession" scripts (VanGardener, VanMetalworker, PickUpVanBuilder, ...) into a
 -- random regional livery, so choosing e.g. the Gardener vinyl gave a Trey Baines van.
--- The event doesn't fire inside addVehicleDebug: it fires later, from
--- BaseVehicle.createPhysics() on a following update (checked in projectzomboid.jar),
--- so unhooking around the spawn call does nothing. Instead vanilla's handler is
--- swapped for a wrapper that skips only the vehicles this swap spawned.
-local skipProfessionSwap = {}   -- vehicle -> timestamp spawned
-local SKIP_EXPIRE_SECONDS = 60
+-- The event fires from BaseVehicle.createPhysics(), synchronously INSIDE the
+-- addVehicleDebug call (confirmed by live logging 2026-11-24: CheckSwap logged in the
+-- same frame, before addVehicleDebug returned), so the vehicle object can't be
+-- flagged in advance. Instead the script name is flagged just before the spawn, and
+-- vanilla's handler is replaced by a wrapper that skips the first not-yet-created
+-- vehicle with that script. The flag is cleared as soon as the spawn call returns.
+local pendingSwapScript = nil
 
 local function WrapProfessionCheckSwap()
     if not ProfessionVehicles or not ProfessionVehicles.CheckSwap then
@@ -39,22 +40,13 @@ local function WrapProfessionCheckSwap()
     if ProfessionVehicles.FlukeysSwapWrapped then return end
     local original = ProfessionVehicles.CheckSwap
     local function wrapped(vehicle)
-        if DEBUG and vehicle then
-            local side = isClient() and "CLIENT" or (isServer() and "SERVER" or "SP")
-            local sn = vehicle:getScript() and vehicle:getScript():getFullName() or "?"
-            dbg("CheckSwap on " .. side .. " for " .. sn .. " id=" .. tostring(vehicle:getId())
-                .. " created=" .. tostring(vehicle:isCreated())
-                .. " flagged=" .. tostring(skipProfessionSwap[vehicle] ~= nil))
-        end
-        if vehicle and skipProfessionSwap[vehicle] then
-            skipProfessionSwap[vehicle] = nil
-            dbg("skipped vanilla profession re-roll for a vinyl-swapped vehicle")
-            return
-        end
-        -- forget stale entries (e.g. a car that never got physics)
-        local now = getTimestamp()
-        for v, t in pairs(skipProfessionSwap) do
-            if now - t > SKIP_EXPIRE_SECONDS then skipProfessionSwap[v] = nil end
+        if vehicle and pendingSwapScript and not vehicle:isCreated() then
+            local script = vehicle:getScript()
+            if script and script:getFullName() == pendingSwapScript then
+                dbg("skipped vanilla profession re-roll for vinyl-swapped " .. pendingSwapScript)
+                pendingSwapScript = nil
+                return
+            end
         end
         return original(vehicle)
     end
@@ -371,9 +363,15 @@ function SwapVehicle_Server_Handle(player, args)
     vehicle:permanentlyRemove()
 
     WrapProfessionCheckSwap()   -- no-op if already wrapped at load
-    local newVehicle = addVehicleDebug(newScript, IsoDirections.N, nil, spawnSquare)
-    -- Exempt this car from vanilla's profession re-roll (see WrapProfessionCheckSwap)
-    if newVehicle then skipProfessionSwap[newVehicle] = getTimestamp() end
+    -- Exempt this spawn from vanilla's profession re-roll (see WrapProfessionCheckSwap).
+    -- pcall so the flag is always cleared, even if the spawn throws.
+    pendingSwapScript = newScript
+    local spawnOk, newVehicle = pcall(addVehicleDebug, newScript, IsoDirections.N, nil, spawnSquare)
+    pendingSwapScript = nil
+    if not spawnOk then
+        print("[SwapVehicle] ERROR: addVehicleDebug threw for " .. tostring(newScript) .. ": " .. tostring(newVehicle))
+        newVehicle = nil
+    end
     if not newVehicle then
         -- Shouldn't happen now the script + square are checked up front, but never lose
         -- the battery or the loot: put them on the ground where the vehicle was.
