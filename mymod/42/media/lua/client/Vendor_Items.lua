@@ -44,6 +44,7 @@ VendorItems = {
     { id = "Base.PaintOrange",            name = "Orange Paint",          price = 20 },
     { id = "Base.PaintPink",              name = "Pink Paint",            price = 20 },
     { id = "Base.PaintPurple",            name = "Purple Paint",          price = 20 },
+    { id = "Base.PaintRed",               name = "Red Paint",             price = 20 },
     { id = "Base.PaintTurquoise",         name = "Turquoise Paint",       price = 20 },
     { id = "Base.PaintWhite",             name = "White Paint",           price = 20 },
     { id = "Base.PaintYellow",            name = "Yellow Paint",          price = 20 },

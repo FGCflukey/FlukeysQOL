@@ -13,6 +13,21 @@
 
 local vehicleMenu_Data = ISVehicleMenu.showRadialMenu
 
+-- These W900 Semi-Truck mod (3409472393) tractors have their own in-cab tow
+-- handling, so ours would be a duplicate option (list per player report). The
+-- other W900 trucks (SemiTruckBox, SemiTruckBox_mil, Oshkosh M911/M911B) and all
+-- trailers still use our option.
+local OWN_TOWING_TRUCKS = {
+	SemiTruck     = true,
+	SemiTruckLite = true,
+	SemiTruck_mil = true,
+}
+
+local function hasOwnTowing(vehicle)
+	local script = vehicle and vehicle:getScript()
+	return script ~= nil and OWN_TOWING_TRUCKS[script:getName()] == true
+end
+
 local function Attach(playerObj, vA, vB, aA, aB)  --Attach timed action
 	playerObj:setVariable("IsAttachingInVehicle", true)
 	local action = ISAttachTrailerToVehicle:new(playerObj, vA, vB, aA, aB)
@@ -43,6 +58,7 @@ function ISVehicleMenu.showRadialMenu(...)
 	local vehicle = playerObj:getVehicle()
 
 	if not vehicle then return end
+	if hasOwnTowing(vehicle) then return end
 
 	local menu = getPlayerRadialMenu(playerObj:getPlayerNum())
 
