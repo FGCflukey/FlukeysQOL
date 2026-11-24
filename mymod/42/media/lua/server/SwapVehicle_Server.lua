@@ -39,6 +39,13 @@ local function WrapProfessionCheckSwap()
     if ProfessionVehicles.FlukeysSwapWrapped then return end
     local original = ProfessionVehicles.CheckSwap
     local function wrapped(vehicle)
+        if DEBUG and vehicle then
+            local side = isClient() and "CLIENT" or (isServer() and "SERVER" or "SP")
+            local sn = vehicle:getScript() and vehicle:getScript():getFullName() or "?"
+            dbg("CheckSwap on " .. side .. " for " .. sn .. " id=" .. tostring(vehicle:getId())
+                .. " created=" .. tostring(vehicle:isCreated())
+                .. " flagged=" .. tostring(skipProfessionSwap[vehicle] ~= nil))
+        end
         if vehicle and skipProfessionSwap[vehicle] then
             skipProfessionSwap[vehicle] = nil
             dbg("skipped vanilla profession re-roll for a vinyl-swapped vehicle")
@@ -487,6 +494,20 @@ function SwapVehicle_Server_Handle(player, args)
     })
 
     dbg(who .. " swapped " .. oldScript .. " -> " .. newScript .. " (id " .. tostring(newVehicleId) .. ")")
+
+    -- DEBUG: report what script the server's copy really ends up as, ~2s later
+    if DEBUG then
+        local ticks = 0
+        local function lateCheck()
+            ticks = ticks + 1
+            if ticks < 120 then return end
+            Events.OnTick.Remove(lateCheck)
+            local v = getVehicleById(newVehicleId)
+            dbg("2s later on server: id " .. tostring(newVehicleId) .. " is "
+                .. tostring(v and v:getScript() and v:getScript():getFullName() or "GONE"))
+        end
+        Events.OnTick.Add(lateCheck)
+    end
 end
 
 ------------------------------------------------------------

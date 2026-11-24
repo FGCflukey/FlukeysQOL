@@ -28,7 +28,7 @@ end
 -- setAngles alone gets overwritten. Same approach as vanilla's debug Vehicle Angles
 -- tool: pause physics, set the angles, then let physics carry on from there.
 ------------------------------------------------------------
-local DEBUG = false
+local DEBUG = true
 local function dbg(msg) if DEBUG then print("[SwapVehicle:Client] " .. tostring(msg)) end end
 
 local WAIT_TICKS = 300   -- how long to wait for the new vehicle to reach this client (~5s)
@@ -65,7 +65,8 @@ local function orientTick()
             p.held = p.held + 1
         else
             v:setPhysicsActive(true, true)
-            dbg("vehicle " .. tostring(id) .. " oriented to angleY " .. tostring(p.args.ay))
+            dbg("vehicle " .. tostring(id) .. " oriented to angleY " .. tostring(p.args.ay)
+                .. ", client sees script " .. tostring(v:getScript() and v:getScript():getFullName()))
             table.insert(done, id)
         end
     end
