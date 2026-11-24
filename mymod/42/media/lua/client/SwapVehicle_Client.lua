@@ -23,5 +23,57 @@ function SwapVehicle_Client.SendSwapRequest(player, vehicle, newScript)
 end
 
 ------------------------------------------------------------
+-- Put the swapped vehicle back where the old one was, facing the same way.
+-- In B42 MP the nearby player's game runs the vehicle's physics, so the server's
+-- setAngles alone gets overwritten. Same approach as vanilla's debug Vehicle Angles
+-- tool: pause physics, set the angles, then let physics carry on from there.
+------------------------------------------------------------
+local DEBUG = false
+local function dbg(msg) if DEBUG then print("[SwapVehicle:Client] " .. tostring(msg)) end end
+
+local WAIT_TICKS = 300   -- how long to wait for the new vehicle to reach this client (~5s)
+local HOLD_TICKS = 10    -- how many ticks to hold it in place with physics paused
+
+local pending = {}       -- vehicleId -> { args, waited, held }
+
+local function applyOrient(v, a)
+    v:setX(a.x)
+    v:setY(a.y)
+    v:setZ(a.z)
+    v:setAngles(a.ax, a.ay, a.az)
+end
+
+local function orientTick()
+    for id, p in pairs(pending) do
+        local v = getVehicleById(id)
+        if not v then
+            p.waited = p.waited + 1
+            if p.waited > WAIT_TICKS then
+                dbg("vehicle " .. tostring(id) .. " never arrived, giving up")
+                pending[id] = nil
+            end
+        elseif p.held < HOLD_TICKS then
+            v:setPhysicsActive(false, false)
+            applyOrient(v, p.args)
+            p.held = p.held + 1
+        else
+            v:setPhysicsActive(true, true)
+            dbg("vehicle " .. tostring(id) .. " oriented to angleY " .. tostring(p.args.ay))
+            pending[id] = nil
+        end
+    end
+    if next(pending) == nil then
+        Events.OnTick.Remove(orientTick)
+    end
+end
+
+Events.OnServerCommand.Add(function(module, command, args)
+    if module ~= "SwapVehicle" or command ~= "Orient" or not args or not args.vehicleId then return end
+    local empty = next(pending) == nil
+    pending[args.vehicleId] = { args = args, waited = 0, held = 0 }
+    if empty then Events.OnTick.Add(orientTick) end
+end)
+
+------------------------------------------------------------
 -- End of Client Command File
 ------------------------------------------------------------

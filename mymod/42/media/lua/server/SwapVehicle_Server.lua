@@ -310,11 +310,11 @@ function SwapVehicle_Server_Handle(player, args)
     -- The new vehicle gets the same key ID, so the player's existing car key keeps working
     local oldKeyId = vehicle:getKeyId()
 
-    -- Rotation must be captured before the old vehicle is removed
-    local rot = nil
-    if vehicle.getWorldRotation then
-        rot = vehicle:getWorldRotation()
-    end
+    -- Facing must be captured before the old vehicle is removed.
+    -- getAngleX/Y/Z + setAngles are the real B42 methods (vanilla's own debug
+    -- "Vehicle Angles" tool uses them); getWorldRotation/setWorldRotation don't
+    -- exist, which is why swapped cars used to always end up facing north.
+    local angX, angY, angZ = vehicle:getAngleX(), vehicle:getAngleY(), vehicle:getAngleZ()
 
     --------------------------------------------------------
     -- Replace the vehicle
@@ -340,11 +340,10 @@ function SwapVehicle_Server_Handle(player, args)
     --------------------------------------------------------
     -- Position + rotation
     --------------------------------------------------------
-    if newVehicle.setX then newVehicle:setX(x) end
-    if newVehicle.setY then newVehicle:setY(y) end
-    if newVehicle.setZ then newVehicle:setZ(z) end
-    if newVehicle.setWorldPos then newVehicle:setWorldPos(x, y, z) end
-    if rot and newVehicle.setWorldRotation then newVehicle:setWorldRotation(rot) end
+    newVehicle:setX(x)
+    newVehicle:setY(y)
+    newVehicle:setZ(z)
+    newVehicle:setAngles(angX, angY, angZ)
 
     if newVehicle.setCurrentSpeed then newVehicle:setCurrentSpeed(0) end
     if newVehicle.setEngineSpeed then newVehicle:setEngineSpeed(0) end
@@ -429,10 +428,18 @@ function SwapVehicle_Server_Handle(player, args)
     ClearNewVehicleContainers(newVehicle)
     RestoreLoot(newVehicle, lootData, spawnSquare)
 
-    -- Send the final position/direction/engine state last, after everything is set
-    if newVehicle.transmitPosition then newVehicle:transmitPosition() end
-    if newVehicle.transmitDirection then newVehicle:transmitDirection() end
     if newVehicle.transmitEngine then newVehicle:transmitEngine() end
+
+    -- In B42 MP the nearby player's game runs a vehicle's physics and overrides the
+    -- server's position/rotation (same cause as the FlipVehicle sync problem), and
+    -- there is no transmit call for a vehicle's transform. So tell every client the
+    -- intended spot + facing; each applies it if it has this vehicle loaded.
+    -- (Lesson from Workshop "FlipVehicleFix" 3843842246.)
+    sendServerCommand("SwapVehicle", "Orient", {
+        vehicleId = newVehicleId,
+        x = x, y = y, z = z,
+        ax = angX, ay = angY, az = angZ,
+    })
 
     dbg(who .. " swapped " .. oldScript .. " -> " .. newScript .. " (id " .. tostring(newVehicleId) .. ")")
 end
