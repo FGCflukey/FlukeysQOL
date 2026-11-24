@@ -1,0 +1,15 @@
+{
+    "Tooltip_FlipThisCar_Desc": "Heave the vehicle back onto its wheels.",
+    "Tooltip_FlipThisCar_Strength": "Strength: %1 (need %2)",
+    "Tooltip_FlipThisCar_NoVehicle": "The vehicle is gone.",
+    "Tooltip_FlipThisCar_ExitVehicle": "Get out of the vehicle first.",
+    "Tooltip_FlipThisCar_NotFlipped": "It's already on its wheels.",
+    "Tooltip_FlipThisCar_Burnt": "It's a burnt-out wreck.",
+    "Tooltip_FlipThisCar_TooFar": "Get closer to the vehicle.",
+    "Tooltip_FlipThisCar_Moving": "The vehicle must be standing still.",
+    "Tooltip_FlipThisCar_Occupied": "Someone is inside the vehicle.",
+    "Tooltip_FlipThisCar_TooWeak": "I'm not strong enough to flip this.",
+    "Tooltip_FlipThisCar_Busy": "It's already being flipped.",
+    "Tooltip_FlipThisCar_Cooldown": "I need to catch my breath first.",
+    "Tooltip_FlipThisCar_Cancelled": "I need to stay next to it to flip it."
+}

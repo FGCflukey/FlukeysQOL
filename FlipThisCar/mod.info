@@ -1,0 +1,8 @@
+name=Flip This Car
+description=Flip a tipped-over or upside-down vehicle back onto its wheels. Stand next to it, right-click (or use the vehicle radial menu) and heave it over with a few shoves. Needs Strength 5 by default (sandbox option), no tools. Done server-side and synced properly in multiplayer: the flipping player is given control of the car's physics while it turns, so everyone sees it land upright, still facing the same way. Our own build, informed by FlipVehiclePlusTrailer, its multiplayer fix, and Push Vehicle. Standalone, no dependencies.
+id=FlipThisCar
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.22
+versionMin=42.19
+icon=LogoFGC.png
