@@ -7,7 +7,7 @@
 
 require "PaintVehicle_Shared"   -- shared key check (PaintVehicle.hasVehicleKey)
 
-local DEBUG = false
+local DEBUG = true
 local function dbg(msg) if DEBUG then print("[SwapVehicle:Server] " .. tostring(msg)) end end
 
 if not SwapVehicleRegistry then
