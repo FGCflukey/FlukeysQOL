@@ -286,20 +286,22 @@ SwapVehicleRegistry.SwapPairs = {
 
     PickupVan = {
         "Base.PickUpVanBrickingIt",
-        "Base.PickUpVanBuilder",
+        -- PickUpVanBuilder / PickUpVanMetalworker removed as choices: vanilla "General"
+        -- placeholders whose only skins are other liveries already in this list, picked
+        -- at random. Still in Groups so existing ones can be swapped away.
         "Base.PickUpVanCallowayLandscaping",
         "Base.PickUpVanHeltonMetalWorking",
         "Base.PickUpVanKimbleKonstruction",
         "Base.PickUpVanMarchRidgeConstruction",
         "Base.PickUpVanMccoy",
-        "Base.PickUpVanMetalworker",
         "Base.PickUpVanWeldingbyCamille",
         "Base.PickUpVanYingsWood",
         "Base.PickUpVan_Camo",
     },
 
     PickupVanLights = {
-        "Base.PickUpVanLightsCarpenter",
+        -- PickUpVanLightsCarpenter removed as a choice: placeholder, its only skin is
+        -- KentuckyLumber's (below).
         "Base.PickUpVanLightsFire",
         "Base.PickUpVanLightsFossoil",
         "Base.PickUpVanLightsKentuckyLumber",
@@ -320,7 +322,9 @@ SwapVehicleRegistry.SwapPairs = {
         "Base.VanDeerValley",
         "Base.VanFossoil",
         "Base.VanGardenGods",
-        "Base.VanGardener",
+        -- VanGardener / VanMetalworker removed as choices: placeholders whose skins are
+        -- Louisville Landscaping + Trey Baines, and Melting Point / Jones / Riverside /
+        -- Schwab, picked at random. Still in Groups so existing ones can be swapped away.
         "Base.Van_Glass",
         "Base.VanGreenes",
         "Base.Van_HeritageTailors",
@@ -340,7 +344,6 @@ SwapVehicleRegistry.SwapPairs = {
         "Base.VanMccoy",
         "Base.VanMeltingPointMetal",
         "Base.VanMetalheads",
-        "Base.VanMetalworker",
         "Base.VanMicheles",
         "Base.VanMobileMechanics",
         "Base.VanMooreMechanics",

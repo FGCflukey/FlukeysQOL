@@ -28,7 +28,7 @@ end
 -- setAngles alone gets overwritten. Same approach as vanilla's debug Vehicle Angles
 -- tool: pause physics, set the angles, then let physics carry on from there.
 ------------------------------------------------------------
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg) if DEBUG then print("[SwapVehicle:Client] " .. tostring(msg)) end end
 
 local WAIT_TICKS = 300   -- how long to wait for the new vehicle to reach this client (~5s)
