@@ -61,6 +61,13 @@ local blockedKeywords = {
 function PaintVehicle.isBlockedCommercial(vehicle)
     local script = vehicle and vehicle:getScript()
     local name = script and script:getName() or ""
+    -- Liveried vehicles handled by the vinyl swap system get vinyls, not paint.
+    -- (Plain base vehicles like Base.Van aren't in that registry, so they stay paintable.)
+    local fullName = script and script:getFullName()
+    if fullName and SwapVehicleRegistry and SwapVehicleRegistry.Groups
+            and SwapVehicleRegistry.Groups[fullName] then
+        return true, name
+    end
     for _, keyword in ipairs(blockedKeywords) do
         if string.find(name, keyword, 1, true) then return true, name end
     end

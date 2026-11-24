@@ -321,7 +321,18 @@ function SwapVehicle_Server_Handle(player, args)
     --------------------------------------------------------
     vehicle:permanentlyRemove()
 
-    local newVehicle = addVehicleDebug(newScript, IsoDirections.N, nil, spawnSquare)
+    -- Vanilla's ProfessionVehicles.CheckSwap (OnSpawnVehicleStart) re-rolls generic
+    -- "profession" scripts (VanGardener, VanMetalworker, PickUpVanBuilder, ...) into a
+    -- random regional livery, so the player wouldn't get the vinyl they chose.
+    -- Unhook it just for this spawn, and always put it back (hence the pcall).
+    local professionHook = ProfessionVehicles and ProfessionVehicles.CheckSwap
+    if professionHook then Events.OnSpawnVehicleStart.Remove(professionHook) end
+    local spawnOk, newVehicle = pcall(addVehicleDebug, newScript, IsoDirections.N, nil, spawnSquare)
+    if professionHook then Events.OnSpawnVehicleStart.Add(professionHook) end
+    if not spawnOk then
+        print("[SwapVehicle] ERROR: addVehicleDebug threw for " .. tostring(newScript) .. ": " .. tostring(newVehicle))
+        newVehicle = nil
+    end
     if not newVehicle then
         -- Shouldn't happen now the script + square are checked up front, but never lose
         -- the battery or the loot: put them on the ground where the vehicle was.
