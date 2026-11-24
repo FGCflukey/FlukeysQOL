@@ -19,6 +19,48 @@ local SPRAY   = "Base.SpraycanVinylCoat"
 local SANDING = "Base.SandingBlock"
 
 ------------------------------------------------------------
+-- Vanilla profession re-roll exemption
+------------------------------------------------------------
+-- Vanilla's ProfessionVehicles.CheckSwap (OnSpawnVehicleStart) turns generic
+-- "profession" scripts (VanGardener, VanMetalworker, PickUpVanBuilder, ...) into a
+-- random regional livery, so choosing e.g. the Gardener vinyl gave a Trey Baines van.
+-- The event doesn't fire inside addVehicleDebug: it fires later, from
+-- BaseVehicle.createPhysics() on a following update (checked in projectzomboid.jar),
+-- so unhooking around the spawn call does nothing. Instead vanilla's handler is
+-- swapped for a wrapper that skips only the vehicles this swap spawned.
+local skipProfessionSwap = {}   -- vehicle -> timestamp spawned
+local SKIP_EXPIRE_SECONDS = 60
+
+local function WrapProfessionCheckSwap()
+    if not ProfessionVehicles or not ProfessionVehicles.CheckSwap then
+        dbg("ProfessionVehicles.CheckSwap not found, nothing to wrap")
+        return
+    end
+    if ProfessionVehicles.FlukeysSwapWrapped then return end
+    local original = ProfessionVehicles.CheckSwap
+    local function wrapped(vehicle)
+        if vehicle and skipProfessionSwap[vehicle] then
+            skipProfessionSwap[vehicle] = nil
+            dbg("skipped vanilla profession re-roll for a vinyl-swapped vehicle")
+            return
+        end
+        -- forget stale entries (e.g. a car that never got physics)
+        local now = getTimestamp()
+        for v, t in pairs(skipProfessionSwap) do
+            if now - t > SKIP_EXPIRE_SECONDS then skipProfessionSwap[v] = nil end
+        end
+        return original(vehicle)
+    end
+    Events.OnSpawnVehicleStart.Remove(original)
+    Events.OnSpawnVehicleStart.Add(wrapped)
+    ProfessionVehicles.FlukeysSwapWrapped = true
+    dbg("wrapped vanilla ProfessionVehicles.CheckSwap")
+end
+
+-- Mod server files load after vanilla's, so CheckSwap is normally registered already
+WrapProfessionCheckSwap()
+
+------------------------------------------------------------
 -- Multi-tick lightbar restore (the lightbar condition can get
 -- reset by the new vehicle's own init for a few ticks)
 ------------------------------------------------------------
@@ -321,18 +363,10 @@ function SwapVehicle_Server_Handle(player, args)
     --------------------------------------------------------
     vehicle:permanentlyRemove()
 
-    -- Vanilla's ProfessionVehicles.CheckSwap (OnSpawnVehicleStart) re-rolls generic
-    -- "profession" scripts (VanGardener, VanMetalworker, PickUpVanBuilder, ...) into a
-    -- random regional livery, so the player wouldn't get the vinyl they chose.
-    -- Unhook it just for this spawn, and always put it back (hence the pcall).
-    local professionHook = ProfessionVehicles and ProfessionVehicles.CheckSwap
-    if professionHook then Events.OnSpawnVehicleStart.Remove(professionHook) end
-    local spawnOk, newVehicle = pcall(addVehicleDebug, newScript, IsoDirections.N, nil, spawnSquare)
-    if professionHook then Events.OnSpawnVehicleStart.Add(professionHook) end
-    if not spawnOk then
-        print("[SwapVehicle] ERROR: addVehicleDebug threw for " .. tostring(newScript) .. ": " .. tostring(newVehicle))
-        newVehicle = nil
-    end
+    WrapProfessionCheckSwap()   -- no-op if already wrapped at load
+    local newVehicle = addVehicleDebug(newScript, IsoDirections.N, nil, spawnSquare)
+    -- Exempt this car from vanilla's profession re-roll (see WrapProfessionCheckSwap)
+    if newVehicle then skipProfessionSwap[newVehicle] = getTimestamp() end
     if not newVehicle then
         -- Shouldn't happen now the script + square are checked up front, but never lose
         -- the battery or the loot: put them on the ground where the vehicle was.
