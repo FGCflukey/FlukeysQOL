@@ -9,7 +9,7 @@ require "FlipThisCar/FlipThisCar_Shared"
 
 local function dbg(msg) FlipThisCar.dbg("Client", msg) end
 
-local ICON = "media/ui/Sidebar/64/Furniture_Rotate_64.png"   -- vanilla icon
+local ICON = "media/ui/FlipThisCar_Radial.png"
 
 ------------------------------------------------------------
 -- Heaving: a few vanilla shoves before the car goes over
