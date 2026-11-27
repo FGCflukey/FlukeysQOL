@@ -4,10 +4,9 @@ Commands.RebuildEngine = {}
 -----------------------------------------------------
 -- RECURSIVE ITEM-OF-TYPE SEARCH (server-side)
 --
--- Same pattern used by EZPZ Banking (confirmed working in B42.20
--- MP) for finding Money/MoneyBundle across bags, worn clothing,
--- and hand items. Returns {item, container} pairs so each item
--- can be removed from the exact container that actually holds it.
+-- Searches bags, worn clothing and hand items. Returns
+-- {item, container} pairs so each item can be removed from the
+-- exact container that actually holds it.
 -----------------------------------------------------
 local function collectItemsOfType(container, typeName, results)
 	if not container then return end
@@ -73,7 +72,8 @@ Commands.RebuildEngine.RepairEngine = function( player, args)
 	end
 
 	local inv = player:getInventory()
-	if not inv:contains("Wrench") then
+	local wrench = inv:getFirstTagEvalRecurse(ItemTag.WRENCH, function(item) return not item:isBroken() end)
+	if not wrench then
 		print( "Warning: player has no wrench for engine rebuild.")
 		return
 	end

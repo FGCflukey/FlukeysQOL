@@ -24,7 +24,9 @@ function ISVehicleMechanics:doPartContextMenu(part, x,y)
 	--         based on vehicle type as defined by the engineRepairLevel value)
 	--   6. The player's Mechanics skill level is currently higher than the skill level required to 
 	--         perform mechanics actions on the vehicle's engine (engineRepairLevel value)
-	--   7. The player currently has a wrench
+	--   7. The player has a usable wrench (any item tagged base:wrench, e.g. Wrench or
+	--      Ratchet, anywhere in their inventory including bags) -- same lookup vanilla's
+	--      Repair Engine uses
 
 	if part:getId() == "Engine" and not VehicleUtils.RequiredKeyNotFound(part, self.chr) then
 		if part:getVehicle():getEngineQuality() < 100 then
@@ -37,7 +39,7 @@ function ISVehicleMechanics:doPartContextMenu(part, x,y)
 			option = self.context:addOption(getText("IGUI_EER_RebuildEngine"), playerObj, ISVehicleMechanics.UGREonRebuildEngine, part);
 			self:UGREdoMenuTooltip(part, option, "EER_rebuildengine");
 			
-			if part:getCondition() >= 90 and self.chr:getInventory():getNumberOfItem("EngineParts", false, true) >= requiredEngineParts and self.chr:getPerkLevel(Perks.Mechanics) >= engineRepairLevel and self.chr:getInventory():contains("Wrench") then
+			if part:getCondition() >= 90 and self.chr:getInventory():getNumberOfItem("EngineParts", false, true) >= requiredEngineParts and self.chr:getPerkLevel(Perks.Mechanics) >= engineRepairLevel and ISVehicleMechanics:getWrench(self.chr) then
 				option.notAvailable = false;
 			else
 				--option = self.context:addOption(getText("IGUI_EER_RebuildEngine"), nil, nil);
@@ -81,7 +83,7 @@ function ISVehicleMechanics:UGREdoMenuTooltip(part, option, lua, name)
 		tooltip.description = tooltip.description .. rgb .. getText("IGUI_perks_Mechanics") .. " " .. self.chr:getPerkLevel(Perks.Mechanics) .. "/" .. engineRepairLevel .. " <LINE>";
 		rgb = " <RGB:1,1,1>";
 		local item = instanceItem("Base.Wrench");
-		if not self.chr:getInventory():contains("Wrench") then
+		if not ISVehicleMechanics:getWrench(self.chr) then
 			tooltip.description = tooltip.description .. " <RGB:1,0,0>" .. item:getDisplayName() .. " 0/1 <LINE>";
 		else
 			tooltip.description = tooltip.description .. " <RGB:1,1,1>" .. item:getDisplayName() .. " 1/1 <LINE>";
@@ -111,8 +113,10 @@ function ISVehicleMechanics.UGREonRebuildEngine(playerObj, part)
 		ISVehicleMenu.onExit(playerObj)
 	end
 	
-	local typeToItem = VehicleUtils.getItems(playerObj:getPlayerNum())
-	local item = typeToItem["Base.Wrench"][1]
+	-- Any non-broken wrench-tagged tool, from any bag; moved to the main
+	-- inventory first, same as vanilla's Repair Engine.
+	local item = ISVehicleMechanics:getWrench(playerObj)
+	if not item then return end
 	ISVehiclePartMenu.toPlayerInventory(playerObj, item)
 	
 	ISTimedActionQueue.add(ISPathFindAction:pathToVehicleArea(playerObj, part:getVehicle(), part:getArea()))
