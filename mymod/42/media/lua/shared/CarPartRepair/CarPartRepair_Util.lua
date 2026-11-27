@@ -134,6 +134,33 @@ local RepairRules = {
         toolConsumesUses = true,
         toolUsesPerRepair = 2,
     },
+
+    -- W900 Semi Truck (Workshop 3409472393) fuel/cistern tanks. Their
+    -- names (Tank125_2, Tank2000_2...) never contain "GasTank", so the
+    -- keyword GasTank rule above misses them. Same kit/tool/material as
+    -- GasTank. The W900 mod's own welding fixings exist for these but,
+    -- like any vanilla fixing, can't touch a broken (0%) tank -- this can.
+    -- Exact types only; if the W900 mod is removed nothing matches.
+    W900Tank = {
+        label = "W900 Tank",
+        exactTypes = {
+            "Base.Tank125_2",       -- truck fuel tank (both modules define it)
+            "Rotators.Tank125_2",
+            "Base.Tank2000_2",      -- cistern trailer, fuel
+            "Base.Tank2000W_2",     -- cistern trailer, water
+            "Base.Tank2000M_2",     -- milk variant (defined, not fitted by any part yet)
+            "Rotators.Tank750_2",   -- legacy cistern tank
+        },
+        required = {
+            tool = "Base.BlowTorch",
+            material = "Base.ScrapMetal",
+            kit = "Base.GasTankRepairKit",
+        },
+        repairAmount = 10,
+        skillCaps = {30, 60, 100},
+        toolConsumesUses = true,
+        toolUsesPerRepair = 2,
+    },
 }
 
 -- Build exact-type lookup sets once.
