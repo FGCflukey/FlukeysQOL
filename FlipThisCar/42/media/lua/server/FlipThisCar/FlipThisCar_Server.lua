@@ -4,7 +4,7 @@
 -- flipping player, turns it upright, then takes physics back.
 ------------------------------------------------------------
 
--- In MP, clients load server/ files too (the HomeHeat lesson). Only the real
+-- In MP, clients load server/ files too. Only the real
 -- server (or single-player, where isClient() is false) should run this.
 if isClient() then return end
 
@@ -41,7 +41,7 @@ local function detachTowing(player, vehicle)
     end
 end
 
--- Push Vehicle's pattern: take physics ownership off whoever has it and give it to
+-- Take physics ownership off whoever has it and give it to
 -- the flipping player, so their game (which also turns the car) is the one others follow.
 local function giveAuthority(player, vehicle)
     if not isServer() then return end

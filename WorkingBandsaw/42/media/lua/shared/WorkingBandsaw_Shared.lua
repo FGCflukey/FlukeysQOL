@@ -1,17 +1,11 @@
 -- WorkingBandsaw_Shared.lua
 -- Detection, electricity, and log-counting helpers shared by client and server.
---
--- Rebuilt from the "Industrial Saw Mod" Workshop mod (id 3702250114) after
--- reading its source turned up two real server-authority gaps: the server
--- trusted a client-supplied planks-per-log ratio outright, and never
--- re-validated that the player was actually near a real, powered bandsaw
--- before honoring a saw request. See WorkingBandsaw_Server.lua for the fix.
 
 WorkingBandsaw = WorkingBandsaw or {}
 
 -- The Metal Bandsaw entity's 4 real rotation sprites, confirmed against
 -- entity_metalbandsaw.txt. Keyed by direction so placement can pick the
--- right one, same convention as MyPersonalBankSafe's Util.SPRITES.
+-- right one.
 WorkingBandsaw.SPRITES = {
     N = "industry_02_267",
     E = "industry_02_264",
@@ -80,11 +74,7 @@ end
 --- The square planks should land on: the tile the bandsaw is facing
 --- (computed from which of the 4 known sprites it's currently showing),
 --- falling back to the bandsaw's own square if that tile doesn't exist or
---- is blocked. Informed by reading the "Table Saw" Workshop mod (id
---- 3540297822), whose own version drops planks on an offset tile rather
---- than under the machine itself -- our version derives the direction
---- from the sprite we already track instead of a separate per-sprite
---- offset table.
+--- is blocked.
 ---@param bandsawObj IsoObject
 ---@param square IsoGridSquare
 ---@return IsoGridSquare
@@ -103,13 +93,7 @@ function WorkingBandsaw.GetDropSquare(bandsawObj, square)
     return square
 end
 
---- Check if a square has electricity. Deliberately matches
---- HomeHeat_Util.hasPower exactly -- that function is confirmed working
---- with generators AND the user's solar power mod, whereas an earlier
---- version of this function added its own ambient-grid-shutoff-day
---- fallback that only ever reflects the vanilla city grid, not a
---- player's own generator/solar circuit, and could wrongly report "no
---- power" on a tile a non-grid source was genuinely powering.
+--- Check if a square has electricity (grid, generator or solar).
 ---@param square IsoGridSquare
 ---@return boolean
 function WorkingBandsaw.HasElectricity(square)

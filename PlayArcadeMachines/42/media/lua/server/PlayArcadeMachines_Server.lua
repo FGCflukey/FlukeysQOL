@@ -3,8 +3,7 @@
 -- Client only ever says "I started/stopped playing machine at (x,y,z)".
 -- This file owns the real stat reduction: a periodic watchdog re-validates
 -- power and that the player is still actually there, and applies a
--- proportional slice of the sandbox-configured reduction each pass --
--- matching the watchdog pattern already proven in this pack (HomeHeat).
+-- proportional slice of the sandbox-configured reduction each pass.
 -- Never trusts a client-reported amount, only a client-reported "I'm at
 -- this machine" claim, which gets re-checked every pass.
 
@@ -83,21 +82,15 @@ Events.OnTick.Add(function()
             local unhappinessPct = getOption("UnhappinessDecrease", 33)
             local stressPct = getOption("StressDecrease", 33)
 
-            -- WATCHDOG_INTERVAL ticks out of a 3000-tick full session -- same
-            -- per-slice math the original used, just driven server-side.
+            -- WATCHDOG_INTERVAL ticks out of a 3000-tick full session.
             local fraction = WATCHDOG_INTERVAL / 3000
 
             local applied, err = pcall(function()
                 -- Real vanilla API, confirmed against shared/RadioCom/
                 -- ISRadioInteractions.lua's own boredom/unhappiness
                 -- reduction -- both stats live on Stats (not BodyDamage),
-                -- via the generic CharacterStat add() delta method.
-                -- bodyDamage:setBoredomLevel()/setUnhappynessLevel() and
-                -- stats:setStress() (the original approach, matching both
-                -- the Workshop mod and the old B41 mod) aren't real
-                -- callable methods here -- confirmed by the server crash,
-                -- and by finding another Workshop mod (TrueMusicJukebox)
-                -- with the exact same three calls, all commented out.
+                -- via the generic CharacterStat add() delta method. The B41
+                -- setters (setBoredomLevel etc.) no longer exist in B42.
                 local stats = player:getStats()
                 if stats then
                     dbg("before: boredom=" .. tostring(stats:get(CharacterStat.BOREDOM))

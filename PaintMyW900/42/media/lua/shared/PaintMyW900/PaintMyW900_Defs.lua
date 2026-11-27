@@ -3,8 +3,8 @@
 -- ===================================================================
 --  Repaint the W900 Semi-Truck (Workshop 3409472393) and its trailers
 --  by switching between the skins that mod already ships with, paid
---  for with vanilla paint cans. Our own build, styled after "Paint my
---  KI5" (3782524328): switch skin index + transmit, server-side.
+--  for with vanilla paint cans. Done server-side (switch skin index +
+--  transmit).
 --
 --  Cost rules (a vanilla paint can = 10 uses):
 --    truck   = 1 can total  -> one colour: 1 can, two-tone: 1/2 can each

@@ -3,17 +3,12 @@
 -- Each craftRecipe in Survivor_Travel.txt (timedAction = Making) fires its
 -- OnCreate here on completion. OnCreate runs from the server's own
 -- authoritative execution, not just client prediction, so this must live
--- server-side -- matches this pack's own proven OnCreate hooks
--- (WalletCut_OnCreate, GiveBack_CarSeatStuff), which take (item, player)
--- positionally; `player` is the real character who crafted the recipe.
+-- server-side. OnCreate gets (item, player); `player` is the character who
+-- crafted the recipe.
 --
--- Does NOT move the player directly (no setX/Y/Z here). Confirmed via the
--- Workshop mod "FastTravelMP" (3775394486)'s own real-tested notes: the
--- server changing a remote player's position is genuinely correct
--- server-side (survives reconnect) but never live-updates that client's
--- own screen -- only that client calling player:teleportTo() on its own
--- local character does. So this just tells the owning client where to go;
--- client/Survivor_Travel/Survivor_Travel.lua does the actual move.
+-- Does NOT move the player directly: a server-side setX/Y/Z never updates
+-- that client's screen. This tells the owning client where to go and
+-- client/Survivor_Travel/Survivor_Travel.lua does the move.
 
 local DEBUG = false
 local function dbg(msg)

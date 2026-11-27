@@ -17,11 +17,9 @@ end
 
 ---------------------------------------------------------
 -- Excluded traits: Weight/Fitness-derived (FIT/ATHLETIC/STOUT/STRONG/
--- EMACIATED/VERY_UNDERWEIGHT/UNDERWEIGHT/OVERWEIGHT/OBESE) -- same
--- category confirmed unsafe by the "TraitsPurchaseSystem" Workshop mod's
--- own "Unpurchasable Traits" list, since their effects are baked into
--- already-drifted derived stats with no clean value to revert to once
--- real play has moved them.
+-- EMACIATED/VERY_UNDERWEIGHT/UNDERWEIGHT/OVERWEIGHT/OBESE): their effects
+-- are baked into derived stats that drift in play, so there's no clean
+-- value to revert to.
 --
 -- Every profession-granted trait (Ax-pert, Burglar, Desensitized,
 -- Herbalist, Inventive Cook2/Mechanics2/etc.) is excluded separately

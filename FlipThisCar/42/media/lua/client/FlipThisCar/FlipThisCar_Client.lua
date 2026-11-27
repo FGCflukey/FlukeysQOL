@@ -21,7 +21,7 @@ local function playThump(vehicle)
     if sq then sq:playSound(FlipThisCar.SOUND) end
 end
 
--- Same calls Push Vehicle uses to play the real hand-to-hand shove animation
+-- Vanilla hand-to-hand shove animation
 local function shove(player, vehicle)
     player:faceThisObject(vehicle)
     player:setDoShove(true)
@@ -124,7 +124,7 @@ Events.OnServerCommand.Add(function(module, command, args)
         if not v then return end
         playThump(v)
         if not player or player:getOnlineID() ~= args.requester then return end
-        -- Mirror the physics ownership the server just gave us (as Push Vehicle does)
+        -- Mirror the physics ownership the server just gave us
         v:authorizationClientCollide(player)
         dbg("server accepted flip of vehicle " .. tostring(args.vehicle) .. ", turning it here too")
         if not turning[v:getId()] then
@@ -179,8 +179,8 @@ local function onFillWorldObjectContextMenu(playerNum, context, worldobjects, te
     option.toolTip = tip
 end
 
--- Vehicle radial menu (V key / controller) while standing outside, wrapped the
--- same way Push Vehicle does it: let vanilla build it, then add our slice.
+-- Vehicle radial menu (V key / controller) while standing outside: let vanilla
+-- build it, then add our slice.
 if ISVehicleMenu and ISVehicleMenu.showRadialMenuOutside and not ISVehicleMenu._FlipThisCarHooked then
     ISVehicleMenu._FlipThisCarHooked = true
     local original = ISVehicleMenu.showRadialMenuOutside

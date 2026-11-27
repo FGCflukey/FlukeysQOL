@@ -1,13 +1,11 @@
 ------------------------------------------------------------
 -- Flip This Car - shared definitions + checks (client and server)
 --
--- Our own build, informed by reading FlipVehiclePlusTrailer (3430172149), its
--- multiplayer fix FlipVehicleFix (3843842246) and Push Vehicle (3780639614):
 --  * B42 MP: the player whose game "owns" a vehicle's physics overrides the
 --    server's rotation, so the flip runs on the server AND on that player's game,
---    with physics paused while it turns (FlipVehicleFix's finding).
---  * The server explicitly hands physics ownership to the flipping player first
---    (authorizationServerOnSeat), as Push Vehicle does, so it can't be someone else.
+--    with physics paused while it turns.
+--  * The server hands physics ownership to the flipping player first
+--    (authorizationServerOnSeat), so it can't be someone else.
 --  * setAngles(0, heading, 0) keeps the car's heading. Vanilla's flipUpright() was
 --    checked in projectzomboid.jar: it resets the heading to 0, so it isn't used.
 ------------------------------------------------------------
@@ -29,7 +27,7 @@ FlipThisCar.TIMEOUT_MS    = 15000   -- give up turning after this long
 FlipThisCar.COOLDOWN_MS   = 5000    -- per player, between accepted flips
 FlipThisCar.HEAVES        = 3       -- shoves before the car goes over
 FlipThisCar.HEAVE_MS      = 1000    -- time between shoves
-FlipThisCar.SOUND         = "thumpa2"   -- vanilla vehicle-impact thump (as Push Vehicle)
+FlipThisCar.SOUND         = "thumpa2"   -- vanilla vehicle-impact thump
 
 function FlipThisCar.getMinStrength()
     local vars = SandboxVars and SandboxVars.FlipThisCar

@@ -1,22 +1,22 @@
 -- TowFromVehicle_Menu.lua
--- Adds "Attach/Detach Trailer" to the in-vehicle (steering wheel)
--- radial menu, so towing can be set up/torn down without getting out
--- of the car. Ported in from the Workshop mod "Tow In Your Car"
--- (SportXAI, Steam id 3473214630) -- this menu-injection part was
--- already working correctly as published (confirmed by a Workshop
--- comment: "it shows up and even does the progress bar"). The real
--- bug was entirely in the timed-action overrides -- see
--- TowFromVehicle_Actions.lua for the actual fix. Ported this file
--- essentially unchanged (only the accidental unlocalized
--- `vehicleTowing` global tidied up -- confirmed unused anywhere else
--- in the original mod, so this changes nothing about behavior).
+-- Adds "Attach/Detach Trailer" to the in-vehicle (steering wheel) radial
+-- menu, for the driver of a stopped vehicle.
+--
+-- Which options appear is decided by vanilla itself: we run vanilla's
+-- ISVehicleMenu.doTowingMenu (the outside-the-car towing menu) against a
+-- stand-in menu that only records the slices, then add those same slices
+-- here, pointed at our seated actions instead of vanilla's walk-to-hitch
+-- ones. So vanilla's hitch rules and the server's DisableTrailerTowing /
+-- DisableVehicleTowing / DisableBurntTowing options all apply unchanged.
 
-local vehicleMenu_Data = ISVehicleMenu.showRadialMenu
+require "Vehicles/ISUI/ISVehicleMenu"
+require "TowFromVehicle/TowFromVehicle_Actions"
 
--- These W900 Semi-Truck mod (3409472393) tractors have their own in-cab tow
--- handling, so ours would be a duplicate option (list per player report). The
--- other W900 trucks (SemiTruckBox, SemiTruckBox_mil, Oshkosh M911/M911B) and all
--- trailers still use our option.
+local dbg = TowFromVehicle.dbg
+
+-- These W900 Semi-Truck mod tractors have their own in-cab tow handling, so
+-- ours would be a duplicate option. The other W900 trucks (SemiTruckBox,
+-- SemiTruckBox_mil, Oshkosh M911/M911B) and all trailers still use ours.
 local OWN_TOWING_TRUCKS = {
 	SemiTruck     = true,
 	SemiTruckLite = true,
@@ -24,93 +24,58 @@ local OWN_TOWING_TRUCKS = {
 }
 
 local function hasOwnTowing(vehicle)
-	local script = vehicle and vehicle:getScript()
+	local script = vehicle:getScript()
 	return script ~= nil and OWN_TOWING_TRUCKS[script:getName()] == true
 end
 
-local function Attach(playerObj, vA, vB, aA, aB)  --Attach timed action
-	playerObj:setVariable("IsAttachingInVehicle", true)
-	local action = ISAttachTrailerToVehicle:new(playerObj, vA, vB, aA, aB)
-	ISTimedActionQueue.add(action)
+local function onAttach(playerObj, vehicleA, attachmentA, attachmentB)
+	local vehicleB = ISVehicleTrailerUtils.getTowableVehicleNear(
+		vehicleA:getCurrentSquare(), vehicleA, attachmentA, attachmentB)
+	if not vehicleB then return end
+	ISTimedActionQueue.add(TowFromVehicle.AttachAction:new(playerObj, vehicleA, vehicleB, attachmentA, attachmentB))
 end
 
-local function Detach(playerObj, vehicle, attach)  --Detach timed action
-	playerObj:setVariable("IsAttachingInVehicle", true)
-	local action = ISDetachTrailerFromVehicle:new(playerObj, vehicle, attach)
-	ISTimedActionQueue.add(action)
+local function onDetach(playerObj, vehicle)
+	ISTimedActionQueue.add(TowFromVehicle.DetachAction:new(playerObj, vehicle))
 end
 
-local function AttachTrailerInVehicle(vehicleB, vehicle, attachmentB, attachmentA)
-	local playerObj = getSpecificPlayer(0)
-	local menu = getPlayerRadialMenu(playerObj:getPlayerNum())
-	local aName = ISVehicleMenu.getVehicleDisplayName(vehicle)
-	local bName = ISVehicleMenu.getVehicleDisplayName(vehicleB)
-	local attachNameA = getText("IGUI_TrailerAttachName_" .. attachmentB)
-	local attachNameB = getText("IGUI_TrailerAttachName_" .. attachmentA)
-	local text = getText("ContextMenu_Vehicle_AttachTrailer", aName, bName, attachNameA, attachNameB);
-	local vehicleTowing = vehicleB
-	menu:addSlice(text, getTexture("media/ui/ZoomIn.png"), Attach, playerObj, vehicleTowing, vehicle, attachmentA, attachmentB)
+-- Records what vanilla's towing menu would offer, without showing anything.
+local function collectTowingSlices(playerObj, vehicle)
+	local recorder = { slices = {} }
+	function recorder:addSlice(text, texture, fn, a1, a2, a3, a4)
+		table.insert(self.slices, { text = text, texture = texture, fn = fn, a1 = a1, a2 = a2, a3 = a3, a4 = a4 })
+	end
+	local ok, err = pcall(ISVehicleMenu.doTowingMenu, playerObj, vehicle, recorder)
+	if not ok then dbg("doTowingMenu failed: " .. tostring(err)) end
+	return recorder.slices
 end
 
-function ISVehicleMenu.showRadialMenu(...)
-	vehicleMenu_Data(...)
-	local playerObj = getSpecificPlayer(0)
-	local vehicle = playerObj:getVehicle()
+local function addTowingSlices(playerObj, vehicle, menu)
+	for _, s in ipairs(collectTowingSlices(playerObj, vehicle)) do
+		if s.fn == ISVehicleMenu.onAttachTrailer then
+			-- vanilla args: (playerObj, vehicleA, attachmentA, attachmentB)
+			menu:addSlice(s.text, s.texture, onAttach, playerObj, s.a2, s.a3, s.a4)
+			dbg("offered attach: " .. tostring(s.text))
+		elseif s.fn == ISVehicleMenu.onDetachTrailer then
+			-- vanilla args: (playerObj, towingVehicle, attachment)
+			menu:addSlice(s.text, s.texture, onDetach, playerObj, s.a2)
+			dbg("offered detach: " .. tostring(s.text))
+		end
+	end
+end
 
-	if not vehicle then return end
-	if hasOwnTowing(vehicle) then return end
+if ISVehicleMenu and ISVehicleMenu.showRadialMenu and not ISVehicleMenu._TowFromVehicleHooked then
+	ISVehicleMenu._TowFromVehicleHooked = true
+	local original = ISVehicleMenu.showRadialMenu
+	ISVehicleMenu.showRadialMenu = function(playerObj, ...)
+		local menu = playerObj and getPlayerRadialMenu(playerObj:getPlayerNum())
+		local wasVisible = menu and menu:isReallyVisible()   -- vanilla toggles: it was closing
+		original(playerObj, ...)
+		if not menu or wasVisible or not menu:isReallyVisible() then return end
 
-	local menu = getPlayerRadialMenu(playerObj:getPlayerNum())
-
-    if not vehicle:isDriver(playerObj) then return end
-
-    --Attach vehicle
-    local attachmentA, attachmentB = "trailer", "trailerfront"
-    local vehicleB = ISVehicleTrailerUtils.getTowableVehicleNear(vehicle:getSquare(), vehicle, attachmentA, attachmentB)
-    if vehicleB then
-        AttachTrailerInVehicle(vehicle, vehicleB, attachmentB, attachmentA)
-        return
-    end
-
-    attachmentA, attachmentB = "trailerfront", "trailerfront"
-    vehicleB = ISVehicleTrailerUtils.getTowableVehicleNear(vehicle:getSquare(), vehicle, attachmentA, attachmentB)
-    if vehicleB then
-        AttachTrailerInVehicle(vehicle, vehicleB, attachmentB, attachmentA)
-        return
-    end
-
-    attachmentA, attachmentB = "trailer", "trailer"
-    vehicleB = ISVehicleTrailerUtils.getTowableVehicleNear(vehicle:getSquare(), vehicle, attachmentA, attachmentB)
-    if vehicleB then
-        AttachTrailerInVehicle(vehicle, vehicleB, attachmentA, attachmentB)
-        return
-    end
-
-    attachmentA, attachmentB = "trailerfront", "trailer"
-    vehicleB = ISVehicleTrailerUtils.getTowableVehicleNear(vehicle:getSquare(), vehicle, attachmentA, attachmentB)
-    if vehicleB then
-        AttachTrailerInVehicle(vehicle, vehicleB, attachmentB, attachmentA)
-        return
-    end
-
-    --Detach vehicle
-    if vehicle:getVehicleTowing() then
-        local aName = ISVehicleMenu.getVehicleDisplayName(vehicle:getVehicleTowing())
-        local bName = ISVehicleMenu.getVehicleDisplayName(vehicle)
-        local text = getText("ContextMenu_Vehicle_DetachTrailer", aName, bName)
-        if vehicle:isStopped() and vehicle:getVehicleTowing():isStopped() then
-            menu:addSlice(text, getTexture("media/ui/ZoomOut.png"), Detach, playerObj, vehicle, vehicle:getTowAttachmentSelf())
-        end
-        return
-    end
-
-    if vehicle:getVehicleTowedBy() then
-        local aName = ISVehicleMenu.getVehicleDisplayName(vehicle:getVehicleTowedBy())
-        local bName = ISVehicleMenu.getVehicleDisplayName(vehicle)
-        local text = getText("ContextMenu_Vehicle_DetachTrailer", bName, aName)
-        if vehicle:isStopped() and vehicle:getVehicleTowedBy():isStopped() then
-            menu:addSlice(text, getTexture("media/ui/ZoomOut.png"), Detach, playerObj, vehicle:getVehicleTowedBy(), vehicle:getVehicleTowedBy():getTowAttachmentSelf())
-        end
-        return
-    end
+		local vehicle = playerObj:getVehicle()
+		if not vehicle or not vehicle:isDriver(playerObj) or not vehicle:isStopped() then return end
+		if hasOwnTowing(vehicle) then return end
+		addTowingSlices(playerObj, vehicle, menu)
+	end
 end

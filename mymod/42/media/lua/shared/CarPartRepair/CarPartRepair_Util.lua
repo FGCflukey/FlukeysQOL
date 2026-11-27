@@ -84,8 +84,8 @@ local RepairRules = {
     -- Merged in from the standalone Tire mod. "Tire" alone would also
     -- match TirePump/TireRepairKit/TirePiece (all legitimately contain
     -- "Tire" as a camelCase word), so "excludes" rules those back out.
-    -- tool2 (TirePump) is checked for presence only, never consumed --
-    -- same as the original mod's behavior. alsoInflatesTire tells
+    -- tool2 (TirePump) is checked for presence only, never consumed.
+    -- alsoInflatesTire tells
     -- Server.lua to also restore air pressure, not just condition.
     Tire = {
         matches = { "Tire" },

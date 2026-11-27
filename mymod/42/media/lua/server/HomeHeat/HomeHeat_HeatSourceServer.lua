@@ -135,10 +135,8 @@ local function updateOne(entry)
 end
 
 -----------------------------------------------------
--- Server-side periodic tasks conventionally run on a slower
--- cadence than client OnTick (matches vanilla precedent, e.g.
--- Ed's own SEdsRadiatorSystem.EveryOneMinute power check) --
--- body warmth doesn't need sub-second responsiveness.
+-- Runs on EveryOneMinute rather than OnTick: body warmth
+-- doesn't need sub-second responsiveness.
 -----------------------------------------------------
 local function EveryOneMinute()
     -- Heartbeat every 30 calls (~30 in-game minutes) -- confirms this

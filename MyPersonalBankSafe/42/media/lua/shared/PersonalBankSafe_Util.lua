@@ -1,12 +1,9 @@
 -- Shared helpers for My Personal Bank Safe (MPBS).
 --
--- Ownership and remote-client sync patterns here are adapted from the subscribed
--- PersonalSafe Workshop mod (3745891081), which already hit and fixed the real bug
--- class this guards against: a remote (non-owning) client's copy of a world object
--- can lag behind on ModData sync, so relying on obj:getModData() alone for an
--- ownership check can let a non-owner see/loot another player's safe. The fix is a
--- server-broadcast "known safes" map (coords -> ownerKey) that every client receives
--- independently of the object's own ModData replication, used as a fallback.
+-- A remote client's copy of a world object can lag behind on ModData sync, so
+-- obj:getModData() alone isn't a safe ownership check. The server also broadcasts
+-- a "known safes" map (coords -> ownerKey) that every client gets separately,
+-- used as a fallback.
 
 MPBS = MPBS or {}
 MPBS.Util = MPBS.Util or {}

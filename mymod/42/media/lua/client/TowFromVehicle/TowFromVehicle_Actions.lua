@@ -1,158 +1,154 @@
 -- TowFromVehicle_Actions.lua
--- Monkey-patches vanilla's real ISAttachTrailerToVehicle /
--- ISDetachTrailerFromVehicle timed actions (client/Vehicles/
--- TimedActions/) so they also work when triggered from the in-vehicle
--- radial menu (TowFromVehicle_Menu.lua) instead of only the normal
--- outside-the-vehicle right-click flow.
+-- Attach / detach a trailer while sitting in the driver's seat.
 --
--- Ported in from the Workshop mod "Tow In Your Car" (SportXAI, Steam
--- id 3473214630) and FIXED here -- as published it showed the
--- progress bar and played the sound, but never actually attached or
--- detached anything in this in-vehicle path (confirmed via a Workshop
--- comment reporting exactly that). Root cause, found by reading
--- vanilla's real source directly:
---
--- ATTACH: vanilla's real ISAttachTrailerToVehicle:start() does four
--- things -- animation, sound, vehicleA:beginAttachingTrailer(), and
--- self:attachTrailer() (which is what actually sends the real
--- sendClientCommand(..., 'vehicle', 'attachTrailer', ...) that
--- performs the attach). The original mod's in-vehicle override of
--- :start() skipped ALL of it except the sound -- attachTrailer() was
--- simply never called, so the network command that does the real work
--- never went out. Fixed by still calling beginAttachingTrailer() and
--- attachTrailer() in the in-vehicle case, just skipping the
--- stand-up/walk animation (setActionAnim), which doesn't make sense
--- while seated in a car anyway.
---
--- DETACH: the real network command lives in vanilla's :perform(),
--- gated by `character:DistTo(hitchPos) > 4` -- and hitchPos is only
--- ever computed by vanilla's real :waitToStart()/:update(), via
--- vehicle:getTowingWorldPos(attachment, hitchPos). The original mod's
--- in-vehicle overrides of BOTH of those skipped calling through to
--- vanilla's versions entirely, so hitchPos stayed at its default
--- (0,0,0) for the whole action. By the time :perform() ran its
--- distance check, the player was never going to be within 4 tiles of
--- (0,0,0), so the check always failed and the detach command was
--- silently never sent. Fixed by still computing hitchPos every frame
--- via getTowingWorldPos() in the in-vehicle case, just skipping the
--- faceLocationF() turn-to-face-it call (again, doesn't make sense
--- while seated).
+-- Our own timed actions (vanilla's ISAttachTrailerToVehicle /
+-- ISDetachTrailerFromVehicle are left untouched). They send the same
+-- vanilla server commands ('vehicle' 'attachTrailer' / 'detachTrailer',
+-- server/Vehicles/VehicleCommands.lua), so the hitch itself is done and
+-- synced by the game exactly as it is from outside the car.
 
-local D_WaitToStart = ISDetachTrailerFromVehicle.waitToStart
-local A_WaitToStart = ISAttachTrailerToVehicle.waitToStart
-local A_Start = ISAttachTrailerToVehicle.start
-local D_Start = ISDetachTrailerFromVehicle.start
-local D_Stop = ISDetachTrailerFromVehicle.stop
-local A_Stop = ISAttachTrailerToVehicle.stop
-local D_Perform = ISDetachTrailerFromVehicle.perform
-local A_Perform = ISAttachTrailerToVehicle.perform
-local D_Update = ISDetachTrailerFromVehicle.update
-local A_Update = ISAttachTrailerToVehicle.update
-local D_New = ISDetachTrailerFromVehicle.new
-local A_New = ISAttachTrailerToVehicle.new
+require "TimedActions/ISBaseTimedAction"
 
---Start
-function ISAttachTrailerToVehicle:start()
-	if not self.isAttachingInVehicle then
-		A_Start(self)
-		return
+TowFromVehicle = TowFromVehicle or {}
+
+local DEBUG = true
+local function dbg(msg)
+	if DEBUG then print("[TowFromVehicle] " .. tostring(msg)) end
+end
+TowFromVehicle.dbg = dbg
+
+local ACTION_TIME = 100   -- same length as vanilla's hitch actions
+
+-- The player must be sitting in one of the two vehicles, and it must be stopped.
+local function seatedInStopped(character, vehicleA, vehicleB)
+	local seat = character:getVehicle()
+	if not seat or (seat ~= vehicleA and seat ~= vehicleB) then return false end
+	return seat:isStopped()
+end
+
+local function stopSound(action)
+	if action.sound and action.character:getEmitter():isPlaying(action.sound) then
+		action.character:stopOrTriggerSound(action.sound)
 	end
-	-- In-vehicle case: skip the stand-up/walk animation, but keep the
-	-- two calls that actually matter -- beginAttachingTrailer() (native
-	-- vehicle-side state flag) and attachTrailer() (the real
-	-- sendClientCommand that performs the attach). These were the two
-	-- calls silently missing in the original mod.
+	action.sound = nil
+end
+
+---------------------------------------------------------
+-- Attach
+---------------------------------------------------------
+TowFromVehicle.AttachAction = ISBaseTimedAction:derive("TowFromVehicle_AttachAction")
+
+function TowFromVehicle.AttachAction:new(character, vehicleA, vehicleB, attachmentA, attachmentB)
+	local o = ISBaseTimedAction.new(self, character)
+	o.vehicleA = vehicleA
+	o.vehicleB = vehicleB
+	o.attachmentA = attachmentA
+	o.attachmentB = attachmentB
+	o.stopOnWalk = false
+	o.stopOnRun = false
+	o.maxTime = character:isTimedActionInstant() and 1 or ACTION_TIME
+	return o
+end
+
+function TowFromVehicle.AttachAction:isValid()
+	local a, b = self.vehicleA, self.vehicleB
+	if not a or not b or a:isRemovedFromWorld() or b:isRemovedFromWorld() then return false end
+	local towing = a:getVehicleTowing()
+	if towing ~= nil and towing ~= b then return false end
+	return seatedInStopped(self.character, a, b)
+end
+
+function TowFromVehicle.AttachAction:waitToStart()
+	return false   -- seated: nothing to turn and face
+end
+
+function TowFromVehicle.AttachAction:start()
 	self.sound = self.character:getEmitter():playSound("VehicleTowAttach")
+	-- Same order as vanilla: start the hitch now, undo it in stop() if cancelled.
 	self.vehicleA:beginAttachingTrailer()
-	self:attachTrailer()
-end
-
-function ISDetachTrailerFromVehicle:start()
-	if not self.isAttachingInVehicle then
-		D_Start(self)
-		return
-	end
-    self.sound = self.character:getEmitter():playSound("VehicleTowAttach")
-end
-
---Update
-function ISAttachTrailerToVehicle:update()
-	if not self.isAttachingInVehicle then
-		A_Update(self)
-		return
-	end
-
-    if not self.character:getVehicle():isStopped() then self:forceStop() return end
-end
-
-function ISDetachTrailerFromVehicle:update()
-	if not self.isAttachingInVehicle then
-		D_Update(self)
-		return
-	end
-
-	if not self.character:getVehicle():isStopped() then self:forceStop() return end
-
-	-- Still compute hitchPos every frame (same as vanilla's real
-	-- update()), just without the faceLocationF() turn-to-face-it call
-	-- -- this is what :perform()'s distance check needs to actually
-	-- pass. Missing this is why detach silently never completed.
-	self.vehicle:getTowingWorldPos(self.attachment, self.hitchPos)
-end
-
---Wait to start
-function ISAttachTrailerToVehicle:waitToStart()
-	if self.isAttachingInVehicle then
-		return false
+	local found = ISVehicleTrailerUtils.getTowableVehicleNear(
+		self.vehicleA:getCurrentSquare(), self.vehicleA, self.attachmentA, self.attachmentB)
+	if found == self.vehicleB then
+		sendClientCommand(self.character, "vehicle", "attachTrailer", {
+			vehicleA = self.vehicleA:getId(), vehicleB = self.vehicleB:getId(),
+			attachmentA = self.attachmentA, attachmentB = self.attachmentB,
+		})
+		self.sent = true
+		dbg("attach sent: " .. tostring(self.vehicleA:getId()) .. " -> " .. tostring(self.vehicleB:getId())
+			.. " (" .. tostring(self.attachmentA) .. "/" .. tostring(self.attachmentB) .. ")")
 	else
-		A_WaitToStart(self)
-		return getSpecificPlayer(0):shouldBeTurning()
+		dbg("attach: vehicle B no longer in reach, nothing sent")
 	end
 end
 
-function ISDetachTrailerFromVehicle:waitToStart()
-	if self.isAttachingInVehicle then
-		-- Same fix as update() -- compute hitchPos here too, since
-		-- waitToStart() runs before update() ever gets a chance to.
-		self.vehicle:getTowingWorldPos(self.attachment, self.hitchPos)
-		return false
-	else
-		D_WaitToStart(self)
-		return getSpecificPlayer(0):shouldBeTurning()
+function TowFromVehicle.AttachAction:update()
+	if not seatedInStopped(self.character, self.vehicleA, self.vehicleB) then
+		self:forceStop()
 	end
 end
 
---Stop
-function ISAttachTrailerToVehicle:stop()
-	getSpecificPlayer(0):setVariable("IsAttachingInVehicle", false)
-	A_Stop(self)
+function TowFromVehicle.AttachAction:stop()
+	self.vehicleA:stopAttachingTrailer()
+	if self.sent then
+		sendClientCommand(self.character, "vehicle", "detachTrailer", { vehicle = self.vehicleA:getId() })
+		dbg("attach cancelled, hitch undone")
+	end
+	stopSound(self)
+	ISBaseTimedAction.stop(self)
 end
 
-function ISDetachTrailerFromVehicle:stop()
-	getSpecificPlayer(0):setVariable("IsAttachingInVehicle", false)
-	D_Stop(self)
+function TowFromVehicle.AttachAction:perform()
+	self.vehicleA:stopAttachingTrailer()
+	stopSound(self)
+	dbg("attach finished, towing=" .. tostring(self.vehicleA:getVehicleTowing() ~= nil))
+	ISBaseTimedAction.perform(self)
 end
 
---Perform
-function ISAttachTrailerToVehicle:perform()
-	getSpecificPlayer(0):setVariable("IsAttachingInVehicle", false)
-	A_Perform(self)
-end
+---------------------------------------------------------
+-- Detach
+---------------------------------------------------------
+TowFromVehicle.DetachAction = ISBaseTimedAction:derive("TowFromVehicle_DetachAction")
 
-function ISDetachTrailerFromVehicle:perform()
-	getSpecificPlayer(0):setVariable("IsAttachingInVehicle", false)
-	D_Perform(self)
-end
-
---New
-function ISDetachTrailerFromVehicle:new(...)
-	local o = D_New(self, ...)
-	o.isAttachingInVehicle = getSpecificPlayer(0):getVariableBoolean("IsAttachingInVehicle") --Flip Or Attach Trailer In Vehicle
+function TowFromVehicle.DetachAction:new(character, vehicle)
+	local o = ISBaseTimedAction.new(self, character)
+	o.vehicle = vehicle
+	o.stopOnWalk = false
+	o.stopOnRun = false
+	o.maxTime = character:isTimedActionInstant() and 1 or ACTION_TIME
 	return o
 end
 
-function ISAttachTrailerToVehicle:new(...)
-	local o = A_New(self, ...)
-	o.isAttachingInVehicle = getSpecificPlayer(0):getVariableBoolean("IsAttachingInVehicle") --Flip Or Attach Trailer In Vehicle
-	return o
+function TowFromVehicle.DetachAction:isValid()
+	local v = self.vehicle
+	if not v or v:isRemovedFromWorld() then return false end
+	local towed = v:getVehicleTowing()
+	if not towed then return false end
+	return seatedInStopped(self.character, v, towed)
+end
+
+function TowFromVehicle.DetachAction:waitToStart()
+	return false
+end
+
+function TowFromVehicle.DetachAction:start()
+	self.sound = self.character:getEmitter():playSound("VehicleTowDetach")
+end
+
+function TowFromVehicle.DetachAction:update()
+	if not seatedInStopped(self.character, self.vehicle, self.vehicle:getVehicleTowing()) then
+		self:forceStop()
+	end
+end
+
+function TowFromVehicle.DetachAction:stop()
+	stopSound(self)
+	ISBaseTimedAction.stop(self)
+end
+
+function TowFromVehicle.DetachAction:perform()
+	stopSound(self)
+	-- Seated in one of the two linked vehicles, so no hitch-distance check is needed.
+	sendClientCommand(self.character, "vehicle", "detachTrailer", { vehicle = self.vehicle:getId() })
+	dbg("detach sent for vehicle " .. tostring(self.vehicle:getId()))
+	ISBaseTimedAction.perform(self)
 end

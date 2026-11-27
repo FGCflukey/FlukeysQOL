@@ -50,8 +50,7 @@ end
 ---------------------------------------------------------
 -- Protection while the must-accept window is open
 ---------------------------------------------------------
--- Approach taken from the Workshop mod "Minidoracat Safe Spawn" (3653490664), whose notes trace
--- each step through the game's Java source:
+-- How it works (traced through the game's Java source):
 --   * Zombie AI runs on the game of whichever player "owns" that zombie, normally the nearest
 --     player. So a LOCAL-only invisible flag is enough: the zombies around this player don't
 --     spot them, and any zombie already targeting them is cleared every tick.
@@ -624,7 +623,7 @@ Events.OnServerCommand.Add(onServerCommand)
 ---------------------------------------------------------
 -- Keybind: show the rules again (Options > Mod Options > Server Rules, default F9)
 -- Same PZAPI.ModOptions approach as TraitRespec. Vanilla doesn't bind F9; TraitRespec uses F7
--- and the Workshop "PZ B42 GPS Navigation" mod uses F8, so F9 is the first free one.
+-- and F8 is commonly taken by other mods, so F9 is the first free one.
 ---------------------------------------------------------
 local modOptions = PZAPI.ModOptions:create("ServerRules", "UI_ServerRules_ModOptionsTitle")
 local viewKey = modOptions:addKeyBind("ViewRules", "UI_ServerRules_ViewKeybind", Keyboard.KEY_F9)

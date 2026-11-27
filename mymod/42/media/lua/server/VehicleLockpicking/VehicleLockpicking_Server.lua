@@ -101,8 +101,7 @@ local function OnClientCommand(module, command, player, args)
         part:getDoor():setLocked(false)
         vehicle:transmitPartDoor(part)
 
-        -- Picking any door also opens the trunk, same as the original
-        -- mod's intent -- just properly synced now.
+        -- Picking any door also unlocks the trunk.
         if args.partId ~= "TrunkDoor" then
             local trunk = vehicle:getPartById("TrunkDoor")
             if trunk and trunk:getDoor() and trunk:getDoor():isLocked() then

@@ -1,10 +1,4 @@
 -- My Personal Bank Safe -- server authority.
---
--- Real object construction (IsoThumpable + ItemContainer) and the full square-removal
--- sequence (including the special-objects-list ghost-reference fix) are adapted from
--- the subscribed PersonalSafe Workshop mod's own already-proven Server.createSafe /
--- removeSafeFromSquare -- see the comment on removeSafeFromSquare below for exactly
--- why the naive two-call removal isn't enough for an AddSpecialObject-spawned object.
 
 if isClient() then return end
 
@@ -71,8 +65,7 @@ end
 --- the square's objects list AND its special-objects list. RemoveTileObject only
 --- clears the objects list, so the special-objects entry survives as a ghost
 --- reference -- causing "IsoThumpable not found on square" and a tile that silently
---- refuses further placement. Mirrors vanilla ISAnvil:removeFromGround and the fix
---- already proven in the PersonalSafe Workshop mod.
+--- refuses further placement. Mirrors vanilla ISAnvil:removeFromGround.
 local function removeSafeFromSquare(sq, obj)
     if not sq or not obj then return end
     pcall(function() sq:transmitRemoveItemFromSquare(obj) end)

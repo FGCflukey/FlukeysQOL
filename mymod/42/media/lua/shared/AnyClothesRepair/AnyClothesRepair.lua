@@ -1,54 +1,20 @@
 -- media/lua/shared/AnyClothesRepair/AnyClothesRepair.lua
 --
--- Makes every real clothing item mendable (vanilla's own "Patch Hole" /
--- "Add Padding" options in ISGarmentUI.lua are gated entirely behind
--- item:getFabricType() being set -- nothing else), instead of relying on
--- either third-party mod's approach:
+-- Makes every wearable clothing item mendable. Vanilla's "Patch Hole" /
+-- "Add Padding" options (ISGarmentUI.lua) only need item:getFabricType()
+-- to be set, so at boot this gives a default FabricType to every item
+-- definition that has a BodyLocation and no FabricType yet.
 --
---   - "Repair Any Clothes" (Workshop 2142622992) scans getAllItems() at
---     boot too, but decides what counts as "clothing" via
---     item:getBloodClothingType() -> BloodClothingType.getCoveredPartCount()
---     -- confirmed (via live testing on KATTAJ1 Military Pack items) that
---     this silently returns 0 for clothing using a custom BodyLocation, so
---     those items never get patched at all. That's why a separate compat
---     mod had to exist just to hardcode KATTAJ1's item list back in.
---   - "Repair Any Clothes New Version" (Workshop 2984301200) sidesteps that
---     bug by not detecting anything at all -- it's a ~400-line hardcoded
---     list of exact item names across specific popular Workshop mods.
---     Fixes KATTAJ1 specifically (it's in the list) but isn't actually
---     "any clothes" -- anything not explicitly typed into that file,
---     including this pack's own clothing, gets nothing.
---
--- CORRECTION (found via live testing 2026-09-24): originally this checked
--- instanceof(item, "Clothing") instead of the below -- that was wrong.
--- getAllItems() returns the static script-DEFINITION objects from
--- ScriptManager, not runtime item instances, and those definition objects
--- are not instanceof "Clothing" even for a real clothing item type --
--- instanceof(item, "Clothing") was false for literally every item in the
--- game, so the scan silently patched nothing at all (confirmed: "gave 0
--- clothing item(s)", no errors -- instanceof just never once passed).
---
--- The original "Repair Any Clothes" mod never used instanceof either --
--- it duck-types instead (`if item.getFabricType and type(item.getFabricType)
--- == "function"`), which is why IT could at least set FabricType on these
--- same definition objects. We keep that proven duck-type check, but swap
--- its OTHER check (getBloodClothingType -> BloodClothingType.
--- getCoveredPartCount(), the actual source of the KATTAJ1 bug) for
--- getBodyLocation() being non-empty instead -- confirmed present and
--- populated on KATTAJ1's own items directly from their item script
--- (BodyLocation = KATTAJ1:UpperArms, etc.), so it isn't exposed to the
--- same failure, while still only touching real wearable clothing.
---
--- Lives in shared/, not client/: item scripts are identical data on both
--- sides and DoParam mutates the shared ScriptManager item definition
--- itself, not per-character state -- but after getting burned once this
--- session by a client-only fix leaving the server's copy of a function
--- unpatched (see the ReloadAllClips setReloadSpeed fix), defaulting to
--- shared/ for anything touching ScriptManager rather than assuming
--- client-only is safe.
---
--- Doesn't touch items that already have a FabricType set -- vanilla or
--- another mod's own deliberate choice is left alone either way.
+-- Notes:
+--   * getAllItems() returns script DEFINITIONS, not item instances, so
+--     instanceof(item, "Clothing") is false for all of them. We check for
+--     the methods instead.
+--   * BodyLocation is used to detect clothing because it's set on modded
+--     clothing too (custom BodyLocations included). BloodClothingType's
+--     covered-part count returns 0 for custom locations, so it misses them.
+--   * Lives in shared/: DoParam changes the ScriptManager definition, which
+--     both client and server need to agree on.
+--   * Items that already have a FabricType are left alone.
 
 local DEBUG = false
 local function dbg(msg)
@@ -57,12 +23,8 @@ local function dbg(msg)
     end
 end
 
--- Flat default for every item this touches. A real per-item material
--- guess (Cotton for cloth-looking items, Denim for jeans/work gear, etc.)
--- would need per-item judgment calls the same way both source mods make
--- them by hand -- not something a generic scan can infer reliably, so
--- this picks one sensible default (matching the original "Repair Any
--- Clothes" mod's own choice) rather than guessing wrong per item.
+-- Flat default for every item this touches. A generic scan can't reliably
+-- tell cotton from denim per item, so one default beats guessing wrong.
 local DEFAULT_FABRIC_TYPE = "Leather"
 
 local function AnyClothesRepair()
@@ -90,12 +52,8 @@ local function AnyClothesRepair()
                 return -- already set, leave it alone
             end
 
-            -- getBodyLocation() gets its own inner pcall -- unlike
-            -- getFabricType/DoParam (proven safe by the original mod's
-            -- long track record with no crash protection at all), this
-            -- one isn't proven safe on every item type, and a matching
-            -- symptom already showed up on this exact class of native
-            -- call for a different mod earlier this session (FlashGate).
+            -- getBodyLocation() gets its own pcall: it can throw on some
+            -- modded item types.
             local hasBodyLocation = false
             if item.getBodyLocation and type(item.getBodyLocation) == "function" then
                 local locOk, loc = pcall(function() return item:getBodyLocation() end)

@@ -1,5 +1,5 @@
 name=Working Bandsaw
-description=Use the vanilla Metal Bandsaw to cut logs into planks in bulk, no handheld saw needed -- requires electricity. Rebuilt from scratch after the Workshop mod it replaces turned out to trust the client for both the plank-per-log ratio and the saw location itself. Standalone, no dependencies.
+description=Use the vanilla Metal Bandsaw to cut logs into planks in bulk, no handheld saw needed -- requires electricity. Fully server-side: plank yield, power and saw location are all checked by the server. Pick the saw up with a crowbar and place it anywhere. Standalone, no dependencies.
 id=WorkingBandsaw
 author=justanothersteamclient
 modversion=1.0

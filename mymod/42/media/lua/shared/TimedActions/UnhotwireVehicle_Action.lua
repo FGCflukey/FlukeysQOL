@@ -1,8 +1,7 @@
 require "TimedActions/ISBaseTimedAction"
 
 -- UnhotwireVehicle: the driver of a hotwired car can strip the hotwire back out,
--- so the car needs a key again. Our own build, informed by reading the Workshop mod
--- "Custom Hotwire Car" (3789954867).
+-- so the car needs a key again.
 --
 -- Server-authoritative: the state change happens in complete(), which in B42 runs on
 -- the server, using vanilla's own vehicle:cheatHotwire(hotwired, broken) -- the same

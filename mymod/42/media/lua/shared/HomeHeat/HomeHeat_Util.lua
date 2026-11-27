@@ -12,9 +12,7 @@ HomeHeat_Util = {}
 -- consistent ~7C gap between source temp and felt temp
 -- at typical standing distance (nominal 15/20/24 read as
 -- roughly 8/13/17), so these run well above the old
--- 15/20/24 figures to compensate -- same reasoning Ed's
--- original mod used (his own source temps ran 25-40+ for
--- an intended room feel much lower than that).
+-- 15/20/24 figures to compensate.
 -----------------------------------------------------
 HomeHeat_Util.PRESETS = {
     { key = "cool", label = "Cool",   tempC = 22 },

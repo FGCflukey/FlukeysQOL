@@ -8,10 +8,7 @@
 -- Whatever quantity the player picks (1/5/10/All) is cut one log at a
 -- time, not as a single lump timer: WorkingBandsaw.SawAction only ever
 -- processes ONE log, and on completion re-checks availability/power and
--- queues the next one itself if more remain -- a self-chaining action,
--- the same idea the "Table Saw" Workshop mod (id 3540297822) uses for its
--- own log-by-log cutting loop, adapted to our existing quantity-picker
--- menu instead of its separate persistent panel.
+-- queues the next one itself if more remain.
 
 require "WorkingBandsaw_Shared"
 require "ISUI/ISWorldObjectContextMenu"

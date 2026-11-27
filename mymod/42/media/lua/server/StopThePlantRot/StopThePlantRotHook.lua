@@ -1,5 +1,5 @@
 -- StopThePlantRot: fully grown crops stay harvestable instead of rotting -- forever, or for a set
--- number of in-game days. Our own build, inspired by the Workshop mod NoPlantRot (3779203470).
+-- number of in-game days.
 --
 -- How vanilla rots a crop (server/Farming):
 --   SFarmingSystem:checkPlant2 calls growPlant() whenever hoursElapsed >= plant.nextGrowing.
@@ -91,8 +91,8 @@ function SFarmingSystem:growPlant(plant, nextGrowing, updateNbOfGrow)
         plant.nextGrowing = now + NEVER_ROT_RECHECK_HOURS
     end
 
-    -- Hold on vanilla's seed-bearing display stage. Clamps any crop that an older version of
-    -- this mod (or NoPlantRot's "keep as-is" option) let creep past it.
+    -- Hold on vanilla's seed-bearing display stage. Clamps any crop that already crept past it
+    -- (older version of this mod, or another no-rot mod).
     plant.nbOfGrow = prop.fullGrown + 1
     dbg("holding ripe: seed=" .. tostring(plant.typeOfSeed) .. " nextCheck=" .. tostring(plant.nextGrowing))
     plant:saveData()

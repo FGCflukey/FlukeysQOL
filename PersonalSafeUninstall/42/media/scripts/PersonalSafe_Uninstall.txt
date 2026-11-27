@@ -7,8 +7,7 @@
  *
  * This declares the same entity again (same module, same name, same sprites) with ONLY
  * its SpriteConfig: no CraftRecipe, so it never shows in the Build menu, and no UiConfig
- * or OnIsValid, since those referenced the original mod's UI style and Lua function. Same
- * approach as SIMBAproduz's "SMB steps Uninstall" (3819922421).
+ * or OnIsValid, since those referenced Personal Safe's UI style and Lua function.
  */
 module PersonalSafe
 {

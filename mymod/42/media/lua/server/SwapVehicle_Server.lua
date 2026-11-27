@@ -481,10 +481,9 @@ function SwapVehicle_Server_Handle(player, args)
     if newVehicle.transmitEngine then newVehicle:transmitEngine() end
 
     -- In B42 MP the nearby player's game runs a vehicle's physics and overrides the
-    -- server's position/rotation (same cause as the FlipVehicle sync problem), and
-    -- there is no transmit call for a vehicle's transform. So tell every client the
-    -- intended spot + facing; each applies it if it has this vehicle loaded.
-    -- (Lesson from Workshop "FlipVehicleFix" 3843842246.)
+    -- server's position/rotation, and there is no transmit call for a vehicle's
+    -- transform. So tell every client the intended spot + facing; each applies it
+    -- if it has this vehicle loaded.
     sendServerCommand("SwapVehicle", "Orient", {
         vehicleId = newVehicleId,
         x = x, y = y, z = z,

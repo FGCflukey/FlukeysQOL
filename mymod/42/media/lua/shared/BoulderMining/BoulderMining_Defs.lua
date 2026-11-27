@@ -1,16 +1,13 @@
 -- ===================================================================
 --  Boulder Mining - shared definitions (client + server)
 -- ===================================================================
---  Our own feature, informed by reading Workshop "Break Big Rocks"
---  (3538602374). What we kept from that research:
---   * vanilla boulder sprites are "boulders_N" (see vanilla
---     server/WorldGen/features/ore/boulders.lua for the layout)
+--  Break a vanilla boulder for stone. The WHOLE multi-tile boulder is
+--  removed at once, and all the work happens in a server-side
+--  complete(), like vanilla's ISPickAxeGroundCoverItem.
+--   * vanilla boulder sprites are "boulders_N" (layout in vanilla
+--     server/WorldGen/features/ore/boulders.lua)
 --   * 0-7 are single-tile giants, 16-31 are 2x2 giants (4 sprites
 --     each), 32/33 and 34/35 are 2-tile pairs, the rest are smaller.
---  What we do differently: break the WHOLE multi-tile boulder at once
---  (that mod removed only the clicked tile, leaving the other 3/4 of a
---  2x2 boulder behind), and do all the work in a server-side
---  complete() like vanilla's own ISPickAxeGroundCoverItem.
 -- ===================================================================
 
 BoulderMining = BoulderMining or {}
@@ -75,8 +72,8 @@ add(32, "medium", "p32"); add(33, "medium", "p32")
 add(34, "medium", "p34"); add(35, "medium", "p34")
 for _, i in ipairs({ 8, 10, 11, 13, 14, 15 }) do add(i, "medium") end
 for _, i in ipairs({ 9, 12 }) do add(i, "small") end
--- B42 "boulders_light" set + map-placed variants (per the Workshop mod's
--- tile research). Harmless if a given index doesn't exist in this build.
+-- B42 "boulders_light" set + map-placed variants. Harmless if a given
+-- index doesn't exist in this build.
 for i = 40, 47 do add(i, "medium") end
 for i = 56, 63 do add(i, "medium") end
 add(49, "medium"); add(52, "medium")

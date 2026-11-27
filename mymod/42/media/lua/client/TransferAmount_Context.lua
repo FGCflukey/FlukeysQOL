@@ -1,13 +1,10 @@
 -- ===================================================================
 --  Transfer Amount: "Grab amount..." / "Put amount..." / "Drop amount..."
 -- ===================================================================
---  Our own build of a choose-how-many transfer, informed by reading the
---  Workshop "TakeAnyAmount" mod (3820203426). Differences from that mod:
+--  Choose how many items of a stack to move.
 --   * Adds options AFTER vanilla builds the menu (OnFillInventoryObject-
---     ContextMenu) instead of replacing vanilla's whole doGrabMenu, so
---     vanilla updates to the grab menu are kept.
---   * No shared MAX/AMOUNT globals: each option carries its own item
---     list, so the max can't be overwritten by another menu.
+--     ContextMenu), so vanilla's own grab menu is untouched.
+--   * Each option carries its own item list (no shared globals).
 --   * Numbers-only box, OK greyed out unless 1..max, Enter = OK.
 --   * Skips favourited and equipped/worn/attached items (so "put 5"
 --     never takes the knife out of your hand), and re-checks every item

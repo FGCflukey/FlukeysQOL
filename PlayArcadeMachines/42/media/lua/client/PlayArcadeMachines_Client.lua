@@ -3,21 +3,10 @@
 -- Context menu + local animation/sound for playing a vanilla arcade or
 -- pinball machine. Real stat reduction (boredom/unhappiness/stress) is NOT
 -- done here -- it's server-authoritative (see PlayArcadeMachines_Server.lua).
--- Built from the Workshop mod "ArcadeMachinesB42" (id 3398916952), which
--- called bodyDamage:setBoredomLevel() etc. directly from client-side code
--- with no server file at all -- vanilla itself never calls those setters
--- from Lua anywhere, so there's no proven precedent that works correctly
--- in real MP. This file only ever requests; the server re-validates power/
--- position and applies the real change itself.
+-- This file only ever requests; the server re-validates power/position and
+-- applies the real change itself.
 --
--- Animation: uses a real custom "PlayArcadian" player animation (from the
--- user's own old B41 "Play Modded Arcades" mod) instead of the generic
--- vanilla "Making" pose the Workshop mod used.
---
--- Sound: ArcadeMachine1/ArcadeMachine2 both use the old mod's real
--- PAMGArcadianplay (loops) / PAMGArcadianend (one-shot, on full completion
--- only) pair instead of the Workshop mod's 2 generic/disliked .wav files.
--- PinballMachine keeps the Workshop mod's own sound -- already sounds right.
+-- Animation and arcade sounds come from my old B41 "Play Modded Arcades" mod.
 
 local DEBUG = false
 local function dbg(msg)
@@ -48,24 +37,15 @@ local function getArcadeMachineType(spriteName)
     return nil
 end
 
--- Real per-machine sounds from the user's own old B41 mod -- a looping
--- "playing" sound for the duration, plus a one-shot "end" sound on full
--- completion. ArcadeMachine1 and ArcadeMachine2 both reuse the same
--- Arcadian pair (that's what the old mod used for both). Pinball keeps
--- its own single Workshop-mod sound -- already sounds right, no end sound.
+-- Per-machine sounds: a looping "playing" sound, plus a one-shot "end" sound
+-- on full completion. Pinball has a single loop and no end sound.
 local MACHINE_SOUNDS = {
     ArcadeMachine1 = { play = "PAMGArcadianplay", finish = "PAMGArcadianend" },
     ArcadeMachine2 = { play = "PAMGArcadianplay", finish = "PAMGArcadianend" },
     PinballMachine = { play = "PinballMachine", finish = nil },
 }
 
--- Which tile is "in front of" each facing sprite. The original Workshop
--- mod's version of this had a real bug -- an unreachable elseif branch
--- (recreational_01_21 was checked against two different directions, the
--- first always wins) and recreational_01_18 was never assigned a direction
--- at all. This fixes both, inferring 18=W/22=W to complete the S/E/N/W
--- rotation set -- worth confirming in-game that the "step in front"
--- message triggers from the correct side for each sprite.
+-- Which side of each machine sprite the player stands on to play.
 local FRONT_DIR = {
     recreational_01_16 = "S", recreational_01_20 = "S", recreational_01_24 = "S",
     recreational_01_17 = "E", recreational_01_21 = "E", recreational_01_27 = "E",

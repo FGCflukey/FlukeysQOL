@@ -27,7 +27,7 @@ List of current things this mod does...
 - Lighter weights for everyday hauling stuff -- Logs, Planks, Firewood, Twigs, Nails, Screws, Hinges,
   Doorknobs, Wallpaper rolls, Wrench, Pipe Wrench, Ratchet, Bolt Cutters and Animal Bones
 - Added Stop The Plant Rot - fully grown crops stay harvestable instead of rotting, forever or for a set
-  number of in-game days (sandbox option). Watering and disease still matter. (Inspired by NoPlantRot.)
+  number of in-game days (sandbox option). Watering and disease still matter.
 - Faster Tire Inflating - pumping up a tire is 3x faster, and your character crouches down and faces the
   tire itself instead of the middle of the car
 

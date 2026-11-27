@@ -7,16 +7,8 @@
 -- object is actually there (or isn't, for placement), that the square has
 -- electricity, and that the player actually has a crowbar.
 --
--- The Workshop mod the SawLogs handler replaces ("Industrial Saw Mod", id
--- 3702250114) skipped all of its equivalent checks and took the plank
--- ratio straight off the network packet -- a tampered client could
--- request any ratio it liked.
---
--- The pick-up/place flow mirrors MyPersonalBankSafe's proven
--- detach/place/pick-up pattern (PersonalBankSafe_Server.lua), with one
--- real difference: a bandsaw has no owner and nothing to loot, so there's
--- no registry, no ownership key, and no "is it empty" check -- anyone
--- with a crowbar can pick up any bandsaw, same as anyone can use one.
+-- A bandsaw has no owner and nothing to loot, so anyone with a crowbar can
+-- pick one up, same as anyone can use one.
 
 require "WorkingBandsaw_Shared"
 

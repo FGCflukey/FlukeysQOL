@@ -1,11 +1,8 @@
 -- Survivor Chopper Travel -- CLIENT
 --
--- Does the actual move. Confirmed via the Workshop mod "FastTravelMP"
--- (3775394486)'s own real-tested notes: a server directly mutating a
--- remote player's x/y/z is genuinely correct server-side (survives
--- reconnect) but never live-updates that client's own screen -- only the
--- owning client calling player:teleportTo() on its own local character
--- does. server/Survivor_Travel/Survivor_Travel.lua sends the destination
+-- Does the actual move. A server changing a remote player's x/y/z never
+-- live-updates that client's screen -- only the owning client calling
+-- player:teleportTo() on its own character does. server/Survivor_Travel/Survivor_Travel.lua sends the destination
 -- here instead of moving the player itself.
 
 local DEBUG = false
