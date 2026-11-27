@@ -1,5 +1,4 @@
 require "LockpickTimedAction"
-require "ISUI/Animal/ISAnimalContextMenu"
 
 local DEBUG = true
 local function dbg(...) if DEBUG then print("[Lockpicking]", ...) end end
@@ -321,7 +320,49 @@ local function installRadialHook()
     end
 end
 
+-------------------------------------------------
+-- Compatibility: Alice's Weapon Sling Radial Menu (Workshop 3775549570)
+--
+-- That mod also listens for V (no car / no animal) and, when a weapon
+-- is slung, does menu:clear() + its own slices in the SAME key press,
+-- after ours. Its "already open?" guard is isReallyVisible(), which is
+-- still false right after our addToUIManager (it's only queued), so it
+-- wipes our Pick Lock slice. Wrap its show(): after it rebuilds, append
+-- Pick Lock so both appear together. If it bails early (no slung
+-- weapon) our menu is untouched and already has the slice.
+-------------------------------------------------
+
+local function menuHasPickLock(menu)
+    for _, s in ipairs(menu.slices or {}) do
+        if s.command and s.command[1] == onRadialPickLock then return true end
+    end
+    return false
+end
+
+local function installSlingCompat()
+    local radial = AliceWeaponSling and AliceWeaponSling.Radial
+    if not radial or not radial.show or radial.__lockpickWrapped then return end
+    radial.__lockpickWrapped = true
+
+    local originalShow = radial.show
+    radial.show = function(playerObj)
+        originalShow(playerObj)
+        if not playerObj or playerObj:getVehicle() then return end
+
+        local menu = getPlayerRadialMenu(playerObj:getPlayerNum())
+        if not menu or menu:isEmpty() or menuHasPickLock(menu) then return end
+
+        local door = findLockedDoorInReach(playerObj)
+        if not door or not hasLockpickTools(playerObj) then return end
+
+        dbg("Sling radial rebuilt the menu, appending Pick Lock")
+        menu:addSlice("Pick Lock", getTexture("media/ui/vehicles/lockpick.png"), onRadialPickLock, playerObj, door)
+    end
+    dbg("Weapon sling radial compatibility installed")
+end
+
 Events.OnGameStart.Add(installRadialHook)
+Events.OnGameStart.Add(installSlingCompat)
 
 -------------------------------------------------
 -- Context menu
