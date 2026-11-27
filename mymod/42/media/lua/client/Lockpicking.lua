@@ -1,4 +1,8 @@
 require "LockpickTimedAction"
+require "ISUI/Animal/ISAnimalContextMenu"
+
+local DEBUG = true
+local function dbg(...) if DEBUG then print("[Lockpicking]", ...) end end
 
 -------------------------------------------------
 -- Utility: determine if object is a door
@@ -201,6 +205,123 @@ local function onPickLock(worldobjects, playerIndex)
         LockpickTimedAction:new(player, door, square, ZombRand(6, 11) * 30)
     )
 end
+
+-------------------------------------------------
+-- Radial menu (V key / controller D-pad Up)
+--
+-- Vanilla sends the radial key to ISVehicleMenu when a vehicle is in
+-- reach, and otherwise to AnimalContextMenu.showRadialMenu (both are
+-- bound to V by default, and ISDPadWheels does the same fallback for
+-- controllers). So: wrap AnimalContextMenu.showRadialMenu. A car always
+-- wins (vanilla never reaches here then), a tame animal in reach wins
+-- next, and only when neither is there do we offer "Pick Lock" for a
+-- locked door in reach. Key-release-to-close works for free, because
+-- vanilla calls this same function again on release to undisplay.
+--
+-- No worldobjects here, so scan the player's own square + its 8
+-- neighbours for door objects. Doors sit on a square's edge, so the
+-- door can be on the player's own square or the one they face; the
+-- facing tile is preferred, then nearest. Same filters as the
+-- right-click option: closed, actually locked, in reach.
+-------------------------------------------------
+
+local function findLockedDoorInReach(player)
+    local psq = player:getSquare()
+    if not psq then return nil end
+    local cell = getCell()
+    local facing = psq:getTileInDirection(player:getDir())
+
+    local best, bestScore = nil, nil
+    for dx = -1, 1 do
+        for dy = -1, 1 do
+            local sq = cell:getGridSquare(psq:getX() + dx, psq:getY() + dy, psq:getZ())
+            local door = getDoorAtSquare(sq)
+            if door and not (door.IsOpen and door:IsOpen()) then
+                local doors = getRelatedDoors(door)
+                if clusterLocked(doors) then
+                    local reach = getDoorInReach(player, doors)
+                    if reach then
+                        local score = psq:DistToProper(reach:getSquare())
+                        if sq == facing then score = score - 10 end
+                        if not bestScore or score < bestScore then
+                            best, bestScore = reach, score
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return best
+end
+
+local function onRadialPickLock(player, door)
+    if not player or not door then return end
+    -- Re-validate at click time, same as the right-click path
+    if door.IsOpen and door:IsOpen() then return end
+    local reach = getDoorInReach(player, getRelatedDoors(door))
+    if not reach then
+        player:Say("I need to be right at the door.")
+        return
+    end
+    if not hasLockpickTools(player) then
+        player:Say("I need a screwdriver or multitool, and a paperclip.")
+        return
+    end
+    dbg("Radial pick started at", reach:getSquare():getX(), reach:getSquare():getY(), reach:getSquare():getZ())
+    ISTimedActionQueue.add(
+        LockpickTimedAction:new(player, reach, reach:getSquare(), ZombRand(6, 11) * 30)
+    )
+end
+
+local function installRadialHook()
+    if AnimalContextMenu.__lockpickWrapped then return end
+    AnimalContextMenu.__lockpickWrapped = true
+
+    local original = AnimalContextMenu.showRadialMenu
+
+    AnimalContextMenu.showRadialMenu = function(playerObj)
+        if not playerObj or playerObj:getVehicle() then
+            return original(playerObj)
+        end
+
+        local playerIndex = playerObj:getPlayerNum()
+        local menu = getPlayerRadialMenu(playerIndex)
+
+        -- Menu already open (key release / second press): let vanilla close it
+        if not menu or menu:isReallyVisible() then
+            return original(playerObj)
+        end
+
+        -- A tame animal in reach keeps its vanilla radial
+        local animal = AnimalContextMenu.getAnimalToInteractWith(playerObj)
+        if animal and not animal:isWild() then
+            dbg("Animal in reach, deferring to vanilla radial")
+            return original(playerObj)
+        end
+
+        local door = findLockedDoorInReach(playerObj)
+        if not door or not hasLockpickTools(playerObj) then
+            dbg("No locked door/tools for radial. door:", tostring(door ~= nil))
+            return original(playerObj)
+        end
+
+        dbg("Showing Pick Lock radial")
+        menu:clear()
+        menu:addSlice("Pick Lock", getTexture("media/ui/vehicles/lockpick.png"), onRadialPickLock, playerObj, door)
+
+        menu:setX(getPlayerScreenLeft(playerIndex) + getPlayerScreenWidth(playerIndex) / 2 - menu:getWidth() / 2)
+        menu:setY(getPlayerScreenTop(playerIndex) + getPlayerScreenHeight(playerIndex) / 2 - menu:getHeight() / 2)
+        menu:addToUIManager()
+
+        if getJoypadData(playerIndex) then
+            menu:setHideWhenButtonReleased(Joypad.DPadUp)
+            setJoypadFocus(playerIndex, menu)
+            playerObj:setJoypadIgnoreAimUntilCentered(true)
+        end
+    end
+end
+
+Events.OnGameStart.Add(installRadialHook)
 
 -------------------------------------------------
 -- Context menu

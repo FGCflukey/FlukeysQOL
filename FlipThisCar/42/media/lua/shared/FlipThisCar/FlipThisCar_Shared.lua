@@ -12,7 +12,7 @@
 
 FlipThisCar = FlipThisCar or {}
 
-local DEBUG = true
+local DEBUG = false
 function FlipThisCar.dbg(side, msg)
     if DEBUG then print("[FlipThisCar:" .. tostring(side) .. "] " .. tostring(msg)) end
 end

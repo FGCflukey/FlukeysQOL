@@ -11,7 +11,7 @@ require "TimedActions/ISBaseTimedAction"
 
 TowFromVehicle = TowFromVehicle or {}
 
-local DEBUG = true
+local DEBUG = false
 local function dbg(msg)
 	if DEBUG then print("[TowFromVehicle] " .. tostring(msg)) end
 end
