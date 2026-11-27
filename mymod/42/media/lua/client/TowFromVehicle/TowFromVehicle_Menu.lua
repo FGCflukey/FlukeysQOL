@@ -71,11 +71,16 @@ if ISVehicleMenu and ISVehicleMenu.showRadialMenu and not ISVehicleMenu._TowFrom
 		local menu = playerObj and getPlayerRadialMenu(playerObj:getPlayerNum())
 		local wasVisible = menu and menu:isReallyVisible()   -- vanilla toggles: it was closing
 		original(playerObj, ...)
-		if not menu or wasVisible or not menu:isReallyVisible() then return end
+		-- Can't re-check visibility here: addToUIManager only queues the menu
+		-- for the next frame, so isReallyVisible() is still false right now.
+		if not menu or wasVisible then return end
+		local speed = UIManager.getSpeedControls()
+		if speed and speed:getCurrentGameSpeed() == 0 then return end   -- vanilla opens nothing while paused
 
 		local vehicle = playerObj:getVehicle()
 		if not vehicle or not vehicle:isDriver(playerObj) or not vehicle:isStopped() then return end
 		if hasOwnTowing(vehicle) then return end
+		dbg("in-car radial opened, checking towing options")
 		addTowingSlices(playerObj, vehicle, menu)
 	end
 end
