@@ -708,6 +708,10 @@ end
 ---------------------------------------------------------
 function BT.Data.build(item, player)
     if not item then return nil end
+    -- ISToolTipInv isn't only used for items: ISFluidBar passes a bare
+    -- FluidContainer and ISEnergyBar passes a power Resource. Those have
+    -- their own vanilla DoTooltip (e.g. the fluid amount) -- leave them be.
+    if not instanceof(item, "InventoryItem") then return nil end
     if keepVanilla(item) then return nil end
     local model = baseModel(item)
 
