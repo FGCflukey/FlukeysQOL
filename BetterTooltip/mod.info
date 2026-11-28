@@ -1,0 +1,8 @@
+name=Better Tooltip
+description=A cleaner, more informative item tooltip: one compact card with the item's key stats, condition/freshness bars, comparison against your equipped weapon, and Shift for extra detail. Fully scalable from Mod Options. Items it doesn't cover yet show the normal vanilla tooltip. Client-side only, standalone, no dependencies.
+id=BetterTooltip
+author=justanothersteamclient
+modversion=1.0
+versionMax=42.22
+versionMin=42.19
+icon=LogoFGC.png
