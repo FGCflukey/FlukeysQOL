@@ -62,11 +62,22 @@ local function conditionBar(item)
              frac = frac, color = BT.barColor(frac) }
 end
 
-local function itemName(fullType)
-    if type(fullType) ~= "string" or fullType == "" then return nil end
-    local ok, name = pcall(getItemNameFromFullType, fullType)
-    if ok and name and name ~= "" then return name end
-    return BT.pretty(fullType:gsub("^.*%.", ""))
+-- Display name for an item type. Accepts a fullType ("Base.9mmClip"), a B42
+-- registry key ("base:bullets9mm"), or an object with getItemKey() (what
+-- HandWeapon:getAmmoType() returns). Uses ScriptManager:FindItem like
+-- vanilla's reload menu does (ISInventoryPaneContextMenu.doBulletMenu) --
+-- never getItemNameFromFullType, which THROWS on registry keys; even inside
+-- pcall PZ logs a full stack trace for that every frame the tooltip draws.
+local function itemName(key)
+    if key ~= nil and type(key) ~= "string" then
+        key = call(key, "getItemKey")
+    end
+    if type(key) ~= "string" or key == "" then return nil end
+    local sm = getScriptManager()
+    local script = sm and call(sm, "FindItem", key)
+    local name = script and call(script, "getDisplayName")
+    if type(name) == "string" and name ~= "" then return name end
+    return BT.pretty((key:gsub("^.*[%.:]", "")))
 end
 
 local function description(item)
@@ -183,9 +194,9 @@ local function buildWeapon(item, player, model)
             addRow(rows, T("UI_BTT_Ammo", "Loaded"), loaded)
         end
         local ammo = call(item, "getAmmoType")
-        if ammo ~= nil then addRow(rows, T("UI_BTT_AmmoType", "Ammo"), itemName(tostring(ammo))) end
+        if ammo ~= nil then addRow(rows, T("UI_BTT_AmmoType", "Ammo"), itemName(ammo)) end
         local mag = call(item, "getMagazineType")
-        if type(mag) == "string" and mag ~= "" then addRow(rows, T("UI_BTT_Magazine", "Magazine"), itemName(mag)) end
+        if mag ~= nil and mag ~= "" then addRow(rows, T("UI_BTT_Magazine", "Magazine"), itemName(mag)) end
         if call(item, "isJammed") then addRow(rows, T("UI_BTT_Jammed", "Jammed"), T("UI_BTT_Yes", "Yes"), C.bad) end
     else
         local crit = num(call(item, "getCriticalChance"))

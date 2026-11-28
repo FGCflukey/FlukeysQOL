@@ -14,12 +14,23 @@ end
 -- types and builds; a missing or throwing getter returns nil
 -- instead of breaking the tooltip.
 ---------------------------------------------------------
+-- A Java exception caught by pcall is STILL written to console.txt as a
+-- full stack trace, and the tooltip draws every frame -- so a getter that
+-- throws once is remembered (per item type + method) and never retried.
+local badCalls = {}
+
 function BT.call(obj, method, ...)
     if obj == nil then return nil end
     local f = obj[method]
     if type(f) ~= "function" then return nil end
+    local key = nil
+    local okT, ft = pcall(function() return obj.getFullType and obj:getFullType() end)
+    key = tostring(okT and ft or "?") .. ":" .. method
+    if badCalls[key] then return nil end
     local ok, result = pcall(f, obj, ...)
     if ok then return result end
+    badCalls[key] = true
+    print("[BetterTooltip] " .. method .. " failed on " .. tostring(okT and ft or "?") .. ", skipping it from now on: " .. tostring(result))
     return nil
 end
 
