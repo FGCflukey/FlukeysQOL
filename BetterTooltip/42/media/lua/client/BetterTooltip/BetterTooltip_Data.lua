@@ -497,18 +497,234 @@ local function buildFluid(item, player, model, fc)
 end
 
 ---------------------------------------------------------
+-- Books, magazines, newspapers
+-- Read-status rules follow vanilla's ISInventoryPane:isLiteratureRead.
+---------------------------------------------------------
+local MAX_RECIPES = 8
+
+local function readingEffects(item, rows)
+    local function eff(key, fb, v)
+        v = num(v)
+        if v and math.abs(v) >= 0.5 then table.insert(rows, row(T(key, fb), signed(v, 0), effectColor(v, false))) end
+    end
+    eff("UI_BTT_Boredom", "Boredom", call(item, "getBoredomChange"))
+    eff("UI_BTT_Unhappiness", "Unhappiness", call(item, "getUnhappyChange"))
+    eff("UI_BTT_Stress", "Stress", scaled(call(item, "getStressChange")))
+end
+
+-- Cached: looked up once per recipe id, so even a lookup that errors can
+-- never repeat every frame.
+local recipeNames = {}
+local function recipeName(id)
+    id = tostring(id)
+    if recipeNames[id] then return recipeNames[id] end
+    local ok, name = pcall(function() return Translator.getRecipeName(id) end)
+    if not (ok and type(name) == "string" and name ~= "") then name = BT.pretty(id) end
+    recipeNames[id] = name
+    return name
+end
+
+local function knowsRecipe(player, id)
+    local known = player and call(player, "getKnownRecipes")
+    return known and call(known, "contains", id) == true
+end
+
+local function buildLiterature(item, player, model)
+    local skill = call(item, "getSkillTrained")
+    local book = SkillBook and skill and SkillBook[skill]
+    local modData = call(item, "hasModData") and call(item, "getModData") or nil
+
+    -- Pages (skill books and long reads)
+    local pages = num(call(item, "getNumberOfPages")) or 0
+    if pages > 0 then
+        local read = player and num(call(player, "getAlreadyReadPages", call(item, "getFullType"))) or 0
+        read = math.max(0, math.min(pages, read))
+        local frac = read / pages
+        model.bar = { label = T("UI_BTT_Pages", "Pages read"),
+                      text = (read >= pages) and T("UI_BTT_Finished", "Finished") or (fmt(read, 0) .. " / " .. fmt(pages, 0)),
+                      frac = frac, color = (read >= pages) and C.barGood or C.barFluid,
+                      textColor = (read >= pages) and C.good or nil }
+    end
+
+    if book and book.perk then
+        table.insert(model.chips, T("UI_BTT_Chip_SkillBook", "Skill book"))
+        local perkLabel = perkName(book.perk)
+        table.insert(model.chips, perkLabel)
+        local from, to = num(call(item, "getLvlSkillTrained")), num(call(item, "getMaxLevelTrained"))
+        local mine = player and num(call(player, "getPerkLevel", book.perk)) or nil
+        local rows = {}
+        if from and to and from > 0 then
+            addRow(rows, T("UI_BTT_Teaches", "Teaches levels"), fmt(from, 0) .. " - " .. fmt(to, 0))
+            -- vanilla volumes cover two levels each: 1-2 = vol 1 ... 9-10 = vol 5
+            local mult = book["maxMultiplier" .. tostring(math.floor((from - 1) / 2) + 1)]
+            if mult then addRow(rows, T("UI_BTT_XpBoost", "XP boost"), "x" .. fmt(mult, 1), C.good) end
+        end
+        if mine then
+            addRow(rows, T("UI_BTT_Skill", "%1 skill", perkLabel), T("UI_BTT_Level", "Level %1", fmt(mine, 0)))
+            if from and to and from > 0 then
+                if from > mine + 1 then
+                    addRow(rows, T("UI_BTT_Status", "Status"), T("UI_BTT_TooAdvanced", "Too advanced (need level %1)", fmt(from - 1, 0)), C.bad)
+                elseif to < mine + 1 then
+                    addRow(rows, T("UI_BTT_Status", "Status"), T("UI_BTT_AlreadyPast", "You're past this book"), C.label)
+                else
+                    addRow(rows, T("UI_BTT_Status", "Status"), T("UI_BTT_UsefulNow", "Useful now"), C.good)
+                end
+            end
+        end
+        addSection(model, section(T("UI_BTT_Sec_Skill", "SKILL"), rows))
+        return model
+    end
+
+    -- Recipe magazines (list) or a single learned recipe in mod data
+    local recipes = {}
+    local list = call(item, "getLearnedRecipes")
+    local n = list and num(call(list, "size")) or 0
+    for i = 0, n - 1 do table.insert(recipes, list:get(i)) end
+    if #recipes == 0 and modData and modData.learnedRecipe then table.insert(recipes, modData.learnedRecipe) end
+    if #recipes > 0 then
+        table.insert(model.chips, T("UI_BTT_Chip_Recipes", "Recipes"))
+        local rows, newCount = {}, 0
+        for i, id in ipairs(recipes) do
+            local known = knowsRecipe(player, id)
+            if not known then newCount = newCount + 1 end
+            if i <= MAX_RECIPES then
+                table.insert(rows, row(recipeName(id), known and T("UI_BTT_Known", "Known") or T("UI_BTT_New", "New"),
+                                       known and C.label or C.good))
+            end
+        end
+        if #recipes > MAX_RECIPES then
+            table.insert(rows, row(T("UI_BTT_MoreItems", "+%1 more", #recipes - MAX_RECIPES), ""))
+        end
+        local title = T("UI_BTT_Sec_Teaches", "TEACHES")
+        if newCount == 0 then title = title .. "  -  " .. T("UI_BTT_AllKnown", "ALL KNOWN") end
+        addSection(model, section(title, rows))
+        return model
+    end
+
+    -- Everything else readable: books, comics, newspapers, flyers
+    table.insert(model.chips, categoryChip(item) or T("UI_BTT_Chip_Reading", "Reading"))
+    local rows = {}
+    readingEffects(item, rows)
+    local readAlready = nil
+    if modData and player then
+        if modData.literatureTitle then readAlready = call(player, "isLiteratureRead", modData.literatureTitle) == true end
+        if modData.printMedia and modData.printMedia.title then readAlready = call(player, "isPrintMediaRead", modData.printMedia.title) == true end
+    end
+    if readAlready ~= nil then
+        table.insert(rows, row(T("UI_BTT_ReadIt", "Already read"), readAlready and T("UI_BTT_Yes", "Yes") or T("UI_BTT_No", "No"),
+                               readAlready and C.label or C.good))
+    end
+    addSection(model, section(T("UI_BTT_Sec_WhenRead", "WHEN READ"), rows))
+    return model
+end
+
+---------------------------------------------------------
+-- Gun magazines (loose, not in a gun)
+---------------------------------------------------------
+local function buildMagazine(item, player, model, cur, max)
+    table.insert(model.chips, T("UI_BTT_Chip_Magazine", "Magazine"))
+    local frac = math.max(0, math.min(1, cur / max))
+    model.bar = { label = T("UI_BTT_Ammo", "Loaded"), text = fmt(cur, 0) .. " / " .. fmt(max, 0),
+                  frac = frac, color = frac > 0 and C.barFluid or C.barBad }
+    local rows = {}
+    local ammo = call(item, "getAmmoType")
+    if ammo ~= nil then addRow(rows, T("UI_BTT_AmmoType", "Ammo"), itemName(ammo)) end
+    addSection(model, section(T("UI_BTT_Sec_Stats", "STATS"), rows))
+    return model
+end
+
+---------------------------------------------------------
+-- Vehicle parts
+---------------------------------------------------------
+local function buildVehiclePart(item, player, model, mechType)
+    table.insert(model.chips, T("UI_BTT_Chip_VehiclePart", "Vehicle part"))
+    model.bar = conditionBar(item)
+    local rows = {}
+    local fits = getText("IGUI_VehicleType_" .. tostring(mechType))
+    if fits and fits ~= "IGUI_VehicleType_" .. tostring(mechType) then
+        addRow(rows, T("UI_BTT_Fits", "Fits"), fits)
+    end
+    local cap = num(call(item, "getMaxCapacity"))
+    if cap and cap > 0 then addRow(rows, T("UI_BTT_Capacity", "Capacity"), fmt(cap, 0)) end
+    addSection(model, section(T("UI_BTT_Sec_Stats", "STATS"), rows))
+    return model
+end
+
+---------------------------------------------------------
+-- Everything else ordinary: tools, materials, medical, batteries...
+---------------------------------------------------------
+-- These keep the vanilla tooltip: it shows special info a plain card would drop.
+local VANILLA_ONLY = { "Radio", "Moveable", "AnimalInventoryItem", "AlarmClock", "AlarmClockClothing" }
+
+local function keepVanilla(item)
+    for _, cls in ipairs(VANILLA_ONLY) do
+        if instanceof(item, cls) then return true end
+    end
+    if call(item, "isRecordedMedia") then return true end
+    return false
+end
+
+local function buildGeneric(item, player, model)
+    table.insert(model.chips, categoryChip(item) or T("UI_BTT_Chip_Item", "Item"))
+
+    -- Uses (batteries, lighters, tape, thread, glue, propane...)
+    if instanceof(item, "DrainableComboItem") then
+        local cur, max = num(call(item, "getCurrentUses")), num(call(item, "getMaxUses"))
+        local frac
+        if cur and max and max > 0 then
+            frac = cur / max
+            model.bar = { label = T("UI_BTT_Uses", "Uses left"), text = fmt(cur, 0) .. " / " .. fmt(max, 0) }
+        else
+            local f = num(call(item, "getCurrentUsesFloat"))
+            if f and f <= 1 then
+                frac = f
+                model.bar = { label = T("UI_BTT_Uses", "Uses left"), text = fmt(f * 100, 0) .. "%" }
+            end
+        end
+        if model.bar then
+            frac = math.max(0, math.min(1, frac))
+            model.bar.frac, model.bar.color = frac, BT.barColor(frac)
+        end
+    end
+
+    -- Condition, only when it actually matters (damaged)
+    if not model.bar then
+        local cb = conditionBar(item)
+        if cb and cb.frac < 0.999 then model.bar = cb end
+    end
+
+    -- Medical
+    local med = {}
+    local bandage = num(call(item, "getBandagePower"))
+    if bandage and bandage > 0 then addRow(med, T("UI_BTT_Bandage", "Bandage strength"), fmt(bandage, 1)) end
+    local alcohol = num(call(item, "getAlcoholPower"))
+    if alcohol and alcohol > 0 then addRow(med, T("UI_BTT_Disinfect", "Disinfectant strength"), fmt(alcohol, 1)) end
+    addSection(model, section(T("UI_BTT_Sec_Medical", "MEDICAL"), med))
+    return model
+end
+
+---------------------------------------------------------
 -- Entry point
 ---------------------------------------------------------
 function BT.Data.build(item, player)
     if not item then return nil end
+    if keepVanilla(item) then return nil end
     local model = baseModel(item)
 
     if instanceof(item, "HandWeapon") then return buildWeapon(item, player, model) end
     if instanceof(item, "Food") then return buildFood(item, player, model) end
     if instanceof(item, "Clothing") then return buildClothing(item, player, model) end
     if instanceof(item, "InventoryContainer") then return buildContainer(item, player, model) end
+    if instanceof(item, "Literature") then return buildLiterature(item, player, model) end
     local fc = call(item, "getFluidContainer")
     if fc then return buildFluid(item, player, model, fc) end
 
-    return nil -- not covered yet: caller draws the vanilla tooltip
+    local maxAmmo = num(call(item, "getMaxAmmo"))
+    if maxAmmo and maxAmmo > 0 then
+        return buildMagazine(item, player, model, num(call(item, "getCurrentAmmoCount")) or 0, maxAmmo)
+    end
+    local mech = num(call(item, "getMechanicType"))
+    if mech and mech > 0 then return buildVehiclePart(item, player, model, mech) end
+
+    return buildGeneric(item, player, model)
 end
