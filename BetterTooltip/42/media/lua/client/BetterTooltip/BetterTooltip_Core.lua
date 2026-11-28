@@ -4,7 +4,7 @@
 BetterTooltip = BetterTooltip or {}
 local BT = BetterTooltip
 
-local DEBUG = true
+local DEBUG = false
 function BT.dbg(...)
     if DEBUG then print("[BetterTooltip]", ...) end
 end
