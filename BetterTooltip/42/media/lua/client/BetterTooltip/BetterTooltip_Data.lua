@@ -720,7 +720,14 @@ function BT.Data.build(item, player)
     if instanceof(item, "Clothing") then return buildClothing(item, player, model) end
     if instanceof(item, "InventoryContainer") then return buildContainer(item, player, model) end
     if instanceof(item, "Literature") then return buildLiterature(item, player, model) end
+    -- A placed item (floor, table, shelf) keeps its fluid on the world
+    -- object, not the item -- same two-step lookup vanilla uses
+    -- (ISInventoryPane / ISInventoryItem / ISFluidContainerMenu).
     local fc = call(item, "getFluidContainer")
+    if not fc then
+        local wi = call(item, "getWorldItem")
+        fc = wi and call(wi, "getFluidContainer")
+    end
     if fc then return buildFluid(item, player, model, fc) end
 
     local maxAmmo = num(call(item, "getMaxAmmo"))

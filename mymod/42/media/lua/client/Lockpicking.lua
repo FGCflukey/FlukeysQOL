@@ -1,6 +1,6 @@
 require "LockpickTimedAction"
 
-local DEBUG = true
+local DEBUG = false
 local function dbg(...) if DEBUG then print("[Lockpicking]", ...) end end
 
 -------------------------------------------------
