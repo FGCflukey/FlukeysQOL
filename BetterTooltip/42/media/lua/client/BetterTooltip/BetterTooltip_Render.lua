@@ -225,6 +225,24 @@ local function walk(ui, model, L, w, draw, shift)
                 end
             end
             y = y + tileH
+        elseif s.icons then
+            -- icon grid that wraps; repeats get a small "x2" in the corner
+            local size, ig = u(30), u(4)
+            local perRow = math.max(1, math.floor((cw + ig) / (size + ig)))
+            for i, ic in ipairs(s.icons) do
+                local col = (i - 1) % perRow
+                local x = pad + col * (size + ig)
+                if draw then
+                    ui:drawRect(x, y, size, size, 1, C.tileBg[1], C.tileBg[2], C.tileBg[3])
+                    ui:drawTextureScaledAspect(ic.tex, x + u(2), y + u(2), size - u(4), size - u(4), 1, 1, 1, 1)
+                    if ic.count > 1 then
+                        local c = "x" .. ic.count
+                        drawStr(ui, L.small, c, x + size - measure(L.small, c) - u(1), y + size - L.small.h, C.value)
+                    end
+                end
+                if col == perRow - 1 or i == #s.icons then y = y + size + ig end
+            end
+            y = y - ig
         elseif s.list then
             local colGap = u(12)
             local colW = math.floor((cw - colGap) / 2)

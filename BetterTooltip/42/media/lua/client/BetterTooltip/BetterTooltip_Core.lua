@@ -23,14 +23,23 @@ function BT.call(obj, method, ...)
     if obj == nil then return nil end
     local f = obj[method]
     if type(f) ~= "function" then return nil end
-    local key = nil
+    -- Items: keyed by item type, switched off after the first failure.
+    -- Anything else (fluid containers, recipe lists...) has no type, so the
+    -- key is just the method, and it takes 3 failures before it's switched
+    -- off -- one bad object can't disable it for everything else, while a
+    -- method that's genuinely broken still stops spamming quickly.
     local okT, ft = pcall(function() return obj.getFullType and obj:getFullType() end)
-    key = tostring(okT and ft or "?") .. ":" .. method
-    if badCalls[key] then return nil end
+    local isItem = okT and ft ~= nil
+    local key = (isItem and tostring(ft) or "*") .. ":" .. method
+    local limit = isItem and 1 or 3
+    if (badCalls[key] or 0) >= limit then return nil end
     local ok, result = pcall(f, obj, ...)
     if ok then return result end
-    badCalls[key] = true
-    print("[BetterTooltip] " .. method .. " failed on " .. tostring(okT and ft or "?") .. ", skipping it from now on: " .. tostring(result))
+    badCalls[key] = (badCalls[key] or 0) + 1
+    if badCalls[key] >= limit then
+        print("[BetterTooltip] " .. method .. " failed on " .. (isItem and tostring(ft) or "a non-item object")
+              .. ", skipping it from now on: " .. tostring(result))
+    end
     return nil
 end
 

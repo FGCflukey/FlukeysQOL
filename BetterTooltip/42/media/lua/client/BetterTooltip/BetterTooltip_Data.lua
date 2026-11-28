@@ -73,11 +73,36 @@ local function itemName(key)
         key = call(key, "getItemKey")
     end
     if type(key) ~= "string" or key == "" then return nil end
-    local sm = getScriptManager()
-    local script = sm and call(sm, "FindItem", key)
+    local script = BT.Data.findScript(key)
     local name = script and call(script, "getDisplayName")
     if type(name) == "string" and name ~= "" then return name end
     return BT.pretty((key:gsub("^.*[%.:]", "")))
+end
+
+-- Icon for an item type, from its script definition (no throwaway item is
+-- spawned). Cached per type; `false` marks "no icon" so it isn't retried.
+-- ScriptManager lookups are cached per key here rather than going through
+-- BT.call: BT.call's "skip after a failure" memory is keyed by item type,
+-- and the ScriptManager has none, so one bad key would block every lookup.
+local scriptCache = {}
+local function findScript(key)
+    local cached = scriptCache[key]
+    if cached ~= nil then return cached or nil end
+    local ok, script = pcall(function() return getScriptManager():FindItem(key) end)
+    scriptCache[key] = (ok and script) or false
+    return ok and script or nil
+end
+BT.Data.findScript = findScript
+
+local iconCache = {}
+function BT.Data.iconFor(key)
+    key = tostring(key)
+    local cached = iconCache[key]
+    if cached ~= nil then return cached or nil end
+    local script = findScript(key)
+    local tex = script and call(script, "getNormalTexture")
+    iconCache[key] = tex or false
+    return tex
 end
 
 local function description(item)
@@ -336,6 +361,31 @@ local function buildFood(item, player, model)
                 { value = fmt(fat or 0, 0) .. "g", label = T("UI_BTT_Fat", "Fat") },
             },
         })
+    end
+
+    -- Dish ingredients (salads, soups, stews, sandwiches...) as icons, like
+    -- vanilla. getExtraItems()/getSpices() hold item-type names.
+    local icons, byKey = {}, {}
+    local function addIcons(list)
+        local n = list and num(call(list, "size")) or 0
+        for i = 0, n - 1 do
+            local ft = list:get(i)
+            local key = ft and tostring(ft)
+            local tex = key and BT.Data.iconFor(key)
+            if tex then
+                if byKey[key] then
+                    byKey[key].count = byKey[key].count + 1
+                else
+                    byKey[key] = { tex = tex, count = 1 }
+                    table.insert(icons, byKey[key])
+                end
+            end
+        end
+    end
+    addIcons(call(item, "getExtraItems"))
+    addIcons(call(item, "getSpices"))
+    if #icons > 0 then
+        table.insert(model.sections, { title = T("UI_BTT_Sec_Ingredients", "INGREDIENTS"), icons = icons })
     end
 
     local cook = num(call(item, "getMinutesToCook"))
